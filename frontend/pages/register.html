@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký - Yến Nhi Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gradient-to-br from-yellow-200 to-yellow-300 min-h-screen flex items-center justify-center px-4 py-8">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <a href="../index.html" class="inline-flex items-center gap-2 mb-4">
+                <div class="relative w-12 h-12">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-yellow-500 rounded-lg"></div>
+                    <div class="absolute inset-0.5 bg-white rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-transparent" fill="none" stroke="url(#gradient)" viewBox="0 0 24 24" stroke-width="2.5">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                    <stop offset="20%" style="stop-color:#a855f7;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-lg font-black bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">Yến Nhi</span>
+                        <span class="text-lg font-black text-yellow-500">Mobile</span>
+                    </div>
+                </div>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Đăng Ký</h1>
+            <p class="text-gray-600">Tạo tài khoản mới để mua sắm</p>
+        </div>
+
+        <form id="registerForm" class="space-y-4">
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Họ và tên</label>
+                <input type="text" id="fullname" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 transition" placeholder="Nguyễn Văn A">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                <input type="email" id="email" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 transition" placeholder="email@example.com">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Số điện thoại</label>
+                <input type="tel" id="phone" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 transition" placeholder="0123456789">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Mật khẩu</label>
+                <input type="password" id="password" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 transition" placeholder="••••••••">
+                <p class="text-xs text-gray-500 mt-1">Tối thiểu 8 ký tự, bao gồm chữ và số</p>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Xác nhận mật khẩu</label>
+                <input type="password" id="confirmPassword" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-purple-500 transition" placeholder="••••••••">
+            </div>
+
+            <div class="flex items-start">
+                <input type="checkbox" id="terms" required class="w-4 h-4 mt-1 text-purple-600 rounded">
+                <label for="terms" class="ml-2 text-sm text-gray-600">
+                    Tôi đồng ý với <a href="#" class="text-purple-600 hover:text-purple-700 font-semibold">Điều khoản dịch vụ</a> và <a href="#" class="text-purple-600 hover:text-purple-700 font-semibold">Chính sách bảo mật</a>
+                </label>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105">
+                Đăng ký
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">Đã có tài khoản? <a href="login.html" class="text-purple-600 hover:text-purple-700 font-semibold">Đăng nhập ngay</a></p>
+        </div>
+
+        <div class="mt-6 text-center">
+            <a href="../index.html" class="text-gray-600 hover:text-gray-800 font-semibold">← Quay lại trang chủ</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+
+            // Validation
+            if (password.length < 8) {
+                alert('Mật khẩu phải có ít nhất 8 ký tự!');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Mật khẩu xác nhận không khớp!');
+                return;
+            }
+
+            if (!terms) {
+                alert('Vui lòng đồng ý với điều khoản dịch vụ!');
+                return;
+            }
+
+            // Simulate registration
+            alert('Đăng ký thành công! Chào mừng ' + fullname);
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
+

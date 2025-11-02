@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Trị - Yến Nhi Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 border-b-4 border-yellow-400 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-20 gap-2 sm:gap-3 lg:gap-4">
+                <a href="../index.html" class="flex items-center gap-1 sm:gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0">
+                    <div class="relative w-10 h-10 sm:w-12 sm:h-12">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-yellow-500 rounded-lg transform group-hover:scale-110 transition duration-300 shadow-lg"></div>
+                        <div class="absolute inset-0.5 bg-white rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-transparent" fill="none" stroke="url(#gradient)" viewBox="0 0 24 24" stroke-width="2.5">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                        <stop offset="20%" style="stop-color:#a855f7;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="flex items-center gap-0.5 sm:gap-1">
+                            <span class="text-xs sm:text-sm md:text-lg font-black bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">Yến Nhi</span>
+                            <span class="text-xs sm:text-sm md:text-lg font-black text-yellow-500">Mobile</span>
+                        </div>
+                        <p class="text-[8px] sm:text-xs font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text">TECH</p>
+                    </div>
+                </a>
+
+                <div class="flex items-center gap-1 sm:gap-1.5 lg:gap-4 ml-auto">
+                    <span class="text-sm font-semibold text-gray-700">Admin</span>
+                    <a href="../index.html" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-3 rounded text-xs transition">Đăng xuất</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-24 pb-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Dashboard Quản Trị</h1>
+            <p class="text-lg md:text-xl">Quản lý cửa hàng của bạn</p>
+        </div>
+    </section>
+
+    <section class="py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-gray-600 font-semibold">Tổng doanh thu</h3>
+                        <div class="bg-green-100 p-2 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold">125.5M</p>
+                    <p class="text-sm text-green-600 font-semibold">+12.5% so với tháng trước</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-gray-600 font-semibold">Đơn hàng</h3>
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold">1,234</p>
+                    <p class="text-sm text-blue-600 font-semibold">+8.2% so với tháng trước</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-gray-600 font-semibold">Sản phẩm</h3>
+                        <div class="bg-purple-100 p-2 rounded-lg">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold">567</p>
+                    <p class="text-sm text-purple-600 font-semibold">45 sản phẩm mới</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-gray-600 font-semibold">Khách hàng</h3>
+                        <div class="bg-yellow-100 p-2 rounded-lg">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold">8,945</p>
+                    <p class="text-sm text-yellow-600 font-semibold">+156 khách hàng mới</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4">Đơn hàng gần đây</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-semibold">#12345 - Nguyễn Văn A</p>
+                                <p class="text-sm text-gray-600">iPhone 15 Pro Max</p>
+                            </div>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">Đã giao</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-semibold">#12344 - Trần Thị B</p>
+                                <p class="text-sm text-gray-600">Samsung Galaxy S24</p>
+                            </div>
+                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">Đang giao</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-semibold">#12343 - Lê Văn C</p>
+                                <p class="text-sm text-gray-600">MacBook Pro M3</p>
+                            </div>
+                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">Đang xử lý</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-4">Sản phẩm bán chạy</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <img src="https://via.placeholder.com/60" alt="Product" class="w-12 h-12 object-cover rounded">
+                            <div class="flex-1">
+                                <p class="font-semibold">iPhone 15 Pro Max</p>
+                                <p class="text-sm text-gray-600">Đã bán: 234</p>
+                            </div>
+                            <span class="font-bold text-green-600">34.9M</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img src="https://via.placeholder.com/60" alt="Product" class="w-12 h-12 object-cover rounded">
+                            <div class="flex-1">
+                                <p class="font-semibold">Samsung Galaxy S24</p>
+                                <p class="text-sm text-gray-600">Đã bán: 187</p>
+                            </div>
+                            <span class="font-bold text-green-600">25.9M</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img src="https://via.placeholder.com/60" alt="Product" class="w-12 h-12 object-cover rounded">
+                            <div class="flex-1">
+                                <p class="font-semibold">AirPods Pro 2</p>
+                                <p class="text-sm text-gray-600">Đã bán: 345</p>
+                            </div>
+                            <span class="font-bold text-green-600">6.9M</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center text-gray-400">
+            <p>&copy; 2025 Yến Nhi Mobile. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

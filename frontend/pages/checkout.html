@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - Yến Nhi Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 border-b-4 border-yellow-400 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-20 gap-2 sm:gap-3 lg:gap-4">
+                <a href="../index.html" class="flex items-center gap-1 sm:gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0">
+                    <div class="relative w-10 h-10 sm:w-12 sm:h-12">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-yellow-500 rounded-lg transform group-hover:scale-110 transition duration-300 shadow-lg"></div>
+                        <div class="absolute inset-0.5 bg-white rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-transparent" fill="none" stroke="url(#gradient)" viewBox="0 0 24 24" stroke-width="2.5">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                        <stop offset="20%" style="stop-color:#a855f7;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="flex items-center gap-0.5 sm:gap-1">
+                            <span class="text-xs sm:text-sm md:text-lg font-black bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">Yến Nhi</span>
+                            <span class="text-xs sm:text-sm md:text-lg font-black text-yellow-500">Mobile</span>
+                        </div>
+                        <p class="text-[8px] sm:text-xs font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text">TECH</p>
+                    </div>
+                </a>
+
+                <div class="flex items-center gap-1 sm:gap-1.5 lg:gap-4 ml-auto">
+                    <a href="login.html" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-1.5 px-1.5 sm:py-2 sm:px-3 lg:px-4 rounded text-[9px] sm:text-xs lg:text-sm whitespace-nowrap transition duration-200">Đăng nhập</a>
+                    <a href="register.html" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-1.5 px-1.5 sm:py-2 sm:px-3 lg:px-4 rounded text-[9px] sm:text-xs lg:text-sm whitespace-nowrap transition duration-200">Đăng ký</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-24 pb-8 bg-gradient-to-r from-green-600 to-blue-600 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Thanh Toán</h1>
+            <p class="text-lg md:text-xl">Hoàn tất đơn hàng của bạn</p>
+        </div>
+    </section>
+
+    <section class="py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <form id="checkoutForm" class="space-y-6">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h2 class="text-2xl font-bold mb-6">Thông tin giao hàng</h2>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">Họ và tên *</label>
+                                    <input type="text" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Nguyễn Văn A">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">Số điện thoại *</label>
+                                    <input type="tel" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="0123456789">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-gray-700 font-semibold mb-2">Email *</label>
+                                    <input type="email" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="email@example.com">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-gray-700 font-semibold mb-2">Địa chỉ *</label>
+                                    <input type="text" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Số nhà, tên đường">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">Tỉnh/Thành phố *</label>
+                                    <select required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                        <option value="">Chọn tỉnh/thành</option>
+                                        <option value="hcm">TP. Hồ Chí Minh</option>
+                                        <option value="hn">Hà Nội</option>
+                                        <option value="dn">Đà Nẵng</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">Quận/Huyện *</label>
+                                    <select required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                        <option value="">Chọn quận/huyện</option>
+                                        <option value="q1">Quận 1</option>
+                                        <option value="q2">Quận 2</option>
+                                        <option value="q3">Quận 3</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-gray-700 font-semibold mb-2">Ghi chú</label>
+                                    <textarea rows="3" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Ghi chú cho đơn hàng (không bắt buộc)"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h2 class="text-2xl font-bold mb-6">Phương thức thanh toán</h2>
+                            <div class="space-y-3">
+                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="cod" checked class="w-5 h-5 text-blue-600">
+                                    <span class="ml-3 font-semibold">Thanh toán khi nhận hàng (COD)</span>
+                                </label>
+                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="bank" class="w-5 h-5 text-blue-600">
+                                    <span class="ml-3 font-semibold">Chuyển khoản ngân hàng</span>
+                                </label>
+                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="momo" class="w-5 h-5 text-blue-600">
+                                    <span class="ml-3 font-semibold">Ví MoMo</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-lg transition duration-300 text-lg">
+                            Đặt hàng
+                        </button>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+                        <h2 class="text-2xl font-bold mb-6">Đơn hàng</h2>
+                        <div id="orderSummary" class="space-y-4 mb-6">
+                            <!-- Order items will be loaded here -->
+                        </div>
+                        <div class="border-t pt-4 space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Tạm tính:</span>
+                                <span id="subtotal" class="font-semibold">0đ</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Phí vận chuyển:</span>
+                                <span class="font-semibold text-green-600">Miễn phí</span>
+                            </div>
+                            <div class="border-t pt-3">
+                                <div class="flex justify-between">
+                                    <span class="text-lg font-bold">Tổng cộng:</span>
+                                    <span id="total" class="text-2xl font-bold text-red-600">0đ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center text-gray-400">
+            <p>&copy; 2025 Yến Nhi Mobile. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        function loadOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const summary = document.getElementById('orderSummary');
+            let subtotal = 0;
+
+            summary.innerHTML = cart.map(item => {
+                subtotal += item.price * item.quantity;
+                return `
+                    <div class="flex gap-3">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm">${item.name}</p>
+                            <p class="text-gray-600 text-sm">x${item.quantity}</p>
+                            <p class="font-bold text-red-600">${formatCurrency(item.price * item.quantity)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('total').textContent = formatCurrency(subtotal);
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Đặt hàng thành công! Cảm ơn bạn đã mua hàng.');
+            localStorage.removeItem('cart');
+            window.location.href = '../index.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', loadOrderSummary);
+    </script>
+</body>
+</html>

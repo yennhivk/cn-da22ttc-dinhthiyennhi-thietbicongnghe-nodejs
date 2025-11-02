@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Đơn Hàng - Yến Nhi Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 border-b-4 border-yellow-400 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-20 gap-2 sm:gap-3 lg:gap-4">
+                <a href="../index.html" class="flex items-center gap-1 sm:gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0">
+                    <div class="relative w-10 h-10 sm:w-12 sm:h-12">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-yellow-500 rounded-lg transform group-hover:scale-110 transition duration-300 shadow-lg"></div>
+                        <div class="absolute inset-0.5 bg-white rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-transparent" fill="none" stroke="url(#gradient)" viewBox="0 0 24 24" stroke-width="2.5">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                        <stop offset="20%" style="stop-color:#a855f7;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="flex items-center gap-0.5 sm:gap-1">
+                            <span class="text-xs sm:text-sm md:text-lg font-black bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">Yến Nhi</span>
+                            <span class="text-xs sm:text-sm md:text-lg font-black text-yellow-500">Mobile</span>
+                        </div>
+                        <p class="text-[8px] sm:text-xs font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text">TECH</p>
+                    </div>
+                </a>
+
+                <div class="flex items-center gap-1 sm:gap-1.5 lg:gap-4 ml-auto">
+                    <a href="cart.html" class="relative text-blue-600 hover:text-yellow-500 transition flex-shrink-0">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-24 pb-8 bg-gradient-to-r from-blue-600 to-green-600 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Lịch Sử Đơn Hàng</h1>
+            <p class="text-lg md:text-xl">Theo dõi đơn hàng của bạn</p>
+        </div>
+    </section>
+
+    <section class="py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="md:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="text-center mb-6">
+                            <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
+                                U
+                            </div>
+                            <h3 class="font-bold text-lg">User Name</h3>
+                            <p class="text-gray-600 text-sm">user@example.com</p>
+                        </div>
+                        <nav class="space-y-2">
+                            <a href="profile.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">Thông tin cá nhân</a>
+                            <a href="order-history.html" class="block px-4 py-3 bg-blue-50 text-blue-600 rounded-lg font-semibold">Đơn hàng</a>
+                            <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">Đổi mật khẩu</a>
+                            <a href="../index.html" class="block px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-semibold">Đăng xuất</a>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="md:col-span-3">
+                    <div class="space-y-4">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="font-bold text-lg">Đơn hàng #12345</h3>
+                                    <p class="text-gray-600 text-sm">Ngày đặt: 15/01/2025</p>
+                                </div>
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">Đã giao</span>
+                            </div>
+                            <div class="space-y-3 mb-4">
+                                <div class="flex gap-3">
+                                    <img src="https://via.placeholder.com/80" alt="Product" class="w-16 h-16 object-cover rounded">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">iPhone 15 Pro Max 256GB</p>
+                                        <p class="text-gray-600 text-sm">x1</p>
+                                        <p class="font-bold text-red-600">34.990.000đ</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-600">Tổng cộng:</span>
+                                    <span class="font-bold text-xl text-red-600">34.990.000đ</span>
+                                </div>
+                                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                                    Xem chi tiết
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="font-bold text-lg">Đơn hàng #12344</h3>
+                                    <p class="text-gray-600 text-sm">Ngày đặt: 10/01/2025</p>
+                                </div>
+                                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">Đang giao</span>
+                            </div>
+                            <div class="space-y-3 mb-4">
+                                <div class="flex gap-3">
+                                    <img src="https://via.placeholder.com/80" alt="Product" class="w-16 h-16 object-cover rounded">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Samsung Galaxy S24 Ultra</p>
+                                        <p class="text-gray-600 text-sm">x1</p>
+                                        <p class="font-bold text-red-600">25.990.000đ</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-600">Tổng cộng:</span>
+                                    <span class="font-bold text-xl text-red-600">25.990.000đ</span>
+                                </div>
+                                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                                    Theo dõi đơn hàng
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="font-bold text-lg">Đơn hàng #12343</h3>
+                                    <p class="text-gray-600 text-sm">Ngày đặt: 05/01/2025</p>
+                                </div>
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">Đang xử lý</span>
+                            </div>
+                            <div class="space-y-3 mb-4">
+                                <div class="flex gap-3">
+                                    <img src="https://via.placeholder.com/80" alt="Product" class="w-16 h-16 object-cover rounded">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">AirPods Pro 2</p>
+                                        <p class="text-gray-600 text-sm">x2</p>
+                                        <p class="font-bold text-red-600">13.980.000đ</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-600">Tổng cộng:</span>
+                                    <span class="font-bold text-xl text-red-600">13.980.000đ</span>
+                                </div>
+                                <button class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                                    Hủy đơn hàng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center text-gray-400">
+            <p>&copy; 2025 Yến Nhi Mobile. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

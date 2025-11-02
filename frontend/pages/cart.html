@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng - Yến Nhi Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 border-b-4 border-yellow-400 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-20 gap-2 sm:gap-3 lg:gap-4">
+                <a href="../index.html" class="flex items-center gap-1 sm:gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0">
+                    <div class="relative w-10 h-10 sm:w-12 sm:h-12">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-yellow-500 rounded-lg transform group-hover:scale-110 transition duration-300 shadow-lg"></div>
+                        <div class="absolute inset-0.5 bg-white rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-transparent" fill="none" stroke="url(#gradient)" viewBox="0 0 24 24" stroke-width="2.5">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                        <stop offset="20%" style="stop-color:#a855f7;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="flex items-center gap-0.5 sm:gap-1">
+                            <span class="text-xs sm:text-sm md:text-lg font-black bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">Yến Nhi</span>
+                            <span class="text-xs sm:text-sm md:text-lg font-black text-yellow-500">Mobile</span>
+                        </div>
+                        <p class="text-[8px] sm:text-xs font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text">TECH</p>
+                    </div>
+                </a>
+
+                <div class="hidden lg:flex gap-4 xl:gap-6 ml-auto">
+                    <a href="../index.html" class="text-sm xl:text-lg font-semibold text-gray-800 hover:text-yellow-600 transition">Trang chủ</a>
+                    <a href="products.html" class="text-sm xl:text-lg font-semibold text-gray-800 hover:text-yellow-600 transition">Sản phẩm</a>
+                    <a href="news.html" class="text-sm xl:text-lg font-semibold text-gray-800 hover:text-yellow-600 transition">Tin tức</a>
+                    <a href="promotions.html" class="text-sm xl:text-lg font-semibold text-gray-800 hover:text-yellow-600 transition">Khuyến mãi</a>
+                    <a href="about.html" class="text-sm xl:text-lg font-semibold text-gray-800 hover:text-yellow-600 transition">Giới thiệu</a>
+                    <a href="contact.html" class="text-sm xl:text-lg font-semibold text-gray-800 hover:text-yellow-600 transition">Liên hệ</a>
+                </div>
+
+                <div class="flex items-center gap-1 sm:gap-1.5 lg:gap-4 ml-auto lg:ml-0">
+                    <a href="login.html" class="bg-green-600 hover:bg-green-700 text-white hover:text-yellow-300 font-semibold py-1.5 px-1.5 sm:py-2 sm:px-3 lg:px-4 rounded text-[9px] sm:text-xs lg:text-sm whitespace-nowrap transition duration-200">Đăng nhập</a>
+                    <a href="register.html" class="bg-green-600 hover:bg-green-700 text-white hover:text-yellow-300 font-semibold py-1.5 px-1.5 sm:py-2 sm:px-3 lg:px-4 rounded text-[9px] sm:text-xs lg:text-sm whitespace-nowrap transition duration-200">Đăng ký</a>
+                    <button id="mobileMenuBtn" class="lg:hidden text-gray-700 hover:text-yellow-500 transition flex-shrink-0" onclick="toggleMobileMenu()">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden bg-white border-t border-gray-200 shadow-lg lg:hidden fixed top-20 left-0 right-0 z-40">
+        <div class="px-4 py-2">
+            <div class="flex flex-col space-y-1">
+                <a href="../index.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-600 rounded-lg transition">🏠 Trang chủ</a>
+                <a href="products.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-600 rounded-lg transition">📱 Sản phẩm</a>
+                <a href="news.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-600 rounded-lg transition">📰 Tin tức</a>
+                <a href="promotions.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-600 rounded-lg transition">🎉 Khuyến mãi</a>
+                <a href="about.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-600 rounded-lg transition">ℹ️ Giới thiệu</a>
+                <a href="contact.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-600 rounded-lg transition">📞 Liên hệ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="pt-24 pb-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Giỏ Hàng</h1>
+            <p class="text-lg md:text-xl">Xem lại sản phẩm và tiến hành thanh toán</p>
+        </div>
+    </section>
+
+    <!-- Cart Content -->
+    <section class="py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div id="emptyCart" class="text-center py-12">
+                <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Giỏ hàng trống</h2>
+                <p class="text-gray-500 mb-6">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
+                <a href="products.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full transition duration-300">
+                    Tiếp tục mua sắm
+                </a>
+            </div>
+
+            <div id="cartContent" class="hidden">
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div id="cartItems" class="space-y-4">
+                            <!-- Cart items will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+                            <h3 class="text-xl font-bold mb-4">Tổng đơn hàng</h3>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Tạm tính:</span>
+                                    <span id="subtotal" class="font-semibold">0đ</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Phí vận chuyển:</span>
+                                    <span class="font-semibold text-green-600">Miễn phí</span>
+                                </div>
+                                <div class="border-t pt-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-lg font-bold">Tổng cộng:</span>
+                                        <span id="total" class="text-2xl font-bold text-red-600">0đ</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="checkout.html" class="block w-full bg-red-600 hover:bg-red-700 text-white text-center font-bold py-3 px-6 rounded-lg transition duration-300 mb-3">
+                                Thanh toán
+                            </a>
+                            <a href="products.html" class="block w-full bg-gray-200 hover:bg-gray-300 text-gray-800 text-center font-bold py-3 px-6 rounded-lg transition duration-300">
+                                Tiếp tục mua hàng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 md:py-12 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div>
+                <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4 text-yellow-400">Yến Nhi Mobile</h3>
+                <p class="text-sm md:text-base text-gray-400">Cửa hàng thiết bị công nghệ uy tín, chất lượng cao với giá tốt nhất.</p>
+            </div>
+            <div>
+                <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Liên kết nhanh</h4>
+                <ul class="space-y-2 text-sm md:text-base">
+                    <li><a href="products.html" class="text-gray-400 hover:text-yellow-400 transition">Sản phẩm</a></li>
+                    <li><a href="promotions.html" class="text-gray-400 hover:text-yellow-400 transition">Khuyến mãi</a></li>
+                    <li><a href="news.html" class="text-gray-400 hover:text-yellow-400 transition">Tin tức</a></li>
+                    <li><a href="about.html" class="text-gray-400 hover:text-yellow-400 transition">Giới thiệu</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Hỗ trợ khách hàng</h4>
+                <ul class="space-y-2 text-sm md:text-base">
+                    <li><a href="contact.html" class="text-gray-400 hover:text-yellow-400 transition">Liên hệ</a></li>
+                    <li><a href="cart.html" class="text-gray-400 hover:text-yellow-400 transition">Giỏ hàng</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Liên hệ</h4>
+                <ul class="space-y-2 text-sm md:text-base text-gray-400">
+                    <li>📞 0123-456-789</li>
+                    <li>📧 info@yennhimobile.vn</li>
+                    <li>📍 123 Đường ABC, TP.HCM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-6 md:mt-8 pt-6 md:pt-8 border-t border-gray-800 text-center text-gray-400 text-sm md:text-base">
+            <p>&copy; 2025 Yến Nhi Mobile. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const emptyCart = document.getElementById('emptyCart');
+            const cartContent = document.getElementById('cartContent');
+            const cartItems = document.getElementById('cartItems');
+
+            if (cart.length === 0) {
+                emptyCart.classList.remove('hidden');
+                cartContent.classList.add('hidden');
+                return;
+            }
+
+            emptyCart.classList.add('hidden');
+            cartContent.classList.remove('hidden');
+
+            let subtotal = 0;
+            cartItems.innerHTML = cart.map((item, index) => {
+                subtotal += item.price * item.quantity;
+                return `
+                    <div class="bg-white rounded-xl shadow-lg p-4 flex gap-4">
+                        <img src="${item.image}" alt="${item.name}" class="w-24 h-24 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg mb-2">${item.name}</h3>
+                            <p class="text-red-600 font-bold text-xl mb-2">${formatCurrency(item.price)}</p>
+                            <div class="flex items-center gap-3">
+                                <button onclick="updateQuantity(${index}, -1)" class="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold">-</button>
+                                <span class="font-semibold">${item.quantity}</span>
+                                <button onclick="updateQuantity(${index}, 1)" class="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold">+</button>
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-between items-end">
+                            <button onclick="removeFromCart(${index})" class="text-red-600 hover:text-red-700">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                            <p class="font-bold text-lg">${formatCurrency(item.price * item.quantity)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('total').textContent = formatCurrency(subtotal);
+        }
+
+        function updateQuantity(index, change) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+            updateCartBadge();
+        }
+
+        function removeFromCart(index) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+            updateCartBadge();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCart);
+    </script>
+</body>
+</html>
