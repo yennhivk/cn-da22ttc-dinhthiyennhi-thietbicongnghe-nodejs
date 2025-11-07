@@ -14,6 +14,13 @@
         .blink-animation {
             animation: blink 0.5s ease-in-out 2;
         }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -324,101 +331,291 @@
         </div>
     </div>
 
+    <!-- Promotional Banner Strip -->
+    <section class="pt-16 lg:pt-28 bg-red-600">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between overflow-x-auto gap-4 py-3 text-white scrollbar-hide">
+                <!-- Deal 1 -->
+                <a href="pages/promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2">
+                        <span class="text-2xl">🔥</span>
+                    </div>
+                    <span class="font-bold text-sm md:text-base">Săn Deal Online</span>
+                </a>
+
+                <!-- Deal 2 -->
+                <a href="pages/products.html?brand=samsung" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2">
+                        <span class="text-2xl">📱</span>
+                    </div>
+                    <span class="font-bold text-sm md:text-base">Samsung mua 1 tặng 1</span>
+                </a>
+
+                <!-- Deal 3 -->
+                <a href="pages/promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2">
+                        <span class="text-2xl">🎁</span>
+                    </div>
+                    <span class="font-bold text-sm md:text-base">Voucher tặng bạn mới</span>
+                </a>
+
+                <!-- Deal 4 -->
+                <a href="pages/products.html?category=appliances" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2">
+                        <span class="text-2xl">❄️</span>
+                    </div>
+                    <span class="font-bold text-sm md:text-base">Máy nước nóng từ 2.29 triệu</span>
+                </a>
+
+                <!-- Deal 5 -->
+                <a href="pages/products.html?special=11.11" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse">
+                        <span class="font-black text-red-600 text-sm">11.11</span>
+                    </div>
+                    <span class="font-bold text-sm md:text-base">Trở giá cực đã - Sale 50%</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Hero Carousel Section -->
-    <section class="pt-16 lg:pt-28">
+    <section class="bg-gray-50">
         <div class="relative h-64 sm:h-80 md:h-96 lg:h-[450px] overflow-hidden">
             <div id="carousel" class="flex transition-transform duration-500 ease-out h-full">
-                <!-- Slide 1 - Red Gradient (Gaming Laptop) -->
-                <div class="min-w-full h-full relative bg-gradient-to-r from-red-500 via-red-500 to-rose-400">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="max-w-7xl mx-auto px-8 w-full flex items-center justify-between">
-                            <div class="text-white max-w-2xl">
-                                <div class="bg-yellow-400 text-red-900 px-3 py-1 rounded-full inline-block text-xs font-bold mb-3">KHUYẾN MÃI HOT</div>
-                                <h1 class="text-3xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">LAPTOP GAMING<br/>GIẢM ĐẾN 40%</h1>
-                                <p class="text-lg md:text-xl mb-6 text-red-100">Cấu hình khủng - Giá siêu hời</p>
-                                <div class="flex gap-3">
-                                    <a href="pages/products.html" class="bg-white text-red-700 px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 hover:text-white transition text-sm md:text-base">Xem ngay</a>
-                                    <a href="pages/promotions.html" class="border-2 border-white text-white px-6 py-3 rounded-lg font-bold hover:bg-white hover:text-red-700 transition text-sm md:text-base">Khuyến mãi</a>
+                <!-- Slide 1 - 11.11 Sale (Left: Products, Right: 11.11 Text) -->
+                <div class="min-w-full h-full relative bg-gradient-to-r from-red-800 via-red-700 to-red-600 overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-between px-8">
+                        <!-- Left Side - Products with Model -->
+                        <div class="flex items-center gap-6 flex-1">
+                            <!-- Badge 50% off -->
+                            <div class="bg-yellow-400 text-red-900 px-6 py-3 rounded-xl transform -rotate-12 shadow-2xl">
+                                <p class="text-sm font-bold">GIẢM NGAY</p>
+                                <p class="text-4xl font-black">50%++</p>
+                            </div>
+                            
+                            <!-- Products Display -->
+                            <div class="relative">
+                                <!-- Background circle -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-3xl"></div>
+                                
+                                <!-- Products stack -->
+                                <div class="relative flex items-center gap-4">
+                                    <!-- Laptop -->
+                                    <div class="transform hover:scale-110 transition-transform">
+                                        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=150&fit=crop" alt="MacBook" class="w-32 h-24 rounded-lg shadow-2xl object-cover">
+                                    </div>
+                                    
+                                    <!-- Phone -->
+                                    <div class="transform hover:scale-110 transition-transform -ml-4">
+                                        <img src="https://images.unsplash.com/photo-1592286927505-2fd7c3ba8d08?w=100&h=180&fit=crop" alt="iPhone" class="w-20 h-36 rounded-2xl shadow-2xl object-cover border-4 border-gray-700">
+                                    </div>
+                                    
+                                    <!-- Watch -->
+                                    <div class="transform hover:scale-110 transition-transform">
+                                        <img src="https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=100&h=100&fit=crop" alt="Apple Watch" class="w-16 h-16 rounded-full shadow-2xl object-cover">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="hidden lg:block">
-                                <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop" alt="Gaming Laptop" class="rounded-lg shadow-2xl transform hover:scale-105 transition duration-300">
+                            
+                            <!-- Model Section -->
+                            <div class="relative">
+                                <div class="w-48 h-64 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl overflow-hidden backdrop-blur-sm">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=280&fit=crop&crop=faces" alt="Customer Service" class="w-full h-full object-cover opacity-80">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
+                                        <div class="text-center w-full">
+                                            <p class="text-white font-bold text-sm">Trợ giá đến</p>
+                                            <p class="text-yellow-400 font-black text-3xl">2.5</p>
+                                            <p class="text-white font-bold text-lg">TRIỆU</p>
+                                            <p class="text-white/80 text-xs mt-1">Mua Máy Kèm SIM FPT</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Side - 11.11 Text -->
+                        <div class="flex-1 text-right">
+                            <div class="inline-block">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <span class="text-6xl">🏁</span>
+                                    <div class="text-white">
+                                        <h1 class="text-7xl font-black leading-none drop-shadow-2xl" style="text-shadow: 4px 4px 0px rgba(0,0,0,0.3), -2px -2px 0px rgba(255,255,255,0.1);">11.11</h1>
+                                    </div>
+                                </div>
+                                <h2 class="text-5xl font-black text-white mb-2 drop-shadow-lg">TRỞ GIÁ</h2>
+                                <h2 class="text-5xl font-black text-yellow-400 mb-4 drop-shadow-lg">CỰC ĐÃ</h2>
+                                <p class="text-3xl font-black text-white mb-2">CHẠY KPI BỨT PHÁ</p>
+                                <div class="bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3 inline-block">
+                                    <p class="text-white font-bold text-xl">SĂN GIÁ RẺ HƠN</p>
+                                    <p class="text-yellow-400 font-black text-2xl">10H-13H | 16H-21H</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Slide 2 - Blue Gradient (PC Gaming) -->
-                <div class="min-w-full h-full relative bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-500">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="max-w-7xl mx-auto px-8 w-full flex items-center justify-between">
-                            <div class="text-white max-w-2xl">
-                                <div class="bg-red-500 text-white px-3 py-1 rounded-full inline-block text-xs font-bold mb-3 animate-pulse">🔥 MUA NGAY</div>
-                                <h1 class="text-3xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">PC GAMING<br/>SIÊU PHẨM 2024</h1>
-                                <p class="text-lg md:text-xl mb-6 text-cyan-100">RTX 4090 - Intel Core i9 - RGB</p>
-                                <div class="flex gap-3">
-                                    <a href="pages/products.html" class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-lg font-bold hover:bg-white transition text-sm md:text-base">Đặt hàng ngay</a>
+                <!-- Slide 2 - Galaxy A56 "Awesome Ngay 9đ" -->
+                <div class="min-w-full h-full relative bg-gradient-to-br from-blue-100 via-white to-blue-50">
+                    <div class="absolute inset-0 flex items-center justify-between px-8">
+                        <!-- Left Side - Text Content -->
+                        <div class="flex-1">
+                            <div class="text-blue-600 mb-2">
+                                <p class="text-lg font-semibold">Galaxy A56 | A36 5G</p>
+                            </div>
+                            <h1 class="text-6xl font-black text-blue-700 mb-4" style="font-family: 'Arial Black', sans-serif;">Awesome<br/>Ngay 9đ</h1>
+                            <p class="text-2xl font-bold text-blue-600 mb-6">- Nhận đổi bảo hành -</p>
+                            
+                            <!-- 3 Features in Blue Boxes -->
+                            <div class="flex gap-4 mb-6">
+                                <div class="bg-blue-600 text-white rounded-lg px-6 py-4 text-center min-w-[140px]">
+                                    <p class="text-sm font-semibold mb-1">Giảm ngay</p>
+                                    <p class="text-4xl font-black">700k</p>
+                                </div>
+                                <div class="bg-blue-600 text-white rounded-lg px-6 py-4 text-center min-w-[140px]">
+                                    <p class="text-sm font-semibold mb-1">Ưu đãi</p>
+                                    <p class="text-xl font-black">bảo hành chính hãng</p>
+                                    <p class="text-4xl font-black">24 tháng</p>
+                                </div>
+                                <div class="bg-blue-600 text-white rounded-lg px-6 py-4 text-center min-w-[140px]">
+                                    <p class="text-sm font-semibold mb-1">Trả góp</p>
+                                    <p class="text-4xl font-black">0%</p>
                                 </div>
                             </div>
-                            <div class="hidden lg:block">
-                                <img src="https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=500&h=400&fit=crop" alt="PC Gaming" class="rounded-lg shadow-2xl transform hover:scale-105 transition duration-300">
+                            <p class="text-sm text-gray-600">Áp dụng từ ngày 1/11 đến 11/11/2025</p>
+                        </div>
+                        
+                        <!-- Right Side - Phone Images -->
+                        <div class="flex-1 flex items-center justify-center">
+                            <div class="relative">
+                                <!-- Phone 1 -->
+                                <div class="absolute -left-32 top-0 transform hover:scale-110 transition-transform">
+                                    <img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=350&fit=crop" alt="Galaxy A56" class="w-40 h-72 rounded-[3rem] shadow-2xl object-cover">
+                                </div>
+                                
+                                <!-- Phone 2 (Main) -->
+                                <div class="relative z-10 transform hover:scale-110 transition-transform">
+                                    <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=250&h=400&fit=crop" alt="Samsung Galaxy" class="w-48 h-80 rounded-[3.5rem] shadow-2xl object-cover">
+                                </div>
+                                
+                                <!-- Phone 3 -->
+                                <div class="absolute -right-32 top-0 transform hover:scale-110 transition-transform">
+                                    <img src="https://images.unsplash.com/photo-1591122947157-26bad3a117d2?w=200&h=350&fit=crop" alt="Galaxy A36" class="w-40 h-72 rounded-[3rem] shadow-2xl object-cover">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Slide 3 - Red/Orange Gradient (Hot Deals) -->
-                <div class="min-w-full h-full relative bg-gradient-to-r from-red-400 via-orange-600 to-yellow-500">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="max-w-7xl mx-auto px-8 w-full flex items-center justify-between">
-                            <div class="text-white max-w-2xl">
-                                <div class="bg-white text-red-600 px-3 py-1 rounded-full inline-block text-xs font-bold mb-3">⚡ FLASH SALE</div>
-                                <h1 class="text-3xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">GIẢM GIÁ<br/>ĐẾN 50%</h1>
-                                <p class="text-lg md:text-xl mb-6">Chuột - Bàn phím - Tai nghe Gaming</p>
-                                <div class="flex gap-3">
-                                    <a href="pages/promotions.html" class="bg-white text-red-600 px-6 py-3 rounded-lg font-bold hover:bg-yellow-300 transition text-sm md:text-base">Mua ngay</a>
+                <!-- Slide 3 - Gaming "x2 SỨC MẠNH" -->
+                <div class="min-w-full h-full relative bg-gradient-to-br from-purple-900 via-blue-900 to-black">
+                    <div class="absolute inset-0 flex items-center justify-between px-8">
+                        <!-- Left Side - Gaming Graphics -->
+                        <div class="flex-1 flex items-center justify-center">
+                            <div class="relative">
+                                <!-- Gaming Laptop -->
+                                <div class="transform hover:scale-105 transition-transform">
+                                    <img src="https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=500&h=350&fit=crop" alt="Gaming Laptop" class="rounded-xl shadow-2xl object-cover">
+                                </div>
+                                <!-- Gaming Mouse -->
+                                <div class="absolute -bottom-4 -right-8 transform hover:scale-105 transition-transform">
+                                    <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=150&h=150&fit=crop" alt="Gaming Mouse" class="w-24 h-24 rounded-lg shadow-xl object-cover">
                                 </div>
                             </div>
-                            <div class="hidden lg:block">
-                                <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=400&fit=crop" alt="Gaming Gear" class="rounded-lg shadow-2xl transform hover:scale-105 transition duration-300">
+                        </div>
+                        
+                        <!-- Right Side - Content -->
+                        <div class="flex-1 text-white">
+                            <div class="relative">
+                                <!-- Badge -->
+                                <div class="absolute -top-4 -left-4 bg-red-600 text-white px-4 py-2 rounded-full transform -rotate-12 shadow-xl">
+                                    <p class="text-xs font-bold">TRẢ GÓP</p>
+                                    <p class="text-2xl font-black">0%</p>
+                                </div>
+                                
+                                <!-- Main Text -->
+                                <div class="mb-6">
+                                    <h1 class="text-7xl font-black mb-2" style="background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">x2 SỨC</h1>
+                                    <h1 class="text-7xl font-black mb-4" style="background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MẠNH</h1>
+                                    <p class="text-3xl font-bold text-pink-400">GAMING ĐỈNH - AI CHẤT</p>
+                                </div>
+                                
+                                <!-- Features -->
+                                <div class="space-y-3 mb-6">
+                                    <div class="bg-gradient-to-r from-purple-600/50 to-pink-600/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-pink-500">
+                                        <p class="text-lg font-bold">HSSV giảm thêm 5%</p>
+                                        <p class="text-2xl font-black text-yellow-400">đến 5 TRIỆU</p>
+                                    </div>
+                                    <div class="bg-gradient-to-r from-blue-600/50 to-purple-600/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-blue-500">
+                                        <p class="text-lg font-bold">Tặng gói Bảo Hành</p>
+                                        <p class="text-2xl font-black text-yellow-400">PMH 300K mua Bảo hành 1 ĐỔI 1</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Laptop Image -->
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=130&fit=crop" alt="Gaming Setup" class="w-full h-32 rounded-lg shadow-2xl object-cover">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Slide 4 - Green Gradient (Deals) -->
-                <div class="min-w-full h-full relative bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="max-w-7xl mx-auto px-8 w-full flex items-center justify-between">
-                            <div class="text-white max-w-2xl">
-                                <div class="bg-yellow-400 text-green-900 px-3 py-1 rounded-full inline-block text-xs font-bold mb-3">MỚI VỀ</div>
-                                <h1 class="text-3xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">MÀN HÌNH<br/>4K GAMING</h1>
-                                <p class="text-lg md:text-xl mb-6 text-green-100">144Hz - 1ms - HDR400</p>
-                                <div class="flex gap-3">
-                                    <a href="pages/products.html" class="bg-white text-green-700 px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 hover:text-white transition text-sm md:text-base">Khám phá</a>
-                                </div>
+                <!-- Slide 4 - iPhone Sale -->
+                <div class="min-w-full h-full relative bg-gradient-to-r from-orange-400 via-red-500 to-pink-500">
+                    <div class="absolute inset-0 flex items-center justify-between px-8">
+                        <!-- Left Side -->
+                        <div class="flex-1 text-white">
+                            <div class="bg-yellow-400 text-red-900 px-4 py-2 rounded-full inline-block text-sm font-bold mb-4 animate-pulse">
+                                🔥 SIÊU HOT
                             </div>
-                            <div class="hidden lg:block">
-                                <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=400&fit=crop" alt="Gaming Monitor" class="rounded-lg shadow-2xl transform hover:scale-105 transition duration-300">
+                            <h1 class="text-6xl font-black mb-4 drop-shadow-2xl">IPHONE 15</h1>
+                            <h2 class="text-5xl font-black mb-4">GIẢM SỐC</h2>
+                            <p class="text-4xl font-black text-yellow-400 mb-6">ĐẾN 30%</p>
+                            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 inline-block">
+                                <p class="text-xl font-bold mb-2">Chỉ từ</p>
+                                <p class="text-5xl font-black text-yellow-400">18.990.000đ</p>
+                                <p class="text-sm mt-2">Trả góp 0% - Đổi cũ lên đời</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Side - iPhone -->
+                        <div class="flex-1 flex items-center justify-center">
+                            <div class="relative group transform group-hover:scale-110 transition-transform">
+                                <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=280&h=450&fit=crop" alt="iPhone 15 Pro Max" class="w-64 h-96 rounded-[3.5rem] shadow-2xl object-cover">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Slide 5 - Pink/Magenta Gradient (Special Offer) -->
-                <div class="min-w-full h-full relative bg-gradient-to-r from-pink-600 via-rose-500 to-red-500">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="max-w-7xl mx-auto px-8 w-full flex items-center justify-between">
-                            <div class="text-white max-w-2xl">
-                                <div class="bg-white text-pink-600 px-3 py-1 rounded-full inline-block text-xs font-bold mb-3 animate-bounce">💝 QUÀ TẶNG</div>
-                                <h1 class="text-3xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">MUA 1<br/>TẶNG 1</h1>
-                                <p class="text-lg md:text-xl mb-6">Phụ kiện gaming cao cấp</p>
-                                <div class="flex gap-3">
-                                    <a href="pages/promotions.html" class="bg-white text-pink-600 px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition text-sm md:text-base">Nhận ưu đãi</a>
-                                </div>
+                <!-- Slide 5 - Laptop Deal -->
+                <div class="min-w-full h-full relative bg-gradient-to-br from-green-600 via-teal-500 to-cyan-500">
+                    <div class="absolute inset-0 flex items-center justify-between px-8">
+                        <!-- Left Side - Laptop -->
+                        <div class="flex-1 flex items-center justify-center">
+                            <div class="relative group transform group-hover:scale-105 transition-transform">
+                                <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=480&h=320&fit=crop" alt="MacBook Pro M3" class="rounded-2xl shadow-2xl object-cover">
                             </div>
-                            <div class="hidden lg:block">
-                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=400&fit=crop" alt="Gaming Accessories" class="rounded-lg shadow-2xl transform hover:scale-105 transition duration-300">
+                        </div>
+                        
+                        <!-- Right Side -->
+                        <div class="flex-1 text-white">
+                            <div class="bg-yellow-400 text-green-900 px-4 py-2 rounded-full inline-block text-sm font-bold mb-4">
+                                ⚡ DEAL HOT
+                            </div>
+                            <h1 class="text-6xl font-black mb-4 drop-shadow-2xl">MACBOOK</h1>
+                            <h2 class="text-5xl font-black mb-4">SỨC MẠNH</h2>
+                            <h2 class="text-5xl font-black text-yellow-400 mb-6">ĐỈNH CAO</h2>
+                            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 mb-4">
+                                <p class="text-xl font-bold mb-2">Giá từ</p>
+                                <p class="text-5xl font-black text-yellow-400">42.990.000đ</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <div class="bg-white/30 rounded-lg px-4 py-2">
+                                    <p class="text-sm font-semibold">✓ Trả góp 0%</p>
+                                </div>
+                                <div class="bg-white/30 rounded-lg px-4 py-2">
+                                    <p class="text-sm font-semibold">✓ Thu cũ đổi mới</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -446,6 +643,78 @@
         </div>
     </section>
 
+    <!-- Promotional Banners Grid -->
+    <section class="py-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Banner 1 - OPPO Style -->
+                <a href="pages/products.html?brand=oppo" class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                    <div class="bg-gradient-to-br from-pink-100 to-purple-100 p-6 h-48 flex flex-col justify-between">
+                        <div>
+                            <div class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">
+                                OPPO AI Phone
+                            </div>
+                            <h3 class="text-2xl font-black text-gray-900 mb-1">Find X9 Series</h3>
+                            <p class="text-lg font-bold text-pink-600 mb-1">Bộ quà tặng <span class="text-2xl">10 Triệu</span></p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-700">Tặng gói Premium Service+</p>
+                                <p class="text-sm font-semibold text-pink-600">Trợ giá thu cũ đến 4 Triệu</p>
+                            </div>
+                            <svg class="w-8 h-8 text-pink-600 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Banner 2 - Điện máy FPT Style -->
+                <a href="pages/products.html?category=appliances" class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                    <div class="bg-gradient-to-br from-red-500 to-orange-500 p-6 h-48 flex flex-col justify-between text-white">
+                        <div>
+                            <div class="inline-block bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full mb-2">
+                                Điện Máy
+                            </div>
+                            <h3 class="text-xl font-black mb-1">TRỌN BỘ TỦ LẠNH</h3>
+                            <p class="text-lg font-bold mb-1">GIÁ CHỈ TỪ</p>
+                            <p class="text-3xl font-black">8.99 TRIỆU</p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm font-semibold">Bảo hành trọn đời 1 đổi 1</p>
+                            <svg class="w-8 h-8 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Banner 3 - 11.11 Sale -->
+                <a href="pages/promotions.html?event=1111" class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                    <div class="bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500 p-6 h-48 flex flex-col justify-between text-white">
+                        <div>
+                            <div class="inline-block bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full mb-2 animate-pulse">
+                                🏁 SIÊU SALE
+                            </div>
+                            <h3 class="text-4xl font-black mb-1 drop-shadow-lg">11.11</h3>
+                            <p class="text-xl font-black mb-1">TRỞ GIÁ CỰC ĐÃ</p>
+                            <p class="text-lg font-bold">CHẠY KPI BỨT PHÁ</p>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-semibold">Săn giá rẻ hơn</p>
+                                <p class="text-xs font-semibold">10H-13H | 16H-21H</p>
+                            </div>
+                            <svg class="w-8 h-8 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Flash Sale Section -->
     <section class="py-8 md:py-12 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300">
         <div class="max-w-7xl mx-auto px-4">
@@ -459,13 +728,13 @@
                     </div>
                     <div>
                         <h2 class="text-2xl md:text-4xl font-black text-red-600">FLASH SALE</h2>
-                        <p class="text-red-500 font-semibold">Giảm giá sốc mỗi ngày</p>
+                        <p class="text-xl md:text-1xl text-white-900 font-semibold">Giảm giá sốc mỗi ngày</p>
                     </div>
                 </div>
                 
                 <!-- Countdown Timer -->
-                <div class="flex items-center gap-2">
-                    <span class="text-black font-semibold text-sm md:text-lg">Kết thúc trong:</span>
+                <div class="flex items-center gap-3">
+                    <span class="text-blue font-semibold text-sm md:text-lg">Kết thúc trong:</span>
                     <div class="flex gap-3">
                         <div class="bg-white rounded-lg px-3 py-2 text-center min-w-[50px]">
                             <div id="hours" class="text-xl md:text-2xl font-black text-red-600">00</div>
