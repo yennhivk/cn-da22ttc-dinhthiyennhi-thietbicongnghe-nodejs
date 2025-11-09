@@ -64,7 +64,7 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden lg:flex items-center gap-6 ml-auto text-white">
+                <div class="hidden lg:flex items-center gap-6 ml-auto text-black-500">
                     <a href="index.html" class="text-lg font-bold hover:text-red-600 transition">Trang chủ</a>
                     <a href="pages/products.html" class="text-lg font-bold hover:text-red-600 transition">Sản phẩm</a>
                     <a href="pages/news.html" class="text-lg font-bold hover:text-red-600 transition">Tin tức</a>
@@ -76,7 +76,7 @@
                 <!-- Right items -->
                 <div class="flex items-center gap-2 sm:gap-3 lg:gap-4">
                     <!-- Cart Icon -->
-                    <a href="pages/cart.html" class="relative text-white hover:text-red-600 transition transform hover:scale-110 flex-shrink-0" title="Giỏ hàng">
+                    <a href="pages/cart.html" class="relative text-black-500 hover:text-red-600 transition transform hover:scale-110 flex-shrink-0" title="Giỏ hàng">
                         <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
@@ -84,7 +84,7 @@
                     </a>
 
                     <!-- User Account -->
-                    <a href="pages/login.html" class="hidden lg:flex items-center gap-2 text-white hover:text-red-600 transition">
+                    <a href="pages/login.html" class="hidden lg:flex items-center gap-2 text-black-500 hover:text-red-600 transition">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="text-lg font-semibold">Đăng nhập</span>
                     </a>
@@ -289,16 +289,17 @@
                 </div>
 
                 <!-- Other Navigation Items -->
-                <a href="#" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-yellow-500 hover:text-red-600 transition">
+                <a href="#" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
+                    <span class="lightning-blink text-yellow-400">⚡</span>
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                     Laptop
                 </a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">PC Gaming</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Màn hình</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">CPU, VGA</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Case, Nguồn</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Chuột, Bàn phím</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Tai nghe</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> PC Gaming</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Màn hình</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> CPU, VGA</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Case, Nguồn</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Chuột, Bàn phím</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Tai nghe</a>
             </div>
         </div>
     </div>
@@ -726,37 +727,42 @@
     </section>
 
     <!-- Flash Sale Section -->
-    <section class="py-8 md:py-12 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300">
-        <div class="max-w-7xl mx-auto px-4">
+    <section class="py-8 md:py-12 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-20">
+            
+
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
             <!-- Header -->
             <div class="flex flex-col md:flex-row items-center justify-between mb-6">
                 <div class="flex items-center gap-3 mb-4 md:mb-0">
-                    <div class="bg-blue-500 p-2 rounded-lg animate-pulse shadow-lg">
-                        <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/>
-                        </svg>
-                    </div>
+                    <div class="text-6xl md:text-7xl animate-pulse">🎁</div>
                     <div>
-                        <h2 class="text-2xl md:text-4xl font-black text-red-600">FLASH SALE</h2>
-                        <p class="text-xl md:text-1xl text-white-900 font-semibold">Giảm giá sốc mỗi ngày</p>
+                        <h2 class="text-3xl md:text-5xl font-black text-white" style="text-shadow: 3px 3px 0px rgba(220,38,38,0.8), -1px -1px 0px #dc2626, 2px 2px 10px rgba(220,38,38,0.5);">
+                            GIỜ VÀNG - GIÁ CỰC SỐC 🔥
+                        </h2>
+                        <p class="text-xl md:text-2xl text-red-600 font-bold mt-1">19H-21H</p>
                     </div>
                 </div>
                 
                 <!-- Countdown Timer -->
-                <div class="flex items-center gap-3">
-                    <span class="text-blue font-semibold text-sm md:text-lg">Kết thúc trong:</span>
-                    <div class="flex gap-3">
-                        <div class="bg-white rounded-lg px-3 py-2 text-center min-w-[50px]">
-                            <div id="hours" class="text-xl md:text-2xl font-black text-red-600">00</div>
-                            <div class="text-xs text-gray-600 font-semibold">Giờ</div>
-                        </div>
-                        <div class="bg-white rounded-lg px-3 py-2 text-center min-w-[50px]">
-                            <div id="minutes" class="text-xl md:text-2xl font-black text-red-600">00</div>
-                            <div class="text-xs text-gray-600 font-semibold">Phút</div>
-                        </div>
-                        <div class="bg-white rounded-lg px-3 py-2 text-center min-w-[50px]">
-                            <div id="seconds" class="text-xl md:text-2xl font-black text-red-600">00</div>
-                            <div class="text-xs text-gray-600 font-semibold">Giây</div>
+                <div class="bg-white/95 rounded-xl px-4 py-3 shadow-2xl">
+                    <div class="flex items-center gap-3">
+                        <span class="text-gray-700 font-bold text-sm md:text-base">Bắt đầu sau:</span>
+                        <div class="flex gap-2">
+                            <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg px-3 py-2 text-center min-w-[45px] shadow-lg">
+                                <div id="hours" class="text-xl md:text-2xl font-black text-white">00</div>
+                            </div>
+                            <span class="text-2xl font-black text-red-600">:</span>
+                            <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg px-3 py-2 text-center min-w-[45px] shadow-lg">
+                                <div id="minutes" class="text-xl md:text-2xl font-black text-white">00</div>
+                            </div>
+                            <span class="text-2xl font-black text-red-600">:</span>
+                            <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg px-3 py-2 text-center min-w-[45px] shadow-lg">
+                                <div id="seconds" class="text-xl md:text-2xl font-black text-white">00</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -769,9 +775,111 @@
 
             <!-- View All Button -->
             <div class="text-center mt-6">
-                <a href="pages/promotions.html" class="inline-block bg-green-400 hover:bg-yellow-500 text-red-500 font-bold px-8 py-3 rounded-lg transition shadow-lg">
+                <a href="pages/promotions.html" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-black px-8 py-3 rounded-lg transition shadow-2xl text-lg border-2 border-white-500">
                     Xem tất cả Flash Sale →
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Góc Review Dành Cho Bạn Section -->
+    <section class="py-8 md:py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Header -->
+            <h2 class="text-3xl md:text-4xl font-black text-gray-800 mb-8">Góc review dành cho bạn</h2>
+            
+            <!-- Review Videos Grid -->
+            <div class="grid grid-cols-4 gap-4">
+                <!-- Video Card 1 - Honor Magic V5 -->
+                <div class="group cursor-pointer bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    <div class="relative overflow-hidden bg-gray-100 h-72 md:h-96">
+                        <video class="review-video w-full h-full object-cover" muted loop playsinline>
+                            <!-- Honor Magic V5 review video -->
+                            <source src="videos/honor-magic-v5-review.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <!-- Product Info -->
+                    <div class="p-4 bg-white">
+                        <div class="flex items-start gap-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-500 line-through mb-1">44.990.000đ</p>
+                                <p class="text-xl md:text-2xl font-black text-gray-800">42.990.000đ</p>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">Honor Magic V5 5G 16GB 512GB</h3>
+                    </div>
+                </div>
+
+                <!-- Video Card 2 - iPhone 17 Pro Max -->
+                <div class="group cursor-pointer bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    <div class="relative overflow-hidden h-72 md:h-96" style="background: linear-gradient(135deg, #ff9a56 0%, #ff6a4d 100%);">
+                        <video class="review-video w-full h-full object-cover" muted loop playsinline>
+                            <!-- iPhone 17 Pro Max review video -->
+                            <source src="videos/iphone-17-pro-max-review.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <!-- Product Info -->
+                    <div class="p-4 bg-white">
+                        <div class="flex items-start gap-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
+                            <div class="flex-1">
+                                <p class="text-xl md:text-2xl font-black text-gray-800">37.990.000đ</p>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">iPhone 17 Pro Max 256GB</h3>
+                    </div>
+                </div>
+
+                <!-- Video Card 3 - Huawei Watch GT 6 -->
+                <div class="group cursor-pointer bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    <div class="relative overflow-hidden h-72 md:h-96" style="background: linear-gradient(135deg, #e69fd4 0%, #d87eb8 100%);">
+                        <video class="review-video w-full h-full object-cover" muted loop playsinline>
+                            <!-- Huawei Watch GT 6 review video -->
+                            <source src="videos/huawei-watch-gt6-review.mp4" type="video/mp4">
+                        </video>
+                        <!-- Badge - 3 MÀU SẮC -->
+                        <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                            ⚡ 3 MÀU SẮC
+                        </div>
+                    </div>
+                    <!-- Product Info -->
+                    <div class="p-4 bg-white">
+                        <div class="flex items-start gap-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-500 line-through mb-1">5.490.000đ <span class="text-red-600 font-bold">-9%</span></p>
+                                <p class="text-xl md:text-2xl font-black text-gray-800">4.990.000đ</p>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">Huawei Watch GT 6 46mm Silicone</h3>
+                    </div>
+                </div>
+
+                <!-- Video Card 4 - Laptop Colorful Rimbook -->
+                <div class="group cursor-pointer bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    <div class="relative overflow-hidden h-72 md:h-96" style="background: linear-gradient(135deg, #c77dff 0%, #9d4edd 100%);">
+                        <video class="review-video w-full h-full object-cover" muted loop playsinline>
+                            <!-- Laptop Colorful Rimbook review video -->
+                            <source src="videos/laptop-colorful-review.mp4" type="video/mp4">
+                        </video>
+                        <!-- Badge - Bán chạy -->
+                        <div class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                            Bán chạy
+                        </div>
+                    </div>
+                    <!-- Product Info -->
+                    <div class="p-4 bg-white">
+                        <div class="flex items-start gap-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-500 line-through mb-1">11.290.000đ <span class="text-red-600 font-bold">-29%</span></p>
+                                <p class="text-xl md:text-2xl font-black text-gray-800">7.990.000đ</p>
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">Laptop Colorful Rimbook L1 i3-...</h3>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1276,38 +1384,109 @@
 
         // Flash Sale Products
         const flashSaleProducts = [
-            { id: 1, name: 'iPhone 15 Pro Max', price: 34990000, oldPrice: 39990000, discount: 13, image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=400&h=400&fit=crop', stock: 15 },
-            { id: 2, name: 'Samsung S24 Ultra', price: 25990000, oldPrice: 31990000, discount: 19, image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=400&fit=crop', stock: 8 },
-            { id: 3, name: 'MacBook Pro M3', price: 54990000, oldPrice: 64990000, discount: 15, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop', stock: 5 },
-            { id: 4, name: 'iPad Pro 2024', price: 28990000, oldPrice: 34990000, discount: 17, image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop', stock: 12 },
-            { id: 5, name: 'AirPods Pro 2', price: 6990000, oldPrice: 8990000, discount: 22, image: 'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=400&h=400&fit=crop', stock: 20 }
+            { 
+                id: 1, 
+                name: 'Ví da ESR Magnetic kiêm giá đỡ HaloLock', 
+                price: 359000, 
+                oldPrice: 599000, 
+                discount: 40, 
+                image: 'https://images.unsplash.com/photo-1627123424574-724f6fae3702?w=400&h=400&fit=crop', 
+                stock: 10,
+                totalStock: 10,
+                features: ['⚡ Công nghệ MagSafe', '🛡️ Da cao cấp', '⭐ Gọn nhẹ và tiện lợi']
+            },
+            { 
+                id: 2, 
+                name: 'Robot hút bụi lau nhà Ecovacs N30 Pro Omni', 
+                price: 8990000, 
+                oldPrice: 13990000, 
+                discount: 36, 
+                image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop', 
+                stock: 5,
+                totalStock: 5,
+                features: ['⚡ Lực hút 10000 Pa', '🔋 Thời gian hoạt động 320\'', '💧 Giặt khăn bằng nước nóng 60°C']
+            },
+            { 
+                id: 3, 
+                name: 'Garmin Instinct 2S', 
+                price: 4939000, 
+                oldPrice: 7559000, 
+                discount: 35, 
+                image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', 
+                stock: 5,
+                totalStock: 5,
+                features: ['🔋 21 ngày', '📍 Định vị GPS', '💧 Kháng nước 10 ATM']
+            },
+            { 
+                id: 4, 
+                name: 'HP Pavilion 15-eg3111TU i5-1335U (8U6L8PA)', 
+                price: 14990000, 
+                oldPrice: 20890000, 
+                discount: 28, 
+                image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop', 
+                stock: 10,
+                totalStock: 10,
+                features: ['💻 Vỏ nhôm cao cấp', '🎵 Âm thanh B&O Play', '📺 Viền mỏng hiệu mỏng']
+            },
+            { 
+                id: 5, 
+                name: 'HP 15-fd0083TU i7-1355U (8D736PA)', 
+                price: 16990000, 
+                oldPrice: 22090000, 
+                discount: 23, 
+                image: 'https://images.unsplash.com/photo-1461773518188-b3e86f98242f?w=400&h=400&fit=crop', 
+                stock: 10,
+                totalStock: 10,
+                features: ['📷 Nút gạt tắt camera', '🔇 Lọc tạp âm AI', '📱 Viền màn hình siêu mỏng']
+            }
         ];
 
         function loadFlashSaleProducts() {
             const container = document.getElementById('flashSaleProducts');
             container.innerHTML = flashSaleProducts.map(product => `
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group">
-                    <div class="relative">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-40 md:h-48 object-cover group-hover:scale-110 transition duration-300">
-                        <div class="absolute top-2 left-2 bg-red-600 text-white px-3 py-1.5 rounded-md text-sm font-bold">
-                            -${product.discount}%
-                        </div>
-                        <div class="absolute top-2 right-2 bg-yellow-400 text-red-600 px-3 py-1.5 rounded-md text-sm font-bold">
-                            🔥 HOT
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition group border border-gray-100">
+                    <!-- Product Image -->
+                    <div class="relative bg-gray-50 p-4">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-contain group-hover:scale-105 transition duration-300">
+                        <!-- Stock Badge -->
+                        <div class="absolute top-3 left-3">
+                            <div class="bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-2 rounded-md text-sm md:text-base font-bold shadow-lg flex items-center gap-1">
+                                <span>🔥</span>
+                                <span>Còn ${product.stock}/${product.totalStock} suất</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-3">
-                        <h3 class="font-bold text-base md:text-lg text-gray-800 mb-2 line-clamp-2 h-12">${product.name}</h3>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xl md:text-2xl font-black text-red-600">${product.price.toLocaleString('vi-VN')}đ</span>
+                    
+                    <!-- Product Info -->
+                    <div class="p-4">
+                        <!-- Features Icons -->
+                        <div class="mb-3 space-y-1.5">
+                            ${product.features.map(feature => `
+                                <div class="flex items-center gap-2 text-sm md:text-base text-gray-600">
+                                    <span>${feature}</span>
+                                </div>
+                            `).join('')}
                         </div>
-                        <div class="text-sm text-gray-500 line-through mb-2">${product.oldPrice.toLocaleString('vi-VN')}đ</div>
-                        <div class="bg-gray-200 rounded-full h-2 mb-2">
-                            <div class="bg-gradient-to-r from-yellow-400 to-red-500 h-2 rounded-full" style="width: ${(product.stock / 20) * 100}%"></div>
+                        
+                        <!-- Price Section -->
+                        <div class="bg-gradient-to-r from-red-600 to-yellow-400 rounded-lg p-3 mb-3 relative overflow-hidden">
+                            <div class="flex items-end justify-between relative z-10">
+                                <div>
+                                    <div class="text-2xl md:text-3xl font-black text-white">${product.price.toLocaleString('vi-VN')}đ</div>
+                                    <div class="text-sm md:text-base text-white/80 line-through">${product.oldPrice.toLocaleString('vi-VN')}đ</div>
+                                </div>
+                                <div class="bg-yellow-300 text-red-600 px-2 py-1 rounded text-base md:text-lg font-black">
+                                    -${product.discount}%
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-sm text-gray-600 mb-2">Còn ${product.stock} sản phẩm</p>
-                        <button onclick="addToCart(${product.id})" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 md:py-3 rounded-lg transition text-base md:text-lg">
-                            Mua ngay
+                        
+                        <!-- Product Name -->
+                        <h3 class="font-semibold text-base md:text-lg text-gray-800 mb-3 line-clamp-2 h-12">${product.name}</h3>
+                        
+                        <!-- Buy Button -->
+                        <button onclick="addToCart(${product.id})" class="w-full bg-white border-2 border-red-500 hover:bg-red-50 text-red-600 font-bold py-2.5 rounded-lg transition text-base md:text-lg">
+                            Sắp diễn ra
                         </button>
                     </div>
                 </div>
@@ -1590,8 +1769,35 @@
                 }
             });
         }
+
+        // Auto-play videos when scrolling into view
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    // Play video when in view
+                    video.play().catch(err => console.log('Auto-play prevented:', err));
+                } else {
+                    // Pause video when out of view
+                    video.pause();
+                }
+            });
+        }, {
+            threshold: 0.5 // Video plays when 50% is visible
+        });
+
+        // Observe all review videos
+        document.querySelectorAll('.review-video').forEach(video => {
+            videoObserver.observe(video);
+        });
     </script>
 </body>
 </html>
+
+
+
+
+
+
 
 

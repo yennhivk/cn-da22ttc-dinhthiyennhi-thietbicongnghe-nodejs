@@ -139,6 +139,24 @@ html {
     animation: blink 1.5s ease-in-out infinite;
 }
 
+/* Lightning Blink Animation */
+@keyframes lightningBlink {
+    0%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.8),
+                     0 0 20px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+        opacity: 0.6;
+        text-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
+    }
+}
+
+.lightning-blink {
+    display: inline-block;
+    animation: lightningBlink 2.5s ease-in-out infinite;
+}
+
 /* Alternative glow effect */
 @keyframes glow {
     0%, 100% {
