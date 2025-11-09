@@ -124,7 +124,7 @@
                             <div class="col-span-3 bg-gray-50 rounded-l-lg border-r border-gray-200">
                                 <div class="py-4">
                                     <!-- Điện thoại -->
-                                    <a href="pages/products.html?category=phone" class="group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600">
+                                    <a href="#" onclick="event.preventDefault(); showCategoryProducts('phone')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="phone">
                                         <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                         </svg>
@@ -135,7 +135,7 @@
                                     </a>
 
                                     <!-- Laptop -->
-                                    <a href="pages/products.html?category=laptop" class="group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600">
+                                    <a href="#" onclick="event.preventDefault(); showCategoryProducts('laptop')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="laptop">
                                         <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                         </svg>
@@ -146,7 +146,7 @@
                                     </a>
 
                                     <!-- Điện máy -->
-                                    <a href="pages/products.html?category=appliances" class="group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600">
+                                    <a href="#" onclick="event.preventDefault(); showCategoryProducts('appliances')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="appliances">
                                         <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                         </svg>
@@ -157,7 +157,7 @@
                                     </a>
 
                                     <!-- Phụ kiện -->
-                                    <a href="pages/products.html?category=accessories" class="group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600">
+                                    <a href="#" onclick="event.preventDefault(); showCategoryProducts('accessories')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="accessories">
                                         <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
                                         </svg>
@@ -175,15 +175,15 @@
                                         <p class="text-sm font-bold text-gray-500 uppercase mb-2">Thương hiệu</p>
                                     </div>
                                     
-                                    <a href="#" class="group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors">
+                                    <a href="#" onclick="event.preventDefault(); showCategoryProducts('apple')" class="category-menu-item group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors" data-category="apple">
                                         <span class="text-xl">🍎</span>
                                         <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Apple</span>
                                     </a>
-                                    <a href="#" class="group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors">
+                                    <a href="#" onclick="event.preventDefault(); showCategoryProducts('samsung')" class="category-menu-item group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors" data-category="samsung">
                                         <span class="text-blue-600 font-bold text-sm">S</span>
                                         <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Samsung</span>
                                     </a>
-                                    <a href="#" class="group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors">
+                                    <a href="#" onclick="event.preventDefault(); showCategoryProducts('xiaomi')" class="category-menu-item group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors" data-category="xiaomi">
                                         <span class="text-orange-500 font-bold text-sm">mi</span>
                                         <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Xiaomi</span>
                                     </a>
@@ -191,12 +191,14 @@
                             </div>
 
                             <!-- Right Content - Gợi ý -->
-                            <div class="col-span-9 p-6">
-                                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <div class="col-span-9 p-6 flex flex-col h-[500px]">
+                                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 flex-shrink-0">
                                     <span class="text-xl">🔥</span>
-                                    Gợi ý cho bạn
+                                    <span id="categoryTitle">Gợi ý cho bạn</span>
                                 </h3>
 
+                                <!-- Category Content Container with Scroll -->
+                                <div id="categoryContent" class="overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-gray-200">
                                 <!-- Category Icons Grid -->
                                 <div class="grid grid-cols-5 gap-3 mb-6">
                                     <!-- Điện thoại 5G -->
@@ -280,22 +282,23 @@
                                         </a>
                                     </div>
                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Other Navigation Items -->
-                <a href="#" class="flex items-center gap-1 text-base font-bold text-yellow-500 hover:text-red-600 transition">
+                <a href="#" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-yellow-500 hover:text-red-600 transition">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                     Laptop
                 </a>
-                <a href="#" class=" text-base font-bold text-yellow-500 hover:text-red-600 transition">PC Gaming</a>
-                <a href="#" class=" text-base font-bold text-yellow-500 hover:text-red-600 transition">Màn hình</a>
-                <a href="#" class=" text-base font-bold text-yellow-500 hover:text-red-600 transition">CPU, VGA</a>
-                <a href="#" class=" text-base font-bold text-yellow-500 hover:text-red-600 transition">Case, Nguồn</a>
-                <a href="#" class=" text-base font-bold text-yellow-500 hover:text-red-600 transition">Chuột, Bàn phím</a>
-                <a href="#" class=" text-base font-bold text-yellow-500 hover:text-red-600 transition">Tai nghe</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">PC Gaming</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Màn hình</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">CPU, VGA</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Case, Nguồn</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Chuột, Bàn phím</a>
+                <a href="#" class="nav-menu-blink text-base font-bold text-yellow-500 hover:text-red-600 transition">Tai nghe</a>
             </div>
         </div>
     </div>
@@ -383,12 +386,12 @@
         <div class="relative h-64 sm:h-80 md:h-96 lg:h-[450px] overflow-hidden">
             <div id="carousel" class="flex transition-transform duration-500 ease-out h-full">
                 <!-- Slide 1 - 11.11 Sale (Left: Products, Right: 11.11 Text) -->
-                <div class="min-w-full h-full relative bg-gradient-to-r from-red-800 via-red-700 to-red-600 overflow-hidden">
+                <div class="min-w-full h-full relative overflow-hidden" style="background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(249, 250, 251, 0.30)), url('https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=1920&h=600&fit=crop') center/cover;">
                     <div class="absolute inset-0 flex items-center justify-between px-8">
                         <!-- Left Side - Products with Model -->
                         <div class="flex items-center gap-6 flex-1">
                             <!-- Badge 50% off -->
-                            <div class="bg-yellow-400 text-red-900 px-6 py-3 rounded-xl transform -rotate-12 shadow-2xl">
+                            <div class="bg-red-600 text-white px-6 py-3 rounded-xl transform -rotate-12 shadow-2xl">
                                 <p class="text-sm font-bold">GIẢM NGAY</p>
                                 <p class="text-4xl font-black">50%++</p>
                             </div>
@@ -396,37 +399,37 @@
                             <!-- Products Display -->
                             <div class="relative">
                                 <!-- Background circle -->
-                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-3xl"></div>
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-400/20 to-orange-500/20 rounded-full blur-3xl"></div>
                                 
                                 <!-- Products stack -->
                                 <div class="relative flex items-center gap-4">
                                     <!-- Laptop -->
                                     <div class="transform hover:scale-110 transition-transform">
-                                        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=150&fit=crop" alt="MacBook" class="w-32 h-24 rounded-lg shadow-2xl object-cover">
+                                        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=150&fit=crop" alt="MacBook" class="w-32 h-24 rounded-lg shadow-2xl object-cover border-2 border-gray-200">
                                     </div>
                                     
                                     <!-- Phone -->
                                     <div class="transform hover:scale-110 transition-transform -ml-4">
-                                        <img src="https://images.unsplash.com/photo-1592286927505-2fd7c3ba8d08?w=100&h=180&fit=crop" alt="iPhone" class="w-20 h-36 rounded-2xl shadow-2xl object-cover border-4 border-gray-700">
+                                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=100&h=180&fit=crop" alt="iPhone" class="w-20 h-36 rounded-2xl shadow-2xl object-cover border-4 border-white ring-2 ring-gray-300">
                                     </div>
                                     
                                     <!-- Watch -->
                                     <div class="transform hover:scale-110 transition-transform">
-                                        <img src="https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=100&h=100&fit=crop" alt="Apple Watch" class="w-16 h-16 rounded-full shadow-2xl object-cover">
+                                        <img src="https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=100&h=100&fit=crop" alt="Apple Watch" class="w-16 h-16 rounded-full shadow-2xl object-cover border-2 border-gray-200">
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Model Section -->
                             <div class="relative">
-                                <div class="w-48 h-64 bg-gradient-to-br from-white/10 to-white/5 rounded-2xl overflow-hidden backdrop-blur-sm">
-                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=280&fit=crop&crop=faces" alt="Customer Service" class="w-full h-full object-cover opacity-80">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
+                                <div class="w-48 h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden backdrop-blur-sm border-2 border-gray-300">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=280&fit=crop&crop=faces" alt="Customer Service" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-red-600/90 to-transparent flex items-end p-4">
                                         <div class="text-center w-full">
                                             <p class="text-white font-bold text-sm">Trợ giá đến</p>
-                                            <p class="text-yellow-400 font-black text-3xl">2.5</p>
+                                            <p class="text-yellow-300 font-black text-3xl">2.5</p>
                                             <p class="text-white font-bold text-lg">TRIỆU</p>
-                                            <p class="text-white/80 text-xs mt-1">Mua Máy Kèm SIM FPT</p>
+                                            <p class="text-white/90 text-xs mt-1">Mua Máy Kèm SIM FPT</p>
                                         </div>
                                     </div>
                                 </div>
@@ -438,16 +441,16 @@
                             <div class="inline-block">
                                 <div class="flex items-center gap-2 mb-4">
                                     <span class="text-6xl">🏁</span>
-                                    <div class="text-white">
-                                        <h1 class="text-7xl font-black leading-none drop-shadow-2xl" style="text-shadow: 4px 4px 0px rgba(0,0,0,0.3), -2px -2px 0px rgba(255,255,255,0.1);">11.11</h1>
+                                    <div class="text-red-600">
+                                        <h1 class="text-7xl font-black leading-none drop-shadow-lg" style="text-shadow: 3px 3px 0px rgba(220, 38, 38, 0.2), -1px -1px 0px rgba(0,0,0,0.05);">11.11</h1>
                                     </div>
                                 </div>
-                                <h2 class="text-5xl font-black text-white mb-2 drop-shadow-lg">TRỞ GIÁ</h2>
-                                <h2 class="text-5xl font-black text-yellow-400 mb-4 drop-shadow-lg">CỰC ĐÃ</h2>
-                                <p class="text-3xl font-black text-white mb-2">CHẠY KPI BỨT PHÁ</p>
-                                <div class="bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3 inline-block">
+                                <h2 class="text-5xl font-black text-gray-900 mb-2 drop-shadow-md">TRỞ GIÁ</h2>
+                                <h2 class="text-5xl font-black text-red-600 mb-4 drop-shadow-md">CỰC ĐÃ</h2>
+                                <p class="text-3xl font-black text-gray-800 mb-2">CHẠY KPI BỨT PHÁ</p>
+                                <div class="bg-red-600 rounded-lg px-6 py-3 inline-block shadow-xl">
                                     <p class="text-white font-bold text-xl">SĂN GIÁ RẺ HƠN</p>
-                                    <p class="text-yellow-400 font-black text-2xl">10H-13H | 16H-21H</p>
+                                    <p class="text-yellow-300 font-black text-2xl">10H-13H | 16H-21H</p>
                                 </div>
                             </div>
                         </div>
@@ -455,7 +458,7 @@
                 </div>
 
                 <!-- Slide 2 - Galaxy A56 "Awesome Ngay 9đ" -->
-                <div class="min-w-full h-full relative bg-gradient-to-br from-blue-100 via-white to-blue-50">
+                <div class="min-w-full h-full relative overflow-hidden" style="background: linear-gradient(rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.2)), url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1920&h=600&fit=crop') center/cover;">
                     <div class="absolute inset-0 flex items-center justify-between px-8">
                         <!-- Left Side - Text Content -->
                         <div class="flex-1">
@@ -507,53 +510,57 @@
                 </div>
 
                 <!-- Slide 3 - Gaming "x2 SỨC MẠNH" -->
-                <div class="min-w-full h-full relative bg-gradient-to-br from-purple-900 via-blue-900 to-black">
+                <div class="min-w-full h-full relative overflow-hidden" style="background: linear-gradient(rgba(255, 255, 255, 0.93), rgba(243, 244, 246, 0.95)), url('https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=1920&h=600&fit=crop') center/cover;">
                     <div class="absolute inset-0 flex items-center justify-between px-8">
                         <!-- Left Side - Gaming Graphics -->
                         <div class="flex-1 flex items-center justify-center">
                             <div class="relative">
                                 <!-- Gaming Laptop -->
                                 <div class="transform hover:scale-105 transition-transform">
-                                    <img src="https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=500&h=350&fit=crop" alt="Gaming Laptop" class="rounded-xl shadow-2xl object-cover">
+                                    <img src="https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=500&h=350&fit=crop" alt="Gaming Laptop" class="rounded-xl shadow-2xl object-cover border-4 border-red-600 ring-2 ring-orange-400">
                                 </div>
                                 <!-- Gaming Mouse -->
                                 <div class="absolute -bottom-4 -right-8 transform hover:scale-105 transition-transform">
-                                    <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=150&h=150&fit=crop" alt="Gaming Mouse" class="w-24 h-24 rounded-lg shadow-xl object-cover">
+                                    <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=150&h=150&fit=crop" alt="Gaming Mouse" class="w-24 h-24 rounded-lg shadow-xl object-cover border-2 border-orange-500">
+                                </div>
+                                <!-- Gaming Headset -->
+                                <div class="absolute -top-4 -left-8 transform hover:scale-105 transition-transform">
+                                    <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=120&h=120&fit=crop" alt="Gaming Headset" class="w-20 h-20 rounded-lg shadow-xl object-cover border-2 border-blue-500">
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Right Side - Content -->
-                        <div class="flex-1 text-white">
+                        <div class="flex-1 text-gray-900">
                             <div class="relative">
                                 <!-- Badge -->
-                                <div class="absolute -top-4 -left-4 bg-red-600 text-white px-4 py-2 rounded-full transform -rotate-12 shadow-xl">
+                                <div class="absolute -top-4 -left-4 bg-gradient-to-r from-red-600 to-orange-600 text-white px-4 py-2 rounded-full transform -rotate-12 shadow-xl">
                                     <p class="text-xs font-bold">TRẢ GÓP</p>
                                     <p class="text-2xl font-black">0%</p>
                                 </div>
                                 
                                 <!-- Main Text -->
                                 <div class="mb-6">
-                                    <h1 class="text-7xl font-black mb-2" style="background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">x2 SỨC</h1>
-                                    <h1 class="text-7xl font-black mb-4" style="background: linear-gradient(45deg, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">MẠNH</h1>
-                                    <p class="text-3xl font-bold text-pink-400">GAMING ĐỈNH - AI CHẤT</p>
+                                    <h1 class="text-7xl font-black mb-2 bg-gradient-to-r from-red-600 via-orange-600 to-blue-600 bg-clip-text text-transparent drop-shadow-lg">x2 SỨC</h1>
+                                    <h1 class="text-7xl font-black mb-4 bg-gradient-to-r from-red-600 via-orange-600 to-blue-600 bg-clip-text text-transparent drop-shadow-lg">MẠNH</h1>
+                                    <p class="text-3xl font-bold text-red-600">GAMING ĐỈNH - AI CHẤT</p>
                                 </div>
                                 
                                 <!-- Features -->
                                 <div class="space-y-3 mb-6">
-                                    <div class="bg-gradient-to-r from-purple-600/50 to-pink-600/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-pink-500">
+                                    <div class="bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-lg px-4 py-2 shadow-xl border-2 border-red-700">
                                         <p class="text-lg font-bold">HSSV giảm thêm 5%</p>
-                                        <p class="text-2xl font-black text-yellow-400">đến 5 TRIỆU</p>
+                                        <p class="text-2xl font-black text-yellow-300">đến 5 TRIỆU</p>
                                     </div>
-                                    <div class="bg-gradient-to-r from-blue-600/50 to-purple-600/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-blue-500">
+                                    <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg px-4 py-2 shadow-xl border-2 border-blue-700">
                                         <p class="text-lg font-bold">Tặng gói Bảo Hành</p>
-                                        <p class="text-2xl font-black text-yellow-400">PMH 300K mua Bảo hành 1 ĐỔI 1</p>
+                                        <p class="text-xl font-black text-yellow-300">PMH 300K mua Bảo hành 1 ĐỔI 1</p>
                                     </div>
                                 </div>
                                 
                                 <!-- Laptop Image -->
                                 <div class="relative">
-                                    <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=130&fit=crop" alt="Gaming Setup" class="w-full h-32 rounded-lg shadow-2xl object-cover">
+                                    <img src="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=130&fit=crop" alt="Gaming Setup" class="w-full h-32 rounded-lg shadow-2xl object-cover border-2 border-gray-300">
                                 </div>
                             </div>
                         </div>
@@ -561,59 +568,59 @@
                 </div>
 
                 <!-- Slide 4 - iPhone Sale -->
-                <div class="min-w-full h-full relative bg-gradient-to-r from-orange-400 via-red-500 to-pink-500">
+                <div class="min-w-full h-full relative overflow-hidden" style="background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(249, 250, 251, 0.50)), url('https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=1920&h=600&fit=crop') center/cover;">
                     <div class="absolute inset-0 flex items-center justify-between px-8">
                         <!-- Left Side -->
-                        <div class="flex-1 text-white">
-                            <div class="bg-yellow-400 text-red-900 px-4 py-2 rounded-full inline-block text-sm font-bold mb-4 animate-pulse">
+                        <div class="flex-1 text-gray-900">
+                            <div class="bg-red-600 text-white px-4 py-2 rounded-full inline-block text-sm font-bold mb-4 shadow-xl">
                                 🔥 SIÊU HOT
                             </div>
-                            <h1 class="text-6xl font-black mb-4 drop-shadow-2xl">IPHONE 15</h1>
-                            <h2 class="text-5xl font-black mb-4">GIẢM SỐC</h2>
-                            <p class="text-4xl font-black text-yellow-400 mb-6">ĐẾN 30%</p>
-                            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 inline-block">
-                                <p class="text-xl font-bold mb-2">Chỉ từ</p>
-                                <p class="text-5xl font-black text-yellow-400">18.990.000đ</p>
-                                <p class="text-sm mt-2">Trả góp 0% - Đổi cũ lên đời</p>
+                            <h1 class="text-6xl font-black mb-4 drop-shadow-lg text-gray-900">IPHONE 15</h1>
+                            <h2 class="text-5xl font-black mb-4 text-red-600">GIẢM SỐC</h2>
+                            <p class="text-4xl font-black text-orange-600 mb-6">ĐẾN 30%</p>
+                            <div class="bg-red-600 rounded-xl p-6 inline-block shadow-2xl">
+                                <p class="text-xl font-bold mb-2 text-white">Chỉ từ</p>
+                                <p class="text-5xl font-black text-yellow-300">18.990.000đ</p>
+                                <p class="text-sm mt-2 text-white">Trả góp 0% - Đổi cũ lên đời</p>
                             </div>
                         </div>
                         
                         <!-- Right Side - iPhone -->
                         <div class="flex-1 flex items-center justify-center">
                             <div class="relative group transform group-hover:scale-110 transition-transform">
-                                <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=280&h=450&fit=crop" alt="iPhone 15 Pro Max" class="w-64 h-96 rounded-[3.5rem] shadow-2xl object-cover">
+                                <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=280&h=450&fit=crop" alt="iPhone 15 Pro Max" class="w-64 h-96 rounded-[3.5rem] shadow-2xl object-cover border-4 border-white ring-4 ring-gray-300">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Slide 5 - Laptop Deal -->
-                <div class="min-w-full h-full relative bg-gradient-to-br from-green-600 via-teal-500 to-cyan-500">
+                <div class="min-w-full h-full relative overflow-hidden" style="background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(249, 250, 251, 0.50)), url('https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1920&h=600&fit=crop') center/cover;">
                     <div class="absolute inset-0 flex items-center justify-between px-8">
                         <!-- Left Side - Laptop -->
                         <div class="flex-1 flex items-center justify-center">
                             <div class="relative group transform group-hover:scale-105 transition-transform">
-                                <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=480&h=320&fit=crop" alt="MacBook Pro M3" class="rounded-2xl shadow-2xl object-cover">
+                                <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=480&h=320&fit=crop" alt="MacBook Pro M3" class="rounded-2xl shadow-2xl object-cover border-4 border-white ring-4 ring-gray-300">
                             </div>
                         </div>
                         
                         <!-- Right Side -->
-                        <div class="flex-1 text-white">
-                            <div class="bg-yellow-400 text-green-900 px-4 py-2 rounded-full inline-block text-sm font-bold mb-4">
+                        <div class="flex-1 text-gray-900">
+                            <div class="bg-blue-600 text-white px-4 py-2 rounded-full inline-block text-sm font-bold mb-4 shadow-xl">
                                 ⚡ DEAL HOT
                             </div>
-                            <h1 class="text-6xl font-black mb-4 drop-shadow-2xl">MACBOOK</h1>
-                            <h2 class="text-5xl font-black mb-4">SỨC MẠNH</h2>
-                            <h2 class="text-5xl font-black text-yellow-400 mb-6">ĐỈNH CAO</h2>
-                            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 mb-4">
-                                <p class="text-xl font-bold mb-2">Giá từ</p>
-                                <p class="text-5xl font-black text-yellow-400">42.990.000đ</p>
+                            <h1 class="text-6xl font-black mb-4 drop-shadow-lg text-gray-900">MACBOOK</h1>
+                            <h2 class="text-5xl font-black mb-4 text-blue-600">SỨC MẠNH</h2>
+                            <h2 class="text-5xl font-black text-cyan-600 mb-6">ĐỈNH CAO</h2>
+                            <div class="bg-blue-600 rounded-xl p-6 mb-4 shadow-2xl">
+                                <p class="text-xl font-bold mb-2 text-white">Giá từ</p>
+                                <p class="text-5xl font-black text-yellow-300">42.990.000đ</p>
                             </div>
                             <div class="flex gap-2">
-                                <div class="bg-white/30 rounded-lg px-4 py-2">
+                                <div class="bg-gray-800 text-white rounded-lg px-4 py-2 shadow-lg">
                                     <p class="text-sm font-semibold">✓ Trả góp 0%</p>
                                 </div>
-                                <div class="bg-white/30 rounded-lg px-4 py-2">
+                                <div class="bg-gray-800 text-white rounded-lg px-4 py-2 shadow-lg">
                                     <p class="text-sm font-semibold">✓ Thu cũ đổi mới</p>
                                 </div>
                             </div>
@@ -649,20 +656,21 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Banner 1 - OPPO Style -->
                 <a href="pages/products.html?brand=oppo" class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                    <div class="bg-gradient-to-br from-pink-100 to-purple-100 p-6 h-48 flex flex-col justify-between">
-                        <div>
+                    <div class="relative p-6 h-48 flex flex-col justify-between bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&h=400&fit=crop'); background-position: center;">
+                        <div class="absolute inset-0 bg-black/30"></div>
+                        <div class="relative z-10">
                             <div class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">
                                 OPPO AI Phone
                             </div>
-                            <h3 class="text-2xl font-black text-gray-900 mb-1">Find X9 Series</h3>
-                            <p class="text-lg font-bold text-pink-600 mb-1">Bộ quà tặng <span class="text-2xl">10 Triệu</span></p>
+                            <h3 class="text-2xl font-black text-white mb-1 drop-shadow-lg">Find X9 Series</h3>
+                            <p class="text-lg font-bold text-white mb-1 drop-shadow-lg">Bộ quà tặng <span class="text-2xl">10 Triệu</span></p>
                         </div>
-                        <div class="flex items-center justify-between">
+                        <div class="relative z-10 flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-semibold text-gray-700">Tặng gói Premium Service+</p>
-                                <p class="text-sm font-semibold text-pink-600">Trợ giá thu cũ đến 4 Triệu</p>
+                                <p class="text-sm font-semibold text-white drop-shadow-lg">Tặng gói Premium Service+</p>
+                                <p class="text-sm font-semibold text-yellow-300 drop-shadow-lg">Trợ giá thu cũ đến 4 Triệu</p>
                             </div>
-                            <svg class="w-8 h-8 text-pink-600 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-white group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </div>
@@ -671,17 +679,18 @@
 
                 <!-- Banner 2 - Điện máy FPT Style -->
                 <a href="pages/products.html?category=appliances" class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                    <div class="bg-gradient-to-br from-red-500 to-orange-500 p-6 h-48 flex flex-col justify-between text-white">
-                        <div>
+                    <div class="relative p-6 h-48 flex flex-col justify-between text-white bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=800&h=400&fit=crop'); background-position: center;">
+                        <div class="absolute inset-0 bg-black/30"></div>
+                        <div class="relative z-10">
                             <div class="inline-block bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full mb-2">
                                 Điện Máy
                             </div>
-                            <h3 class="text-xl font-black mb-1">TRỌN BỘ TỦ LẠNH</h3>
-                            <p class="text-lg font-bold mb-1">GIÁ CHỈ TỪ</p>
-                            <p class="text-3xl font-black">8.99 TRIỆU</p>
+                            <h3 class="text-xl font-black mb-1 drop-shadow-lg">TRỌN BỘ TỦ LẠNH</h3>
+                            <p class="text-lg font-bold mb-1 drop-shadow-lg">GIÁ CHỈ TỪ</p>
+                            <p class="text-3xl font-black drop-shadow-lg">8.99 TRIỆU</p>
                         </div>
-                        <div class="flex items-center justify-between">
-                            <p class="text-sm font-semibold">Bảo hành trọn đời 1 đổi 1</p>
+                        <div class="relative z-10 flex items-center justify-between">
+                            <p class="text-sm font-semibold drop-shadow-lg">Bảo hành trọn đời 1 đổi 1</p>
                             <svg class="w-8 h-8 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
                             </svg>
@@ -691,19 +700,20 @@
 
                 <!-- Banner 3 - 11.11 Sale -->
                 <a href="pages/promotions.html?event=1111" class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                    <div class="bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500 p-6 h-48 flex flex-col justify-between text-white">
-                        <div>
+                    <div class="relative p-6 h-48 flex flex-col justify-between text-white bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&h=400&fit=crop'); background-position: center;">
+                        <div class="absolute inset-0 bg-black/30"></div>
+                        <div class="relative z-10">
                             <div class="inline-block bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full mb-2 animate-pulse">
                                 🏁 SIÊU SALE
                             </div>
                             <h3 class="text-4xl font-black mb-1 drop-shadow-lg">11.11</h3>
-                            <p class="text-xl font-black mb-1">TRỞ GIÁ CỰC ĐÃ</p>
-                            <p class="text-lg font-bold">CHẠY KPI BỨT PHÁ</p>
+                            <p class="text-xl font-black mb-1 drop-shadow-lg">TRỞ GIÁ CỰC ĐÃ</p>
+                            <p class="text-lg font-bold drop-shadow-lg">CHẠY KPI BỨT PHÁ</p>
                         </div>
-                        <div class="flex items-center justify-between">
+                        <div class="relative z-10 flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-semibold">Săn giá rẻ hơn</p>
-                                <p class="text-xs font-semibold">10H-13H | 16H-21H</p>
+                                <p class="text-sm font-semibold drop-shadow-lg">Săn giá rẻ hơn</p>
+                                <p class="text-xs font-semibold drop-shadow-lg">10H-13H | 16H-21H</p>
                             </div>
                             <svg class="w-8 h-8 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
@@ -1078,6 +1088,131 @@
 
     <script src="js/main.js"></script>
     <script>
+        // Category Product Suggestions Data
+        const categoryProducts = {
+            phone: {
+                title: 'Điện thoại - Gợi ý cho bạn',
+                products: [
+                    { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Samsung S24 Ultra', price: '25.990.000đ', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Xiaomi 14 Pro', price: '19.990.000đ', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=200&h=200&fit=crop', tag: '-15%' },
+                    { name: 'OPPO Find X7', price: '22.990.000đ', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'iPhone 14 Pro', price: '27.990.000đ', image: 'https://images.unsplash.com/photo-1678911820864-e2c567c655d7?w=200&h=200&fit=crop', tag: '-10%' },
+                    { name: 'Samsung S23 FE', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=200&h=200&fit=crop', tag: 'SALE' }
+                ]
+            },
+            laptop: {
+                title: 'Laptop - Gợi ý cho bạn',
+                products: [
+                    { name: 'MacBook Pro M3', price: '54.990.000đ', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Dell XPS 15', price: '42.990.000đ', image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200&h=200&fit=crop', tag: '-10%' },
+                    { name: 'Asus ROG Zephyrus', price: '52.990.000đ', image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=200&h=200&fit=crop', tag: 'GAMING' },
+                    { name: 'HP Spectre x360', price: '38.990.000đ', image: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=200&h=200&fit=crop', tag: '-12%' },
+                    { name: 'Lenovo ThinkPad X1', price: '45.990.000đ', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'MSI Creator Z16', price: '49.990.000đ', image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=200&fit=crop', tag: 'HOT' }
+                ]
+            },
+            appliances: {
+                title: 'Điện máy - Gợi ý cho bạn',
+                products: [
+                    { name: 'Tủ lạnh Samsung Inverter', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400&h=400&fit=crop', tag: '-20%' },
+                    { name: 'Máy giặt LG AI', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Tivi Sony 4K 55"', price: '18.990.000đ', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Điều hòa Daikin Inverter', price: '9.990.000đ', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: '-15%' },
+                    { name: 'Máy lọc không khí Sharp', price: '5.990.000đ', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: 'SALE' },
+                    { name: 'Nồi cơm điện Toshiba', price: '2.490.000đ', image: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=400&fit=crop', tag: '-10%' }
+                ]
+            },
+            accessories: {
+                title: 'Phụ kiện - Gợi ý cho bạn',
+                products: [
+                    { name: 'AirPods Pro 2', price: '6.990.000đ', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Apple Watch Series 9', price: '10.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Bàn phím Logitech MX Keys', price: '2.990.000đ', image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&h=400&fit=crop', tag: '-10%' },
+                    { name: 'Chuột Logitech MX Master 3', price: '2.490.000đ', image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Tai nghe Sony WH-1000XM5', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1545127398-14699f92334b?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Webcam Logitech C920', price: '1.990.000đ', image: 'https://images.unsplash.com/photo-1588200618108-1d3249b2fa5a?w=400&h=400&fit=crop', tag: 'SALE' }
+                ]
+            },
+            apple: {
+                title: 'Apple - Sản phẩm nổi bật',
+                products: [
+                    { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'MacBook Pro M3', price: '54.990.000đ', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'iPad Pro 2024', price: '28.990.000đ', image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop', tag: '-17%' },
+                    { name: 'AirPods Pro 2', price: '6.990.000đ', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Apple Watch Series 9', price: '10.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'iMac 24" M3', price: '38.990.000đ', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=400&fit=crop', tag: '-10%' }
+                ]
+            },
+            samsung: {
+                title: 'Samsung - Sản phẩm nổi bật',
+                products: [
+                    { name: 'Samsung S24 Ultra', price: '25.990.000đ', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Galaxy Z Fold 5', price: '42.990.000đ', image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Galaxy Tab S9', price: '18.990.000đ', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=200&h=200&fit=crop', tag: '-15%' },
+                    { name: 'Galaxy Buds Pro', price: '4.990.000đ', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Galaxy Watch 6', price: '7.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Tủ lạnh Samsung Inverter', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=200&h=200&fit=crop', tag: '-20%' }
+                ]
+            },
+            xiaomi: {
+                title: 'Xiaomi - Sản phẩm nổi bật',
+                products: [
+                    { name: 'Xiaomi 14 Pro', price: '19.990.000đ', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Redmi Note 13 Pro', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=400&h=400&fit=crop', tag: '-10%' },
+                    { name: 'Xiaomi Pad 6', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Mi Band 8', price: '990.000đ', image: 'https://images.unsplash.com/photo-1557438159-51eec7a6c9e8?w=400&h=400&fit=crop', tag: 'SALE' },
+                    { name: 'Redmi Buds 4 Pro', price: '1.990.000đ', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop', tag: '-15%' },
+                    { name: 'Xiaomi Smart TV 55"', price: '9.990.000đ', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'HOT' }
+                ]
+            }
+        };
+
+        // Function to show category products
+        function showCategoryProducts(category) {
+            const titleEl = document.getElementById('categoryTitle');
+            const contentEl = document.getElementById('categoryContent');
+            
+            const data = categoryProducts[category];
+            if (!data) return;
+            
+            titleEl.textContent = data.title;
+            
+            // Update active menu item
+            document.querySelectorAll('.category-menu-item').forEach(item => {
+                item.classList.remove('bg-red-50', 'border-red-600');
+                if (item.dataset.category === category) {
+                    item.classList.add('bg-red-50', 'border-red-600');
+                }
+            });
+            
+            contentEl.innerHTML = `
+                <div class="grid grid-cols-3 gap-4">
+                    ${data.products.map(product => `
+                        <div class="group bg-white rounded-lg border border-gray-200 hover:border-red-500 hover:shadow-xl transition overflow-hidden">
+                            <div class="relative">
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">${product.tag}</span>
+                            </div>
+                            <div class="p-4">
+                                <h4 class="text-base font-semibold text-gray-800 mb-2 line-clamp-2 h-12">${product.name}</h4>
+                                <button onclick="addToCart('${product.name}')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg transition text-sm mb-3">
+                                    Mua ngay
+                                </button>
+                                <p class="text-lg font-black text-red-600">${product.price}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Initialize with phone category on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            showCategoryProducts('phone');
+        });
+
         // Carousel functionality
         let currentSlide = 0;
         const totalSlides = 5;
@@ -1154,24 +1289,24 @@
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group">
                     <div class="relative">
                         <img src="${product.image}" alt="${product.name}" class="w-full h-40 md:h-48 object-cover group-hover:scale-110 transition duration-300">
-                        <div class="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold">
+                        <div class="absolute top-2 left-2 bg-red-600 text-white px-3 py-1.5 rounded-md text-sm font-bold">
                             -${product.discount}%
                         </div>
-                        <div class="absolute top-2 right-2 bg-yellow-400 text-red-600 px-2 py-1 rounded-md text-xs font-bold">
+                        <div class="absolute top-2 right-2 bg-yellow-400 text-red-600 px-3 py-1.5 rounded-md text-sm font-bold">
                             🔥 HOT
                         </div>
                     </div>
                     <div class="p-3">
-                        <h3 class="font-bold text-sm md:text-base text-gray-800 mb-2 line-clamp-2">${product.name}</h3>
+                        <h3 class="font-bold text-base md:text-lg text-gray-800 mb-2 line-clamp-2 h-12">${product.name}</h3>
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="text-lg md:text-xl font-black text-red-600">${product.price.toLocaleString('vi-VN')}đ</span>
+                            <span class="text-xl md:text-2xl font-black text-red-600">${product.price.toLocaleString('vi-VN')}đ</span>
                         </div>
-                        <div class="text-xs text-gray-500 line-through mb-2">${product.oldPrice.toLocaleString('vi-VN')}đ</div>
+                        <div class="text-sm text-gray-500 line-through mb-2">${product.oldPrice.toLocaleString('vi-VN')}đ</div>
                         <div class="bg-gray-200 rounded-full h-2 mb-2">
                             <div class="bg-gradient-to-r from-yellow-400 to-red-500 h-2 rounded-full" style="width: ${(product.stock / 20) * 100}%"></div>
                         </div>
-                        <p class="text-xs text-gray-600 mb-2">Còn ${product.stock} sản phẩm</p>
-                        <button onclick="addToCart(${product.id})" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition text-sm">
+                        <p class="text-sm text-gray-600 mb-2">Còn ${product.stock} sản phẩm</p>
+                        <button onclick="addToCart(${product.id})" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 md:py-3 rounded-lg transition text-base md:text-lg">
                             Mua ngay
                         </button>
                     </div>
@@ -1292,19 +1427,19 @@
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition group">
                     <div class="relative">
                         <img src="${product.image}" alt="${product.name}" class="w-full h-40 md:h-48 object-cover group-hover:scale-110 transition duration-300">
-                        ${product.tag ? `<span class="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">${product.tag}</span>` : ''}
-                        ${discount > 0 ? `<div class="absolute top-2 right-2 bg-yellow-400 text-red-700 px-2 py-1 rounded-lg text-xs font-black">-${discount}%</div>` : ''}
+                        ${product.tag ? `<span class="absolute top-2 left-2 bg-red-600 text-white text-sm font-bold px-3 py-1.5 rounded shadow-lg">${product.tag}</span>` : ''}
+                        ${discount > 0 ? `<div class="absolute top-2 right-2 bg-yellow-400 text-red-700 px-3 py-1.5 rounded-lg text-sm font-black">-${discount}%</div>` : ''}
                     </div>
                     <div class="p-3">
-                        <h3 class="font-bold text-sm text-gray-800 mb-2 line-clamp-2 h-10">${product.name}</h3>
-                        <div class="text-xs mb-2">${stars}</div>
-                        <div class="mb-2">
-                            <p class="text-red-600 font-black text-lg">${formatCurrency(product.price)}</p>
-                            ${product.oldPrice ? `<p class="text-gray-400 text-xs line-through">${formatCurrency(product.oldPrice)}</p>` : ''}
-                        </div>
-                        <button onclick='addToCart(${JSON.stringify(product)})' class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg transition text-sm">
+                        <h3 class="font-bold text-base md:text-lg text-gray-800 mb-2 line-clamp-2 h-12">${product.name}</h3>
+                        <button onclick='addToCart(${JSON.stringify(product)})' class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 md:py-3 rounded-lg transition text-base md:text-lg mb-3">
                             Mua ngay
                         </button>
+                        <div class="text-sm mb-2">${stars}</div>
+                        <div class="mb-2">
+                            <p class="text-red-600 font-black text-xl md:text-2xl">${formatCurrency(product.price)}</p>
+                            ${product.oldPrice ? `<p class="text-gray-400 text-sm line-through">${formatCurrency(product.oldPrice)}</p>` : ''}
+                        </div>
                     </div>
                 </div>
             `}).join('');
