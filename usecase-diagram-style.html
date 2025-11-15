@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Case Diagram - Hệ thống Thương mại Điện tử</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 12px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-info { background: #3b82f6; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+
+        .diagram-container {
+            padding: 30px;
+            overflow: auto;
+            background: #fafafa;
+        }
+
+        .diagram-wrapper {
+            width: 1400px;
+            height: 1100px;
+            margin: 0 auto;
+            position: relative;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        /* System Boundary */
+        .system-boundary {
+            position: absolute;
+            border: 3px solid #8B4513;
+            border-radius: 10px;
+            background: #FFF9E6;
+        }
+
+        .system-title {
+            position: absolute;
+            top: 8px;
+            left: 15px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #654321;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .folder-icon {
+            width: 20px;
+            height: 16px;
+            background: #F4A460;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .folder-icon::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 12px;
+            height: 6px;
+            background: #F4A460;
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* Actor Styles */
+        .actor {
+            position: absolute;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .actor:hover {
+            transform: scale(1.05);
+        }
+
+        .actor-figure {
+            margin: 0 auto;
+        }
+
+        .actor-head {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 3px solid #4A90E2;
+            background: white;
+            margin: 0 auto;
+        }
+
+        .actor-body {
+            width: 3px;
+            height: 35px;
+            background: #4A90E2;
+            margin: 0 auto;
+        }
+
+        .actor-arms {
+            position: relative;
+            height: 3px;
+            width: 45px;
+            background: #4A90E2;
+            margin: -18px auto 0;
+        }
+
+        .actor-legs {
+            position: relative;
+            width: 45px;
+            height: 28px;
+            margin: 0 auto;
+        }
+
+        .actor-legs::before,
+        .actor-legs::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 28px;
+            background: #4A90E2;
+        }
+
+        .actor-legs::before {
+            left: 8px;
+            transform: rotate(-12deg);
+        }
+
+        .actor-legs::after {
+            right: 8px;
+            transform: rotate(12deg);
+        }
+
+        .actor-name {
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+
+        /* Use Case Styles */
+        .usecase {
+            position: absolute;
+            background: #FFF9E6;
+            border: 2.5px solid #8B4513;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(139, 69, 19, 0.15);
+        }
+
+        .usecase:hover {
+            background: #FFF4D6;
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.25);
+            z-index: 10;
+        }
+
+        .usecase-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            line-height: 1.3;
+        }
+
+        /* SVG Lines */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection {
+            stroke: #666;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .connection-dashed {
+            stroke: #888;
+            stroke-width: 1.5;
+            stroke-dasharray: 5, 3;
+            fill: none;
+        }
+
+        .connection-include {
+            stroke: #666;
+            stroke-width: 1.8;
+            stroke-dasharray: 6, 4;
+            fill: none;
+        }
+        
+        .arrow-text {
+            font-size: 10px;
+            fill: #666;
+            font-style: italic;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            max-width: 250px;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        /* Highlight mode */
+        .highlight-mode .usecase {
+            opacity: 0.3;
+        }
+
+        .highlight-mode .usecase.active {
+            opacity: 1;
+        }
+
+        .highlight-mode .actor {
+            opacity: 0.3;
+        }
+
+        .highlight-mode .actor.active {
+            opacity: 1;
+        }
+
+        .highlight-mode .connection {
+            opacity: 0.15;
+        }
+
+        .highlight-mode .connection.active {
+            opacity: 1;
+            stroke-width: 2.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Use Case Diagram</h1>
+            <p>Hệ thống Thương mại Điện tử Thiết bị Công nghệ</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="resetView()">🔄 Reset</button>
+            <button class="btn btn-success" onclick="highlightActor('guest')">👤 Khách</button>
+            <button class="btn btn-info" onclick="highlightActor('customer')">🛒 Người dùng</button>
+            <button class="btn btn-warning" onclick="highlightActor('admin')">⚙️ Quản trị viên</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ In</button>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-wrapper" id="diagramWrapper">
+                <svg id="connectionSvg" width="1400" height="1100"></svg>
+
+                <!-- System Boundary -->
+                <div class="system-boundary" style="top: 50px; left: 180px; width: 1040px; height: 1000px;">
+                    <div class="system-title">
+                        <div class="folder-icon"></div>
+                        <span>Hệ thống Thương mại Điện tử</span>
+                    </div>
+                </div>
+
+                <!-- ACTORS -->
+                <!-- Chủ trọ (Guest) - Left -->
+                <div class="actor" id="actor-guest" style="top: 120px; left: 50px;" data-actor="guest">
+                    <div class="actor-figure">
+                        <div class="actor-head"></div>
+                        <div class="actor-body"></div>
+                        <div class="actor-arms"></div>
+                        <div class="actor-legs"></div>
+                    </div>
+                    <div class="actor-name">Khách</div>
+                </div>
+
+                <!-- Người dùng (Customer) - Left -->
+                <div class="actor" id="actor-customer" style="top: 520px; left: 50px;" data-actor="customer">
+                    <div class="actor-figure">
+                        <div class="actor-head"></div>
+                        <div class="actor-body"></div>
+                        <div class="actor-arms"></div>
+                        <div class="actor-legs"></div>
+                    </div>
+                    <div class="actor-name">Người dùng</div>
+                </div>
+
+                <!-- Quản trị viên (Admin) - Right -->
+                <div class="actor" id="actor-admin" style="top: 420px; right: 50px;" data-actor="admin">
+                    <div class="actor-figure">
+                        <div class="actor-head"></div>
+                        <div class="actor-body"></div>
+                        <div class="actor-arms"></div>
+                        <div class="actor-legs"></div>
+                    </div>
+                    <div class="actor-name">Quản trị viên</div>
+                </div>
+
+                <!-- USE CASES - Theo đúng layout hình -->
+                
+                <!-- Row 1: Đăng ký & Xác thực jwt -->
+                <div class="usecase" id="uc-dangky" style="top: 85px; left: 350px; width: 180px; height: 75px;" 
+                     data-actor="guest" data-desc="Đăng ký tài khoản mới">
+                    <div class="usecase-text">Đăng ký</div>
+                </div>
+
+                <div class="usecase" id="uc-xacthuc" style="top: 85px; left: 630px; width: 150px; height: 75px;" 
+                     data-actor="guest" data-desc="Xác thực JWT token">
+                    <div class="usecase-text">Xác thực jwt</div>
+                </div>
+
+                <!-- Row 2: Đăng nhập -->
+                <div class="usecase" id="uc-dangnhap" style="top: 175px; left: 350px; width: 180px; height: 75px;" 
+                     data-actor="guest" data-desc="Đăng nhập vào hệ thống">
+                    <div class="usecase-text">Đăng nhập</div>
+                </div>
+
+                <!-- Row 3: Thông tin -->
+                <div class="usecase" id="uc-thongtin" style="top: 265px; left: 360px; width: 120px; height: 65px;" 
+                     data-actor="guest" data-desc="Nhập thông tin">
+                    <div class="usecase-text">Thông tin</div>
+                </div>
+
+                <!-- Row 4: Tạo bài đăng, Hình ảnh, Ngày đăng -->
+                <div class="usecase" id="uc-taobaidang" style="top: 305px; left: 220px; width: 150px; height: 75px;" 
+                     data-actor="guest" data-desc="Tạo bài đăng mới">
+                    <div class="usecase-text">Tạo bài đăng</div>
+                </div>
+
+                <div class="usecase" id="uc-hinhanh" style="top: 305px; left: 530px; width: 120px; height: 65px;" 
+                     data-actor="guest" data-desc="Thêm hình ảnh">
+                    <div class="usecase-text">Hình ảnh</div>
+                </div>
+
+                <div class="usecase" id="uc-ngaydang" style="top: 330px; left: 690px; width: 120px; height: 65px;" 
+                     data-actor="guest" data-desc="Ngày đăng bài">
+                    <div class="usecase-text">Ngày đăng</div>
+                </div>
+
+                <!-- Row 5: Duyệt/chưa duyệt -->
+                <div class="usecase" id="uc-duyetchuaduyet" style="top: 395px; left: 530px; width: 150px; height: 70px;" 
+                     data-actor="admin" data-desc="Duyệt hoặc chưa duyệt bài đăng">
+                    <div class="usecase-text">Duyệt/chưa duyệt</div>
+                </div>
+
+                <!-- Row 6: Xem trạng thái bài đăng & Sửa/xóa -->
+                <div class="usecase" id="uc-xemtrangthai" style="top: 470px; left: 220px; width: 180px; height: 75px;" 
+                     data-actor="customer" data-desc="Xem trạng thái bài đăng">
+                    <div class="usecase-text">Xem trạng thái bài đăng</div>
+                </div>
+
+                <div class="usecase" id="uc-suaxoa" style="top: 480px; left: 540px; width: 110px; height: 65px;" 
+                     data-actor="customer admin" data-desc="Sửa hoặc xóa bài đăng">
+                    <div class="usecase-text">Sửa/xóa</div>
+                </div>
+
+                <!-- Row 7: Duyệt bài đăng -->
+                <div class="usecase" id="uc-duyetbaidang" style="top: 555px; left: 390px; width: 200px; height: 75px;" 
+                     data-actor="admin" data-desc="Duyệt bài đăng">
+                    <div class="usecase-text">Duyệt bài đăng</div>
+                </div>
+
+                <!-- Row 8: Xóa bài đăng -->
+                <div class="usecase" id="uc-xoabaidang" style="top: 640px; left: 390px; width: 160px; height: 75px;" 
+                     data-actor="admin" data-desc="Xóa bài đăng">
+                    <div class="usecase-text">Xóa bài đăng</div>
+                </div>
+
+                <!-- Row 9: Ảnh -->
+                <div class="usecase" id="uc-anh" style="top: 715px; left: 430px; width: 100px; height: 60px;" 
+                     data-actor="customer" data-desc="Quản lý ảnh">
+                    <div class="usecase-text">Ảnh</div>
+                </div>
+
+                <!-- Row 10: Xem bài đăng & Giá -->
+                <div class="usecase" id="uc-xembaidang" style="top: 740px; left: 220px; width: 150px; height: 75px;" 
+                     data-actor="customer" data-desc="Xem danh sách bài đăng">
+                    <div class="usecase-text">Xem bài đăng</div>
+                </div>
+
+                <div class="usecase" id="uc-gia" style="top: 740px; left: 630px; width: 100px; height: 60px;" 
+                     data-actor="customer" data-desc="Xem giá">
+                    <div class="usecase-text">Giá</div>
+                </div>
+
+                <!-- Row 11: Mô tả/vị trí -->
+                <div class="usecase" id="uc-motavitri" style="top: 810px; left: 420px; width: 140px; height: 65px;" 
+                     data-actor="customer" data-desc="Mô tả và vị trí">
+                    <div class="usecase-text">Mô tả/vị trí</div>
+                </div>
+
+                <!-- Row 12: Tìm kiếm -->
+                <div class="usecase" id="uc-timkiem" style="top: 895px; left: 250px; width: 130px; height: 65px;" 
+                     data-actor="customer" data-desc="Tìm kiếm bài đăng">
+                    <div class="usecase-text">Tìm kiếm</div>
+                </div>
+
+                <!-- Row 13: Lọc theo giá phòng -->
+                <div class="usecase" id="uc-loctheogiaphong" style="top: 905px; left: 450px; width: 180px; height: 75px;" 
+                     data-actor="customer" data-desc="Lọc theo giá phòng">
+                    <div class="usecase-text">Lọc theo giá phòng</div>
+                </div>
+
+                <!-- Row 14: Tìm theo khu vực -->
+                <div class="usecase" id="uc-timtheokhuvuc" style="top: 985px; left: 450px; width: 180px; height: 75px;" 
+                     data-actor="customer" data-desc="Tìm theo khu vực">
+                    <div class="usecase-text">Tìm theo khu vực</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        const usecases = document.querySelectorAll('.usecase');
+        const actors = document.querySelectorAll('.actor');
+        const tooltip = document.getElementById('tooltip');
+        const svg = document.getElementById('connectionSvg');
+
+        // Actor positions (center of actor)
+        const actorPositions = {
+            'guest': {x: 100, y: 150},
+            'customer': {x: 100, y: 550},
+            'admin': {x: 1300, y: 450}
+        };
+
+        // Tooltip for use cases
+        usecases.forEach(uc => {
+            uc.addEventListener('mouseenter', (e) => {
+                const desc = uc.getAttribute('data-desc');
+                const text = uc.querySelector('.usecase-text').textContent;
+                tooltip.innerHTML = `<strong>${text}</strong><br>${desc}`;
+                tooltip.classList.add('show');
+            });
+
+            uc.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.clientX + 15 + 'px';
+                tooltip.style.top = e.clientY + 15 + 'px';
+            });
+
+            uc.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+
+        // Tooltip for actors
+        actors.forEach(actor => {
+            actor.addEventListener('mouseenter', () => {
+                const name = actor.querySelector('.actor-name').textContent;
+                tooltip.innerHTML = `<strong>${name}</strong>`;
+                tooltip.classList.add('show');
+            });
+
+            actor.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.clientX + 15 + 'px';
+                tooltip.style.top = e.clientY + 15 + 'px';
+            });
+
+            actor.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+
+        // Draw connections
+        function drawConnections() {
+            svg.innerHTML = '';
+            
+            usecases.forEach(uc => {
+                const actorAttr = uc.getAttribute('data-actor');
+                if (!actorAttr) return;
+                
+                const actorsList = actorAttr.split(' ');
+                const ucRect = uc.getBoundingClientRect();
+                const containerRect = document.getElementById('diagramWrapper').getBoundingClientRect();
+                
+                const ucX = ucRect.left - containerRect.left + ucRect.width / 2;
+                const ucY = ucRect.top - containerRect.top + ucRect.height / 2;
+                
+                actorsList.forEach(actorName => {
+                    const actorPos = actorPositions[actorName];
+                    if (!actorPos) return;
+                    
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', actorPos.x);
+                    line.setAttribute('y1', actorPos.y);
+                    line.setAttribute('x2', ucX);
+                    line.setAttribute('y2', ucY);
+                    line.setAttribute('class', 'connection');
+                    line.setAttribute('data-actor', actorName);
+                    line.setAttribute('data-uc', uc.id);
+                    svg.appendChild(line);
+                });
+            });
+
+            // Include/Extend relationships (dashed lines between use cases)
+            // Đăng nhập <<include>> Xác thực jwt
+            drawIncludeLine('uc-dangnhap', 'uc-xacthuc');
+            
+            // Tạo bài đăng <<include>> Thông tin
+            drawIncludeLine('uc-taobaidang', 'uc-thongtin');
+            
+            // Tạo bài đăng <<include>> Hình ảnh
+            drawIncludeLine('uc-taobaidang', 'uc-hinhanh');
+            
+            // Hình ảnh <<include>> Ngày đăng
+            drawIncludeLine('uc-hinhanh', 'uc-ngaydang');
+            
+            // Duyệt/chưa duyệt <<extend>> Ngày đăng (chỗ này gần)
+            
+            // Xem trạng thái bài đăng <<include>> Sửa/xóa
+            drawIncludeLine('uc-xemtrangthai', 'uc-suaxoa');
+            
+            // Xem bài đăng <<include>> Ảnh
+            drawIncludeLine('uc-xembaidang', 'uc-anh');
+            
+            // Xem bài đăng <<include>> Giá
+            drawIncludeLine('uc-xembaidang', 'uc-gia');
+            
+            // Xem bài đăng <<include>> Mô tả/vị trí
+            drawIncludeLine('uc-xembaidang', 'uc-motavitri');
+            
+            // Tìm kiếm <<include>> Lọc theo giá phòng
+            drawIncludeLine('uc-timkiem', 'uc-loctheogiaphong');
+            
+            // Tìm kiếm <<include>> Tìm theo khu vực
+            drawIncludeLine('uc-timkiem', 'uc-timtheokhuvuc');
+        }
+
+        function drawIncludeLine(fromId, toId, label = '') {
+            const fromEl = document.getElementById(fromId);
+            const toEl = document.getElementById(toId);
+            if (!fromEl || !toEl) return;
+
+            const containerRect = document.getElementById('diagramWrapper').getBoundingClientRect();
+            const fromRect = fromEl.getBoundingClientRect();
+            const toRect = toEl.getBoundingClientRect();
+
+            const fromX = fromRect.left - containerRect.left + fromRect.width / 2;
+            const fromY = fromRect.top - containerRect.top + fromRect.height / 2;
+            const toX = toRect.left - containerRect.left + toRect.width / 2;
+            const toY = toRect.top - containerRect.top + toRect.height / 2;
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', fromX);
+            line.setAttribute('y1', fromY);
+            line.setAttribute('x2', toX);
+            line.setAttribute('y2', toY);
+            line.setAttribute('class', 'connection-include');
+            svg.appendChild(line);
+            
+            // Add arrow at the end
+            const angle = Math.atan2(toY - fromY, toX - fromX);
+            const arrowSize = 8;
+            const arrowX = toX - Math.cos(angle) * 15;
+            const arrowY = toY - Math.sin(angle) * 15;
+            
+            const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            const points = [
+                [arrowX, arrowY],
+                [arrowX - arrowSize * Math.cos(angle - Math.PI / 6), arrowY - arrowSize * Math.sin(angle - Math.PI / 6)],
+                [arrowX - arrowSize * Math.cos(angle + Math.PI / 6), arrowY - arrowSize * Math.sin(angle + Math.PI / 6)]
+            ];
+            arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
+            arrow.setAttribute('fill', '#666');
+            svg.appendChild(arrow);
+        }
+
+        // Highlight actor use cases
+        function highlightActor(actorName) {
+            const wrapper = document.getElementById('diagramWrapper');
+            wrapper.classList.add('highlight-mode');
+            
+            // Reset all
+            document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+            
+            // Highlight actor
+            const actor = document.querySelector(`#actor-${actorName}`);
+            if (actor) actor.classList.add('active');
+            
+            // Highlight use cases
+            usecases.forEach(uc => {
+                const ucActors = uc.getAttribute('data-actor');
+                if (ucActors && ucActors.includes(actorName)) {
+                    uc.classList.add('active');
+                }
+            });
+            
+            // Highlight connections
+            document.querySelectorAll('.connection').forEach(conn => {
+                if (conn.getAttribute('data-actor') === actorName) {
+                    conn.classList.add('active');
+                }
+            });
+        }
+
+        function resetView() {
+            const wrapper = document.getElementById('diagramWrapper');
+            wrapper.classList.remove('highlight-mode');
+            document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+        }
+
+        // Draw connections on load
+        window.addEventListener('load', drawConnections);
+        window.addEventListener('resize', drawConnections);
+    </script>
+</body>
+</html>
