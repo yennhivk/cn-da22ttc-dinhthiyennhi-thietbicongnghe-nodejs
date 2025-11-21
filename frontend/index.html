@@ -21,9 +21,76 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        /* Popup Modal Styles */
+        .popup-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .popup-modal.active {
+            display: flex;
+        }
+        .popup-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            animation: scaleIn 0.3s ease;
+        }
+        .popup-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .popup-close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 40px;
+            height: 40px;
+            background: #EF4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .popup-close:hover {
+            background: #DC2626;
+            transform: rotate(90deg) scale(1.1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Promotion Popup Modal -->
+    <div id="promotionPopup" class="popup-modal">
+        <div class="popup-content">
+            <div class="popup-close" onclick="closePopup()">&times;</div>
+            <img src="images/Screenshot_2025-11-21_151151-removebg-preview (1).png" alt="Khuyến mãi đặc biệt" onclick="closePopup()">
+        </div>
+    </div>
+
     <!-- Navigation Bar - Red Theme like Gearvn -->
     <nav class="bg-gradient-to-r from-yellow-500 to-yellow-400 shadow-lg fixed top-0 left-0 right-0 z-50 w-full">
         <div class="px-3 sm:px-4 lg:px-6">
@@ -1776,6 +1843,32 @@
         // Observe all review videos
         document.querySelectorAll('.review-video').forEach(video => {
             videoObserver.observe(video);
+        });
+
+        // Promotion Popup
+        function closePopup() {
+            document.getElementById('promotionPopup').classList.remove('active');
+        }
+
+        // Show popup when page loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('promotionPopup').classList.add('active');
+            }, 500); // Delay 0.5s for better UX
+        });
+
+        // Close popup when clicking outside the image
+        document.getElementById('promotionPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+
+        // Close popup with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePopup();
+            }
         });
     </script>
 </body>
