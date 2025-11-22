@@ -93,15 +93,47 @@
                     </a>
 
                     <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="lg:hidden text-white hover:text-yellow-300 transition flex-shrink-0">
+                    <button id="mobileMenuBtn" class="lg:hidden text-white hover:text-yellow-300 transition flex-shrink-0" onclick="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path id="closeIcon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobileMenu" class="hidden bg-white border-t border-gray-200 shadow-lg lg:hidden fixed top-16 left-0 right-0 z-40">
+        <div class="px-4 py-2">
+            <div class="relative mb-3">
+                <input type="text" id="mobileSearchInput" placeholder="Tìm kiếm..." class="w-full px-4 py-2.5 rounded-lg border-2 border-yellow-200 text-sm text-gray-700">
+                <button onclick="handleMobileSearch()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-yellow-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-1">
+                <a href="../index.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">🏠 Trang chủ</a>
+                <a href="products.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📱 Sản phẩm</a>
+                <a href="news.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📰 Tin tức</a>
+                <a href="promotions.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">🎉 Khuyến mãi</a>
+                <a href="about.html" class="block py-3 px-4 text-base font-semibold text-yellow-500 hover:bg-yellow-50 rounded-lg transition">ℹ️ Giới thiệu</a>
+                <a href="contact.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📞 Liên hệ</a>
+                <a href="admin.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">👤 Quản trị</a>
+                <div class="pt-3 pb-2">
+                    <a href="cart.html" class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-200 shadow-md">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span>Giỏ hàng (<span class="cart-badge">0</span>)</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Secondary Navigation - Category Menu -->
     <div class="bg-white shadow-md fixed top-16 left-0 right-0 z-40 hidden lg:block">
@@ -365,13 +397,13 @@
                     <div class="h-1 w-30 bg-red-600 mb-6"></div>
                     
                     <p class="text-gray-700 text-base leading-relaxed mb-4">
-                        <strong class="text-red-600">Yến Nhi Tech</strong> là thương hiệu được sinh ra từ giấc mơ của một game thủ, 
-                        phát triển bởi tập thể các game thủ để phục vụ cho cộng đồng game thủ Việt.
+                        <strong class="text-red-600">Yến Nhi Tech</strong> là thương hiệu được sinh ra từ giấc mơ của một sinh viên IT, nhằm mang đến những 
+                        thiết bị công nghệ hiện đại để phục vụ cho mọi người.
                     </p>
                     
                     <p class="text-gray-700 text-base leading-relaxed mb-4">
                         Đội ngũ tư vấn của <strong class="text-red-600">Yến Nhi Tech</strong> không đơn thuần là nhân viên kinh doanh, 
-                        chúng tôi còn là những người yêu game với mong muốn giúp bạn cũng sở hữu được dàn máy và gear phù hợp.
+                        chúng tôi còn là những người dùng và trải nghiệm các sản phẩm đầu tiên trước khi đem đến khách hàng.
                     </p>
                     
                     <p class="text-gray-700 text-base leading-relaxed mb-6">
@@ -388,8 +420,7 @@
                             </svg>
                         </div>
                         <p class="relative z-10 text-sm md:text-base leading-relaxed italic">
-                            "Khách hàng hôm nay là đồng đội tương lai! Chúng ta cùng nhau lan toả giá trị tích cực đến 
-                            cộng đồng game thủ và tất cả những người yêu công nghệ tại Việt Nam."
+                            "Khách hàng hôm nay là sự phát triển tương lai! "
                         </p>
                         <div class="absolute -bottom-4 -right-4 text-6xl text-red-300 opacity-50">
                             <svg class="w-16 h-16 rotate-180" fill="currentColor" viewBox="0 0 24 24">
