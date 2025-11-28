@@ -231,11 +231,14 @@
     </div>
 
     <script>
-        function handleLogin() {
+        const API_URL = 'http://localhost:3000/api';
+
+        async function handleLogin() {
             const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
             
-            if (!phone) {
-                alert('Vui lòng nhập số điện thoại!');
+            if (!phone || !password) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
                 return;
             }
 
@@ -246,9 +249,34 @@
                 return;
             }
             
-            // Simulate login
-            alert('Đăng nhập thành công!\nChào mừng bạn tới Yến Nhi Tech Member!');
-            window.location.href = '../index.html';
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ten_dang_nhap: phone,
+                        mat_khau: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Lưu token và thông tin user vào localStorage
+                    localStorage.setItem('token', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    
+                    alert('Đăng nhập thành công!\nChào mừng bạn tới Yến Nhi Tech Member!');
+                    window.location.href = '../index.html';
+                } else {
+                    alert(data.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!');
+                }
+            } catch (error) {
+                console.error('Lỗi đăng nhập:', error);
+                alert('Không thể kết nối đến server. Vui lòng kiểm tra lại!');
+            }
         }
 
         // Enter key handler
@@ -257,7 +285,12 @@
                 handleLogin();
             }
         });
+
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
     </script>
 </body>
 </html>
-
