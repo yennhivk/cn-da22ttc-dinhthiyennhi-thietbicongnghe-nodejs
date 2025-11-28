@@ -7,6 +7,7 @@ require('dotenv').config();
 
 // Import database connection
 const db = require('./config/database');
+const passport = require('./config/passport');
 
 // Khởi tạo Express app
 const app = express();
@@ -30,6 +31,10 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Static files
 app.use('/images', express.static(path.join(__dirname, 'images')));

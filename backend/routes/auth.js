@@ -441,6 +441,60 @@ router.put('/change-password', authenticateToken, async (req, res) => {
     }
 });
 
+// ==========================================
+// GOOGLE OAUTH
+// ==========================================
+const passport = require('passport');
+
+// Bắt đầu đăng nhập Google
+router.get('/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+}));
+
+// Callback từ Google
+router.get('/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/login?error=google_failed' }),
+    (req, res) => {
+        try {
+            const user = req.user;
+            
+            // Tạo JWT token
+            const token = jwt.sign(
+                {
+                    ma_tai_khoan: user.ma_tai_khoan,
+                    ten_dang_nhap: user.ten_dang_nhap,
+                    vai_tro: user.vai_tro
+                },
+                process.env.JWT_SECRET || 'your-secret-key',
+                { expiresIn: process.env.JWT_EXPIRE || '24h' }
+            );
+
+            // Lưu vào session
+            req.session.user = {
+                ma_tai_khoan: user.ma_tai_khoan,
+                ten_dang_nhap: user.ten_dang_nhap,
+                email: user.email,
+                vai_tro: user.vai_tro
+            };
+
+            // Redirect về frontend với token
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
+            const userData = encodeURIComponent(JSON.stringify({
+                ma_tai_khoan: user.ma_tai_khoan,
+                ten_dang_nhap: user.ten_dang_nhap,
+                email: user.email,
+                vai_tro: user.vai_tro,
+                hinh_anh: user.hinh_anh
+            }));
+            
+            res.redirect(`${frontendUrl}/frontend/pages/auth-callback.html?token=${token}&user=${userData}`);
+        } catch (error) {
+            console.error('Google callback error:', error);
+            res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5500'}/frontend/pages/login.html?error=server_error`);
+        }
+    }
+);
+
 module.exports = router;
 module.exports.authenticateToken = authenticateToken;
 module.exports.requireAdmin = requireAdmin;
