@@ -138,10 +138,58 @@
                     </a>
 
                     <!-- User Account -->
-                    <a href="pages/login.html" class="hidden lg:flex items-center gap-2 text-black-500 hover:text-red-600 transition">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-lg font-semibold">Đăng nhập</span>
-                    </a>
+                    <div id="userAccountArea" class="hidden lg:block relative">
+                        <!-- Hiển thị khi chưa đăng nhập -->
+                        <a id="loginBtn" href="pages/login.html" class="flex items-center gap-2 text-black-500 hover:text-red-600 transition">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-lg font-semibold">Đăng nhập</span>
+                        </a>
+                        
+                        <!-- Hiển thị khi đã đăng nhập -->
+                        <div id="userDropdown" class="hidden relative group">
+                            <button class="flex items-center gap-2 text-black hover:text-red-600 transition cursor-pointer">
+                                <!-- Avatar - hiển thị ảnh nếu có, không thì hiện icon -->
+                                <div id="userAvatarContainer" class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center border-2 border-orange-300 overflow-hidden">
+                                    <svg id="defaultAvatarIcon" class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <img id="userAvatarImg" class="w-full h-full object-cover hidden" alt="Avatar">
+                                </div>
+                                <span id="userDisplayName" class="text-lg font-semibold text-orange-600"></span>
+                                <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            
+                            <!-- Dropdown Menu -->
+                            <div class="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="p-4 border-b border-gray-100">
+                                    <p id="dropdownUserName" class="font-bold text-gray-800 text-lg"></p>
+                                    <p id="dropdownUserEmail" class="text-gray-500 text-sm"></p>
+                                </div>
+                                <div class="py-2">
+                                    <a href="pages/account.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                        <span class="text-gray-700 font-medium">Tài khoản của tôi</span>
+                                    </a>
+                                    <a href="pages/orders.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                        </svg>
+                                        <span class="text-gray-700 font-medium">Đặt hàng</span>
+                                    </a>
+                                    <button onclick="handleLogout()" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition w-full text-left">
+                                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                        </svg>
+                                        <span class="text-red-500 font-medium">Đăng xuất</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Mobile Menu Button -->
                     <button id="mobileMenuBtn" class="lg:hidden text-white hover:text-yellow-300 transition flex-shrink-0" onclick="toggleMobileMenu()">
@@ -1497,6 +1545,7 @@
 
         function loadFlashSaleProducts() {
             const container = document.getElementById('flashSaleProducts');
+            if (!container) return;
             container.innerHTML = flashSaleProducts.map(product => `
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition group border border-gray-100">
                     <!-- Product Image -->
@@ -1576,6 +1625,7 @@
 
         function loadFeaturedProducts() {
             const container = document.getElementById('featuredProducts');
+            if (!container) return; // Skip if element doesn't exist
             container.innerHTML = featuredProducts.map(product => {
                 const stars = '⭐'.repeat(Math.floor(product.rating || 5));
                 const discount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
@@ -1702,6 +1752,7 @@
 
         function loadLatestNews() {
             const container = document.getElementById('latestNews');
+            if (!container) return;
             container.innerHTML = latestNews.map(news => `
                 <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
                     <img src="${news.image}" alt="${news.title}" class="w-full h-48 object-cover">
@@ -1729,6 +1780,7 @@
 
         function loadHotDeals() {
             const container = document.getElementById('hotDeals');
+            if (!container) return;
             container.innerHTML = hotDeals.map(deal => `
                 <div class="bg-gradient-to-br from-red-50 to-yellow-50 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
                     <div class="relative">
@@ -1769,7 +1821,49 @@
             loadHotDeals();
             loadLatestNews();
             initScrollAnimations();
+            initUserAuth();
         });
+
+        // User Authentication UI
+        function initUserAuth() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const loginBtn = document.getElementById('loginBtn');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            if (user && localStorage.getItem('token')) {
+                // Đã đăng nhập - ẩn nút login, hiện dropdown
+                if (loginBtn) loginBtn.classList.add('hidden');
+                if (userDropdown) {
+                    userDropdown.classList.remove('hidden');
+                    document.getElementById('userDisplayName').textContent = user.ten_dang_nhap;
+                    document.getElementById('dropdownUserName').textContent = user.ten_dang_nhap;
+                    document.getElementById('dropdownUserEmail').textContent = user.email;
+                    
+                    // Hiển thị avatar nếu có
+                    const avatarImg = document.getElementById('userAvatarImg');
+                    const defaultIcon = document.getElementById('defaultAvatarIcon');
+                    if (user.hinh_anh && avatarImg && defaultIcon) {
+                        avatarImg.src = 'http://localhost:3000' + user.hinh_anh;
+                        avatarImg.onload = function() {
+                            avatarImg.classList.remove('hidden');
+                            defaultIcon.classList.add('hidden');
+                        };
+                    }
+                }
+            } else {
+                // Chưa đăng nhập - hiện nút login, ẩn dropdown
+                if (loginBtn) loginBtn.classList.remove('hidden');
+                if (userDropdown) userDropdown.classList.add('hidden');
+            }
+        }
+
+        // Logout function
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            alert('Đăng xuất thành công!');
+            window.location.reload();
+        }
 
         // Scroll Animations for Section Headings
         function initScrollAnimations() {

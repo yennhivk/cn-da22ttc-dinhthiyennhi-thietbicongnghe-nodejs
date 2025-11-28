@@ -157,10 +157,10 @@
                 <p class="text-gray-600 text-sm">Bạn đã từng mua sắm tại Yến Nhi Tech?</p>
             </div>
 
-            <!-- Phone Input -->
+            <!-- Email Input -->
             <div class="mb-4">
-                <input type="tel" id="phone" placeholder="Số điện thoại của bạn" class="w-full px-4 py-3.5 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 transition text-base" required>
-                <p class="text-xs text-gray-500 mt-2">Hệ thống sẽ kiểm tra và tạo tài khoản nếu bạn chưa có</p>
+                <input type="email" id="email" placeholder="Email của bạn" class="w-full px-4 py-3.5 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 transition text-base" required>
+                <p class="text-xs text-gray-500 mt-2">Đăng nhập bằng email đã đăng ký</p>
             </div>
 
             <!-- Password Input -->
@@ -234,18 +234,18 @@
         const API_URL = 'http://localhost:3000/api';
 
         async function handleLogin() {
-            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            if (!phone || !password) {
+            if (!email || !password) {
                 alert('Vui lòng nhập đầy đủ thông tin!');
                 return;
             }
 
-            // Validate phone number
-            const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
-            if (!phoneRegex.test(phone)) {
-                alert('Số điện thoại không hợp lệ!');
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Email không hợp lệ!');
                 return;
             }
             
@@ -256,7 +256,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        ten_dang_nhap: phone,
+                        email: email,
                         mat_khau: password
                     })
                 });
@@ -280,7 +280,7 @@
         }
 
         // Enter key handler
-        document.getElementById('phone').addEventListener('keypress', function(e) {
+        document.getElementById('email').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 handleLogin();
             }

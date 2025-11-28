@@ -3,6 +3,38 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../config/database');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Cấu hình multer để upload ảnh
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, '../uploads/avatars');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'avatar-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+    fileFilter: function (req, file, cb) {
+        const allowedTypes = /jpeg|jpg|png|gif|webp/;
+        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = allowedTypes.test(file.mimetype);
+        if (extname && mimetype) {
+            return cb(null, true);
+        }
+        cb(new Error('Chỉ chấp nhận file ảnh (jpeg, jpg, png, gif, webp)'));
+    }
+});
 
 // ==========================================
 // ĐĂNG KÝ TÀI KHOẢN MỚI
@@ -97,20 +129,20 @@ router.post('/register', async (req, res) => {
 // ==========================================
 router.post('/login', async (req, res) => {
     try {
-        const { ten_dang_nhap, mat_khau } = req.body;
+        const { email, mat_khau } = req.body;
 
         // Validate input
-        if (!ten_dang_nhap || !mat_khau) {
+        if (!email || !mat_khau) {
             return res.status(400).json({
                 success: false,
-                message: 'Vui lòng nhập tên đăng nhập và mật khẩu'
+                message: 'Vui lòng nhập email và mật khẩu'
             });
         }
 
-        // Tìm tài khoản trong database
+        // Tìm tài khoản trong database bằng email
         const [users] = await db.query(
-            'SELECT ma_tai_khoan, ten_dang_nhap, mat_khau, email, vai_tro, trang_thai FROM tai_khoan WHERE ten_dang_nhap = ?',
-            [ten_dang_nhap]
+            'SELECT ma_tai_khoan, ten_dang_nhap, mat_khau, email, vai_tro, trang_thai, hinh_anh FROM tai_khoan WHERE email = ?',
+            [email]
         );
 
         if (users.length === 0) {
@@ -168,7 +200,8 @@ router.post('/login', async (req, res) => {
                     ma_tai_khoan: user.ma_tai_khoan,
                     ten_dang_nhap: user.ten_dang_nhap,
                     email: user.email,
-                    vai_tro: user.vai_tro
+                    vai_tro: user.vai_tro,
+                    hinh_anh: user.hinh_anh || null
                 }
             }
         });
@@ -296,6 +329,117 @@ const requireAdmin = (req, res, next) => {
     }
     next();
 };
+
+// ==========================================
+// CẬP NHẬT THÔNG TIN TÀI KHOẢN
+// ==========================================
+router.put('/update-profile', authenticateToken, async (req, res) => {
+    try {
+        const { ten_dang_nhap } = req.body;
+        const userId = req.user.ma_tai_khoan;
+
+        await db.query(
+            'UPDATE tai_khoan SET ten_dang_nhap = ? WHERE ma_tai_khoan = ?',
+            [ten_dang_nhap, userId]
+        );
+
+        res.json({
+            success: true,
+            message: 'Cập nhật thông tin thành công'
+        });
+    } catch (error) {
+        console.error('❌ Lỗi cập nhật profile:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server khi cập nhật thông tin'
+        });
+    }
+});
+
+// ==========================================
+// UPLOAD AVATAR
+// ==========================================
+router.post('/upload-avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: 'Vui lòng chọn file ảnh'
+            });
+        }
+
+        const userId = req.user.ma_tai_khoan;
+        const avatarPath = '/uploads/avatars/' + req.file.filename;
+
+        await db.query(
+            'UPDATE tai_khoan SET hinh_anh = ? WHERE ma_tai_khoan = ?',
+            [avatarPath, userId]
+        );
+
+        res.json({
+            success: true,
+            message: 'Upload avatar thành công',
+            data: { hinh_anh: avatarPath }
+        });
+    } catch (error) {
+        console.error('❌ Lỗi upload avatar:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server khi upload avatar'
+        });
+    }
+});
+
+// ==========================================
+// ĐỔI MẬT KHẨU
+// ==========================================
+router.put('/change-password', authenticateToken, async (req, res) => {
+    try {
+        const { mat_khau_cu, mat_khau_moi } = req.body;
+        const userId = req.user.ma_tai_khoan;
+
+        // Lấy mật khẩu hiện tại
+        const [users] = await db.query(
+            'SELECT mat_khau FROM tai_khoan WHERE ma_tai_khoan = ?',
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Tài khoản không tồn tại'
+            });
+        }
+
+        // Kiểm tra mật khẩu cũ
+        const isValid = await bcrypt.compare(mat_khau_cu, users[0].mat_khau);
+        if (!isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mật khẩu hiện tại không đúng'
+            });
+        }
+
+        // Mã hóa mật khẩu mới
+        const hashedPassword = await bcrypt.hash(mat_khau_moi, 10);
+
+        await db.query(
+            'UPDATE tai_khoan SET mat_khau = ? WHERE ma_tai_khoan = ?',
+            [hashedPassword, userId]
+        );
+
+        res.json({
+            success: true,
+            message: 'Đổi mật khẩu thành công'
+        });
+    } catch (error) {
+        console.error('❌ Lỗi đổi mật khẩu:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server khi đổi mật khẩu'
+        });
+    }
+});
 
 module.exports = router;
 module.exports.authenticateToken = authenticateToken;
