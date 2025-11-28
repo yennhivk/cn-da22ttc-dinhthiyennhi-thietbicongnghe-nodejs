@@ -1820,53 +1820,8 @@
         </div>
     </footer>
 
-    <script>
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', function() {
-                alert('Mobile menu - To be implemented');
-            });
-        }
-
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const searchTerm = this.value;
-                    if (searchTerm.trim()) {
-                        alert('Tìm kiếm: ' + searchTerm);
-                    }
-                }
-            });
-        }
-
-        // Product card click handling
-        document.querySelectorAll('.group').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (!e.target.closest('button')) {
-                    console.log('Product card clicked');
-                    // Navigate to product detail page
-                }
-            });
-        });
-
-        // Initialize cart badge
-        function updateCartBadge() {
-            const cartBadge = document.querySelector('.cart-badge');
-            if (cartBadge) {
-                const cartItems = localStorage.getItem('cartCount') || 0;
-                cartBadge.textContent = cartItems;
-            }
-        }
-        updateCartBadge();
-
-        // Show default tab on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            switchTab('kham-pha');
-        });
-    </script>
+    <!-- Products JavaScript -->
+    <script src="../js/products.js"></script>
     <script src="../js/main.js"></script>
 </body>
 </html>

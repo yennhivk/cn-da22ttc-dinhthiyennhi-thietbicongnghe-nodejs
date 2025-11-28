@@ -60,9 +60,9 @@ app.get('/api/test-db', async (req, res) => {
     }
 });
 
-// Import routes (sẽ thêm sau)
+// Import routes
+app.use('/api/products', require('./routes/products'));
 // app.use('/api/auth', require('./routes/auth'));
-// app.use('/api/products', require('./routes/products'));
 // app.use('/api/cart', require('./routes/cart'));
 // app.use('/api/orders', require('./routes/orders'));
 
