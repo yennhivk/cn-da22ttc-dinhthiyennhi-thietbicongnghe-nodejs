@@ -1843,7 +1843,7 @@
                     const avatarImg = document.getElementById('userAvatarImg');
                     const defaultIcon = document.getElementById('defaultAvatarIcon');
                     if (user.hinh_anh && avatarImg && defaultIcon) {
-                        avatarImg.src = 'http://localhost:3000' + user.hinh_anh;
+                        avatarImg.src = 'http://localhost:3300' + user.hinh_anh;
                         avatarImg.onload = function() {
                             avatarImg.classList.remove('hidden');
                             defaultIcon.classList.add('hidden');

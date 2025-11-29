@@ -1,10 +1,10 @@
 ### Test kết nối database
-GET http://localhost:3000/api/test-db
+GET http://localhost:3300/api/test-db
 
 ### ==========================================
 ### ĐĂNG KÝ TÀI KHOẢN MỚI
 ### ==========================================
-POST http://localhost:3000/api/auth/register
+POST http://localhost:3300/api/auth/register
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 ### ==========================================
 ### ĐĂNG NHẬP
 ### ==========================================
-POST http://localhost:3000/api/auth/login
+POST http://localhost:3300/api/auth/login
 Content-Type: application/json
 
 {
@@ -28,7 +28,7 @@ Content-Type: application/json
 ### ==========================================
 ### ĐĂNG NHẬP VỚI TÀI KHOẢN ADMIN
 ### ==========================================
-POST http://localhost:3000/api/auth/login
+POST http://localhost:3300/api/auth/login
 Content-Type: application/json
 
 {
@@ -39,17 +39,17 @@ Content-Type: application/json
 ### ==========================================
 ### KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
 ### ==========================================
-GET http://localhost:3000/api/auth/me
+GET http://localhost:3300/api/auth/me
 
 ### ==========================================
 ### ĐĂNG XUẤT
 ### ==========================================
-POST http://localhost:3000/api/auth/logout
+POST http://localhost:3300/api/auth/logout
 
 ### ==========================================
 ### TEST ĐĂNG KÝ VỚI EMAIL ĐÃ TỒN TẠI
 ### ==========================================
-POST http://localhost:3000/api/auth/register
+POST http://localhost:3300/api/auth/register
 Content-Type: application/json
 
 {
@@ -61,7 +61,7 @@ Content-Type: application/json
 ### ==========================================
 ### TEST ĐĂNG NHẬP SAI MẬT KHẨU
 ### ==========================================
-POST http://localhost:3000/api/auth/login
+POST http://localhost:3300/api/auth/login
 Content-Type: application/json
 
 {
@@ -72,7 +72,7 @@ Content-Type: application/json
 ### ==========================================
 ### TEST ĐĂNG KÝ VỚI MẬT KHẨU NGẮN
 ### ==========================================
-POST http://localhost:3000/api/auth/register
+POST http://localhost:3300/api/auth/register
 Content-Type: application/json
 
 {

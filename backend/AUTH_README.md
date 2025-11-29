@@ -36,7 +36,7 @@ mysql -u root -p < CSDL_DoAnCN.sql
 ```bash
 npm start
 ```
-Server sẽ chạy tại: `http://localhost:3000`
+Server sẽ chạy tại: `http://localhost:3300`
 
 ---
 
@@ -176,7 +176,7 @@ const user = getCurrentUser();
 console.log(user.ten_dang_nhap);
 
 // Gọi API với token
-const response = await fetchWithAuth('http://localhost:3000/api/cart', {
+const response = await fetchWithAuth('http://localhost:3300/api/cart', {
     method: 'GET'
 });
 
@@ -200,12 +200,12 @@ logout();
 ### Test bằng curl
 ```bash
 # Đăng ký
-curl -X POST http://localhost:3000/api/auth/register \
+curl -X POST http://localhost:3300/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"ten_dang_nhap":"testuser","mat_khau":"123456","email":"test@gmail.com"}'
 
 # Đăng nhập
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:3300/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"ten_dang_nhap":"testuser","mat_khau":"123456"}'
 ```

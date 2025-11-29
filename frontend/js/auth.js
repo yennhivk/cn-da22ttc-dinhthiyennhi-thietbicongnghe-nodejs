@@ -2,7 +2,7 @@
 // QUẢN LÝ XÁC THỰC NGƯỜI DÙNG
 // ==========================================
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'http://localhost:3300/api';
 
 // Lấy thông tin user từ localStorage
 function getCurrentUser() {

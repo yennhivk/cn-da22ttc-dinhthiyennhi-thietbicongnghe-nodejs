@@ -34,14 +34,14 @@ node scripts/hash-passwords.js
 npm start
 ```
 
-Server sẽ chạy tại: http://localhost:3000
+Server sẽ chạy tại: http://localhost:3300
 
 ---
 
 ## 2. TEST API BẰNG POSTMAN/THUNDER CLIENT
 
 ### Test 1: Đăng ký tài khoản mới
-**POST** `http://localhost:3000/api/auth/register`
+**POST** `http://localhost:3300/api/auth/register`
 
 **Body (JSON):**
 ```json
@@ -68,7 +68,7 @@ Server sẽ chạy tại: http://localhost:3000
 ```
 
 ### Test 2: Đăng nhập
-**POST** `http://localhost:3000/api/auth/login`
+**POST** `http://localhost:3300/api/auth/login`
 
 **Body (JSON):**
 ```json
@@ -96,7 +96,7 @@ Server sẽ chạy tại: http://localhost:3000
 ```
 
 ### Test 3: Kiểm tra thông tin user
-**GET** `http://localhost:3000/api/auth/me`
+**GET** `http://localhost:3300/api/auth/me`
 
 **Headers:**
 ```
@@ -143,7 +143,7 @@ SELECT * FROM tai_khoan WHERE ten_dang_nhap = 'testuser';
 **Giải pháp:**
 - Kiểm tra MySQL đã chạy chưa
 - Kiểm tra thông tin trong file `.env`
-- Test kết nối: `http://localhost:3000/api/test-db`
+- Test kết nối: `http://localhost:3300/api/test-db`
 
 ### Lỗi 2: CORS Error
 **Nguyên nhân:** Frontend và Backend khác domain
