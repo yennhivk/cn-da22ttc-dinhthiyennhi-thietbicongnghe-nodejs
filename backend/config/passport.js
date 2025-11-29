@@ -21,6 +21,8 @@ passport.use(new GoogleStrategy({
 
         let user;
 
+        let isNewUser = false;
+        
         if (existingUsers.length > 0) {
             user = existingUsers[0];
             // Cập nhật google_id nếu user đăng ký bằng email trước đó
@@ -31,7 +33,8 @@ passport.use(new GoogleStrategy({
                 );
             }
         } else {
-            // Tạo user mới
+            // Tạo user mới với trạng thái active (1) - không cần xác nhận OTP
+            isNewUser = true;
             const username = email.split('@')[0] + '_' + Date.now();
             const [result] = await db.query(
                 'INSERT INTO tai_khoan (ten_dang_nhap, email, google_id, hinh_anh, vai_tro, trang_thai) VALUES (?, ?, ?, ?, ?, ?)',
@@ -45,7 +48,7 @@ passport.use(new GoogleStrategy({
             user = newUser[0];
         }
 
-        return done(null, user);
+        return done(null, user, { isNewUser });
     } catch (error) {
         console.error('Google OAuth Error:', error);
         return done(error, null);

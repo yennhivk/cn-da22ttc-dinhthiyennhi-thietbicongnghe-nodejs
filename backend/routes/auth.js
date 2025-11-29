@@ -6,6 +6,10 @@ const db = require('../config/database');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { sendOTPEmail } = require('../config/mailer');
+
+// Lưu trữ OTP tạm thời (trong production nên dùng Redis)
+const otpStore = new Map();
 
 // Cấu hình multer để upload ảnh
 const storage = multer.diskStorage({
@@ -37,7 +41,161 @@ const upload = multer({
 });
 
 // ==========================================
-// ĐĂNG KÝ TÀI KHOẢN MỚI
+// GỬI OTP XÁC NHẬN EMAIL ĐĂNG KÝ
+// ==========================================
+router.post('/send-register-otp', async (req, res) => {
+    try {
+        const { ten_dang_nhap, mat_khau, email } = req.body;
+
+        // Validate input
+        if (!ten_dang_nhap || !mat_khau || !email) {
+            return res.status(400).json({
+                success: false,
+                message: 'Vui lòng điền đầy đủ thông tin'
+            });
+        }
+
+        // Kiểm tra email hợp lệ
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email không hợp lệ'
+            });
+        }
+
+        // Kiểm tra độ dài mật khẩu
+        if (mat_khau.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mật khẩu phải có ít nhất 6 ký tự'
+            });
+        }
+
+        // Kiểm tra email đã tồn tại
+        const [existingEmail] = await db.query(
+            'SELECT ma_tai_khoan FROM tai_khoan WHERE email = ?',
+            [email]
+        );
+
+        if (existingEmail.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Email đã được sử dụng'
+            });
+        }
+
+        // Tạo OTP 6 số
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiresAt = Date.now() + 60000; // 60 giây
+
+        // Mã hóa mật khẩu trước khi lưu tạm
+        const hashedPassword = await bcrypt.hash(mat_khau, 10);
+
+        // Lưu thông tin đăng ký tạm thời
+        otpStore.set(email, {
+            otp,
+            expiresAt,
+            registerData: {
+                ten_dang_nhap,
+                mat_khau: hashedPassword,
+                email,
+                vai_tro: 'khach_hang'
+            }
+        });
+
+        // Gửi email OTP
+        try {
+            await sendOTPEmail(email, otp, ten_dang_nhap);
+            console.log(`✅ Đã gửi OTP đăng ký đến ${email}`);
+        } catch (emailError) {
+            console.error('❌ Lỗi gửi email:', emailError);
+            return res.status(500).json({
+                success: false,
+                message: 'Không thể gửi email xác nhận. Vui lòng thử lại.'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Đã gửi mã xác nhận đến email của bạn'
+        });
+
+    } catch (error) {
+        console.error('❌ Lỗi gửi OTP đăng ký:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server'
+        });
+    }
+});
+
+// ==========================================
+// XÁC NHẬN OTP VÀ TẠO TÀI KHOẢN
+// ==========================================
+router.post('/verify-register-otp', async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const storedData = otpStore.get(email);
+
+        if (!storedData) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mã OTP không tồn tại hoặc đã hết hạn. Vui lòng đăng ký lại.'
+            });
+        }
+
+        // Kiểm tra hết hạn
+        if (Date.now() > storedData.expiresAt) {
+            otpStore.delete(email);
+            return res.status(400).json({
+                success: false,
+                message: 'Mã OTP đã hết hạn. Vui lòng đăng ký lại.'
+            });
+        }
+
+        // Kiểm tra OTP
+        if (storedData.otp !== otp) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mã OTP không đúng'
+            });
+        }
+
+        // OTP đúng - tạo tài khoản
+        const { ten_dang_nhap, mat_khau, vai_tro } = storedData.registerData;
+
+        const [result] = await db.query(
+            'INSERT INTO tai_khoan (ten_dang_nhap, mat_khau, email, vai_tro, trang_thai) VALUES (?, ?, ?, ?, 1)',
+            [ten_dang_nhap, mat_khau, email, vai_tro]
+        );
+
+        // Xóa OTP
+        otpStore.delete(email);
+
+        res.status(201).json({
+            success: true,
+            message: 'Đăng ký tài khoản thành công! Vui lòng đăng nhập.',
+            data: {
+                ma_tai_khoan: result.insertId,
+                ten_dang_nhap,
+                email,
+                vai_tro
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ Lỗi xác nhận OTP đăng ký:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server'
+        });
+    }
+});
+
+// ==========================================
+// ĐĂNG KÝ TÀI KHOẢN MỚI (giữ lại cho tương thích)
 // ==========================================
 router.post('/register', async (req, res) => {
     try {
@@ -65,19 +223,6 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: 'Mật khẩu phải có ít nhất 6 ký tự'
-            });
-        }
-
-        // Kiểm tra tên đăng nhập đã tồn tại
-        const [existingUser] = await db.query(
-            'SELECT ma_tai_khoan FROM tai_khoan WHERE ten_dang_nhap = ?',
-            [ten_dang_nhap]
-        );
-
-        if (existingUser.length > 0) {
-            return res.status(409).json({
-                success: false,
-                message: 'Tên đăng nhập đã tồn tại'
             });
         }
 
@@ -457,8 +602,9 @@ router.get('/google/callback',
     (req, res) => {
         try {
             const user = req.user;
+            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
             
-            // Tạo JWT token
+            // Đăng nhập trực tiếp (không cần xác nhận OTP)
             const token = jwt.sign(
                 {
                     ma_tai_khoan: user.ma_tai_khoan,
@@ -469,7 +615,6 @@ router.get('/google/callback',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
 
-            // Lưu vào session
             req.session.user = {
                 ma_tai_khoan: user.ma_tai_khoan,
                 ten_dang_nhap: user.ten_dang_nhap,
@@ -477,8 +622,6 @@ router.get('/google/callback',
                 vai_tro: user.vai_tro
             };
 
-            // Redirect về frontend với token
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
             const userData = encodeURIComponent(JSON.stringify({
                 ma_tai_khoan: user.ma_tai_khoan,
                 ten_dang_nhap: user.ten_dang_nhap,
@@ -487,13 +630,120 @@ router.get('/google/callback',
                 hinh_anh: user.hinh_anh
             }));
             
-            res.redirect(`${frontendUrl}/frontend/pages/auth-callback.html?token=${token}&user=${userData}`);
+            res.redirect(`${frontendUrl}/pages/auth-callback.html?token=${token}&user=${userData}`);
         } catch (error) {
             console.error('Google callback error:', error);
-            res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5500'}/frontend/pages/login.html?error=server_error`);
+            res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5500'}/pages/login.html?error=server_error`);
         }
     }
 );
+
+// ==========================================
+// XÁC NHẬN OTP
+// ==========================================
+router.post('/verify-otp', async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+        
+        const storedData = otpStore.get(email);
+        
+        if (!storedData) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mã OTP không tồn tại hoặc đã hết hạn'
+            });
+        }
+        
+        // Kiểm tra hết hạn
+        if (Date.now() > storedData.expiresAt) {
+            otpStore.delete(email);
+            // Xóa user khỏi database nếu chưa xác nhận
+            await db.query('DELETE FROM tai_khoan WHERE email = ? AND trang_thai = 0', [email]);
+            return res.status(400).json({
+                success: false,
+                message: 'Mã OTP đã hết hạn. Vui lòng đăng ký lại.'
+            });
+        }
+        
+        // Kiểm tra OTP
+        if (storedData.otp !== otp) {
+            return res.status(400).json({
+                success: false,
+                message: 'Mã OTP không đúng'
+            });
+        }
+        
+        // OTP đúng - kích hoạt tài khoản
+        await db.query('UPDATE tai_khoan SET trang_thai = 1 WHERE email = ?', [email]);
+        
+        // Xóa OTP
+        otpStore.delete(email);
+        
+        // Tạo token và trả về
+        const userData = storedData.userData;
+        const token = jwt.sign(
+            {
+                ma_tai_khoan: userData.ma_tai_khoan,
+                ten_dang_nhap: userData.ten_dang_nhap,
+                vai_tro: userData.vai_tro
+            },
+            process.env.JWT_SECRET || 'your-secret-key',
+            { expiresIn: process.env.JWT_EXPIRE || '24h' }
+        );
+        
+        res.json({
+            success: true,
+            message: 'Xác nhận thành công! Chào mừng bạn đến với Yến Nhi Tech.',
+            data: {
+                token,
+                user: userData
+            }
+        });
+        
+    } catch (error) {
+        console.error('❌ Lỗi xác nhận OTP:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server'
+        });
+    }
+});
+
+// Gửi lại OTP
+router.post('/resend-otp', async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        const storedData = otpStore.get(email);
+        if (!storedData) {
+            return res.status(400).json({
+                success: false,
+                message: 'Không tìm thấy yêu cầu đăng ký. Vui lòng đăng ký lại.'
+            });
+        }
+        
+        // Tạo OTP mới
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        storedData.otp = otp;
+        storedData.expiresAt = Date.now() + 60000;
+        otpStore.set(email, storedData);
+        
+        // Gửi email
+        await sendOTPEmail(email, otp, storedData.userData.ten_dang_nhap);
+        
+        res.json({
+            success: true,
+            message: 'Đã gửi lại mã OTP'
+        });
+        
+    } catch (error) {
+        console.error('❌ Lỗi gửi lại OTP:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server'
+        });
+    }
+});
 
 module.exports = router;
 module.exports.authenticateToken = authenticateToken;
