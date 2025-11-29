@@ -6,7 +6,7 @@ const db = require('../config/database');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { sendOTPEmail } = require('../config/mailer');
+const { sendOTPEmail, sendWelcomeEmail } = require('../config/mailer');
 
 // Lưu trữ OTP tạm thời (trong production nên dùng Redis)
 const otpStore = new Map();
@@ -45,7 +45,11 @@ const upload = multer({
 // ==========================================
 router.post('/send-register-otp', async (req, res) => {
     try {
-        const { ten_dang_nhap, mat_khau, email } = req.body;
+        const ten_dang_nhap = req.body.ten_dang_nhap;
+        const mat_khau = req.body.mat_khau;
+        const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
+        
+        console.log('📝 Send OTP request:', { ten_dang_nhap, email });
 
         // Validate input
         if (!ten_dang_nhap || !mat_khau || !email) {
@@ -87,7 +91,7 @@ router.post('/send-register-otp', async (req, res) => {
 
         // Tạo OTP 6 số
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const expiresAt = Date.now() + 60000; // 60 giây
+        const expiresAt = Date.now() + 300000; // 5 phút (300 giây)
 
         // Mã hóa mật khẩu trước khi lưu tạm
         const hashedPassword = await bcrypt.hash(mat_khau, 10);
@@ -135,28 +139,38 @@ router.post('/send-register-otp', async (req, res) => {
 // ==========================================
 router.post('/verify-register-otp', async (req, res) => {
     try {
-        const { email, otp } = req.body;
+        const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
+        const otp = req.body.otp ? req.body.otp.trim() : '';
+
+        console.log('📧 Verify OTP request:', { email, otp, emailLength: email.length, otpLength: otp.length });
+        console.log('📦 OTP Store keys:', Array.from(otpStore.keys()));
 
         const storedData = otpStore.get(email);
 
         if (!storedData) {
+            console.log('❌ Không tìm thấy OTP cho email:', email);
             return res.status(400).json({
                 success: false,
                 message: 'Mã OTP không tồn tại hoặc đã hết hạn. Vui lòng đăng ký lại.'
             });
         }
 
+        console.log('✅ Found stored OTP:', storedData.otp, 'User input:', otp);
+        console.log('⏰ Expires at:', new Date(storedData.expiresAt), 'Now:', new Date());
+
         // Kiểm tra hết hạn
         if (Date.now() > storedData.expiresAt) {
             otpStore.delete(email);
+            console.log('❌ OTP đã hết hạn');
             return res.status(400).json({
                 success: false,
                 message: 'Mã OTP đã hết hạn. Vui lòng đăng ký lại.'
             });
         }
 
-        // Kiểm tra OTP
-        if (storedData.otp !== otp) {
+        // Kiểm tra OTP - so sánh cả string
+        if (String(storedData.otp) !== String(otp)) {
+            console.log('❌ OTP không khớp. Stored:', storedData.otp, 'Input:', otp);
             return res.status(400).json({
                 success: false,
                 message: 'Mã OTP không đúng'
@@ -173,6 +187,15 @@ router.post('/verify-register-otp', async (req, res) => {
 
         // Xóa OTP
         otpStore.delete(email);
+
+        // Gửi email chào mừng
+        try {
+            await sendWelcomeEmail(email, ten_dang_nhap);
+            console.log(`✅ Đã gửi email chào mừng đến ${email}`);
+        } catch (emailError) {
+            console.error('⚠️ Không thể gửi email chào mừng:', emailError.message);
+            // Không throw error vì đăng ký đã thành công
+        }
 
         res.status(201).json({
             success: true,
@@ -725,7 +748,7 @@ router.post('/resend-otp', async (req, res) => {
         // Tạo OTP mới
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         storedData.otp = otp;
-        storedData.expiresAt = Date.now() + 60000;
+        storedData.expiresAt = Date.now() + 300000; // 5 phút
         otpStore.set(email, storedData);
         
         // Gửi email

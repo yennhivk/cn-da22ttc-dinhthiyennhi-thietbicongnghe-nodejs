@@ -48,8 +48,7 @@
         <!-- Countdown Timer -->
         <div class="text-center mb-4">
             <p class="text-gray-500 text-sm mb-1">Mã hết hạn sau</p>
-            <div class="countdown" id="countdown">60</div>
-            <p class="text-gray-500 text-sm">giây</p>
+            <div class="countdown" id="countdown">5:00</div>
         </div>
 
         <!-- OTP Input -->
@@ -82,7 +81,7 @@
     <script>
         const API_URL = 'http://localhost:3300/api';
         let email = '';
-        let countdown = 60;
+        let countdown = 300; // 5 phút
         let timer = null;
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -107,29 +106,33 @@
             inputs.forEach((input, index) => {
                 input.addEventListener('input', (e) => {
                     const value = e.target.value;
-                    if (value && index < inputs.length - 1) {
+                    // Chỉ cho phép nhập số
+                    e.target.value = value.replace(/[^0-9]/g, '');
+                    if (e.target.value && index < inputs.length - 1) {
                         inputs[index + 1].focus();
                     }
-                    // Auto verify when all filled
-                    if (getOTP().length === 6) {
-                        verifyOTP();
-                    }
+                    // Ẩn lỗi khi người dùng đang nhập
+                    hideError();
                 });
                 
                 input.addEventListener('keydown', (e) => {
                     if (e.key === 'Backspace' && !e.target.value && index > 0) {
                         inputs[index - 1].focus();
                     }
+                    // Cho phép nhấn Enter để xác thực
+                    if (e.key === 'Enter' && getOTP().length === 6) {
+                        verifyOTP();
+                    }
                 });
                 
                 // Cho phép paste
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
-                    const pastedData = e.clipboardData.getData('text').slice(0, 6);
+                    const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
                     pastedData.split('').forEach((char, i) => {
                         if (inputs[i]) inputs[i].value = char;
                     });
-                    if (pastedData.length === 6) verifyOTP();
+                    // Không tự động verify khi paste, để người dùng kiểm tra lại
                 });
             });
             
@@ -141,17 +144,24 @@
             return Array.from(inputs).map(i => i.value).join('');
         }
 
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
         function startCountdown() {
-            countdown = 60;
+            countdown = 300; // 5 phút
             document.getElementById('resendBtn').disabled = true;
+            document.getElementById('countdown').textContent = formatTime(countdown);
             
             timer = setInterval(() => {
                 countdown--;
-                document.getElementById('countdown').textContent = countdown;
+                document.getElementById('countdown').textContent = formatTime(countdown);
                 
                 if (countdown <= 0) {
                     clearInterval(timer);
-                    document.getElementById('countdown').textContent = '0';
+                    document.getElementById('countdown').textContent = '0:00';
                     document.getElementById('resendBtn').disabled = false;
                     showError('Mã OTP đã hết hạn. Vui lòng gửi lại mã mới.');
                 }
