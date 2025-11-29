@@ -24,6 +24,10 @@ CREATE TABLE tai_khoan (
     trang_thai TINYINT DEFAULT 1,
     ngay_tao DATETIME DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE tai_khoan ADD COLUMN hinh_anh VARCHAR(255) DEFAULT NULL;
+ALTER TABLE tai_khoan ADD COLUMN google_id VARCHAR(255) NULL AFTER email;
+ALTER TABLE tai_khoan MODIFY COLUMN mat_khau_gg VARCHAR(255) NULL;
+
 
 -- =========================================
 -- 2. BẢNG DANH MỤC SẢN PHẨM
@@ -426,4 +430,6 @@ SELECT * FROM hoa_don;
 
 -- 19. Bảng chi tiết hóa đơn
 SELECT * FROM chi_tiet_hoa_don;
+
+SELECT ma_tai_khoan, ten_dang_nhap, email, hinh_anh FROM tai_khoan WHERE email = 'your_email';
 
