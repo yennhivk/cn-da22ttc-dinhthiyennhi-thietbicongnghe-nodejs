@@ -19,7 +19,10 @@ function initAuthUI() {
     
     if (user && token) {
         // Đã đăng nhập - hiển thị dropdown user
-        const avatarSrc = user.hinh_anh ? AUTH_API_URL.replace('/api', '') + user.hinh_anh : '';
+        // Nếu ảnh là URL đầy đủ (từ Google) thì dùng trực tiếp, nếu không thì thêm prefix API
+        const avatarSrc = user.hinh_anh ? 
+            (user.hinh_anh.startsWith('http') ? user.hinh_anh : AUTH_API_URL.replace('/api', '') + user.hinh_anh) 
+            : '';
         
         userAccountContainer.innerHTML = `
             <div class="relative group">

@@ -1297,6 +1297,7 @@
     </button>
 
     <script src="js/main.js"></script>
+    <script src="js/auth-ui.js"></script>
     <script>
         // Category Product Suggestions Data
         const categoryProducts = {
@@ -1843,7 +1844,8 @@
                     const avatarImg = document.getElementById('userAvatarImg');
                     const defaultIcon = document.getElementById('defaultAvatarIcon');
                     if (user.hinh_anh && avatarImg && defaultIcon) {
-                        avatarImg.src = 'http://localhost:3300' + user.hinh_anh;
+                        // Nếu ảnh là URL đầy đủ (từ Google) thì dùng trực tiếp
+                        avatarImg.src = user.hinh_anh.startsWith('http') ? user.hinh_anh : 'http://localhost:3300' + user.hinh_anh;
                         avatarImg.onload = function() {
                             avatarImg.classList.remove('hidden');
                             defaultIcon.classList.add('hidden');

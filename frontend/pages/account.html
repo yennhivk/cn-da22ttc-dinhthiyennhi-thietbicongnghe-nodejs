@@ -132,7 +132,11 @@
             document.getElementById('email').value = currentUser.email;
             
             if (currentUser.hinh_anh) {
-                showAvatar(API_URL.replace('/api', '') + currentUser.hinh_anh);
+                // Nếu ảnh là URL đầy đủ (từ Google) thì dùng trực tiếp
+                const avatarUrl = currentUser.hinh_anh.startsWith('http') 
+                    ? currentUser.hinh_anh 
+                    : API_URL.replace('/api', '') + currentUser.hinh_anh;
+                showAvatar(avatarUrl);
             }
         }
 
