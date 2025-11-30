@@ -113,7 +113,18 @@ function displayProducts(products) {
 
 // Create product card HTML
 function createProductCard(product) {
-    const imageUrl = product.anh_chinh || '../images/placeholder.jpg';
+    // Xử lý đường dẫn ảnh - thêm URL backend nếu ảnh từ database
+    let imageUrl = '../images/placeholder.jpg';
+    if (product.anh_chinh) {
+        // Nếu đường dẫn bắt đầu bằng 'images/' thì thêm URL backend
+        if (product.anh_chinh.startsWith('images/')) {
+            imageUrl = `${API_URL.replace('/api', '')}/${product.anh_chinh}`;
+        } else if (product.anh_chinh.startsWith('http')) {
+            imageUrl = product.anh_chinh;
+        } else {
+            imageUrl = `${API_URL.replace('/api', '')}/${product.anh_chinh}`;
+        }
+    }
     const price = formatPrice(product.gia);
     const oldPrice = formatPrice(product.gia * 1.15); // Giả sử giá cũ cao hơn 15%
     const discount = 15; // Giả sử giảm 15%
@@ -135,7 +146,7 @@ function createProductCard(product) {
                 <img src="${imageUrl}" 
                      alt="${product.ten_san_pham}" 
                      class="product-image w-full h-48 object-contain"
-                     onerror="this.src='../images/placeholder.jpg'">
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image'">
                 
                 <!-- Feature Badges -->
                 <div class="absolute top-2 left-2 space-y-1 max-w-[45%]">
@@ -230,6 +241,16 @@ function viewProduct(productId) {
     window.location.href = `product-detail.html?id=${productId}`;
 }
 
+// Helper function to get full image URL
+function getProductImageUrl(imagePath) {
+    if (!imagePath) return '../images/placeholder.jpg';
+    if (imagePath.startsWith('http')) return imagePath;
+    if (imagePath.startsWith('images/')) {
+        return `${API_URL.replace('/api', '')}/${imagePath}`;
+    }
+    return `${API_URL.replace('/api', '')}/${imagePath}`;
+}
+
 // Add to cart
 function addToCart(productId) {
     const product = allProducts.find(p => p.ma_san_pham === productId);
@@ -242,13 +263,13 @@ function addToCart(productId) {
     const existingItem = cart.find(item => item.ma_san_pham === productId);
     
     if (existingItem) {
-        existingItem.so_luong += 1;
+        existingItem.so_luong = (parseInt(existingItem.so_luong) || 0) + 1;
     } else {
         cart.push({
             ma_san_pham: product.ma_san_pham,
             ten_san_pham: product.ten_san_pham,
             gia: product.gia,
-            anh_chinh: product.anh_chinh,
+            anh_chinh: getProductImageUrl(product.anh_chinh),
             so_luong: 1
         });
     }
@@ -266,11 +287,11 @@ function addToCart(productId) {
 // Update cart badge
 function updateCartBadge() {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const totalItems = cart.reduce((sum, item) => sum + item.so_luong, 0);
+    const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.so_luong) || 0), 0);
     
     const badges = document.querySelectorAll('.cart-badge');
     badges.forEach(badge => {
-        badge.textContent = totalItems;
+        badge.textContent = totalItems || 0;
     });
 }
 
