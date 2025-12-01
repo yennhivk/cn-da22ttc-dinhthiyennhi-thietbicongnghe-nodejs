@@ -1,6 +1,9 @@
 // API Configuration
 const API_URL = 'http://localhost:3300/api';
 
+// Default placeholder image
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKhông có ảnh%3C/text%3E%3C/svg%3E';
+
 // State management
 let allProducts = [];
 let filteredProducts = [];
@@ -146,7 +149,7 @@ function createProductCard(product) {
                 <img src="${imageUrl}" 
                      alt="${product.ten_san_pham}" 
                      class="product-image w-full h-48 object-contain"
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                     onerror="this.onerror=null; this.src=PLACEHOLDER_IMAGE">
                 
                 <!-- Feature Badges -->
                 <div class="absolute top-2 left-2 space-y-1 max-w-[45%]">
@@ -251,13 +254,38 @@ function getProductImageUrl(imagePath) {
     return `${API_URL.replace('/api', '')}/${imagePath}`;
 }
 
+// Kiểm tra đăng nhập
+function isLoggedIn() {
+    return !!localStorage.getItem('token');
+}
+
+// Lấy user hiện tại
+function getCurrentUser() {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+}
+
+// Lấy cart key theo user
+function getCartKey() {
+    const user = getCurrentUser();
+    return user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
+}
+
 // Add to cart
 function addToCart(productId) {
+    // Kiểm tra đăng nhập
+    if (!isLoggedIn()) {
+        showLoginRequired();
+        return;
+    }
+    
     const product = allProducts.find(p => p.ma_san_pham === productId);
     if (!product) return;
     
+    const cartKey = getCartKey();
+    
     // Get cart from localStorage
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
     
     // Check if product already in cart
     const existingItem = cart.find(item => item.ma_san_pham === productId);
@@ -275,7 +303,7 @@ function addToCart(productId) {
     }
     
     // Save to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem(cartKey, JSON.stringify(cart));
     
     // Update cart badge
     updateCartBadge();
@@ -284,9 +312,64 @@ function addToCart(productId) {
     showNotification('Đã thêm sản phẩm vào giỏ hàng!');
 }
 
+// Hiển thị yêu cầu đăng nhập
+function showLoginRequired() {
+    // Xóa modal cũ nếu có
+    const existingModal = document.getElementById('loginRequiredModal');
+    if (existingModal) existingModal.remove();
+    
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4';
+    modal.id = 'loginRequiredModal';
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl" onclick="event.stopPropagation()">
+            <div class="text-center">
+                <svg class="w-16 h-16 mx-auto text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Yêu cầu đăng nhập</h3>
+                <p class="text-gray-600 mb-6">Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng</p>
+                <div class="flex gap-3">
+                    <button id="closeLoginModalBtn" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-lg transition">
+                        Để sau
+                    </button>
+                    <a href="login.html" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition text-center inline-flex items-center justify-center">
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Thêm event listener cho nút đóng
+    document.getElementById('closeLoginModalBtn').addEventListener('click', function() {
+        modal.remove();
+    });
+    
+    // Đóng modal khi click bên ngoài
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+// Đóng modal đăng nhập (giữ lại để tương thích)
+function closeLoginModal() {
+    const modal = document.getElementById('loginRequiredModal');
+    if (modal) modal.remove();
+}
+
+// Chuyển đến trang đăng nhập (giữ lại để tương thích)
+function goToLoginPage() {
+    window.location.href = 'login.html';
+}
+
 // Update cart badge
 function updateCartBadge() {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cartKey = getCartKey();
+    const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
     const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.so_luong) || 0), 0);
     
     const badges = document.querySelectorAll('.cart-badge');

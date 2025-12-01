@@ -5,6 +5,23 @@ const API_URL = 'http://localhost:3300/api';
 let currentProduct = null;
 let currentQuantity = 1;
 
+// Kiểm tra đăng nhập
+function isLoggedIn() {
+    return !!localStorage.getItem('token');
+}
+
+// Lấy user hiện tại
+function getCurrentUser() {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+}
+
+// Lấy cart key theo user
+function getCartKey() {
+    const user = getCurrentUser();
+    return user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -60,7 +77,7 @@ function displayProductDetail(product) {
                     class="thumbnail-item flex-shrink-0 w-20 h-20 border-2 ${index === 0 ? 'border-red-600' : 'border-gray-200'} rounded-lg overflow-hidden">
                 <img src="${getProductImageUrl(img.duong_dan_anh)}" alt="Thumbnail ${index + 1}" 
                      class="w-full h-full object-contain"
-                     onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                     onerror="this.onerror=null; this.src=PLACEHOLDER_IMAGE">
             </button>
         `).join('');
     } else {
@@ -453,11 +470,11 @@ async function loadRelatedProducts(categoryId) {
 function displaySampleRelatedProducts() {
     const container = document.getElementById('relatedProducts');
     const sampleProducts = [
-        { id: 1, name: 'iPhone 15 Pro Max', price: 33990000, brand: 'Apple', image: 'https://via.placeholder.com/200x200?text=iPhone+15' },
-        { id: 2, name: 'Samsung Galaxy S24 Ultra', price: 29990000, brand: 'Samsung', image: 'https://via.placeholder.com/200x200?text=Samsung+S24' },
-        { id: 3, name: 'MacBook Air M3 2024', price: 28990000, brand: 'Apple', image: 'https://via.placeholder.com/200x200?text=MacBook+Air' },
-        { id: 4, name: 'Dell XPS 13 Plus', price: 25990000, brand: 'Dell', image: 'https://via.placeholder.com/200x200?text=Dell+XPS' },
-        { id: 5, name: 'Tai nghe AirPods Pro 2', price: 5990000, brand: 'Apple', image: 'https://via.placeholder.com/200x200?text=AirPods+Pro' },
+        { id: 1, name: 'iPhone 15 Pro Max', price: 33990000, brand: 'Apple', image: PLACEHOLDER_IMAGE },
+        { id: 2, name: 'Samsung Galaxy S24 Ultra', price: 29990000, brand: 'Samsung', image: PLACEHOLDER_IMAGE },
+        { id: 3, name: 'MacBook Air M3 2024', price: 28990000, brand: 'Apple', image: PLACEHOLDER_IMAGE },
+        { id: 4, name: 'Dell XPS 13 Plus', price: 25990000, brand: 'Dell', image: PLACEHOLDER_IMAGE },
+        { id: 5, name: 'Tai nghe AirPods Pro 2', price: 5990000, brand: 'Apple', image: PLACEHOLDER_IMAGE },
     ];
     
     let html = '<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">';
@@ -493,7 +510,7 @@ function displayRelatedProducts(products, categoryId) {
                     <img src="${getProductImageUrl(product.anh_chinh)}" 
                          alt="${product.ten_san_pham}" 
                          class="w-full h-36 object-contain group-hover:scale-110 transition-transform duration-300"
-                         onerror="this.src='https://via.placeholder.com/200x150?text=No+Image'">
+                         onerror="this.onerror=null; this.src=PLACEHOLDER_IMAGE">
                 </div>
             </div>
             <div class="p-3">
@@ -579,10 +596,14 @@ function createViewMoreButton(categoryId) {
     `;
 }
 
+// Default placeholder image
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKhông có ảnh%3C/text%3E%3C/svg%3E';
+
 // Helper function to get full image URL
 function getProductImageUrl(imagePath) {
-    if (!imagePath) return 'https://via.placeholder.com/600x600?text=No+Image';
+    if (!imagePath) return PLACEHOLDER_IMAGE;
     if (imagePath.startsWith('http')) return imagePath;
+    if (imagePath.startsWith('data:')) return imagePath;
     if (imagePath.startsWith('images/')) {
         return `${API_URL.replace('/api', '')}/${imagePath}`;
     }
@@ -661,14 +682,75 @@ function switchTab(tabName) {
 }
 
 
+// Hiển thị yêu cầu đăng nhập
+function showLoginRequired() {
+    // Xóa modal cũ nếu có
+    const existingModal = document.getElementById('loginRequiredModal');
+    if (existingModal) existingModal.remove();
+    
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4';
+    modal.id = 'loginRequiredModal';
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl" onclick="event.stopPropagation()">
+            <div class="text-center">
+                <svg class="w-16 h-16 mx-auto text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Yêu cầu đăng nhập</h3>
+                <p class="text-gray-600 mb-6">Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng</p>
+                <div class="flex gap-3">
+                    <button id="closeLoginModalBtn" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-lg transition">
+                        Để sau
+                    </button>
+                    <a href="login.html" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition text-center inline-flex items-center justify-center">
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Thêm event listener cho nút đóng
+    document.getElementById('closeLoginModalBtn').addEventListener('click', function() {
+        modal.remove();
+    });
+    
+    // Đóng modal khi click bên ngoài
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+// Đóng modal đăng nhập (giữ lại để tương thích)
+function closeLoginModal() {
+    const modal = document.getElementById('loginRequiredModal');
+    if (modal) modal.remove();
+}
+
+// Chuyển đến trang đăng nhập (giữ lại để tương thích)
+function goToLoginPage() {
+    window.location.href = 'login.html';
+}
+
 // Add to cart from detail page
 function addToCartFromDetail() {
+    // Kiểm tra đăng nhập
+    if (!isLoggedIn()) {
+        showLoginRequired();
+        return;
+    }
+    
     if (!currentProduct) return;
     
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
+    const cartKey = getCartKey();
     
     // Get cart from localStorage
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
     
     // Check if product already in cart
     const existingItem = cart.find(item => item.ma_san_pham === currentProduct.ma_san_pham);
@@ -686,7 +768,7 @@ function addToCartFromDetail() {
     }
     
     // Save to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem(cartKey, JSON.stringify(cart));
     
     // Update cart badge
     updateCartBadge();
@@ -697,6 +779,11 @@ function addToCartFromDetail() {
 
 // Buy now
 function buyNow() {
+    // Kiểm tra đăng nhập trước
+    if (!isLoggedIn()) {
+        showLoginRequired();
+        return;
+    }
     addToCartFromDetail();
     window.location.href = 'cart.html';
 }
@@ -743,7 +830,8 @@ document.addEventListener('keydown', function(e) {
 
 // Update cart badge
 function updateCartBadge() {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cartKey = getCartKey();
+    const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
     const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.so_luong) || 0), 0);
     
     document.querySelectorAll('.cart-badge').forEach(badge => {
