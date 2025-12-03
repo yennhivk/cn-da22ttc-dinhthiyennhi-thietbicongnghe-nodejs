@@ -438,17 +438,8 @@ function proceedToCheckout() {
     const checkoutKey = user ? `checkout_${user.ma_tai_khoan}` : 'checkout_guest';
     localStorage.setItem(checkoutKey, JSON.stringify(selectedProducts));
     
-    // Chuyển đến trang thanh toán (hoặc hiển thị thông báo nếu chưa có trang)
-    showNotification(`Đang chuyển đến thanh toán với ${selectedProducts.length} sản phẩm...`);
-    
-    // TODO: Chuyển đến trang checkout.html khi có
-    // window.location.href = 'checkout.html';
-    
-    // Tạm thời hiển thị thông tin
-    setTimeout(() => {
-        const total = selectedProducts.reduce((sum, item) => sum + (item.gia * (parseInt(item.so_luong) || 1)), 0);
-        alert(`Thanh toán ${selectedProducts.length} sản phẩm\nTổng tiền: ${formatPrice(total)}\n\n(Tính năng thanh toán đang được phát triển)`);
-    }, 500);
+    // Chuyển đến trang thanh toán
+    window.location.href = 'checkout.html';
 }
 
 // Mobile menu toggle
