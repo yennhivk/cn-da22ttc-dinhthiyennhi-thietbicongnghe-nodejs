@@ -14,6 +14,7 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             min-height: 100vh;
+            padding-top: 64px; /* Space for fixed navbar */
         }
         .member-card {
             background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
@@ -60,6 +61,38 @@
     </style>
 </head>
 <body class="flex items-center justify-center px-4 py-8">
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-yellow-500 to-yellow-400 shadow-lg fixed top-0 left-0 right-0 z-50 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-16 gap-2 sm:gap-3 lg:gap-4">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0 hover:scale-105 transition-all duration-300">
+                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 md:w-14 md:h-14 object-cover rounded-full shadow-lg">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-lg md:text-xl font-bold text-red-600 drop-shadow-md">Yến Nhi</span>
+                        <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', 'Lucida Calligraphy', cursive;">Tech</span>
+                    </div>
+                </a>
+
+                <!-- Right items -->
+                <div class="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-auto">
+                    <!-- Cart Icon -->
+                    <a href="cart.html" class="relative text-black-500 hover:text-red-600 transition transform hover:scale-110 flex-shrink-0" title="Giỏ hàng">
+                        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+
+                    <!-- User Account Container -->
+                    <div class="user-account-container">
+                        <!-- Will be populated by auth-ui.js -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-8 items-center">
         <!-- Left Side - Member Benefits -->
         <div class="member-card p-8 lg:p-12 text-white relative overflow-hidden">
@@ -231,7 +264,10 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3300/api';
+        // Tự động phát hiện backend URL
+        const API_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+            ? 'http://localhost:3300/api'
+            : 'http://localhost:3300/api';
 
         async function handleLogin() {
             const email = document.getElementById('email').value;
@@ -296,6 +332,26 @@
         function loginWithGoogle() {
             window.location.href = `${API_URL}/auth/google`;
         }
+
+        // Update cart badge
+        function updateCartBadge() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const cartKey = user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
+            const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.querySelector('.cart-badge');
+            if (badge) {
+                badge.textContent = totalItems;
+            }
+        }
+
+        // Load cart badge on page load
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
     </script>
+    
+    <!-- Main JS Script -->
+    <script src="../js/main.js"></script>
+    <!-- Auth UI Script -->
+    <script src="../js/auth-ui.js"></script>
 </body>
 </html>

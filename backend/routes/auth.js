@@ -415,9 +415,13 @@ router.get('/me', async (req, res) => {
             });
         }
 
-        // Lấy thông tin user từ database
+        // Lấy thông tin user từ database (bao gồm cả thông tin cá nhân)
         const [users] = await db.query(
-            'SELECT ma_tai_khoan, ten_dang_nhap, email, vai_tro, trang_thai FROM tai_khoan WHERE ma_tai_khoan = ?',
+            `SELECT tk.ma_tai_khoan, tk.ten_dang_nhap, tk.email, tk.vai_tro, tk.trang_thai, tk.hinh_anh,
+                    kh.ho_ten, kh.so_dien_thoai, kh.dia_chi, kh.tinh_thanh, kh.quan_huyen
+             FROM tai_khoan tk
+             LEFT JOIN khach_hang kh ON tk.ma_tai_khoan = kh.ma_tai_khoan
+             WHERE tk.ma_tai_khoan = ?`,
             [req.session.user.ma_tai_khoan]
         );
 
@@ -441,11 +445,17 @@ router.get('/me', async (req, res) => {
 
         res.json({
             success: true,
-            data: {
+            user: {
                 ma_tai_khoan: user.ma_tai_khoan,
                 ten_dang_nhap: user.ten_dang_nhap,
                 email: user.email,
-                vai_tro: user.vai_tro
+                vai_tro: user.vai_tro,
+                hinh_anh: user.hinh_anh,
+                ho_ten: user.ho_ten,
+                so_dien_thoai: user.so_dien_thoai,
+                dia_chi: user.dia_chi,
+                tinh_thanh: user.tinh_thanh,
+                quan_huyen: user.quan_huyen
             }
         });
 

@@ -6,6 +6,7 @@
     <title>Tài khoản của tôi - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/vietnam-address.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <!-- Navigation -->
@@ -53,7 +54,7 @@
 
                     <nav class="space-y-2">
                         <a href="#" class="block py-2 px-4 bg-orange-50 text-orange-600 rounded-lg font-medium">Thông tin tài khoản</a>
-                        <a href="orders.html" class="block py-2 px-4 text-gray-600 hover:bg-gray-50 rounded-lg">Đơn hàng của tôi</a>
+                        <a href="order-history.html" class="block py-2 px-4 text-gray-600 hover:bg-gray-50 rounded-lg">Đơn hàng của tôi</a>
                         <button onclick="handleLogout()" class="w-full text-left py-2 px-4 text-red-500 hover:bg-red-50 rounded-lg">Đăng xuất</button>
                     </nav>
                 </div>
@@ -73,6 +74,11 @@
                             <input type="email" id="email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100" readonly>
                         </div>
 
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Số điện thoại</label>
+                            <input type="tel" id="phoneNumber" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" placeholder="Nhập số điện thoại">
+                        </div>
+
                         <div class="pt-4">
                             <button type="submit" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition">
                                 Cập nhật thông tin
@@ -80,6 +86,53 @@
                         </div>
                     </form>
 
+                    <!-- Address Section -->
+                    <div class="mt-8 pt-8 border-t">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Địa chỉ giao hàng</h3>
+                        <form id="addressForm" class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Tỉnh/Thành phố</label>
+                                    <select id="city" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" required>
+                                        <option value="">Chọn Tỉnh/Thành phố</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Quận/Huyện</label>
+                                    <select id="district" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" required disabled>
+                                        <option value="">Chọn Quận/Huyện</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Phường/Xã</label>
+                                    <select id="ward" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" required disabled>
+                                        <option value="">Chọn Phường/Xã</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Mã bưu chính</label>
+                                    <input type="text" id="zipCode" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" placeholder="Ví dụ: 700000">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Địa chỉ cụ thể</label>
+                                <textarea id="detailAddress" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" placeholder="Số nhà, tên đường..." required></textarea>
+                            </div>
+                            <button type="submit" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition">
+                                Lưu địa chỉ
+                            </button>
+                        </form>
+
+                        <!-- Saved Addresses List -->
+                        <div id="savedAddresses" class="mt-6 space-y-3">
+                            <h4 class="font-semibold text-gray-700 mb-3">Địa chỉ đã lưu:</h4>
+                            <div id="addressList" class="space-y-3">
+                                <!-- Addresses will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Change Password Section -->
                     <div class="mt-8 pt-8 border-t">
@@ -123,6 +176,64 @@
             
             currentUser = user;
             loadUserInfo();
+            loadCities();
+        });
+        
+        // Load cities into dropdown
+        function loadCities() {
+            const citySelect = document.getElementById('city');
+            Object.keys(vietnamAddress).forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+        
+        // Handle city change
+        document.getElementById('city').addEventListener('change', function() {
+            const city = this.value;
+            const districtSelect = document.getElementById('district');
+            const wardSelect = document.getElementById('ward');
+            
+            // Reset district and ward
+            districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
+            wardSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>';
+            wardSelect.disabled = true;
+            
+            if (city && vietnamAddress[city]) {
+                districtSelect.disabled = false;
+                Object.keys(vietnamAddress[city]).forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                districtSelect.disabled = true;
+            }
+        });
+        
+        // Handle district change
+        document.getElementById('district').addEventListener('change', function() {
+            const city = document.getElementById('city').value;
+            const district = this.value;
+            const wardSelect = document.getElementById('ward');
+            
+            // Reset ward
+            wardSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>';
+            
+            if (city && district && vietnamAddress[city][district]) {
+                wardSelect.disabled = false;
+                vietnamAddress[city][district].forEach(ward => {
+                    const option = document.createElement('option');
+                    option.value = ward;
+                    option.textContent = ward;
+                    wardSelect.appendChild(option);
+                });
+            } else {
+                wardSelect.disabled = true;
+            }
         });
 
         function loadUserInfo() {
@@ -131,6 +242,11 @@
             document.getElementById('fullName').value = currentUser.ten_dang_nhap;
             document.getElementById('email').value = currentUser.email;
             
+            // Load phone number if exists
+            if (currentUser.so_dien_thoai) {
+                document.getElementById('phoneNumber').value = currentUser.so_dien_thoai;
+            }
+            
             if (currentUser.hinh_anh) {
                 // Nếu ảnh là URL đầy đủ (từ Google) thì dùng trực tiếp
                 const avatarUrl = currentUser.hinh_anh.startsWith('http') 
@@ -138,6 +254,9 @@
                     : API_URL.replace('/api', '') + currentUser.hinh_anh;
                 showAvatar(avatarUrl);
             }
+            
+            // Load saved addresses
+            loadAddresses();
         }
 
         function showAvatar(url) {
@@ -223,6 +342,7 @@
             e.preventDefault();
             
             const fullName = document.getElementById('fullName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
             
             try {
                 const response = await fetch(`${API_URL}/auth/update-profile`, {
@@ -232,7 +352,8 @@
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
                     body: JSON.stringify({
-                        ten_dang_nhap: fullName
+                        ten_dang_nhap: fullName,
+                        so_dien_thoai: phoneNumber
                     })
                 });
 
@@ -240,9 +361,10 @@
                 
                 if (data.success) {
                     currentUser.ten_dang_nhap = fullName;
+                    currentUser.so_dien_thoai = phoneNumber;
                     localStorage.setItem('user', JSON.stringify(currentUser));
                     alert('Cập nhật thông tin thành công!');
-                    window.location.href = '../index.html';
+                    loadUserInfo();
                 } else {
                     alert(data.message || 'Cập nhật thất bại');
                 }
@@ -251,6 +373,110 @@
                 alert('Không thể kết nối đến server');
             }
         });
+
+        // Load addresses
+        function loadAddresses() {
+            const addresses = JSON.parse(localStorage.getItem(`addresses_${currentUser.ma_tai_khoan}`) || '[]');
+            const addressList = document.getElementById('addressList');
+            
+            if (addresses.length === 0) {
+                addressList.innerHTML = '<p class="text-gray-500 text-sm">Chưa có địa chỉ nào được lưu</p>';
+                return;
+            }
+            
+            addressList.innerHTML = addresses.map((addr, index) => `
+                <div class="border-2 border-gray-200 rounded-lg p-4 ${addr.isDefault ? 'border-orange-500 bg-orange-50' : ''}">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            ${addr.isDefault ? '<span class="inline-block bg-orange-500 text-white text-xs px-2 py-1 rounded mb-2">Mặc định</span>' : ''}
+                            <p class="font-semibold text-gray-800">${addr.fullAddress}</p>
+                            <p class="text-gray-600 text-sm">${addr.ward}, ${addr.district}, ${addr.city}</p>
+                            ${addr.zipCode ? `<p class="text-gray-500 text-xs">Mã bưu chính: ${addr.zipCode}</p>` : ''}
+                        </div>
+                        <div class="flex gap-2">
+                            ${!addr.isDefault ? `<button onclick="setDefaultAddress(${index})" class="text-blue-500 hover:text-blue-700 text-sm font-medium">Đặt mặc định</button>` : ''}
+                            <button onclick="deleteAddress(${index})" class="text-red-500 hover:text-red-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Save address
+        document.getElementById('addressForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const city = document.getElementById('city').value;
+            const district = document.getElementById('district').value;
+            const ward = document.getElementById('ward').value;
+            const zipCode = document.getElementById('zipCode').value.trim();
+            const fullAddress = document.getElementById('detailAddress').value.trim();
+            
+            if (!city || !district || !ward || !fullAddress) {
+                alert('Vui lòng điền đầy đủ thông tin địa chỉ');
+                return;
+            }
+            
+            const addresses = JSON.parse(localStorage.getItem(`addresses_${currentUser.ma_tai_khoan}`) || '[]');
+            
+            const newAddress = {
+                city,
+                district,
+                ward,
+                zipCode,
+                fullAddress,
+                isDefault: addresses.length === 0 // First address is default
+            };
+            
+            addresses.push(newAddress);
+            localStorage.setItem(`addresses_${currentUser.ma_tai_khoan}`, JSON.stringify(addresses));
+            
+            // Clear form
+            document.getElementById('addressForm').reset();
+            document.getElementById('district').disabled = true;
+            document.getElementById('ward').disabled = true;
+            
+            // Reload addresses
+            loadAddresses();
+            
+            alert('Lưu địa chỉ thành công!');
+        });
+
+        // Set default address
+        function setDefaultAddress(index) {
+            const addresses = JSON.parse(localStorage.getItem(`addresses_${currentUser.ma_tai_khoan}`) || '[]');
+            
+            // Remove default from all addresses
+            addresses.forEach(addr => addr.isDefault = false);
+            
+            // Set new default
+            addresses[index].isDefault = true;
+            
+            localStorage.setItem(`addresses_${currentUser.ma_tai_khoan}`, JSON.stringify(addresses));
+            loadAddresses();
+        }
+
+        // Delete address
+        function deleteAddress(index) {
+            if (!confirm('Bạn có chắc muốn xóa địa chỉ này?')) return;
+            
+            const addresses = JSON.parse(localStorage.getItem(`addresses_${currentUser.ma_tai_khoan}`) || '[]');
+            const wasDefault = addresses[index].isDefault;
+            
+            addresses.splice(index, 1);
+            
+            // If deleted address was default, set first address as default
+            if (wasDefault && addresses.length > 0) {
+                addresses[0].isDefault = true;
+            }
+            
+            localStorage.setItem(`addresses_${currentUser.ma_tai_khoan}`, JSON.stringify(addresses));
+            loadAddresses();
+        }
 
         // Change password
         document.getElementById('passwordForm').addEventListener('submit', async function(e) {

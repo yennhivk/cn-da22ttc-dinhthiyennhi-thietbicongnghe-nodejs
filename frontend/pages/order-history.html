@@ -3,177 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Sử Đơn Hàng - Yến Nhi Mobile</title>
+    <title>Đơn Hàng Của Tôi - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .tab-active {
+            color: #ee4d2d;
+            border-bottom: 2px solid #ee4d2d;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 border-b-4 border-yellow-400 w-full">
-        <div class="px-3 sm:px-4 lg:px-6">
-            <div class="flex items-center h-20 gap-2 sm:gap-3 lg:gap-4">
-                <a href="../index.html" class="flex items-center gap-1 sm:gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0">
-                    <div class="relative w-10 h-10 sm:w-12 sm:h-12">
-                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-yellow-500 rounded-lg transform group-hover:scale-110 transition duration-300 shadow-lg"></div>
-                        <div class="absolute inset-0.5 bg-white rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-transparent" fill="none" stroke="url(#gradient)" viewBox="0 0 24 24" stroke-width="2.5">
-                                <defs>
-                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-                                        <stop offset="20%" style="stop-color:#a855f7;stop-opacity:1" />
-                                        <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
-                                    </linearGradient>
-                                </defs>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="block">
-                        <div class="flex items-center gap-0.5 sm:gap-1">
-                            <span class="text-xs sm:text-sm md:text-lg font-black bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">Yến Nhi</span>
-                            <span class="text-xs sm:text-sm md:text-lg font-black text-yellow-500">Mobile</span>
-                        </div>
-                        <p class="text-[8px] sm:text-xs font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text">TECH</p>
-                    </div>
-                </a>
+    <!-- HEADER -->
+    <div id="header-placeholder"></div>
 
-                <div class="flex items-center gap-1 sm:gap-1.5 lg:gap-4 ml-auto">
-                    <a href="cart.html" class="relative text-blue-600 hover:text-yellow-500 transition flex-shrink-0">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        <span class="cart-badge absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <section class="pt-24 pb-8 bg-gradient-to-r from-blue-600 to-green-600 text-white">
+    <!-- MAIN CONTENT -->
+    <main class="pt-24 pb-12 min-h-screen">
         <div class="max-w-7xl mx-auto px-4">
-            <h1 class="text-3xl md:text-5xl font-bold mb-4">Lịch Sử Đơn Hàng</h1>
-            <p class="text-lg md:text-xl">Theo dõi đơn hàng của bạn</p>
-        </div>
-    </section>
+            <!-- Back Button -->
+            <div class="mb-6">
+                <a href="../index.html" class="inline-flex items-center gap-2 text-gray-600 hover:text-orange-500 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    <span class="font-medium">Quay về trang chủ</span>
+                </a>
+            </div>
 
-    <section class="py-12 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="md:col-span-1">
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <div class="text-center mb-6">
-                            <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
-                                U
-                            </div>
-                            <h3 class="font-bold text-lg">User Name</h3>
-                            <p class="text-gray-600 text-sm">user@example.com</p>
-                        </div>
-                        <nav class="space-y-2">
-                            <a href="profile.html" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">Thông tin cá nhân</a>
-                            <a href="order-history.html" class="block px-4 py-3 bg-blue-50 text-blue-600 rounded-lg font-semibold">Đơn hàng</a>
-                            <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg font-semibold">Đổi mật khẩu</a>
-                            <a href="../index.html" class="block px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-semibold">Đăng xuất</a>
-                        </nav>
-                    </div>
+            <!-- Page Title -->
+            <h1 class="text-2xl font-bold mb-6">Đơn hàng của tôi</h1>
+
+            <!-- Tabs Navigation -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="flex border-b overflow-x-auto">
+                    <button class="tab-button tab-active px-6 py-4 font-medium whitespace-nowrap" data-tab="all">
+                        Tất cả
+                    </button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="pending">
+                        Chờ xác nhận
+                    </button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="processing">
+                        Vận chuyển
+                    </button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="shipping">
+                        Chờ giao hàng
+                    </button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="completed">
+                        Hoàn thành
+                    </button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="cancelled">
+                        Đã hủy
+                    </button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="return">
+                        Trả hàng/Hoàn tiền
+                    </button>
                 </div>
 
-                <div class="md:col-span-3">
-                    <div class="space-y-4">
-                        <div class="bg-white rounded-xl shadow-lg p-6">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 class="font-bold text-lg">Đơn hàng #12345</h3>
-                                    <p class="text-gray-600 text-sm">Ngày đặt: 15/01/2025</p>
-                                </div>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">Đã giao</span>
-                            </div>
-                            <div class="space-y-3 mb-4">
-                                <div class="flex gap-3">
-                                    <img src="https://via.placeholder.com/80" alt="Product" class="w-16 h-16 object-cover rounded">
-                                    <div class="flex-1">
-                                        <p class="font-semibold">iPhone 15 Pro Max 256GB</p>
-                                        <p class="text-gray-600 text-sm">x1</p>
-                                        <p class="font-bold text-red-600">34.990.000đ</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-t pt-4">
-                                <div class="flex justify-between mb-2">
-                                    <span class="text-gray-600">Tổng cộng:</span>
-                                    <span class="font-bold text-xl text-red-600">34.990.000đ</span>
-                                </div>
-                                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
-                                    Xem chi tiết
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-xl shadow-lg p-6">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 class="font-bold text-lg">Đơn hàng #12344</h3>
-                                    <p class="text-gray-600 text-sm">Ngày đặt: 10/01/2025</p>
-                                </div>
-                                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">Đang giao</span>
-                            </div>
-                            <div class="space-y-3 mb-4">
-                                <div class="flex gap-3">
-                                    <img src="https://via.placeholder.com/80" alt="Product" class="w-16 h-16 object-cover rounded">
-                                    <div class="flex-1">
-                                        <p class="font-semibold">Samsung Galaxy S24 Ultra</p>
-                                        <p class="text-gray-600 text-sm">x1</p>
-                                        <p class="font-bold text-red-600">25.990.000đ</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-t pt-4">
-                                <div class="flex justify-between mb-2">
-                                    <span class="text-gray-600">Tổng cộng:</span>
-                                    <span class="font-bold text-xl text-red-600">25.990.000đ</span>
-                                </div>
-                                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
-                                    Theo dõi đơn hàng
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-xl shadow-lg p-6">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h3 class="font-bold text-lg">Đơn hàng #12343</h3>
-                                    <p class="text-gray-600 text-sm">Ngày đặt: 05/01/2025</p>
-                                </div>
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">Đang xử lý</span>
-                            </div>
-                            <div class="space-y-3 mb-4">
-                                <div class="flex gap-3">
-                                    <img src="https://via.placeholder.com/80" alt="Product" class="w-16 h-16 object-cover rounded">
-                                    <div class="flex-1">
-                                        <p class="font-semibold">AirPods Pro 2</p>
-                                        <p class="text-gray-600 text-sm">x2</p>
-                                        <p class="font-bold text-red-600">13.980.000đ</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="border-t pt-4">
-                                <div class="flex justify-between mb-2">
-                                    <span class="text-gray-600">Tổng cộng:</span>
-                                    <span class="font-bold text-xl text-red-600">13.980.000đ</span>
-                                </div>
-                                <button class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">
-                                    Hủy đơn hàng
-                                </button>
-                            </div>
-                        </div>
+                <!-- Search Box -->
+                <div class="p-4 border-b">
+                    <div class="relative">
+                        <input type="text" id="searchOrder" placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm" 
+                            class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500">
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <footer class="bg-gray-900 text-white py-8 px-4">
-        <div class="max-w-7xl mx-auto text-center text-gray-400">
-            <p>&copy; 2025 Yến Nhi Mobile. All rights reserved.</p>
+            <!-- Orders List -->
+            <div id="ordersList" class="space-y-4">
+                <!-- Orders will be loaded here -->
+            </div>
         </div>
+    </main>
+
+    <!-- FOOTER -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../js/load-components.js"></script>
+    <script src="../js/auth-ui.js"></script>
+    <script>
+        const API_URL = 'http://localhost:3300/api';
+        let currentTab = 'all';
+        let allOrders = [];
+
+        // Tab switching
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('text-gray-600', 'hover:text-gray-900');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('tab-active');
+                this.classList.remove('text-gray-600', 'hover:text-gray-900');
+                
+                currentTab = this.dataset.tab;
+                filterOrders();
+            });
+        });
+
+        // Load orders
+        async function loadOrders() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Mock data - Replace with actual API call
+            allOrders = [
+                {
+                    id: '1',
+                    shopName: 'Shop Benbo',
+                    status: 'cancelled',
+                    statusText: 'ĐÃ HỦY',
+                    products: [
+                        {
+                            name: 'Đàn guitar acoustic dành cho người mới tập chơi,\'18 phím ấm, Dây loại mềm, âm thanh hay vang to,chơi được tiết tấu nhanh',
+                            variant: 'Phân loại hàng: Màu đen ua+Túi dụng',
+                            quantity: 1,
+                            price: 564999,
+                            originalPrice: 750000,
+                            image: '../images/Screenshot 2025-11-10 154306.png'
+                        }
+                    ],
+                    total: 579499,
+                    createdAt: '2025-01-15'
+                },
+                {
+                    id: '2',
+                    shopName: 'Xưởng_May_Bảo_Ngọc',
+                    status: 'completed',
+                    statusText: 'HOÀN THÀNH',
+                    deliverySuccess: true,
+                    products: [
+                        {
+                            name: 'Áo Thun Nam Nữ Balen Tay Ngắn Form Rộng In Logo 2 Mặt Siêu Nét, Áo Phông Unisex Chất Cotton Cao Cấp Hottrend Hè 2025',
+                            variant: 'Phân loại hàng: Xanh Than,S(38-44KG)',
+                            quantity: 1,
+                            price: 65000,
+                            originalPrice: 118000,
+                            image: '../images/Screenshot 2025-11-10 154306.png'
+                        }
+                    ],
+                    total: 65000,
+                    createdAt: '2025-01-10'
+                }
+            ];
+
+            filterOrders();
+        }
+
+        function filterOrders() {
+            let filtered = allOrders;
+            
+            if (currentTab !== 'all') {
+                filtered = allOrders.filter(order => order.status === currentTab);
+            }
+
+            renderOrders(filtered);
+        }
+
+        function renderOrders(orders) {
+            const ordersList = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="bg-white rounded-lg shadow p-12 text-center">
+                        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p class="text-gray-500 text-lg">Chưa có đơn hàng</p>
+                    </div>
+                `;
+                return;
+            }
+
+            ordersList.innerHTML = orders.map(order => `
+                <div class="bg-white rounded-lg shadow">
+                    <!-- Order Header -->
+                    <div class="flex items-center justify-between px-6 py-3 border-b bg-gray-50">
+                        <div class="flex items-center gap-4">
+                            <span class="font-medium">Yêu thích</span>
+                            <span class="font-semibold">${order.shopName}</span>
+                            <button class="text-orange-500 hover:text-orange-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                            </button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Xem Shop</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${order.deliverySuccess ? '<span class="text-green-600 text-sm">✓ Giao hàng thành công</span>' : ''}
+                            <span class="text-orange-500 font-semibold">${order.statusText}</span>
+                        </div>
+                    </div>
+
+                    <!-- Order Products -->
+                    <div class="p-6">
+                        ${order.products.map(product => `
+                            <div class="flex gap-4 mb-4">
+                                <img src="${product.image}" alt="${product.name}" class="w-20 h-20 object-cover rounded border">
+                                <div class="flex-1">
+                                    <h3 class="font-medium mb-1 line-clamp-2">${product.name}</h3>
+                                    <p class="text-sm text-gray-600 mb-2">${product.variant}</p>
+                                    <p class="text-sm text-gray-600">x${product.quantity}</p>
+                                </div>
+                                <div class="text-right">
+                                    ${product.originalPrice ? `<p class="text-sm text-gray-400 line-through">${product.originalPrice.toLocaleString('vi-VN')}đ</p>` : ''}
+                                    <p class="text-orange-500 font-medium">${product.price.toLocaleString('vi-VN')}đ</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Order Footer -->
+                    <div class="px-6 py-4 border-t bg-gray-50">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-600">
+                                Đã hủy bởi bạn
+                            </div>
+                            <div class="flex items-center gap-6">
+                                <div class="text-right">
+                                    <span class="text-gray-600">Thành tiền:</span>
+                                    <span class="text-2xl font-semibold text-orange-500 ml-2">${order.total.toLocaleString('vi-VN')}đ</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    ${order.status === 'cancelled' ? `
+                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button>
+                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Xem Chi Tiết Hủy Đơn</button>
+                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>
+                                    ` : ''}
+                                    ${order.status === 'completed' ? `
+                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button>
+                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrders();
+        });
+    </script>
+</body>
+</html>
     </footer>
 
     <script src="../js/main.js"></script>
