@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load Header
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (headerPlaceholder) {
-        fetch('../includes/header.html')
+        fetch('../includes/header.html?v=' + Date.now())
             .then(response => response.text())
             .then(data => {
                 headerPlaceholder.innerHTML = data;
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load Footer
     const footerPlaceholder = document.getElementById('footer-placeholder');
     if (footerPlaceholder) {
-        fetch('../includes/footer.html')
+        fetch('../includes/footer.html?v=' + Date.now())
             .then(response => response.text())
             .then(data => {
                 footerPlaceholder.innerHTML = data;
