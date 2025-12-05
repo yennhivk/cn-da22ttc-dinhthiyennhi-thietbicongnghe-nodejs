@@ -16,7 +16,7 @@
                 <a href="../index.html" class="flex items-center gap-2">
                     <img src="../images/Screenshot 2025-11-10 154306.png" alt="Logo" class="w-12 h-12 rounded-full">
                     <span class="text-xl font-bold text-red-600">Yến Nhi</span>
-                    <span class="text-xl font-bold text-blue-500 italic">Tech</span>
+                    <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', 'Lucida Calligraphy', cursive;">Tech</span>
                 </a>
                 <div class="flex items-center gap-4">
                     <!-- Cart Icon -->
@@ -70,12 +70,20 @@
 
                 <!-- Main Content -->
                 <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6">Thông tin cá nhân</h3>
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-800">Thông tin cá nhân</h3>
+                        <button id="editBtn" onclick="toggleEditMode()" class="flex items-center gap-2 px-4 py-2 text-orange-600 border-2 border-orange-600 rounded-lg hover:bg-orange-50 transition font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            <span>Chỉnh sửa</span>
+                        </button>
+                    </div>
                     
                     <form id="profileForm" class="space-y-4">
                         <div>
                             <label class="block text-gray-700 font-medium mb-2">Họ và tên</label>
-                            <input type="text" id="fullName" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" placeholder="Nhập họ và tên">
+                            <input type="text" id="fullName" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none bg-gray-50" placeholder="Nhập họ và tên" disabled>
                         </div>
                         
                         <div>
@@ -85,20 +93,34 @@
 
                         <div>
                             <label class="block text-gray-700 font-medium mb-2">Số điện thoại</label>
-                            <input type="tel" id="phoneNumber" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" placeholder="Nhập số điện thoại">
+                            <input type="tel" id="phoneNumber" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none bg-gray-50" placeholder="Nhập số điện thoại" disabled>
                         </div>
 
-                        <div class="pt-4">
-                            <button type="submit" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition">
-                                Cập nhật thông tin
-                            </button>
+                        <div id="saveButtonContainer" class="pt-4 hidden">
+                            <div class="flex gap-3">
+                                <button type="submit" class="flex-1 bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition">
+                                    Lưu thay đổi
+                                </button>
+                                <button type="button" onclick="cancelEdit()" class="flex-1 bg-gray-300 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-400 transition">
+                                    Hủy
+                                </button>
+                            </div>
                         </div>
                     </form>
 
                     <!-- Address Section -->
                     <div class="mt-8 pt-8 border-t">
-                        <h3 class="text-xl font-bold text-gray-800 mb-6">Địa chỉ giao hàng</h3>
-                        <form id="addressForm" class="space-y-4">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Địa chỉ giao hàng</h3>
+                            <button id="toggleAddressFormBtn" onclick="toggleAddressForm()" class="flex items-center gap-2 px-4 py-2 text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition font-medium">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                <span>Thêm địa chỉ mới</span>
+                            </button>
+                        </div>
+
+                        <form id="addressForm" class="space-y-4 hidden">
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-gray-700 font-medium mb-2">Tỉnh/Thành phố</label>
@@ -129,9 +151,14 @@
                                 <label class="block text-gray-700 font-medium mb-2">Địa chỉ cụ thể</label>
                                 <textarea id="detailAddress" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-orange-500 focus:outline-none" placeholder="Số nhà, tên đường..." required></textarea>
                             </div>
-                            <button type="submit" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition">
-                                Lưu địa chỉ
-                            </button>
+                            <div class="flex gap-3">
+                                <button type="submit" class="flex-1 bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition">
+                                    Lưu địa chỉ
+                                </button>
+                                <button type="button" onclick="cancelAddressForm()" class="flex-1 bg-gray-300 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-400 transition">
+                                    Hủy
+                                </button>
+                            </div>
                         </form>
 
                         <!-- Saved Addresses List -->
@@ -346,6 +373,95 @@
             }
         }
 
+        // Toggle edit mode
+        function toggleEditMode() {
+            const fullNameInput = document.getElementById('fullName');
+            const phoneInput = document.getElementById('phoneNumber');
+            const saveButtonContainer = document.getElementById('saveButtonContainer');
+            const editBtn = document.getElementById('editBtn');
+            
+            // Enable inputs
+            fullNameInput.disabled = false;
+            phoneInput.disabled = false;
+            fullNameInput.classList.remove('bg-gray-50');
+            phoneInput.classList.remove('bg-gray-50');
+            fullNameInput.classList.add('bg-white');
+            phoneInput.classList.add('bg-white');
+            
+            // Show save/cancel buttons
+            saveButtonContainer.classList.remove('hidden');
+            
+            // Hide edit button
+            editBtn.classList.add('hidden');
+        }
+
+        // Cancel edit mode
+        function cancelEdit() {
+            const fullNameInput = document.getElementById('fullName');
+            const phoneInput = document.getElementById('phoneNumber');
+            const saveButtonContainer = document.getElementById('saveButtonContainer');
+            const editBtn = document.getElementById('editBtn');
+            
+            // Reload original data
+            loadUserInfo();
+            
+            // Disable inputs
+            fullNameInput.disabled = true;
+            phoneInput.disabled = true;
+            fullNameInput.classList.add('bg-gray-50');
+            phoneInput.classList.add('bg-gray-50');
+            fullNameInput.classList.remove('bg-white');
+            phoneInput.classList.remove('bg-white');
+            
+            // Hide save/cancel buttons
+            saveButtonContainer.classList.add('hidden');
+            
+            // Show edit button
+            editBtn.classList.remove('hidden');
+        }
+
+        // Toggle address form
+        function toggleAddressForm() {
+            const addressForm = document.getElementById('addressForm');
+            const toggleBtn = document.getElementById('toggleAddressFormBtn');
+            
+            if (addressForm.classList.contains('hidden')) {
+                // Show form
+                addressForm.classList.remove('hidden');
+                toggleBtn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    <span>Đóng</span>
+                `;
+            } else {
+                // Hide form
+                cancelAddressForm();
+            }
+        }
+
+        // Cancel address form
+        function cancelAddressForm() {
+            const addressForm = document.getElementById('addressForm');
+            const toggleBtn = document.getElementById('toggleAddressFormBtn');
+            
+            // Reset form
+            addressForm.reset();
+            document.getElementById('district').disabled = true;
+            document.getElementById('ward').disabled = true;
+            
+            // Hide form
+            addressForm.classList.add('hidden');
+            
+            // Reset button
+            toggleBtn.innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span>Thêm địa chỉ mới</span>
+            `;
+        }
+
         // Update profile
         document.getElementById('profileForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -374,6 +490,7 @@
                     localStorage.setItem('user', JSON.stringify(currentUser));
                     alert('Cập nhật thông tin thành công!');
                     loadUserInfo();
+                    cancelEdit(); // Return to view mode
                 } else {
                     alert(data.message || 'Cập nhật thất bại');
                 }
@@ -444,10 +561,8 @@
             addresses.push(newAddress);
             localStorage.setItem(`addresses_${currentUser.ma_tai_khoan}`, JSON.stringify(addresses));
             
-            // Clear form
-            document.getElementById('addressForm').reset();
-            document.getElementById('district').disabled = true;
-            document.getElementById('ward').disabled = true;
+            // Clear form and hide it
+            cancelAddressForm();
             
             // Reload addresses
             loadAddresses();
