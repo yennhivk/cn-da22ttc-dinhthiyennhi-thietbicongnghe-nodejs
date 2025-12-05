@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (typeof initAuthUI === 'function') {
                     initAuthUI();
                 }
+                // Update cart badge after header is loaded
+                if (typeof updateCartBadge === 'function') {
+                    updateCartBadge();
+                }
             })
             .catch(error => console.error('Error loading header:', error));
     }

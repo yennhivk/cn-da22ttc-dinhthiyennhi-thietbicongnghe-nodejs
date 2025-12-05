@@ -18,7 +18,16 @@
                     <span class="text-xl font-bold text-red-600">Yến Nhi</span>
                     <span class="text-xl font-bold text-blue-500 italic">Tech</span>
                 </a>
-                <a href="../index.html" class="text-black hover:text-red-600 font-semibold">← Quay lại trang chủ</a>
+                <div class="flex items-center gap-4">
+                    <!-- Cart Icon -->
+                    <a href="cart.html" class="relative text-black hover:text-red-600 transition transform hover:scale-110" title="Giỏ hàng">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-green-500 text-red-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                    <a href="../index.html" class="text-black hover:text-red-600 font-semibold">← Quay lại trang chủ</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -54,7 +63,7 @@
 
                     <nav class="space-y-2">
                         <a href="#" class="block py-2 px-4 bg-orange-50 text-orange-600 rounded-lg font-medium">Thông tin tài khoản</a>
-                        <a href="order-history.html" class="block py-2 px-4 text-gray-600 hover:bg-gray-50 rounded-lg">Đơn hàng của tôi</a>
+                        <a href="order-history.html" class="block py-2 px-4 text-blue-800 hover:bg-blue-50 rounded-lg">Đơn hàng của tôi</a>
                         <button onclick="handleLogout()" class="w-full text-left py-2 px-4 text-red-500 hover:bg-red-50 rounded-lg">Đăng xuất</button>
                     </nav>
                 </div>
@@ -528,6 +537,21 @@
             localStorage.removeItem('user');
             window.location.href = '../index.html';
         }
+
+        // Update cart badge from localStorage
+        function updateCartBadge() {
+            const cartBadge = document.querySelector('.cart-badge');
+            if (cartBadge) {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const cartKey = user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
+                const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.quantity) || parseInt(item.so_luong) || 0), 0);
+                cartBadge.textContent = totalItems || 0;
+            }
+        }
+
+        // Update cart badge on page load
+        updateCartBadge();
     </script>
 </body>
 </html>

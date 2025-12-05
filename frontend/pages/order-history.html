@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: data: blob:; connect-src 'self' http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:*;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: data: blob: ws:; connect-src 'self' http://localhost:* http://127.0.0.1:* https://cdn.tailwindcss.com ws://localhost:* ws://127.0.0.1:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;">
     <title>Đơn Hàng Của Tôi - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -156,16 +156,17 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadOrders();
-            updateCartBadge();
         });
 
         // Update cart badge from localStorage
         function updateCartBadge() {
             const cartBadge = document.querySelector('.cart-badge');
             if (cartBadge) {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-                cartBadge.textContent = totalItems;
+                const user = JSON.parse(localStorage.getItem('user'));
+                const cartKey = user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
+                const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+                const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.quantity) || parseInt(item.so_luong) || 0), 0);
+                cartBadge.textContent = totalItems || 0;
             }
         }
     </script>

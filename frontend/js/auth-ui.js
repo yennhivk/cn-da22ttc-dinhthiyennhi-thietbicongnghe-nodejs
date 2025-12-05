@@ -60,7 +60,7 @@ function initAuthUI() {
                             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
-                            <span class="text-gray-700 font-medium">Đặt hàng</span>
+                            <span class="text-gray-700 font-medium">Đơn hàng của tôi</span>
                         </a>
                         <button onclick="handleLogoutGlobal()" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition w-full text-left">
                             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,10 +88,12 @@ function initAuthUI() {
 // Xác định base path dựa trên vị trí file hiện tại
 function getBasePath() {
     const path = window.location.pathname;
+    // Nếu đang ở trong thư mục /pages/, không cần thêm gì (cùng cấp)
+    // Nếu ở ngoài (index.html), cần thêm pages/
     if (path.includes('/pages/')) {
-        return '../';
+        return '';
     }
-    return '';
+    return 'pages/';
 }
 
 // Hàm đăng xuất global
