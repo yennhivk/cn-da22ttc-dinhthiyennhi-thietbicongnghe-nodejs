@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.text())
             .then(data => {
                 headerPlaceholder.innerHTML = data;
+                // Initialize auth UI after header is loaded
+                if (typeof initAuthUI === 'function') {
+                    initAuthUI();
+                }
             })
             .catch(error => console.error('Error loading header:', error));
     }

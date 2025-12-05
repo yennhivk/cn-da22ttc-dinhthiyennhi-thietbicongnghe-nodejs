@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: data: blob:; connect-src 'self' http://localhost:* http://127.0.0.1:* ws://localhost:* ws://127.0.0.1:*;">
     <title>Đơn Hàng Của Tôi - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -11,16 +12,25 @@
             color: #ee4d2d;
             border-bottom: 2px solid #ee4d2d;
         }
+        /* Hide all Live Server overlays and notifications */
+        body::before,
+        body::after,
+        #vscode-live-server-indicator,
+        [id*="vscode"],
+        [class*="live-server"],
+        div[style*="position: fixed"][style*="top: 0"],
+        div[style*="z-index: 999"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- HEADER -->
     <div id="header-placeholder"></div>
 
-    <!-- MAIN CONTENT -->
-    <main class="pt-24 pb-12 min-h-screen">
+    <main class="pt-20 pb-12 min-h-screen">
         <div class="max-w-7xl mx-auto px-4">
-            <!-- Back Button -->
             <div class="mb-6">
                 <a href="../index.html" class="inline-flex items-center gap-2 text-gray-600 hover:text-orange-500 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,36 +40,19 @@
                 </a>
             </div>
 
-            <!-- Page Title -->
             <h1 class="text-2xl font-bold mb-6">Đơn hàng của tôi</h1>
 
-            <!-- Tabs Navigation -->
             <div class="bg-white rounded-lg shadow mb-6">
                 <div class="flex border-b overflow-x-auto">
-                    <button class="tab-button tab-active px-6 py-4 font-medium whitespace-nowrap" data-tab="all">
-                        Tất cả
-                    </button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="pending">
-                        Chờ xác nhận
-                    </button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="processing">
-                        Vận chuyển
-                    </button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="shipping">
-                        Chờ giao hàng
-                    </button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="completed">
-                        Hoàn thành
-                    </button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="cancelled">
-                        Đã hủy
-                    </button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="return">
-                        Trả hàng/Hoàn tiền
-                    </button>
+                    <button class="tab-button tab-active px-6 py-4 font-medium whitespace-nowrap" data-tab="all">Tất cả</button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="pending">Chờ xác nhận</button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="processing">Vận chuyển</button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="shipping">Chờ giao hàng</button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="completed">Hoàn thành</button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="cancelled">Đã hủy</button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="return">Trả hàng/Hoàn tiền</button>
                 </div>
 
-                <!-- Search Box -->
                 <div class="p-4 border-b">
                     <div class="relative">
                         <input type="text" id="searchOrder" placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm" 
@@ -71,14 +64,10 @@
                 </div>
             </div>
 
-            <!-- Orders List -->
-            <div id="ordersList" class="space-y-4">
-                <!-- Orders will be loaded here -->
-            </div>
+            <div id="ordersList" class="space-y-4"></div>
         </div>
     </main>
 
-    <!-- FOOTER -->
     <div id="footer-placeholder"></div>
 
     <script src="../js/load-components.js"></script>
@@ -88,69 +77,57 @@
         let currentTab = 'all';
         let allOrders = [];
 
-        // Tab switching
         document.querySelectorAll('.tab-button').forEach(button => {
             button.addEventListener('click', function() {
-                // Remove active class from all tabs
                 document.querySelectorAll('.tab-button').forEach(btn => {
                     btn.classList.remove('tab-active');
                     btn.classList.add('text-gray-600', 'hover:text-gray-900');
                 });
-                
-                // Add active class to clicked tab
                 this.classList.add('tab-active');
                 this.classList.remove('text-gray-600', 'hover:text-gray-900');
-                
                 currentTab = this.dataset.tab;
                 filterOrders();
             });
         });
 
-        // Load orders
         async function loadOrders() {
             const user = JSON.parse(localStorage.getItem('user'));
-            
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            // Mock data - Replace with actual API call
             allOrders = [
                 {
                     id: '1',
                     shopName: 'Shop Benbo',
                     status: 'cancelled',
                     statusText: 'ĐÃ HỦY',
-                    products: [
-                        {
-                            name: 'Đàn guitar acoustic dành cho người mới tập chơi,\'18 phím ấm, Dây loại mềm, âm thanh hay vang to,chơi được tiết tấu nhanh',
-                            variant: 'Phân loại hàng: Màu đen ua+Túi dụng',
-                            quantity: 1,
-                            price: 564999,
-                            originalPrice: 750000,
-                            image: '../images/Screenshot 2025-11-10 154306.png'
-                        }
-                    ],
+                    products: [{
+                        name: 'Đàn guitar acoustic dành cho người mới tập chơi',
+                        variant: 'Phân loại hàng: Màu đen',
+                        quantity: 1,
+                        price: 564999,
+                        originalPrice: 750000,
+                        image: '../images/Screenshot 2025-11-10 154306.png'
+                    }],
                     total: 579499,
                     createdAt: '2025-01-15'
                 },
                 {
                     id: '2',
-                    shopName: 'Xưởng_May_Bảo_Ngọc',
+                    shopName: 'Xưởng May Bảo Ngọc',
                     status: 'completed',
                     statusText: 'HOÀN THÀNH',
                     deliverySuccess: true,
-                    products: [
-                        {
-                            name: 'Áo Thun Nam Nữ Balen Tay Ngắn Form Rộng In Logo 2 Mặt Siêu Nét, Áo Phông Unisex Chất Cotton Cao Cấp Hottrend Hè 2025',
-                            variant: 'Phân loại hàng: Xanh Than,S(38-44KG)',
-                            quantity: 1,
-                            price: 65000,
-                            originalPrice: 118000,
-                            image: '../images/Screenshot 2025-11-10 154306.png'
-                        }
-                    ],
+                    products: [{
+                        name: 'Áo Thun Nam Nữ Balen Tay Ngắn Form Rộng',
+                        variant: 'Phân loại hàng: Xanh Than, S',
+                        quantity: 1,
+                        price: 65000,
+                        originalPrice: 118000,
+                        image: '../images/Screenshot 2025-11-10 154306.png'
+                    }],
                     total: 65000,
                     createdAt: '2025-01-10'
                 }
@@ -161,105 +138,36 @@
 
         function filterOrders() {
             let filtered = allOrders;
-            
             if (currentTab !== 'all') {
                 filtered = allOrders.filter(order => order.status === currentTab);
             }
-
             renderOrders(filtered);
         }
 
         function renderOrders(orders) {
             const ordersList = document.getElementById('ordersList');
-            
             if (orders.length === 0) {
-                ordersList.innerHTML = `
-                    <div class="bg-white rounded-lg shadow p-12 text-center">
-                        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p class="text-gray-500 text-lg">Chưa có đơn hàng</p>
-                    </div>
-                `;
+                ordersList.innerHTML = '<div class="bg-white rounded-lg shadow p-12 text-center"><p class="text-gray-500 text-lg">Chưa có đơn hàng</p></div>';
                 return;
             }
 
-            ordersList.innerHTML = orders.map(order => `
-                <div class="bg-white rounded-lg shadow">
-                    <!-- Order Header -->
-                    <div class="flex items-center justify-between px-6 py-3 border-b bg-gray-50">
-                        <div class="flex items-center gap-4">
-                            <span class="font-medium">Yêu thích</span>
-                            <span class="font-semibold">${order.shopName}</span>
-                            <button class="text-orange-500 hover:text-orange-600">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                                </svg>
-                            </button>
-                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Xem Shop</button>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            ${order.deliverySuccess ? '<span class="text-green-600 text-sm">✓ Giao hàng thành công</span>' : ''}
-                            <span class="text-orange-500 font-semibold">${order.statusText}</span>
-                        </div>
-                    </div>
-
-                    <!-- Order Products -->
-                    <div class="p-6">
-                        ${order.products.map(product => `
-                            <div class="flex gap-4 mb-4">
-                                <img src="${product.image}" alt="${product.name}" class="w-20 h-20 object-cover rounded border">
-                                <div class="flex-1">
-                                    <h3 class="font-medium mb-1 line-clamp-2">${product.name}</h3>
-                                    <p class="text-sm text-gray-600 mb-2">${product.variant}</p>
-                                    <p class="text-sm text-gray-600">x${product.quantity}</p>
-                                </div>
-                                <div class="text-right">
-                                    ${product.originalPrice ? `<p class="text-sm text-gray-400 line-through">${product.originalPrice.toLocaleString('vi-VN')}đ</p>` : ''}
-                                    <p class="text-orange-500 font-medium">${product.price.toLocaleString('vi-VN')}đ</p>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-
-                    <!-- Order Footer -->
-                    <div class="px-6 py-4 border-t bg-gray-50">
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm text-gray-600">
-                                Đã hủy bởi bạn
-                            </div>
-                            <div class="flex items-center gap-6">
-                                <div class="text-right">
-                                    <span class="text-gray-600">Thành tiền:</span>
-                                    <span class="text-2xl font-semibold text-orange-500 ml-2">${order.total.toLocaleString('vi-VN')}đ</span>
-                                </div>
-                                <div class="flex gap-2">
-                                    ${order.status === 'cancelled' ? `
-                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button>
-                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Xem Chi Tiết Hủy Đơn</button>
-                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>
-                                    ` : ''}
-                                    ${order.status === 'completed' ? `
-                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button>
-                                        <button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            ordersList.innerHTML = orders.map(order => '<div class="bg-white rounded-lg shadow"><div class="flex items-center justify-between px-6 py-3 border-b bg-gray-50"><div class="flex items-center gap-4"><span class="font-medium">Yêu thích</span><span class="font-semibold">' + order.shopName + '</span><button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Xem Shop</button></div><div class="flex items-center gap-2">' + (order.deliverySuccess ? '<span class="text-green-600 text-sm">✓ Giao hàng thành công</span>' : '') + '<span class="text-orange-500 font-semibold">' + order.statusText + '</span></div></div><div class="p-6">' + order.products.map(product => '<div class="flex gap-4 mb-4"><img src="' + product.image + '" alt="' + product.name + '" class="w-20 h-20 object-cover rounded border"><div class="flex-1"><h3 class="font-medium mb-1 line-clamp-2">' + product.name + '</h3><p class="text-sm text-gray-600 mb-2">' + product.variant + '</p><p class="text-sm text-gray-600">x' + product.quantity + '</p></div><div class="text-right">' + (product.originalPrice ? '<p class="text-sm text-gray-400 line-through">' + product.originalPrice.toLocaleString('vi-VN') + 'đ</p>' : '') + '<p class="text-orange-500 font-medium">' + product.price.toLocaleString('vi-VN') + 'đ</p></div></div>').join('') + '</div><div class="px-6 py-4 border-t bg-gray-50"><div class="flex items-center justify-between"><div class="text-sm text-gray-600">Đã hủy bởi bạn</div><div class="flex items-center gap-6"><div class="text-right"><span class="text-gray-600">Thành tiền:</span><span class="text-2xl font-semibold text-orange-500 ml-2">' + order.total.toLocaleString('vi-VN') + 'đ</span></div><div class="flex gap-2">' + (order.status === 'cancelled' ? '<button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button><button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Xem Chi Tiết Hủy Đơn</button><button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>' : '') + (order.status === 'completed' ? '<button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button><button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>' : '') + '</div></div></div></div></div>').join('');
         }
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             loadOrders();
+            updateCartBadge();
         });
-    </script>
-</body>
-</html>
-    </footer>
 
-    <script src="../js/main.js"></script>
+        // Update cart badge from localStorage
+        function updateCartBadge() {
+            const cartBadge = document.querySelector('.cart-badge');
+            if (cartBadge) {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                cartBadge.textContent = totalItems;
+            }
+        }
+    </script>
 </body>
 </html>
