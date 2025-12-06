@@ -688,4 +688,41 @@ router.delete('/reviews/:id', authenticateToken, requireAdmin, async (req, res) 
     }
 });
 
+// ==========================================
+// TẠO ĐƠN HÀNG MẪU ĐỂ TEST
+// ==========================================
+router.post('/create-sample-orders', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        // Lấy ma_tai_khoan của admin hiện tại
+        const adminId = req.user.ma_tai_khoan;
+
+        // Tạo 5 đơn hàng mẫu với các trạng thái khác nhau
+        const orders = [
+            { tong_tien: 25990000, trang_thai: 'cho_xac_nhan', dia_chi: '123 Nguyễn Văn A, Q.1, TP.HCM', sdt: '0901234567', ghi_chu: 'Giao giờ hành chính' },
+            { tong_tien: 15500000, trang_thai: 'da_xac_nhan', dia_chi: '456 Lê Văn B, Q.3, TP.HCM', sdt: '0912345678', ghi_chu: 'Gọi trước khi giao' },
+            { tong_tien: 34900000, trang_thai: 'dang_giao', dia_chi: '789 Trần Văn C, Q.7, TP.HCM', sdt: '0923456789', ghi_chu: 'Shipper đang giao' },
+            { tong_tien: 8990000, trang_thai: 'da_giao', dia_chi: '321 Phạm Văn D, Q.Bình Thạnh, TP.HCM', sdt: '0934567890', ghi_chu: 'Đã nhận hàng' },
+            { tong_tien: 12000000, trang_thai: 'da_huy', dia_chi: '654 Hoàng Văn E, Q.Tân Bình, TP.HCM', sdt: '0945678901', ghi_chu: 'Khách hủy đơn' }
+        ];
+
+        const insertedOrders = [];
+        for (const order of orders) {
+            const [result] = await db.query(`
+                INSERT INTO don_hang (ma_tai_khoan, tong_tien, trang_thai, dia_chi_giao, so_dien_thoai, ghi_chu, ngay_dat)
+                VALUES (?, ?, ?, ?, ?, ?, NOW() - INTERVAL FLOOR(RAND() * 7) DAY)
+            `, [adminId, order.tong_tien, order.trang_thai, order.dia_chi, order.sdt, order.ghi_chu]);
+            insertedOrders.push(result.insertId);
+        }
+
+        res.json({
+            success: true,
+            message: `Đã tạo ${insertedOrders.length} đơn hàng mẫu`,
+            data: { order_ids: insertedOrders }
+        });
+    } catch (error) {
+        console.error('Create sample orders error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi tạo đơn hàng mẫu: ' + error.message });
+    }
+});
+
 module.exports = router;
