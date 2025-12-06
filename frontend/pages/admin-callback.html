@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đang xử lý đăng nhập Admin...</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .loader-container {
+            text-align: center;
+            color: white;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        .shield-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-container">
+        <div class="shield-icon">
+            <svg class="w-12 h-12 text-white" style="width: 48px; height: 48px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+        </div>
+        <div class="spinner"></div>
+        <h2>Đang xác thực Admin...</h2>
+        <p>Vui lòng đợi trong giây lát</p>
+    </div>
+
+    <script>
+        (function() {
+            // Lấy token và user từ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const userStr = urlParams.get('user');
+            const error = urlParams.get('error');
+
+            console.log('[Admin Callback] Token:', token ? 'Có' : 'Không');
+            console.log('[Admin Callback] User string:', userStr);
+
+            if (error) {
+                alert('Đăng nhập Admin thất bại: ' + error);
+                window.location.replace('admin-login.html');
+                return;
+            }
+            
+            if (token && userStr) {
+                try {
+                    const decodedUserStr = decodeURIComponent(userStr);
+                    console.log('[Admin Callback] Decoded user:', decodedUserStr);
+                    
+                    const user = JSON.parse(decodedUserStr);
+                    console.log('[Admin Callback] Parsed user:', user);
+                    
+                    // Kiểm tra quyền admin
+                    if (user.vai_tro !== 'admin') {
+                        alert('Tài khoản này không có quyền admin!');
+                        window.location.replace('admin-login.html?message=' + encodeURIComponent('Bạn không có quyền truy cập'));
+                        return;
+                    }
+                    
+                    // Lưu vào localStorage với prefix admin_
+                    localStorage.setItem('admin_token', token);
+                    localStorage.setItem('admin_user', JSON.stringify(user));
+                    
+                    console.log('[Admin Callback] Đã lưu localStorage, đang chuyển trang...');
+                    
+                    // Chuyển về trang admin
+                    setTimeout(function() {
+                        window.location.href = 'admin.html';
+                    }, 500);
+                } catch (e) {
+                    console.error('[Admin Callback] Lỗi xử lý dữ liệu:', e);
+                    alert('Có lỗi xảy ra khi xử lý đăng nhập: ' + e.message);
+                    window.location.replace('admin-login.html');
+                }
+            } else {
+                alert('Không tìm thấy thông tin đăng nhập');
+                window.location.replace('admin-login.html');
+            }
+        })();
+    </script>
+</body>
+</html>

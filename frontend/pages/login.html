@@ -269,6 +269,16 @@
             ? 'http://localhost:3300/api'
             : 'http://localhost:3300/api';
 
+        // Kiểm tra URL parameters cho redirect và message
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectTo = urlParams.get('redirect');
+        const message = urlParams.get('message');
+
+        // Hiển thị message nếu có
+        if (message) {
+            alert(decodeURIComponent(message));
+        }
+
         async function handleLogin() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -304,8 +314,21 @@
                     localStorage.setItem('token', data.data.token);
                     localStorage.setItem('user', JSON.stringify(data.data.user));
                     
-                    alert('Đăng nhập thành công!\nChào mừng bạn tới Yến Nhi Tech Member!');
-                    window.location.href = '../index.html';
+                    // Kiểm tra nếu cần redirect về admin
+                    if (redirectTo === 'admin') {
+                        // Kiểm tra quyền admin
+                        if (data.data.user.vai_tro === 'admin') {
+                            alert('Đăng nhập thành công!\nĐang chuyển đến trang quản trị...');
+                            window.location.href = 'admin.html';
+                        } else {
+                            alert('Bạn không có quyền truy cập trang quản trị!');
+                            localStorage.removeItem('token');
+                            localStorage.removeItem('user');
+                        }
+                    } else {
+                        alert('Đăng nhập thành công!\nChào mừng bạn tới Yến Nhi Tech Member!');
+                        window.location.href = '../index.html';
+                    }
                 } else {
                     alert(data.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!');
                 }
@@ -330,7 +353,9 @@
 
         // Google Login
         function loginWithGoogle() {
-            window.location.href = `${API_URL}/auth/google`;
+            // Thêm redirect parameter nếu cần
+            const redirectParam = redirectTo ? `?redirect=${redirectTo}` : '';
+            window.location.href = `${API_URL}/auth/google${redirectParam}`;
         }
 
         // Update cart badge

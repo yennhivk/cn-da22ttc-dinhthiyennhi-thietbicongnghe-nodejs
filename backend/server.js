@@ -25,10 +25,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        secure: false, // Set to true in production with HTTPS
+        httpOnly: true,
+        sameSite: 'lax'
     }
 }));
 

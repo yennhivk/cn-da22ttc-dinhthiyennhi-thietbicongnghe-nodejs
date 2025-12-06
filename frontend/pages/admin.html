@@ -6,8 +6,44 @@
     <title>Quản Trị - Yến Nhi Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p class="mt-4 text-gray-700 font-semibold">Đang xác thực...</p>
+    </div>
+
+    <!-- Admin Content (Hidden until authenticated) -->
+    <div id="admin-content" style="display: none;">
     <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 border-b-4 border-yellow-400 w-full">
         <div class="px-3 sm:px-4 lg:px-6">
             <div class="flex items-center h-20 gap-2 sm:gap-3 lg:gap-4">
@@ -23,8 +59,8 @@
                 </a>
 
                 <div class="flex items-center gap-1 sm:gap-1.5 lg:gap-4 ml-auto">
-                    <span class="text-sm font-semibold text-gray-700">Admin</span>
-                    <a href="../index.html" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-3 rounded text-xs transition">Đăng xuất</a>
+                    <span id="admin-username" class="text-sm font-semibold text-gray-700"></span>
+                    <button onclick="handleAdminLogout()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-3 rounded text-xs transition">Đăng xuất</button>
                 </div>
             </div>
         </div>
@@ -154,11 +190,108 @@
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white py-8 px-4">
-        <div class="max-w-7xl mx-auto text-center text-gray-400">
-            <p>&copy; 2025 Yến Nhi Mobile. All rights reserved.</p>
-        </div>
-    </footer>
+    </div>
+    <!-- End Admin Content -->
+
+    <!-- Authentication Script -->
+    <script>
+        const AUTH_API_URL = 'http://localhost:3300/api';
+        
+        // Kiểm tra xác thực khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+        });
+
+        async function checkAdminAuth() {
+            const user = JSON.parse(localStorage.getItem('admin_user'));
+            const token = localStorage.getItem('admin_token');
+
+            console.log('Checking admin auth - User:', user);
+            console.log('Checking admin auth - Token:', token ? 'exists' : 'missing');
+
+            // Kiểm tra nếu không có user hoặc token
+            if (!user || !token) {
+                console.log('No admin user or token found');
+                redirectToAdminLogin('Vui lòng đăng nhập để truy cập trang quản trị');
+                return;
+            }
+
+            // Kiểm tra vai trò admin (vai_tro = 'admin')
+            console.log('Admin user role:', user.vai_tro, typeof user.vai_tro);
+            if (user.vai_tro !== 'admin') {
+                console.log('User is not admin');
+                redirectToAdminLogin('Bạn không có quyền truy cập trang quản trị');
+                return;
+            }
+
+            // Verify token với server
+            try {
+                console.log('Verifying admin token with server...');
+                const response = await fetch(`${AUTH_API_URL}/auth/verify-admin`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Verify admin response status:', response.status);
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Verify admin failed:', errorData);
+                    throw new Error(errorData.message || 'Token không hợp lệ');
+                }
+
+                const data = await response.json();
+                console.log('Verify admin success:', data);
+                
+                if (!data.success || data.user.vai_tro !== 'admin') {
+                    throw new Error('Không có quyền truy cập');
+                }
+
+                // Xác thực thành công
+                displayAdminContent(user);
+                
+            } catch (error) {
+                console.error('Admin auth error:', error);
+                redirectToAdminLogin('Phiên đăng nhập đã hết hạn hoặc không hợp lệ');
+            }
+        }
+
+        function displayAdminContent(user) {
+            // Ẩn loading overlay
+            document.getElementById('loading-overlay').style.display = 'none';
+            
+            // Hiển thị nội dung admin
+            document.getElementById('admin-content').style.display = 'block';
+            
+            // Hiển thị tên admin
+            const usernameElement = document.getElementById('admin-username');
+            if (usernameElement) {
+                usernameElement.textContent = `Admin: ${user.ten_dang_nhap || user.email}`;
+            }
+        }
+
+        function redirectToAdminLogin(message) {
+            // Xóa dữ liệu admin cũ
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_user');
+            
+            // Redirect về trang admin login
+            setTimeout(() => {
+                window.location.href = 'admin-login.html?message=' + encodeURIComponent(message);
+            }, 1000);
+        }
+
+        function handleAdminLogout() {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) {
+                localStorage.removeItem('admin_user');
+                localStorage.removeItem('admin_token');
+                window.location.href = 'admin-login.html';
+            }
+        }
+    </script>
 
     <script src="../js/main.js"></script>
 </body>

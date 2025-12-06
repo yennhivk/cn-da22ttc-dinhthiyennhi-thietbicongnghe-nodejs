@@ -46,9 +46,11 @@
             const token = urlParams.get('token');
             const userStr = urlParams.get('user');
             const error = urlParams.get('error');
+            const redirect = urlParams.get('redirect');
 
             console.log('Token:', token ? 'Có' : 'Không');
             console.log('User string:', userStr);
+            console.log('Redirect:', redirect);
 
             if (error) {
                 alert('Đăng nhập Google thất bại: ' + error);
@@ -70,10 +72,27 @@
                     
                     console.log('Đã lưu localStorage, đang chuyển trang...');
                     
-                    // Chuyển về trang chủ
-                    setTimeout(function() {
-                        window.location.href = '/frontend/index.html';
-                    }, 500);
+                    // Kiểm tra redirect về admin
+                    if (redirect === 'admin') {
+                        // Kiểm tra quyền admin
+                        if (user.vai_tro === 'admin') {
+                            setTimeout(function() {
+                                window.location.href = 'admin.html';
+                            }, 500);
+                        } else {
+                            alert('Bạn không có quyền truy cập trang quản trị!');
+                            localStorage.removeItem('token');
+                            localStorage.removeItem('user');
+                            setTimeout(function() {
+                                window.location.href = 'login.html?message=' + encodeURIComponent('Bạn không có quyền truy cập trang quản trị');
+                            }, 500);
+                        }
+                    } else {
+                        // Chuyển về trang chủ
+                        setTimeout(function() {
+                            window.location.href = '/frontend/index.html';
+                        }, 500);
+                    }
                 } catch (e) {
                     console.error('Lỗi xử lý dữ liệu:', e);
                     alert('Có lỗi xảy ra khi xử lý đăng nhập: ' + e.message);
