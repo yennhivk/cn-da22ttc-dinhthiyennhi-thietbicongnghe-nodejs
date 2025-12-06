@@ -74,6 +74,7 @@ app.use('/api/products', require('./routes/products'));
 const authRouter = require('./routes/auth');
 console.log('Auth routes loaded:', authRouter.stack.map(r => r.route?.path).filter(Boolean));
 app.use('/api/auth', authRouter);
+app.use('/api/admin', require('./routes/admin'));
 // app.use('/api/cart', require('./routes/cart'));
 // app.use('/api/orders', require('./routes/orders'));
 

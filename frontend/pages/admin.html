@@ -3,296 +3,976 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Trị - Yến Nhi Mobile</title>
+    <title>Quản Trị - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Loading overlay */
         .loading-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
             z-index: 9999;
         }
         .spinner {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #3b82f6;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .sidebar { transition: transform 0.3s ease; }
+        .sidebar-item:hover { background: rgba(255,255,255,0.1); }
+        .sidebar-item.active { background: rgba(255,255,255,0.2); border-left: 4px solid #fbbf24; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .modal { display: none; }
+        .modal.active { display: flex; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-100">
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="loading-overlay">
         <div class="spinner"></div>
         <p class="mt-4 text-gray-700 font-semibold">Đang xác thực...</p>
     </div>
 
-    <!-- Admin Content (Hidden until authenticated) -->
-    <div id="admin-content" style="display: none;">
-    <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 border-b-4 border-yellow-400 w-full">
-        <div class="px-3 sm:px-4 lg:px-6">
-            <div class="flex items-center h-20 gap-2 sm:gap-3 lg:gap-4">
-                <a href="../index.html" class="flex items-center gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0 hover:scale-105 transition-all duration-300">
-                    <!-- Logo Image - Circular -->
-                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 md:w-14 md:h-14 object-cover rounded-full shadow-lg">
-                    
-                    <!-- Text Logo -->
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-lg md:text-xl font-bold text-red-600 drop-shadow-md">Yến Nhi</span>
-                        <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', 'Lucida Calligraphy', cursive;">Tech</span>
-                    </div>
+    <!-- Admin Content -->
+    <div id="admin-content" style="display: none;" class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="sidebar w-64 bg-gradient-to-b from-blue-900 to-slate-900 text-white fixed h-full z-40">
+            <div class="p-4 border-b border-blue-800">
+                <h1 class="text-xl font-bold">🛒 Yến Nhi Tech</h1>
+                <p class="text-sm text-blue-300">Admin Panel</p>
+            </div>
+            <nav class="mt-4">
+                <a href="#" onclick="showSection('dashboard')" class="sidebar-item active flex items-center gap-3 px-4 py-3" data-section="dashboard">
+                    <span>📊</span> Dashboard
                 </a>
-
-                <div class="flex items-center gap-1 sm:gap-1.5 lg:gap-4 ml-auto">
-                    <span id="admin-username" class="text-sm font-semibold text-gray-700"></span>
-                    <button onclick="handleAdminLogout()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-3 rounded text-xs transition">Đăng xuất</button>
+                <a href="#" onclick="showSection('products')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="products">
+                    <span>📦</span> Sản phẩm
+                </a>
+                <a href="#" onclick="showSection('categories')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="categories">
+                    <span>📁</span> Danh mục
+                </a>
+                <a href="#" onclick="showSection('orders')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="orders">
+                    <span>🛍️</span> Đơn hàng
+                </a>
+                <a href="#" onclick="showSection('users')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="users">
+                    <span>👥</span> Tài khoản
+                </a>
+                <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">
+                    <span>⭐</span> Đánh giá
+                </a>
+            </nav>
+            <div class="absolute bottom-0 w-full p-4 border-t border-blue-800">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-blue-700 rounded-full flex items-center justify-center">👤</div>
+                    <div>
+                        <p id="admin-name" class="font-semibold text-sm"></p>
+                        <p class="text-xs text-blue-300">Admin</p>
+                    </div>
                 </div>
+                <button onclick="handleLogout()" class="w-full bg-red-500 hover:bg-red-600 py-2 rounded text-sm font-semibold">
+                    Đăng xuất
+                </button>
             </div>
-        </div>
-    </nav>
+        </aside>
 
-    <section class="pt-24 pb-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <h1 class="text-3xl md:text-5xl font-bold mb-4">Dashboard Quản Trị</h1>
-            <p class="text-lg md:text-xl">Quản lý cửa hàng của bạn</p>
-        </div>
-    </section>
-
-    <section class="py-12 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-gray-600 font-semibold">Tổng doanh thu</h3>
-                        <div class="bg-green-100 p-2 rounded-lg">
-                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <p class="text-3xl font-bold">125.5M</p>
-                    <p class="text-sm text-green-600 font-semibold">+12.5% so với tháng trước</p>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-gray-600 font-semibold">Đơn hàng</h3>
-                        <div class="bg-blue-100 p-2 rounded-lg">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <p class="text-3xl font-bold">1,234</p>
-                    <p class="text-sm text-blue-600 font-semibold">+8.2% so với tháng trước</p>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-gray-600 font-semibold">Sản phẩm</h3>
-                        <div class="bg-purple-100 p-2 rounded-lg">
-                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <p class="text-3xl font-bold">567</p>
-                    <p class="text-sm text-purple-600 font-semibold">45 sản phẩm mới</p>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-gray-600 font-semibold">Khách hàng</h3>
-                        <div class="bg-yellow-100 p-2 rounded-lg">
-                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <p class="text-3xl font-bold">8,945</p>
-                    <p class="text-sm text-yellow-600 font-semibold">+156 khách hàng mới</p>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold mb-4">Đơn hàng gần đây</h2>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+        <!-- Main Content -->
+        <main class="flex-1 ml-64 p-6">
+            <!-- Dashboard Section -->
+            <section id="section-dashboard" class="content-section active">
+                <h2 class="text-2xl font-bold mb-6">📊 Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <div class="flex justify-between items-center">
                             <div>
-                                <p class="font-semibold">#12345 - Nguyễn Văn A</p>
-                                <p class="text-sm text-gray-600">iPhone 15 Pro Max</p>
+                                <p class="text-gray-500 text-sm">Doanh thu</p>
+                                <p id="stat-revenue" class="text-2xl font-bold text-green-600">0đ</p>
                             </div>
-                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">Đã giao</span>
+                            <div class="bg-green-100 p-3 rounded-full">💰</div>
                         </div>
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <div class="flex justify-between items-center">
                             <div>
-                                <p class="font-semibold">#12344 - Trần Thị B</p>
-                                <p class="text-sm text-gray-600">Samsung Galaxy S24</p>
+                                <p class="text-gray-500 text-sm">Đơn hàng</p>
+                                <p id="stat-orders" class="text-2xl font-bold text-blue-600">0</p>
                             </div>
-                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">Đang giao</span>
+                            <div class="bg-blue-100 p-3 rounded-full">🛍️</div>
                         </div>
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <div class="flex justify-between items-center">
                             <div>
-                                <p class="font-semibold">#12343 - Lê Văn C</p>
-                                <p class="text-sm text-gray-600">MacBook Pro M3</p>
+                                <p class="text-gray-500 text-sm">Sản phẩm</p>
+                                <p id="stat-products" class="text-2xl font-bold text-purple-600">0</p>
                             </div>
-                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">Đang xử lý</span>
+                            <div class="bg-purple-100 p-3 rounded-full">📦</div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-500 text-sm">Khách hàng</p>
+                                <p id="stat-customers" class="text-2xl font-bold text-yellow-600">0</p>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">👥</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold mb-4">Sản phẩm bán chạy</h2>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <img src="https://via.placeholder.com/60" alt="Product" class="w-12 h-12 object-cover rounded">
-                            <div class="flex-1">
-                                <p class="font-semibold">iPhone 15 Pro Max</p>
-                                <p class="text-sm text-gray-600">Đã bán: 234</p>
-                            </div>
-                            <span class="font-bold text-green-600">34.9M</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <img src="https://via.placeholder.com/60" alt="Product" class="w-12 h-12 object-cover rounded">
-                            <div class="flex-1">
-                                <p class="font-semibold">Samsung Galaxy S24</p>
-                                <p class="text-sm text-gray-600">Đã bán: 187</p>
-                            </div>
-                            <span class="font-bold text-green-600">25.9M</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <img src="https://via.placeholder.com/60" alt="Product" class="w-12 h-12 object-cover rounded">
-                            <div class="flex-1">
-                                <p class="font-semibold">AirPods Pro 2</p>
-                                <p class="text-sm text-gray-600">Đã bán: 345</p>
-                            </div>
-                            <span class="font-bold text-green-600">6.9M</span>
-                        </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h3 class="font-bold mb-4">🕐 Đơn hàng gần đây</h3>
+                        <div id="recent-orders" class="space-y-3"></div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h3 class="font-bold mb-4">🔥 Sản phẩm bán chạy</h3>
+                        <div id="top-products" class="space-y-3"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
+            <!-- Products Section -->
+            <section id="section-products" class="content-section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">📦 Quản lý sản phẩm</h2>
+                    <button onclick="openProductModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold">
+                        + Thêm sản phẩm
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex gap-4 mb-4">
+                        <input type="text" id="product-search" placeholder="Tìm kiếm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchProducts()">
+                        <select id="product-category-filter" class="border rounded-lg px-4 py-2" onchange="loadProducts()">
+                            <option value="">Tất cả danh mục</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left">Ảnh</th>
+                                    <th class="px-4 py-3 text-left">Tên sản phẩm</th>
+                                    <th class="px-4 py-3 text-left">Danh mục</th>
+                                    <th class="px-4 py-3 text-right">Giá</th>
+                                    <th class="px-4 py-3 text-center">Số lượng</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section id="section-categories" class="content-section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">📁 Quản lý danh mục</h2>
+                    <button onclick="openCategoryModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold">
+                        + Thêm danh mục
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left">ID</th>
+                                <th class="px-4 py-3 text-left">Tên danh mục</th>
+                                <th class="px-4 py-3 text-left">Mô tả</th>
+                                <th class="px-4 py-3 text-center">Số sản phẩm</th>
+                                <th class="px-4 py-3 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="section-orders" class="content-section">
+                <h2 class="text-2xl font-bold mb-6">🛍️ Quản lý đơn hàng</h2>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex gap-4 mb-4">
+                        <input type="text" id="order-search" placeholder="Tìm kiếm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchOrders()">
+                        <select id="order-status-filter" class="border rounded-lg px-4 py-2" onchange="loadOrders()">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="cho_xac_nhan">Chờ xác nhận</option>
+                            <option value="da_xac_nhan">Đã xác nhận</option>
+                            <option value="dang_giao">Đang giao</option>
+                            <option value="da_giao">Đã giao</option>
+                            <option value="da_huy">Đã hủy</option>
+                        </select>
+                    </div>
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left">Mã ĐH</th>
+                                <th class="px-4 py-3 text-left">Khách hàng</th>
+                                <th class="px-4 py-3 text-right">Tổng tiền</th>
+                                <th class="px-4 py-3 text-center">Trạng thái</th>
+                                <th class="px-4 py-3 text-center">Ngày đặt</th>
+                                <th class="px-4 py-3 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="section-users" class="content-section">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">👥 Quản lý tài khoản</h2>
+                    <button onclick="openUserModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold">
+                        + Thêm tài khoản
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex gap-4 mb-4">
+                        <input type="text" id="user-search" placeholder="Tìm kiếm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchUsers()">
+                        <select id="user-role-filter" class="border rounded-lg px-4 py-2" onchange="loadUsers()">
+                            <option value="">Tất cả vai trò</option>
+                            <option value="admin">Admin</option>
+                            <option value="khach_hang">Khách hàng</option>
+                        </select>
+                    </div>
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left">ID</th>
+                                <th class="px-4 py-3 text-left">Tên</th>
+                                <th class="px-4 py-3 text-left">Email</th>
+                                <th class="px-4 py-3 text-center">Vai trò</th>
+                                <th class="px-4 py-3 text-center">Trạng thái</th>
+                                <th class="px-4 py-3 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Reviews Section -->
+            <section id="section-reviews" class="content-section">
+                <h2 class="text-2xl font-bold mb-6">⭐ Quản lý đánh giá</h2>
+                <div class="bg-white rounded-xl shadow p-6">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left">Sản phẩm</th>
+                                <th class="px-4 py-3 text-left">Người đánh giá</th>
+                                <th class="px-4 py-3 text-center">Điểm</th>
+                                <th class="px-4 py-3 text-left">Nội dung</th>
+                                <th class="px-4 py-3 text-center">Trạng thái</th>
+                                <th class="px-4 py-3 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-table"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
     </div>
-    <!-- End Admin Content -->
 
-    <!-- Authentication Script -->
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 id="product-modal-title" class="text-xl font-bold">Thêm sản phẩm</h3>
+                <button onclick="closeProductModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form id="product-form" class="p-6 space-y-4">
+                <input type="hidden" id="product-id">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Tên sản phẩm *</label>
+                    <input type="text" id="product-name" required class="w-full border rounded-lg px-4 py-2">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Giá *</label>
+                        <input type="number" id="product-price" required class="w-full border rounded-lg px-4 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Số lượng</label>
+                        <input type="number" id="product-quantity" value="0" class="w-full border rounded-lg px-4 py-2">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Thương hiệu</label>
+                        <input type="text" id="product-brand" class="w-full border rounded-lg px-4 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Danh mục</label>
+                        <select id="product-category" class="w-full border rounded-lg px-4 py-2"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Mô tả</label>
+                    <textarea id="product-desc" rows="3" class="w-full border rounded-lg px-4 py-2"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Trạng thái</label>
+                    <select id="product-status" class="w-full border rounded-lg px-4 py-2">
+                        <option value="hien_thi">Hiển thị</option>
+                        <option value="an">Ẩn</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">Lưu</button>
+                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 rounded-lg font-semibold">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div id="category-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-md m-4">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 id="category-modal-title" class="text-xl font-bold">Thêm danh mục</h3>
+                <button onclick="closeCategoryModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form id="category-form" class="p-6 space-y-4">
+                <input type="hidden" id="category-id">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Tên danh mục *</label>
+                    <input type="text" id="category-name" required class="w-full border rounded-lg px-4 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Mô tả</label>
+                    <textarea id="category-desc" rows="3" class="w-full border rounded-lg px-4 py-2"></textarea>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">Lưu</button>
+                    <button type="button" onclick="closeCategoryModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 rounded-lg font-semibold">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="user-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-md m-4">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 id="user-modal-title" class="text-xl font-bold">Thêm tài khoản</h3>
+                <button onclick="closeUserModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form id="user-form" class="p-6 space-y-4">
+                <input type="hidden" id="user-id">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Tên đăng nhập *</label>
+                    <input type="text" id="user-name" required class="w-full border rounded-lg px-4 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Email *</label>
+                    <input type="email" id="user-email" required class="w-full border rounded-lg px-4 py-2">
+                </div>
+                <div id="user-password-field">
+                    <label class="block text-sm font-semibold mb-1">Mật khẩu *</label>
+                    <input type="password" id="user-password" class="w-full border rounded-lg px-4 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Vai trò</label>
+                    <select id="user-role" class="w-full border rounded-lg px-4 py-2">
+                        <option value="khach_hang">Khách hàng</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold">Lưu</button>
+                    <button type="button" onclick="closeUserModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 rounded-lg font-semibold">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div id="order-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto m-4">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold">Chi tiết đơn hàng #<span id="order-detail-id"></span></h3>
+                <button onclick="closeOrderModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div id="order-detail-content" class="p-6"></div>
+        </div>
+    </div>
+
     <script>
-        const AUTH_API_URL = 'http://localhost:3300/api';
-        
-        // Kiểm tra xác thực khi trang load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAdminAuth();
-        });
+        const API_URL = 'http://localhost:3300/api';
+        let adminToken = '';
+        let adminUser = null;
 
-        async function checkAdminAuth() {
-            const user = JSON.parse(localStorage.getItem('admin_user'));
-            const token = localStorage.getItem('admin_token');
+        // Auth check
+        document.addEventListener('DOMContentLoaded', checkAuth);
 
-            console.log('Checking admin auth - User:', user);
-            console.log('Checking admin auth - Token:', token ? 'exists' : 'missing');
+        async function checkAuth() {
+            adminToken = localStorage.getItem('admin_token');
+            adminUser = JSON.parse(localStorage.getItem('admin_user') || 'null');
 
-            // Kiểm tra nếu không có user hoặc token
-            if (!user || !token) {
-                console.log('No admin user or token found');
-                redirectToAdminLogin('Vui lòng đăng nhập để truy cập trang quản trị');
+            if (!adminToken || !adminUser || adminUser.vai_tro !== 'admin') {
+                redirectToLogin('Vui lòng đăng nhập');
                 return;
             }
 
-            // Kiểm tra vai trò admin (vai_tro = 'admin')
-            console.log('Admin user role:', user.vai_tro, typeof user.vai_tro);
-            if (user.vai_tro !== 'admin') {
-                console.log('User is not admin');
-                redirectToAdminLogin('Bạn không có quyền truy cập trang quản trị');
-                return;
-            }
-
-            // Verify token với server
             try {
-                console.log('Verifying admin token with server...');
-                const response = await fetch(`${AUTH_API_URL}/auth/verify-admin`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
+                const res = await fetch(`${API_URL}/auth/verify-admin`, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
                 });
-
-                console.log('Verify admin response status:', response.status);
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    console.error('Verify admin failed:', errorData);
-                    throw new Error(errorData.message || 'Token không hợp lệ');
-                }
-
-                const data = await response.json();
-                console.log('Verify admin success:', data);
+                if (!res.ok) throw new Error('Token invalid');
                 
-                if (!data.success || data.user.vai_tro !== 'admin') {
-                    throw new Error('Không có quyền truy cập');
-                }
-
-                // Xác thực thành công
-                displayAdminContent(user);
+                document.getElementById('loading-overlay').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'flex';
+                document.getElementById('admin-name').textContent = adminUser.ten_dang_nhap || adminUser.email;
                 
-            } catch (error) {
-                console.error('Admin auth error:', error);
-                redirectToAdminLogin('Phiên đăng nhập đã hết hạn hoặc không hợp lệ');
+                loadDashboard();
+                loadCategoriesForFilter();
+            } catch (e) {
+                redirectToLogin('Phiên đăng nhập hết hạn');
             }
         }
 
-        function displayAdminContent(user) {
-            // Ẩn loading overlay
-            document.getElementById('loading-overlay').style.display = 'none';
-            
-            // Hiển thị nội dung admin
-            document.getElementById('admin-content').style.display = 'block';
-            
-            // Hiển thị tên admin
-            const usernameElement = document.getElementById('admin-username');
-            if (usernameElement) {
-                usernameElement.textContent = `Admin: ${user.ten_dang_nhap || user.email}`;
-            }
-        }
-
-        function redirectToAdminLogin(message) {
-            // Xóa dữ liệu admin cũ
+        function redirectToLogin(msg) {
             localStorage.removeItem('admin_token');
             localStorage.removeItem('admin_user');
-            
-            // Redirect về trang admin login
-            setTimeout(() => {
-                window.location.href = 'admin-login.html?message=' + encodeURIComponent(message);
-            }, 1000);
+            window.location.href = 'admin-login.html?message=' + encodeURIComponent(msg);
         }
 
-        function handleAdminLogout() {
-            if (confirm('Bạn có chắc muốn đăng xuất?')) {
-                localStorage.removeItem('admin_user');
+        function handleLogout() {
+            if (confirm('Đăng xuất?')) {
                 localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_user');
                 window.location.href = 'admin-login.html';
             }
         }
-    </script>
 
-    <script src="../js/main.js"></script>
+        // Section navigation
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + section).classList.add('active');
+            document.querySelector(`[data-section="${section}"]`).classList.add('active');
+
+            if (section === 'dashboard') loadDashboard();
+            else if (section === 'products') loadProducts();
+            else if (section === 'categories') loadCategories();
+            else if (section === 'orders') loadOrders();
+            else if (section === 'users') loadUsers();
+            else if (section === 'reviews') loadReviews();
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('vi-VN');
+        }
+
+        function getStatusBadge(status) {
+            const map = {
+                'cho_xac_nhan': '<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">Chờ xác nhận</span>',
+                'da_xac_nhan': '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">Đã xác nhận</span>',
+                'dang_giao': '<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">Đang giao</span>',
+                'da_giao': '<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Đã giao</span>',
+                'da_huy': '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">Đã hủy</span>'
+            };
+            return map[status] || status;
+        }
+
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const options = {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${adminToken}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            if (body) options.body = JSON.stringify(body);
+            const res = await fetch(`${API_URL}${endpoint}`, options);
+            return res.json();
+        }
+""
+  
+      // Dashboard
+        async function loadDashboard() {
+            try {
+                const data = await apiCall('/admin/dashboard');
+                if (data.success) {
+                    const s = data.data.stats;
+                    document.getElementById('stat-revenue').textContent = formatPrice(s.total_revenue);
+                    document.getElementById('stat-orders').textContent = s.total_orders;
+                    document.getElementById('stat-products').textContent = s.total_products;
+                    document.getElementById('stat-customers').textContent = s.total_customers;
+
+                    // Recent orders
+                    const ordersHtml = data.data.recent_orders.slice(0, 5).map(o => `
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-semibold">#${o.ma_don_hang} - ${o.ten_dang_nhap || 'Khách'}</p>
+                                <p class="text-sm text-gray-500">${formatDate(o.ngay_dat)}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-green-600">${formatPrice(o.tong_tien)}</p>
+                                ${getStatusBadge(o.trang_thai)}
+                            </div>
+                        </div>
+                    `).join('');
+                    document.getElementById('recent-orders').innerHTML = ordersHtml || '<p class="text-gray-500">Chưa có đơn hàng</p>';
+
+                    // Top products
+                    const productsHtml = data.data.top_products.map(p => `
+                        <div class="flex items-center gap-3">
+                            <img src="${p.anh_chinh ? API_URL.replace('/api', '') + p.anh_chinh : 'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded">
+                            <div class="flex-1">
+                                <p class="font-semibold">${p.ten_san_pham}</p>
+                                <p class="text-sm text-gray-500">Đã bán: ${p.total_sold}</p>
+                            </div>
+                            <span class="font-bold text-green-600">${formatPrice(p.gia)}</span>
+                        </div>
+                    `).join('');
+                    document.getElementById('top-products').innerHTML = productsHtml || '<p class="text-gray-500">Chưa có dữ liệu</p>';
+                }
+            } catch (e) {
+                console.error('Dashboard error:', e);
+            }
+        }
+
+        // Products
+        let allCategories = [];
+        async function loadCategoriesForFilter() {
+            const data = await apiCall('/admin/categories');
+            if (data.success) {
+                allCategories = data.data;
+                const options = '<option value="">Tất cả danh mục</option>' + 
+                    data.data.map(c => `<option value="${c.ma_danh_muc}">${c.ten_danh_muc}</option>`).join('');
+                document.getElementById('product-category-filter').innerHTML = options;
+                document.getElementById('product-category').innerHTML = 
+                    '<option value="">Chọn danh mục</option>' + 
+                    data.data.map(c => `<option value="${c.ma_danh_muc}">${c.ten_danh_muc}</option>`).join('');
+            }
+        }
+
+        async function loadProducts() {
+            const search = document.getElementById('product-search').value;
+            const category = document.getElementById('product-category-filter').value;
+            const data = await apiCall(`/admin/products?search=${search}&category=${category}`);
+            
+            if (data.success) {
+                const html = data.data.map(p => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3">
+                            <img src="${p.anh_chinh ? API_URL.replace('/api', '') + p.anh_chinh : 'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded">
+                        </td>
+                        <td class="px-4 py-3 font-semibold">${p.ten_san_pham}</td>
+                        <td class="px-4 py-3">${p.ten_danh_muc || '-'}</td>
+                        <td class="px-4 py-3 text-right font-bold text-green-600">${formatPrice(p.gia)}</td>
+                        <td class="px-4 py-3 text-center">${p.so_luong}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2 py-1 rounded text-xs ${p.trang_thai === 'hien_thi' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">
+                                ${p.trang_thai === 'hien_thi' ? 'Hiển thị' : 'Ẩn'}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="editProduct(${p.ma_san_pham})" class="text-blue-600 hover:underline mr-2">Sửa</button>
+                            <button onclick="deleteProduct(${p.ma_san_pham})" class="text-red-600 hover:underline">Xóa</button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('products-table').innerHTML = html || '<tr><td colspan="7" class="text-center py-4 text-gray-500">Không có sản phẩm</td></tr>';
+            }
+        }
+
+        function searchProducts() {
+            clearTimeout(window.productSearchTimeout);
+            window.productSearchTimeout = setTimeout(loadProducts, 300);
+        }
+
+        function openProductModal(product = null) {
+            document.getElementById('product-modal').classList.add('active');
+            document.getElementById('product-modal-title').textContent = product ? 'Sửa sản phẩm' : 'Thêm sản phẩm';
+            document.getElementById('product-form').reset();
+            
+            if (product) {
+                document.getElementById('product-id').value = product.ma_san_pham;
+                document.getElementById('product-name').value = product.ten_san_pham;
+                document.getElementById('product-price').value = product.gia;
+                document.getElementById('product-quantity').value = product.so_luong;
+                document.getElementById('product-brand').value = product.thuong_hieu || '';
+                document.getElementById('product-category').value = product.ma_danh_muc || '';
+                document.getElementById('product-desc').value = product.mo_ta || '';
+                document.getElementById('product-status').value = product.trang_thai;
+            } else {
+                document.getElementById('product-id').value = '';
+            }
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('active');
+        }
+
+        async function editProduct(id) {
+            const data = await apiCall(`/admin/products/${id}`);
+            if (data.success) openProductModal(data.data);
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Xóa sản phẩm này?')) return;
+            const data = await apiCall(`/admin/products/${id}`, 'DELETE');
+            if (data.success) {
+                alert('Đã xóa!');
+                loadProducts();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('product-id').value;
+            const body = {
+                ten_san_pham: document.getElementById('product-name').value,
+                gia: parseFloat(document.getElementById('product-price').value),
+                so_luong: parseInt(document.getElementById('product-quantity').value) || 0,
+                thuong_hieu: document.getElementById('product-brand').value,
+                ma_danh_muc: document.getElementById('product-category').value || null,
+                mo_ta: document.getElementById('product-desc').value,
+                trang_thai: document.getElementById('product-status').value
+            };
+
+            const data = await apiCall(`/admin/products${id ? '/' + id : ''}`, id ? 'PUT' : 'POST', body);
+            if (data.success) {
+                alert(id ? 'Đã cập nhật!' : 'Đã thêm!');
+                closeProductModal();
+                loadProducts();
+            } else {
+                alert(data.message);
+            }
+        });
+
+        // Categories
+        async function loadCategories() {
+            const data = await apiCall('/admin/categories');
+            if (data.success) {
+                const html = data.data.map(c => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3">${c.ma_danh_muc}</td>
+                        <td class="px-4 py-3 font-semibold">${c.ten_danh_muc}</td>
+                        <td class="px-4 py-3">${c.mo_ta || '-'}</td>
+                        <td class="px-4 py-3 text-center">${c.so_san_pham}</td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="editCategory(${c.ma_danh_muc}, '${c.ten_danh_muc}', '${c.mo_ta || ''}')" class="text-blue-600 hover:underline mr-2">Sửa</button>
+                            <button onclick="deleteCategory(${c.ma_danh_muc})" class="text-red-600 hover:underline">Xóa</button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('categories-table').innerHTML = html || '<tr><td colspan="5" class="text-center py-4 text-gray-500">Không có danh mục</td></tr>';
+            }
+        }
+
+        function openCategoryModal(category = null) {
+            document.getElementById('category-modal').classList.add('active');
+            document.getElementById('category-modal-title').textContent = category ? 'Sửa danh mục' : 'Thêm danh mục';
+            document.getElementById('category-form').reset();
+            document.getElementById('category-id').value = category?.id || '';
+            if (category) {
+                document.getElementById('category-name').value = category.name;
+                document.getElementById('category-desc').value = category.desc;
+            }
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('category-modal').classList.remove('active');
+        }
+
+        function editCategory(id, name, desc) {
+            openCategoryModal({ id, name, desc });
+        }
+
+        async function deleteCategory(id) {
+            if (!confirm('Xóa danh mục này?')) return;
+            const data = await apiCall(`/admin/categories/${id}`, 'DELETE');
+            if (data.success) {
+                alert('Đã xóa!');
+                loadCategories();
+                loadCategoriesForFilter();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        document.getElementById('category-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('category-id').value;
+            const body = {
+                ten_danh_muc: document.getElementById('category-name').value,
+                mo_ta: document.getElementById('category-desc').value
+            };
+
+            const data = await apiCall(`/admin/categories${id ? '/' + id : ''}`, id ? 'PUT' : 'POST', body);
+            if (data.success) {
+                alert(id ? 'Đã cập nhật!' : 'Đã thêm!');
+                closeCategoryModal();
+                loadCategories();
+                loadCategoriesForFilter();
+            } else {
+                alert(data.message);
+            }
+        });
+
+        // Orders
+        async function loadOrders() {
+            const search = document.getElementById('order-search').value;
+            const status = document.getElementById('order-status-filter').value;
+            const data = await apiCall(`/admin/orders?search=${search}&status=${status}`);
+            
+            if (data.success) {
+                const html = data.data.map(o => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3 font-semibold">#${o.ma_don_hang}</td>
+                        <td class="px-4 py-3">${o.ten_dang_nhap || o.email || 'Khách'}</td>
+                        <td class="px-4 py-3 text-right font-bold text-green-600">${formatPrice(o.tong_tien)}</td>
+                        <td class="px-4 py-3 text-center">${getStatusBadge(o.trang_thai)}</td>
+                        <td class="px-4 py-3 text-center">${formatDate(o.ngay_dat)}</td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="viewOrder(${o.ma_don_hang})" class="text-blue-600 hover:underline mr-2">Xem</button>
+                            <select onchange="updateOrderStatus(${o.ma_don_hang}, this.value)" class="border rounded px-2 py-1 text-xs">
+                                <option value="">Cập nhật</option>
+                                <option value="cho_xac_nhan">Chờ xác nhận</option>
+                                <option value="da_xac_nhan">Đã xác nhận</option>
+                                <option value="dang_giao">Đang giao</option>
+                                <option value="da_giao">Đã giao</option>
+                                <option value="da_huy">Đã hủy</option>
+                            </select>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('orders-table').innerHTML = html || '<tr><td colspan="6" class="text-center py-4 text-gray-500">Không có đơn hàng</td></tr>';
+            }
+        }
+
+        function searchOrders() {
+            clearTimeout(window.orderSearchTimeout);
+            window.orderSearchTimeout = setTimeout(loadOrders, 300);
+        }
+
+        async function viewOrder(id) {
+            const data = await apiCall(`/admin/orders/${id}`);
+            if (data.success) {
+                const o = data.data;
+                document.getElementById('order-detail-id').textContent = o.ma_don_hang;
+                document.getElementById('order-detail-content').innerHTML = `
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h4 class="font-bold mb-2">Thông tin khách hàng</h4>
+                            <p><strong>Tên:</strong> ${o.ten_dang_nhap || 'Khách'}</p>
+                            <p><strong>Email:</strong> ${o.email || '-'}</p>
+                            <p><strong>SĐT:</strong> ${o.so_dien_thoai || '-'}</p>
+                            <p><strong>Địa chỉ:</strong> ${o.dia_chi_giao || '-'}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-2">Thông tin đơn hàng</h4>
+                            <p><strong>Ngày đặt:</strong> ${formatDate(o.ngay_dat)}</p>
+                            <p><strong>Trạng thái:</strong> ${getStatusBadge(o.trang_thai)}</p>
+                            <p><strong>Tổng tiền:</strong> <span class="text-green-600 font-bold">${formatPrice(o.tong_tien)}</span></p>
+                        </div>
+                    </div>
+                    <h4 class="font-bold mb-2">Sản phẩm</h4>
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left">Sản phẩm</th>
+                                <th class="px-4 py-2 text-center">SL</th>
+                                <th class="px-4 py-2 text-right">Đơn giá</th>
+                                <th class="px-4 py-2 text-right">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${o.items.map(i => `
+                                <tr class="border-b">
+                                    <td class="px-4 py-2">${i.ten_san_pham}</td>
+                                    <td class="px-4 py-2 text-center">${i.so_luong}</td>
+                                    <td class="px-4 py-2 text-right">${formatPrice(i.gia)}</td>
+                                    <td class="px-4 py-2 text-right font-bold">${formatPrice(i.so_luong * i.gia)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                document.getElementById('order-modal').classList.add('active');
+            }
+        }
+
+        function closeOrderModal() {
+            document.getElementById('order-modal').classList.remove('active');
+        }
+
+        async function updateOrderStatus(id, status) {
+            if (!status) return;
+            const data = await apiCall(`/admin/orders/${id}/status`, 'PUT', { trang_thai: status });
+            if (data.success) {
+                alert('Đã cập nhật!');
+                loadOrders();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        // Users
+        async function loadUsers() {
+            const search = document.getElementById('user-search').value;
+            const role = document.getElementById('user-role-filter').value;
+            const data = await apiCall(`/admin/users?search=${search}&role=${role}`);
+            
+            if (data.success) {
+                const html = data.data.map(u => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3">${u.ma_tai_khoan}</td>
+                        <td class="px-4 py-3 font-semibold">${u.ten_dang_nhap}</td>
+                        <td class="px-4 py-3">${u.email}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2 py-1 rounded text-xs ${u.vai_tro === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">
+                                ${u.vai_tro === 'admin' ? 'Admin' : 'Khách hàng'}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2 py-1 rounded text-xs ${u.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                                ${u.trang_thai === 1 ? 'Hoạt động' : 'Khóa'}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="editUser(${u.ma_tai_khoan})" class="text-blue-600 hover:underline mr-2">Sửa</button>
+                            <button onclick="toggleUserStatus(${u.ma_tai_khoan})" class="text-yellow-600 hover:underline mr-2">${u.trang_thai === 1 ? 'Khóa' : 'Mở'}</button>
+                            <button onclick="deleteUser(${u.ma_tai_khoan})" class="text-red-600 hover:underline">Xóa</button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('users-table').innerHTML = html || '<tr><td colspan="6" class="text-center py-4 text-gray-500">Không có tài khoản</td></tr>';
+            }
+        }
+
+        function searchUsers() {
+            clearTimeout(window.userSearchTimeout);
+            window.userSearchTimeout = setTimeout(loadUsers, 300);
+        }
+
+        function openUserModal(user = null) {
+            document.getElementById('user-modal').classList.add('active');
+            document.getElementById('user-modal-title').textContent = user ? 'Sửa tài khoản' : 'Thêm tài khoản';
+            document.getElementById('user-form').reset();
+            document.getElementById('user-id').value = user?.ma_tai_khoan || '';
+            document.getElementById('user-password-field').style.display = user ? 'none' : 'block';
+            
+            if (user) {
+                document.getElementById('user-name').value = user.ten_dang_nhap;
+                document.getElementById('user-email').value = user.email;
+                document.getElementById('user-email').disabled = true;
+                document.getElementById('user-role').value = user.vai_tro;
+            } else {
+                document.getElementById('user-email').disabled = false;
+            }
+        }
+
+        function closeUserModal() {
+            document.getElementById('user-modal').classList.remove('active');
+        }
+
+        async function editUser(id) {
+            const data = await apiCall(`/admin/users/${id}`);
+            if (data.success) openUserModal(data.data);
+        }
+
+        async function toggleUserStatus(id) {
+            const data = await apiCall(`/admin/users/${id}/toggle-status`, 'PUT');
+            if (data.success) {
+                alert('Đã cập nhật!');
+                loadUsers();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Xóa tài khoản này?')) return;
+            const data = await apiCall(`/admin/users/${id}`, 'DELETE');
+            if (data.success) {
+                alert('Đã xóa!');
+                loadUsers();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        document.getElementById('user-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('user-id').value;
+            const body = {
+                ten_dang_nhap: document.getElementById('user-name').value,
+                vai_tro: document.getElementById('user-role').value
+            };
+
+            if (!id) {
+                body.email = document.getElementById('user-email').value;
+                body.mat_khau = document.getElementById('user-password').value;
+                if (!body.mat_khau) {
+                    alert('Vui lòng nhập mật khẩu');
+                    return;
+                }
+            }
+
+            const data = await apiCall(`/admin/users${id ? '/' + id : ''}`, id ? 'PUT' : 'POST', body);
+            if (data.success) {
+                alert(id ? 'Đã cập nhật!' : 'Đã thêm!');
+                closeUserModal();
+                loadUsers();
+            } else {
+                alert(data.message);
+            }
+        });
+
+        // Reviews
+        async function loadReviews() {
+            const data = await apiCall('/admin/reviews');
+            if (data.success) {
+                const html = data.data.map(r => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3">${r.ten_san_pham || '-'}</td>
+                        <td class="px-4 py-3">${r.ten_dang_nhap || 'Ẩn danh'}</td>
+                        <td class="px-4 py-3 text-center">${'⭐'.repeat(r.diem_danh_gia || 0)}</td>
+                        <td class="px-4 py-3">${r.noi_dung || '-'}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2 py-1 rounded text-xs ${r.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                                ${r.trang_thai === 1 ? 'Hiện' : 'Ẩn'}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="toggleReviewStatus(${r.ma_danh_gia})" class="text-yellow-600 hover:underline mr-2">${r.trang_thai === 1 ? 'Ẩn' : 'Hiện'}</button>
+                            <button onclick="deleteReview(${r.ma_danh_gia})" class="text-red-600 hover:underline">Xóa</button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('reviews-table').innerHTML = html || '<tr><td colspan="6" class="text-center py-4 text-gray-500">Không có đánh giá</td></tr>';
+            }
+        }
+
+        async function toggleReviewStatus(id) {
+            const data = await apiCall(`/admin/reviews/${id}/toggle-status`, 'PUT');
+            if (data.success) loadReviews();
+        }
+
+        async function deleteReview(id) {
+            if (!confirm('Xóa đánh giá này?')) return;
+            const data = await apiCall(`/admin/reviews/${id}`, 'DELETE');
+            if (data.success) {
+                alert('Đã xóa!');
+                loadReviews();
+            }
+        }
+    </script>
 </body>
 </html>
