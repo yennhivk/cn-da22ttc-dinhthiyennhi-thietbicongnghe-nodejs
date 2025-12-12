@@ -28,6 +28,23 @@
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+        
+        /* Tăng cỡ chữ cho trang sản phẩm */
+        .product-card h3 {
+            font-size: 1rem !important; /* text-base thay vì text-sm */
+        }
+        .product-card .text-xl {
+            font-size: 1.5rem !important; /* text-2xl */
+        }
+        .product-card .text-sm {
+            font-size: 0.9375rem !important; /* tăng từ 0.875rem */
+        }
+        .product-card .text-xs {
+            font-size: 0.8125rem !important; /* tăng từ 0.75rem */
+        }
+        .product-card .text-\[11px\] {
+            font-size: 0.875rem !important; /* text-sm */
+        }
         .line-clamp-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -400,7 +417,7 @@
     <section class="py-6 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4">
             <!-- Khám phá Tab - With Sidebar -->
-            <div id="content-kham-pha" class="hidden">
+            <div id="content-kham-pha">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
                 <!-- Sidebar Filters -->
@@ -526,46 +543,17 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         <!-- Product Card 1 - iPhone 16 128GB -->
                         <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                            <!-- Freeship Badge -->
-                            <div class="absolute top-2 left-2 z-10">
-                                <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                    <div class="text-center">
-                                        <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                        <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                    </div>
-                                </div>
-                            </div>
                             
                             <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3Ctext fill='%239ca3af' font-family='Arial' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ES?n ph?m%3C/text%3E%3C/svg%3E" alt="iPhone 16" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
                                 
-                                <!-- Feature Badges Left -->
-                                <div class="absolute top-2 left-2 space-y-1 max-w-[45%]">
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <div class="flex items-start gap-1">
-                                            <div class="w-3 h-3 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
-                                                <svg class="w-2 h-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><rect width="14" height="10" x="3" y="5" rx="1"/></svg>
-                                            </div>
-                                            <span class="text-[10px] font-medium text-gray-800 leading-tight">Chip Apple A18 mạnh mẽ</span>
+                                <!-- Freeship Badge -->
+                                <div class="absolute top-2 left-2 z-10">
+                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
+                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
                                         </div>
-                                    </div>
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <div class="flex items-start gap-1">
-                                            <div class="w-3 h-3 bg-green-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
-                                                <svg class="w-2 h-2 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/></svg>
-                                            </div>
-                                            <span class="text-[10px] font-medium text-gray-800 leading-tight">Thời lượng pin 22 giờ</span>
-                                        </div>
-                                    </div>
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Nút Camera Control mới</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Installment Badge -->
-                                <div class="absolute bottom-2 right-2">
-                                    <div class="bg-blue-600 text-white px-3 py-1.5 rounded-md shadow-lg">
-                                        <span class="text-xs font-bold">Trả góp 0%</span>
                                     </div>
                                 </div>
                             </div>
@@ -574,16 +562,16 @@
                                 <!-- Pricing -->
                                 <div class="mb-2">
                                     <div class="flex items-baseline gap-2 mb-1">
-                                        <span class="text-sm text-gray-400 line-through">22.490.000đ</span>
-                                        <span class="text-red-600 text-xs font-bold">-6%</span>
+                                        <span class="text-base text-gray-400 line-through">22.490.000đ</span>
+                                        <span class="text-red-600 text-sm font-bold">-6%</span>
                                     </div>
-                                    <div class="text-xl font-bold text-red-600">21.090.000đ</div>
-                                    <div class="text-xs text-green-600 font-medium">Giảm 1.400.000đ</div>
-                                    <div class="text-xs text-gray-500 mt-1">Còn 00 ngày 12:31:32</div>
+                                    <div class="text-2xl font-bold text-red-600">21.090.000đ</div>
+                                    <div class="text-sm text-green-600 font-medium">Giảm 1.400.000đ</div>
+                                    <div class="text-sm text-gray-500 mt-1">Còn 00 ngày 12:31:32</div>
                                 </div>
                                 
                                 <!-- Product Name -->
-                                <h3 class="font-semibold text-gray-900 text-sm mb-2">iPhone 16 128GB</h3>
+                                <h3 class="font-semibold text-gray-900 text-base mb-2">iPhone 16 128GB</h3>
                                 
                                 <!-- Color Options -->
                                 <div class="flex items-center gap-1 mb-2">
@@ -595,9 +583,9 @@
                                 
                                 <!-- Storage Options -->
                                 <div class="flex gap-2 mb-3">
-                                    <button class="px-3 py-1 text-xs border-2 border-red-500 text-red-600 rounded font-medium bg-red-50">128 GB</button>
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">256 GB</button>
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">512 GB</button>
+                                    <button class="px-3 py-1 text-sm border-2 border-red-500 text-red-600 rounded font-medium bg-red-50">128 GB</button>
+                                    <button class="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:border-red-500">256 GB</button>
+                                    <button class="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:border-red-500">512 GB</button>
                                 </div>
                                 
                                 <!-- Payment Methods -->
@@ -621,33 +609,16 @@
 
                         <!-- Product Card 2 - iPhone 16 Plus 128GB -->
                         <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                            <div class="absolute top-2 left-2 z-10">
-                                <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                    <div class="text-center">
-                                        <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                        <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                    </div>
-                                </div>
-                            </div>
                             
                             <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3Ctext fill='%239ca3af' font-family='Arial' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ES?n ph?m%3C/text%3E%3C/svg%3E" alt="iPhone 16 Plus" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16 Plus" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
                                 
-                                <div class="absolute top-2 left-2 space-y-1 max-w-[45%]">
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Chip Apple A18 mạnh mẽ</span>
-                                    </div>
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Thời lượng pin 27 giờ</span>
-                                    </div>
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Nút Camera Control mới</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="absolute bottom-2 right-2">
-                                    <div class="bg-blue-600 text-white px-3 py-1.5 rounded-md shadow-lg">
-                                        <span class="text-xs font-bold">Trả góp 0%</span>
+                                <div class="absolute top-2 left-2 z-10">
+                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
+                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -698,36 +669,16 @@
 
                         <!-- Product Card 3 - iPhone 16 Pro 256GB -->
                         <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                            <div class="absolute top-2 left-2 z-10">
-                                <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                    <div class="text-center">
-                                        <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                        <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                    </div>
-                                </div>
-                            </div>
                             
                             <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3Ctext fill='%239ca3af' font-family='Arial' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ES?n ph?m%3C/text%3E%3C/svg%3E" alt="iPhone 16 Pro" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16 Pro" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
                                 
-                                <div class="absolute top-2 left-2 space-y-1 max-w-[45%]">
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Chip A18 Pro cực mạnh</span>
-                                    </div>
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Nút Camera Control mới</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="absolute top-2 right-2 space-y-1 max-w-[45%]">
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Viền màn hình siêu mỏng</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="absolute bottom-2 right-2">
-                                    <div class="bg-blue-600 text-white px-3 py-1.5 rounded-md shadow-lg">
-                                        <span class="text-xs font-bold">Trả góp 0%</span>
+                                <div class="absolute top-2 left-2 z-10">
+                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
+                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -786,36 +737,15 @@
                                 <img src="https://cdn.tgdd.vn/2023/10/campaign/label-1111-80x48-4.png" alt="11.11 Sale" class="w-16 h-auto">
                             </div>
                             
-                            <div class="absolute top-2 left-2 z-10">
-                                <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                    <div class="text-center">
-                                        <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                        <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
                             <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3Ctext fill='%239ca3af' font-family='Arial' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ES?n ph?m%3C/text%3E%3C/svg%3E" alt="iPhone 16 Pro Max" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
+                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16 Pro Max" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
                                 
-                                <div class="absolute top-2 left-2 space-y-1 max-w-[45%]">
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Màn hình cực lớn 6.9 inch</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="absolute top-2 right-2 space-y-1 max-w-[45%]">
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Chip A18 Pro cực mạnh</span>
-                                    </div>
-                                    <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Nút Camera Control mới</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="absolute bottom-2 right-2">
-                                    <div class="bg-blue-600 text-white px-3 py-1.5 rounded-md shadow-lg">
-                                        <span class="text-xs font-bold">Trả góp 0%</span>
+                                <div class="absolute top-2 left-2 z-10">
+                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
+                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1141,23 +1071,20 @@
                         <!-- Category Tabs -->
                         <div class="bg-white rounded-lg shadow-sm mb-5 p-4">
                             <div class="flex flex-wrap gap-3">
-                                <button class="flex flex-col items-center gap-2 px-6 py-3 bg-red-50 text-red-600 border-2 border-red-600 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white transition min-w-[120px]">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border-2 border-red-600 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                                     </svg>
                                     <span>Tất cả</span>
                                 </button>
-                                <button class="flex flex-col items-center gap-2 px-6 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition min-w-[120px]">
-                                    <span class="text-3xl">🎧</span>
-                                    <div class="flex items-center gap-1">
-                                        <span>Phụ kiện</span>
-                                        <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(82)</span>
-                                    </div>
+                                <button class="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                                    <span class="text-2xl">🎧</span>
+                                    <span>Phụ kiện</span>
+                                    <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(82)</span>
                                 </button>
-                                <button class="flex flex-col items-center gap-2 px-6 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition min-w-[120px]">
-                                    <span class="text-3xl">📱</span>
-                                    <div class="flex items-center gap-1">
-                                        <span>Điện thoại</span>
+                                <button class="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                                    <span class="text-2xl">📱</span>
+                                    <span>Điện thoại</span>
                                         <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(4)</span>
                                     </div>
                                 </button>
@@ -1171,11 +1098,14 @@
                                     <span class="text-sm text-gray-600">Lọc nhanh:</span>
                                     <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-400 bg-white">
                                         <option>Hàng sản xuất</option>
+                                        <option>Giá thấp đến cao</option>
+                                        <option>Giá cao đến thấp</option>
+                                        <option>Mới nhất</option>
                                     </select>
                                 </div>
-                                <div class="flex flex-wrap items-center gap-4 text-sm">
-                                    <span class="text-gray-500">Tìm thấy <strong class="text-gray-900">86</strong> kết quả với từ khóa <strong class="text-gray-900">iphone 17</strong></span>
-                                    <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-4 text-sm">
+                                    <span class="text-gray-500">Tìm thấy <strong class="text-red-600">86</strong> kết quả với từ khóa <strong>iphone 17</strong></span>
+                                    <div class="flex items-center gap-2">
                                         <button class="text-red-600 font-semibold hover:underline">Nổi bật</button>
                                         <span class="text-gray-400">•</span>
                                         <button class="text-gray-600 hover:text-red-600">Giá tăng dần</button>
@@ -1189,34 +1119,11 @@
                         </div>
 
                         <!-- Products Grid -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             <!-- Product Card 1 - iPhone 17 256GB -->
                             <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
                                 <div class="relative p-4 bg-gray-50">
-                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3Ctext fill='%239ca3af' font-family='Arial' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ES?n ph?m%3C/text%3E%3C/svg%3E" alt="iPhone 17" class="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300">
-                                    
-                                    <!-- Feature Badges -->
-                                    <div class="absolute top-2 left-2 space-y-1">
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200 flex items-center gap-1">
-                                            <svg class="w-3 h-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><rect width="14" height="10" x="3" y="5" rx="1"/></svg>
-                                            <span class="text-[10px] font-medium text-gray-700">Màn hình ProMotion 120Hz</span>
-                                        </div>
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200 flex items-center gap-1">
-                                            <svg class="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/></svg>
-                                            <span class="text-[10px] font-medium text-gray-700">Chip A19 - pin cả ngày</span>
-                                        </div>
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200 flex items-center gap-1">
-                                            <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/></svg>
-                                            <span class="text-[10px] font-medium text-gray-700">Camera 48MP Dual Fusion</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Installment Badge -->
-                                    <div class="absolute bottom-2 right-2">
-                                        <div class="bg-blue-600 text-white px-3 py-1 rounded shadow-md">
-                                            <span class="text-xs font-bold">Trả góp 0%</span>
-                                        </div>
-                                    </div>
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 17" class="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300">
                                 </div>
                                 
                                 <div class="p-3">
@@ -1264,28 +1171,7 @@
                             <!-- Product Card 2 - iPhone 17 Pro 256GB -->
                             <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
                                 <div class="relative p-4 bg-gray-50">
-                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3Ctext fill='%239ca3af' font-family='Arial' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ES?n ph?m%3C/text%3E%3C/svg%3E" alt="iPhone 17 Pro" class="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300">
-                                    
-                                    <div class="absolute top-2 left-2 space-y-1">
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">Thiết kế nguyên khối</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="absolute top-2 right-2 space-y-1">
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">A19 Pro tân nhất hơi</span>
-                                        </div>
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">Hệ thống camera Pro</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="absolute bottom-2 right-2">
-                                        <div class="bg-blue-600 text-white px-3 py-1 rounded shadow-md">
-                                            <span class="text-xs font-bold">Trả góp 0%</span>
-                                        </div>
-                                    </div>
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 17 Pro" class="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300">
                                 </div>
                                 
                                 <div class="p-3">
@@ -1328,23 +1214,8 @@
                             <!-- Product Card 3 - iPhone 17 Pro Max 256GB -->
                             <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
                                 <div class="relative p-4 bg-gray-50">
-                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3Ctext fill='%239ca3af' font-family='Arial' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ES?n ph?m%3C/text%3E%3C/svg%3E" alt="iPhone 17 Pro Max" class="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300">
-                                    
-                                    <div class="absolute top-2 left-2 space-y-1">
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">Màn hình cực lớn 6.9 inch</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="absolute top-2 right-2 space-y-1">
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">Thiết kế nguyên khối</span>
-                                        </div>
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">A19 Pro tân nhất hơi</span>
-                                        </div>
-                                    </div>
-                                    
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 17 Pro Max" class="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300">
+                                                                        
                                     <div class="absolute bottom-2 right-2">
                                         <div class="bg-blue-600 text-white px-3 py-1 rounded shadow-md">
                                             <span class="text-xs font-bold">Trả góp 0%</span>
@@ -1683,6 +1554,11 @@
                 icon.style.transform = 'rotate(-90deg)';
             }
         }
+        
+        // Hiển thị tab Khám phá khi trang load
+        window.addEventListener('load', function() {
+            switchTab('kham-pha');
+        });
     </script>
 
     <!-- Footer -->
@@ -1823,9 +1699,9 @@
     </footer>
 
     <!-- Products JavaScript -->
-    <script src="../js/auth-ui.js?v=2"></script>
-    <script src="../js/products.js?v=2"></script>
-    <script src="../js/main.js?v=2"></script>
+    <script src="../js/auth-ui.js?v=3"></script>
+    <script src="../js/products.js?v=3"></script>
+    <script src="../js/main.js?v=3"></script>
 </body>
 </html>
 

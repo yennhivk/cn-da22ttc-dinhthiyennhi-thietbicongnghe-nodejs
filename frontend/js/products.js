@@ -150,31 +150,6 @@ function createProductCard(product) {
                      alt="${product.ten_san_pham}" 
                      class="product-image w-full h-48 object-contain"
                      onerror="this.onerror=null; this.src=PLACEHOLDER_IMAGE">
-                
-                <!-- Feature Badges -->
-                <div class="absolute top-2 left-2 space-y-1 max-w-[45%]">
-                    ${product.thuong_hieu ? `
-                    <div class="feature-badge bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">${product.thuong_hieu}</span>
-                    </div>
-                    ` : ''}
-                    ${product.so_luong > 0 ? `
-                    <div class="feature-badge bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-gray-200">
-                        <span class="text-[10px] font-medium text-gray-800 leading-tight block">Còn ${product.so_luong} sản phẩm</span>
-                    </div>
-                    ` : `
-                    <div class="feature-badge bg-red-100 backdrop-blur-sm px-2 py-1 rounded shadow-md border border-red-300">
-                        <span class="text-[10px] font-medium text-red-600 leading-tight block">Hết hàng</span>
-                    </div>
-                    `}
-                </div>
-                
-                <!-- Installment Badge -->
-                <div class="absolute bottom-2 right-2">
-                    <div class="bg-blue-600 text-white px-3 py-1.5 rounded-md shadow-lg">
-                        <span class="text-xs font-bold">Trả góp 0%</span>
-                    </div>
-                </div>
             </div>
             
             <!-- Product Info -->
@@ -483,10 +458,16 @@ function toggleMobileMenu() {
 function switchTab(tabName) {
     // Hide all content
     document.getElementById('content-kham-pha').classList.add('hidden');
+    document.getElementById('content-san-pham').classList.add('hidden');
+    document.getElementById('content-bai-viet').classList.add('hidden');
     
     // Show selected content
     if (tabName === 'kham-pha') {
         document.getElementById('content-kham-pha').classList.remove('hidden');
+    } else if (tabName === 'san-pham') {
+        document.getElementById('content-san-pham').classList.remove('hidden');
+    } else if (tabName === 'bai-viet') {
+        document.getElementById('content-bai-viet').classList.remove('hidden');
     }
     
     // Update tab styles
