@@ -32,9 +32,28 @@
         .gauge-container { position: relative; width: 180px; height: 100px; }
         .trend-up { color: #10b981; }
         .trend-down { color: #ef4444; }
+        
+        /* Tăng cỡ chữ toàn trang */
+        body { font-size: 18px; }
+        table { font-size: 17px; }
+        table th { font-size: 16px; font-weight: 600; }
+        table td { font-size: 17px; padding: 16px 18px !important; }
+        .text-xs { font-size: 15px !important; }
+        .text-sm { font-size: 16px !important; }
+        .text-base { font-size: 18px !important; }
+        .text-lg { font-size: 20px !important; }
+        .text-xl { font-size: 24px !important; }
+        .text-2xl { font-size: 30px !important; }
+        .text-3xl { font-size: 36px !important; }
+        input, select, textarea { font-size: 17px !important; padding: 12px 16px !important; }
+        button { font-size: 16px; padding: 10px 18px; }
+        .sidebar-item { font-size: 17px; padding: 14px 18px !important; }
+        .sidebar-item span:first-child { font-size: 20px; }
+        h2, h3 { font-size: 26px !important; }
+        p { font-size: 17px; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 text-base"></body>
     <!-- Loading -->
     <div id="loading-overlay" class="loading-overlay">
         <div class="spinner"></div>
@@ -46,13 +65,13 @@
         <!-- Sidebar -->
         <aside class="sidebar w-64 text-white fixed h-full z-40 flex flex-col">
             <div class="p-4 border-b border-blue-800">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-xl">📊</div>
-                    <div>
-                        <h1 class="font-bold text-lg">Yến Nhi Tech</h1>
-                        <p class="text-xs text-blue-300">Hệ thống quản trị</p>
+                <a href="../index.html" class="flex items-center gap-3 hover:opacity-80 transition">
+                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 object-cover rounded-full shadow-lg">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-lg font-bold text-red-400">Yến Nhi</span>
+                        <span class="text-xl font-bold text-blue-400 italic" style="font-family: 'Brush Script MT', 'Lucida Calligraphy', cursive;">Tech</span>
                     </div>
-                </div>
+                </a>
             </div>
             
             <nav class="flex-1 py-4 overflow-y-auto">
@@ -124,41 +143,41 @@
                         <div class="stat-card bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-5 text-white">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-blue-100 text-sm">Tổng doanh thu</p>
-                                    <p id="stat-revenue" class="text-2xl font-bold mt-1">0đ</p>
-                                    <p class="text-sm mt-2"><span id="revenue-trend" class="bg-white/20 px-2 py-0.5 rounded">↑ 0%</span> so với kỳ trước</p>
+                                    <p class="text-white font-semibold text-base">Tổng doanh thu</p>
+                                    <p id="stat-revenue" class="text-3xl font-extrabold mt-1">0đ</p>
+                                    <p class="text-base font-medium mt-2"><span id="revenue-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
                                 </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-3xl">💰</span></div>
+                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">💰</span></div>
                             </div>
                         </div>
                         <div class="stat-card bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl p-5 text-white">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-emerald-100 text-sm">Số đơn đặt hàng</p>
-                                    <p id="stat-orders" class="text-2xl font-bold mt-1">0</p>
-                                    <p class="text-sm mt-2"><span id="orders-trend" class="bg-white/20 px-2 py-0.5 rounded">↑ 0%</span> so với kỳ trước</p>
+                                    <p class="text-white font-semibold text-base">Số đơn đặt hàng</p>
+                                    <p id="stat-orders" class="text-3xl font-extrabold mt-1">0</p>
+                                    <p class="text-base font-medium mt-2"><span id="orders-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
                                 </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-3xl">🛒</span></div>
+                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">🛒</span></div>
                             </div>
                         </div>
                         <div class="stat-card bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl p-5 text-white">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-amber-100 text-sm">Số khách hàng</p>
-                                    <p id="stat-customers" class="text-2xl font-bold mt-1">0</p>
-                                    <p class="text-sm mt-2"><span id="customers-trend" class="bg-white/20 px-2 py-0.5 rounded">↑ 0%</span> so với kỳ trước</p>
+                                    <p class="text-white font-semibold text-base">Số khách hàng</p>
+                                    <p id="stat-customers" class="text-3xl font-extrabold mt-1">0</p>
+                                    <p class="text-base font-medium mt-2"><span id="customers-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
                                 </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-3xl">👥</span></div>
+                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">👥</span></div>
                             </div>
                         </div>
                         <div class="stat-card bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-5 text-white">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-purple-100 text-sm">Số lượng bán</p>
-                                    <p id="stat-products-sold" class="text-2xl font-bold mt-1">0</p>
-                                    <p class="text-sm mt-2"><span id="products-trend" class="bg-white/20 px-2 py-0.5 rounded">↑ 0%</span> so với kỳ trước</p>
+                                    <p class="text-white font-semibold text-base">Số lượng bán</p>
+                                    <p id="stat-products-sold" class="text-3xl font-extrabold mt-1">0</p>
+                                    <p class="text-base font-medium mt-2"><span id="products-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
                                 </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-3xl">📦</span></div>
+                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">📦</span></div>
                             </div>
                         </div>
                     </div>
@@ -404,6 +423,15 @@
                         <option value="an">Ẩn</option>
                     </select>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Hình ảnh sản phẩm</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('product-images').click()">
+                        <input type="file" id="product-images" multiple accept="image/*" class="hidden" onchange="previewImages(this)">
+                        <div id="image-preview" class="flex flex-wrap gap-2 justify-center mb-2"></div>
+                        <p class="text-gray-500"><span class="text-blue-600 font-medium">Click để chọn ảnh</span> hoặc kéo thả vào đây</p>
+                        <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP (tối đa 5 ảnh, mỗi ảnh ≤ 5MB)</p>
+                    </div>
+                </div>
                 <div class="flex gap-3 pt-4">
                     <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium">Lưu</button>
                     <button type="button" onclick="closeProductModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 py-2.5 rounded-lg font-medium">Hủy</button>
@@ -566,6 +594,14 @@
         // Helpers
         function formatPrice(price) {
             return new Intl.NumberFormat('vi-VN').format(price || 0) + 'đ';
+        }
+        function getImageUrl(path) {
+            if (!path) return 'https://via.placeholder.com/100x100?text=Ảnh';
+            if (path.startsWith('http')) return path;
+            // Xử lý đường dẫn tương đối - backend chạy trên port 3300
+            const baseUrl = 'http://localhost:3300';
+            if (path.startsWith('/')) return baseUrl + path;
+            return baseUrl + '/' + path;
         }
         function formatDate(date) {
             return new Date(date).toLocaleDateString('vi-VN');
@@ -765,7 +801,7 @@
             if (data.success) {
                 const html = data.data.map(p => `
                     <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-3"><img src="${p.anh_chinh ? API_URL.replace('/api', '') + p.anh_chinh : 'https://via.placeholder.com/50'}" class="w-12 h-12 object-cover rounded"></td>
+                        <td class="px-4 py-3"><img src="${getImageUrl(p.anh_chinh)}" class="w-12 h-12 object-cover rounded" onerror="this.src='https://via.placeholder.com/50?text=No+Image'"></td>
                         <td class="px-4 py-3 font-medium">${p.ten_san_pham}</td>
                         <td class="px-4 py-3 text-gray-600">${p.ten_danh_muc || '-'}</td>
                         <td class="px-4 py-3 text-right font-bold text-green-600">${formatPrice(p.gia)}</td>
@@ -789,6 +825,9 @@
             document.getElementById('product-modal-title').textContent = p ? 'Sửa sản phẩm' : 'Thêm sản phẩm';
             document.getElementById('product-form').reset();
             document.getElementById('product-id').value = p?.ma_san_pham || '';
+            document.getElementById('image-preview').innerHTML = '';
+            document.getElementById('product-images').value = '';
+            
             if (p) {
                 document.getElementById('product-name').value = p.ten_san_pham;
                 document.getElementById('product-price').value = p.gia;
@@ -797,6 +836,16 @@
                 document.getElementById('product-category').value = p.ma_danh_muc || '';
                 document.getElementById('product-desc').value = p.mo_ta || '';
                 document.getElementById('product-status').value = p.trang_thai;
+                
+                // Hiển thị ảnh hiện tại nếu có
+                if (p.images && p.images.length > 0) {
+                    document.getElementById('image-preview').innerHTML = p.images.map((img, i) => `
+                        <div class="relative">
+                            <img src="${API_URL.replace('/api', '')}${img.duong_dan_anh}" class="w-20 h-20 object-cover rounded-lg border">
+                            ${img.la_anh_chinh ? '<span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1 rounded">Chính</span>' : ''}
+                        </div>
+                    `).join('');
+                }
             }
         }
         function closeProductModal() { document.getElementById('product-modal').classList.remove('active'); }
@@ -806,6 +855,24 @@
             const d = await apiCall(`/admin/products/${id}`, 'DELETE');
             if (d.success) { alert('Đã xóa!'); loadProducts(); } else alert(d.message);
         }
+        // Preview images before upload
+        function previewImages(input) {
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = '';
+            if (input.files) {
+                Array.from(input.files).slice(0, 5).forEach((file, i) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        preview.innerHTML += `<div class="relative">
+                            <img src="${e.target.result}" class="w-20 h-20 object-cover rounded-lg border">
+                            ${i === 0 ? '<span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1 rounded">Chính</span>' : ''}
+                        </div>`;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('product-id').value;
@@ -818,8 +885,43 @@
                 mo_ta: document.getElementById('product-desc').value,
                 trang_thai: document.getElementById('product-status').value
             };
+            
+            // Tạo hoặc cập nhật sản phẩm
             const d = await apiCall(`/admin/products${id ? '/' + id : ''}`, id ? 'PUT' : 'POST', body);
-            if (d.success) { alert(id ? 'Đã cập nhật!' : 'Đã thêm!'); closeProductModal(); loadProducts(); } else alert(d.message);
+            
+            if (d.success) {
+                const productId = id || d.data.ma_san_pham;
+                
+                // Upload ảnh nếu có
+                const imageInput = document.getElementById('product-images');
+                if (imageInput.files && imageInput.files.length > 0) {
+                    const formData = new FormData();
+                    Array.from(imageInput.files).slice(0, 5).forEach(file => {
+                        formData.append('images', file);
+                    });
+                    formData.append('is_main', 'true');
+                    
+                    try {
+                        const uploadRes = await fetch(`${API_URL}/admin/products/${productId}/images`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${adminToken}` },
+                            body: formData
+                        });
+                        const uploadData = await uploadRes.json();
+                        if (!uploadData.success) {
+                            alert('Sản phẩm đã lưu nhưng upload ảnh thất bại: ' + uploadData.message);
+                        }
+                    } catch (err) {
+                        alert('Sản phẩm đã lưu nhưng upload ảnh lỗi: ' + err.message);
+                    }
+                }
+                
+                alert(id ? 'Đã cập nhật sản phẩm!' : 'Đã thêm sản phẩm!');
+                closeProductModal();
+                loadProducts();
+            } else {
+                alert(d.message);
+            }
         });
 
         // Categories

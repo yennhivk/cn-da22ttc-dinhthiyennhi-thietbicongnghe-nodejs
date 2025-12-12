@@ -273,9 +273,29 @@ router.post('/products/:id/images', authenticateToken, requireAdmin, upload.arra
         const productId = req.params.id;
         const isMain = req.body.is_main === 'true' || req.body.is_main === '1';
 
+        console.log('📸 Upload request - Product ID:', productId);
+        console.log('📸 Files received:', req.files?.length || 0);
+
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ success: false, message: 'Vui lòng chọn ảnh' });
         }
+
+        // Kiểm tra sản phẩm tồn tại
+        const [product] = await db.query('SELECT ma_san_pham FROM san_pham WHERE ma_san_pham = ?', [productId]);
+        if (product.length === 0) {
+            return res.status(404).json({ success: false, message: 'Sản phẩm không tồn tại' });
+        }
+
+        // Tạo bảng anh_san_pham nếu chưa có
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS anh_san_pham (
+                ma_anh INT AUTO_INCREMENT PRIMARY KEY,
+                ma_san_pham INT NOT NULL,
+                duong_dan_anh VARCHAR(500) NOT NULL,
+                la_anh_chinh TINYINT(1) DEFAULT 0,
+                ngay_tao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
 
         // Nếu là ảnh chính, bỏ flag ảnh chính cũ
         if (isMain) {
@@ -286,6 +306,8 @@ router.post('/products/:id/images', authenticateToken, requireAdmin, upload.arra
         for (let i = 0; i < req.files.length; i++) {
             const file = req.files[i];
             const imagePath = '/images/products/' + file.filename;
+            console.log('📸 Saving image:', imagePath);
+            
             const [result] = await db.query(`
                 INSERT INTO anh_san_pham (ma_san_pham, duong_dan_anh, la_anh_chinh)
                 VALUES (?, ?, ?)
@@ -293,10 +315,12 @@ router.post('/products/:id/images', authenticateToken, requireAdmin, upload.arra
             insertedImages.push({ ma_anh: result.insertId, duong_dan_anh: imagePath });
         }
 
+        console.log('✅ Upload success:', insertedImages.length, 'images');
         res.json({ success: true, message: 'Upload ảnh thành công', data: insertedImages });
     } catch (error) {
-        console.error('Upload image error:', error);
-        res.status(500).json({ success: false, message: 'Lỗi server' });
+        console.error('❌ Upload image error:', error.message);
+        console.error('❌ Stack:', error.stack);
+        res.status(500).json({ success: false, message: 'Lỗi upload: ' + error.message });
     }
 });
 
