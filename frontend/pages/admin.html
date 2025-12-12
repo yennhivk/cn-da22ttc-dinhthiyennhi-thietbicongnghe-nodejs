@@ -244,7 +244,8 @@
                     </div>
                     <div class="bg-white rounded-xl shadow p-5">
                         <div class="flex gap-4 mb-4">
-                            <input type="text" id="product-search" placeholder="Tìm kiếm sản phẩm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchProducts()">
+                            <input type="text" id="product-search" placeholder="Tìm kiếm sản phẩm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchProducts()" onchange="loadProducts()">
+                            <button type="button" onclick="loadProducts()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">🔍 Tìm</button>
                             <select id="product-category-filter" class="border rounded-lg px-4 py-2" onchange="loadProducts()">
                                 <option value="">Tất cả danh mục</option>
                             </select>
@@ -794,11 +795,17 @@
         }
 
         async function loadProducts() {
-            const search = document.getElementById('product-search').value;
+            const search = document.getElementById('product-search').value.trim();
             const category = document.getElementById('product-category-filter').value;
-            const data = await apiCall(`/admin/products?search=${search}&category=${category}`);
+            console.log('🔍 Searching products:', search, 'Category:', category);
+            const data = await apiCall(`/admin/products?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}`);
             
+            console.log('API response:', data);
             if (data.success) {
+                if (data.data.length === 0) {
+                    document.getElementById('products-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500">Không tìm thấy sản phẩm nào</td></tr>';
+                    return;
+                }
                 const html = data.data.map(p => `
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-4 py-3"><img src="${getImageUrl(p.anh_chinh)}" class="w-12 h-12 object-cover rounded" onerror="this.src='https://via.placeholder.com/50?text=No+Image'"></td>
@@ -815,11 +822,32 @@
                         </td>
                     </tr>
                 `).join('');
-                document.getElementById('products-table').innerHTML = html || '<tr><td colspan="7" class="text-center py-8 text-gray-500">Không có sản phẩm</td></tr>';
+                document.getElementById('products-table').innerHTML = html;
+            } else {
+                console.error('API error:', data.message);
+                document.getElementById('products-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-500">Lỗi: ' + (data.message || 'Không thể tải sản phẩm') + '</td></tr>';
             }
         }
 
-        function searchProducts() { clearTimeout(window.pst); window.pst = setTimeout(loadProducts, 300); }
+        function searchProducts() { 
+            console.log('searchProducts called!');
+            clearTimeout(window.pst); 
+            window.pst = setTimeout(() => {
+                console.log('Timeout fired, calling loadProducts');
+                loadProducts();
+            }, 300); 
+        }
+        
+        // Thêm event listener khi DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('product-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    console.log('Input event:', this.value);
+                    searchProducts();
+                });
+            }
+        });
         function openProductModal(p = null) {
             document.getElementById('product-modal').classList.add('active');
             document.getElementById('product-modal-title').textContent = p ? 'Sửa sản phẩm' : 'Thêm sản phẩm';

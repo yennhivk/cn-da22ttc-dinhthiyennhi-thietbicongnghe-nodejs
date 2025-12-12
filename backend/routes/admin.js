@@ -129,39 +129,43 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
 // Lấy tất cả sản phẩm (admin - bao gồm cả ẩn)
 router.get('/products', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const { page = 1, limit = 20, search, category, status } = req.query;
-        const offset = (page - 1) * limit;
+        const { page = 1, limit = 100, search, category, status } = req.query;
 
-        let query = `
+        console.log('🔍 Admin products search:', { search, category, status });
+
+        let whereClause = '1=1';
+        const params = [];
+
+        if (search && search.trim()) {
+            whereClause += ` AND (sp.ten_san_pham LIKE ? OR sp.thuong_hieu LIKE ? OR sp.mo_ta LIKE ?)`;
+            const searchTerm = `%${search.trim()}%`;
+            params.push(searchTerm, searchTerm, searchTerm);
+        }
+        if (category) {
+            whereClause += ` AND sp.ma_danh_muc = ?`;
+            params.push(category);
+        }
+        if (status) {
+            whereClause += ` AND sp.trang_thai = ?`;
+            params.push(status);
+        }
+
+        const query = `
             SELECT sp.*, dm.ten_danh_muc,
                    (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
             FROM san_pham sp
             LEFT JOIN danh_muc_san_pham dm ON sp.ma_danh_muc = dm.ma_danh_muc
-            WHERE 1=1
+            WHERE ${whereClause}
+            ORDER BY sp.ma_san_pham DESC
+            LIMIT ${parseInt(limit)}
         `;
-        const params = [];
 
-        if (search) {
-            query += ` AND (sp.ten_san_pham LIKE ? OR sp.thuong_hieu LIKE ?)`;
-            params.push(`%${search}%`, `%${search}%`);
-        }
-        if (category) {
-            query += ` AND sp.ma_danh_muc = ?`;
-            params.push(category);
-        }
-        if (status) {
-            query += ` AND sp.trang_thai = ?`;
-            params.push(status);
-        }
-
-        // Count total
-        const countQuery = query.replace('sp.*, dm.ten_danh_muc,', 'COUNT(*) as total');
-        const [countResult] = await db.query(countQuery.split('(SELECT')[0] + ' WHERE 1=1' + query.split('WHERE 1=1')[1], params);
-
-        query += ` ORDER BY sp.ma_san_pham DESC LIMIT ? OFFSET ?`;
-        params.push(parseInt(limit), parseInt(offset));
+        console.log('🔍 Query:', query);
+        console.log('🔍 Params:', params);
 
         const [products] = await db.query(query, params);
+
+        console.log('🔍 Found:', products.length, 'products');
 
         res.json({
             success: true,
@@ -169,12 +173,12 @@ router.get('/products', authenticateToken, requireAdmin, async (req, res) => {
             pagination: {
                 page: parseInt(page),
                 limit: parseInt(limit),
-                total: countResult[0]?.total || products.length
+                total: products.length
             }
         });
     } catch (error) {
-        console.error('Get products error:', error);
-        res.status(500).json({ success: false, message: 'Lỗi server' });
+        console.error('❌ Get products error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server: ' + error.message });
     }
 });
 
