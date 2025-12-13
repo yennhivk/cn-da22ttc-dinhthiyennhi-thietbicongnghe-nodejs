@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -95,6 +95,9 @@
                 </a>
                 <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">
                     <span class="text-lg">⭐</span> <span>Đánh giá</span>
+                </a>
+                <a href="#" onclick="showSection('news')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="news">
+                    <span class="text-lg">📰</span> <span>Tin tức</span>
                 </a>
             </nav>
 
@@ -245,7 +248,6 @@
                     <div class="bg-white rounded-xl shadow p-5">
                         <div class="flex gap-4 mb-4">
                             <input type="text" id="product-search" placeholder="Tìm kiếm sản phẩm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchProducts()" onchange="loadProducts()">
-                            <button type="button" onclick="loadProducts()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">🔍 Tìm</button>
                             <select id="product-category-filter" class="border rounded-lg px-4 py-2" onchange="loadProducts()">
                                 <option value="">Tất cả danh mục</option>
                             </select>
@@ -275,19 +277,31 @@
                         <h2 class="text-xl font-bold">Quản lý danh mục</h2>
                         <button onclick="openCategoryModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">+ Thêm danh mục</button>
                     </div>
-                    <div class="bg-white rounded-xl shadow p-5">
+                    <div class="bg-white rounded-xl shadow p-5 mb-6">
                         <table class="w-full">
-                            <thead class="bg-gray-50 text-left">
+                            <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-left">
                                 <tr>
-                                    <th class="px-4 py-3 font-semibold">ID</th>
-                                    <th class="px-4 py-3 font-semibold">Tên danh mục</th>
-                                    <th class="px-4 py-3 font-semibold">Mô tả</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Số sản phẩm</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Thao tác</th>
+                                    <th class="px-4 py-4 font-semibold rounded-tl-lg">Icon</th>
+                                    <th class="px-4 py-4 font-semibold">Tên danh mục</th>
+                                    <th class="px-4 py-4 font-semibold">Mô tả</th>
+                                    <th class="px-4 py-4 font-semibold text-center">Số sản phẩm</th>
+                                    <th class="px-4 py-4 font-semibold text-center rounded-tr-lg">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="categories-table"></tbody>
                         </table>
+                    </div>
+                    
+                    <!-- Biểu đồ số lượng sản phẩm theo danh mục -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow p-4">
+                            <h3 class="font-bold text-gray-700 mb-3 text-base">📊 Biểu đồ cột - Số lượng sản phẩm</h3>
+                            <canvas id="categoryBarChart" height="180"></canvas>
+                        </div>
+                        <div class="bg-white rounded-xl shadow p-4">
+                            <h3 class="font-bold text-gray-700 mb-3 text-base">🍩 Biểu đồ tròn - Tỷ lệ sản phẩm</h3>
+                            <canvas id="categoryPieChart" height="180"></canvas>
+                        </div>
                     </div>
                 </section>
 
@@ -298,10 +312,10 @@
                         <button onclick="createSampleOrders()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm">+ Tạo đơn hàng mẫu</button>
                     </div>
                     <div class="bg-white rounded-xl shadow p-5">
-                        <div class="flex gap-4 mb-4"></div>
+                        <div class="flex gap-4 mb-4">
                             <input type="text" id="order-search" placeholder="Tìm kiếm đơn hàng..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchOrders()">
                             <select id="order-status-filter" class="border rounded-lg px-4 py-2" onchange="loadOrders()">
-                                <option value="">Tất cả trạng thái</option>
+                                <option value="">📋 Tất cả trạng thái</option>
                                 <option value="cho_xac_nhan">⏳ Chờ xác nhận</option>
                                 <option value="da_xac_nhan">✅ Đã xác nhận</option>
                                 <option value="dang_giao">🚚 Đang giao</option>
@@ -310,14 +324,14 @@
                             </select>
                         </div>
                         <table class="w-full">
-                            <thead class="bg-gray-50 text-left">
+                            <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-left">
                                 <tr>
-                                    <th class="px-4 py-3 font-semibold">Mã ĐH</th>
-                                    <th class="px-4 py-3 font-semibold">Khách hàng</th>
-                                    <th class="px-4 py-3 font-semibold text-right">Tổng tiền</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Trạng thái</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Ngày đặt</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Thao tác</th>
+                                    <th class="px-4 py-4 font-semibold rounded-tl-lg">Mã ĐH</th>
+                                    <th class="px-4 py-4 font-semibold">Khách hàng</th>
+                                    <th class="px-4 py-4 font-semibold text-right">Tổng tiền</th>
+                                    <th class="px-4 py-4 font-semibold text-center">Trạng thái</th>
+                                    <th class="px-4 py-4 font-semibold text-center">Ngày đặt</th>
+                                    <th class="px-4 py-4 font-semibold text-center rounded-tr-lg">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="orders-table"></tbody>
@@ -375,12 +389,37 @@
                         </table>
                     </div>
                 </section>
+
+                <!-- News Section -->
+                <section id="section-news" class="content-section">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold">Quản lý tin tức</h2>
+                        <button onclick="openNewsModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">+ Thêm tin tức</button>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-5">
+                        <div class="flex gap-4 mb-4">
+                            <input type="text" id="news-search" placeholder="Tìm kiếm tin tức..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchNews()">
+                        </div>
+                        <table class="w-full">
+                            <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-left">
+                                <tr>
+                                    <th class="px-4 py-3 font-semibold rounded-tl-lg">Ảnh</th>
+                                    <th class="px-4 py-3 font-semibold">Tiêu đề</th>
+                                    <th class="px-4 py-3 font-semibold">Danh mục</th>
+                                    <th class="px-4 py-3 font-semibold text-center">Ngày đăng</th>
+                                    <th class="px-4 py-3 font-semibold text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 font-semibold text-center rounded-tr-lg">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="news-table"></tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
-</th></div>h2></div>thead>th></th>th></div>th></div>div></section>div>thead>""
-   
- <!-- Product Modal -->
+
+    <!-- Product Modal -->
     <div id="product-modal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center">
         <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
             <div class="p-5 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
@@ -580,7 +619,8 @@
                 categories: 'Quản lý danh mục',
                 orders: 'Quản lý đơn hàng',
                 users: 'Quản lý khách hàng',
-                reviews: 'Quản lý đánh giá'
+                reviews: 'Quản lý đánh giá',
+                news: 'Quản lý tin tức'
             };
             document.getElementById('page-title').textContent = titles[section] || section;
 
@@ -590,6 +630,7 @@
             else if (section === 'orders') loadOrders();
             else if (section === 'users') loadUsers();
             else if (section === 'reviews') loadReviews();
+            else if (section === 'news') loadNews();
         }
 
         // Helpers
@@ -616,6 +657,31 @@
                 'da_huy': '<span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-medium">Đã hủy</span>'
             };
             return map[status] || status;
+        }
+
+        // Lấy nút chuyển trạng thái tiếp theo
+        function getNextStatusButton(orderId, currentStatus) {
+            const flow = {
+                'cho_xac_nhan': { next: 'da_xac_nhan', label: '✅ Xác nhận', class: 'bg-blue-500 hover:bg-blue-600 text-white' },
+                'da_xac_nhan': { next: 'dang_giao', label: '🚚 Giao hàng', class: 'bg-purple-500 hover:bg-purple-600 text-white' },
+                'dang_giao': { next: 'da_giao', label: '📦 Đã giao', class: 'bg-green-500 hover:bg-green-600 text-white' },
+                'da_giao': null,
+                'da_huy': null
+            };
+            const nextStep = flow[currentStatus];
+            if (!nextStep) {
+                return '<span class="text-gray-400 text-sm">Hoàn tất</span>';
+            }
+            return `
+                <button onclick="updateOrderStatus(${orderId}, '${nextStep.next}')" 
+                    class="px-3 py-1.5 rounded text-sm font-medium ${nextStep.class}">
+                    ${nextStep.label}
+                </button>
+                <button onclick="updateOrderStatus(${orderId}, 'da_huy')" 
+                    class="px-3 py-1.5 rounded text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200" title="Hủy đơn">
+                    ❌
+                </button>
+            `;
         }
 
         async function apiCall(endpoint, method = 'GET', body = null) {
@@ -953,23 +1019,126 @@
         });
 
         // Categories
+        let categoryCharts = {};
         async function loadCategories() {
             const data = await apiCall('/admin/categories');
+            const colors = [
+                { bg: 'bg-blue-50', border: 'border-l-blue-500', icon: '1F4F1', iconBg: 'bg-blue-100', hex: '#3b82f6' },
+                { bg: 'bg-green-50', border: 'border-l-green-500', icon: '1F4BB', iconBg: 'bg-green-100', hex: '#22c55e' },
+                { bg: 'bg-purple-50', border: 'border-l-purple-500', icon: '1F3A7', iconBg: 'bg-purple-100', hex: '#a855f7' },
+                { bg: 'bg-amber-50', border: 'border-l-amber-500', icon: '231A', iconBg: 'bg-amber-100', hex: '#f59e0b' },
+                { bg: 'bg-pink-50', border: 'border-l-pink-500', icon: '1F4E6', iconBg: 'bg-pink-100', hex: '#ec4899' },
+                { bg: 'bg-cyan-50', border: 'border-l-cyan-500', icon: '1F5A5', iconBg: 'bg-cyan-100', hex: '#06b6d4' }
+            ];
+            const getEmoji = (code) => String.fromCodePoint(parseInt(code, 16));
             if (data.success) {
-                const html = data.data.map(c => `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-3">${c.ma_danh_muc}</td>
-                        <td class="px-4 py-3 font-medium">${c.ten_danh_muc}</td>
-                        <td class="px-4 py-3 text-gray-600">${c.mo_ta || '-'}</td>
-                        <td class="px-4 py-3 text-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">${c.so_san_pham}</span></td>
-                        <td class="px-4 py-3 text-center">
-                            <button onclick="editCategory(${c.ma_danh_muc}, '${c.ten_danh_muc}', '${(c.mo_ta || '').replace(/'/g, "\\'")}')" class="text-blue-600 hover:underline mr-2">Sửa</button>
-                            <button onclick="deleteCategory(${c.ma_danh_muc})" class="text-red-600 hover:underline">Xóa</button>
+                const html = data.data.map((c, i) => {
+                    const color = colors[i % colors.length];
+                    return `
+                    <tr class="${color.bg} border-l-4 ${color.border} hover:brightness-95 transition">
+                        <td class="px-4 py-4">
+                            <span class="${color.iconBg} w-10 h-10 rounded-full inline-flex items-center justify-center text-xl">${getEmoji(color.icon)}</span>
+                        </td>
+                        <td class="px-4 py-4 font-bold text-gray-800 text-lg">${c.ten_danh_muc}</td>
+                        <td class="px-4 py-4 text-gray-600">${c.mo_ta || '<span class="text-gray-400 italic">Chưa có mô tả</span>'}</td>
+                        <td class="px-4 py-4 text-center">
+                            <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow">${c.so_san_pham} sản phẩm</span>
+                        </td>
+                        <td class="px-4 py-4 text-center">
+                            <button onclick="editCategory(${c.ma_danh_muc}, '${c.ten_danh_muc}', '${(c.mo_ta || '').replace(/'/g, "\\'")}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium mr-2 transition">✏️ Sửa</button>
+                            <button onclick="deleteCategory(${c.ma_danh_muc})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition">🗑️ Xóa</button>
                         </td>
                     </tr>
-                `).join('');
+                `}).join('');
                 document.getElementById('categories-table').innerHTML = html || '<tr><td colspan="5" class="text-center py-8 text-gray-500">Không có danh mục</td></tr>';
+                
+                // Vẽ biểu đồ
+                drawCategoryCharts(data.data, colors);
             }
+        }
+        
+        function drawCategoryCharts(categories, colors) {
+            // Destroy existing charts
+            if (categoryCharts.bar) categoryCharts.bar.destroy();
+            if (categoryCharts.pie) categoryCharts.pie.destroy();
+            
+            const labels = categories.map(c => c.ten_danh_muc);
+            const dataValues = categories.map(c => c.so_san_pham || 0);
+            const bgColors = categories.map((c, i) => colors[i % colors.length].hex);
+            
+            // Bar Chart
+            categoryCharts.bar = new Chart(document.getElementById('categoryBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số sản phẩm',
+                        data: dataValues,
+                        backgroundColor: bgColors,
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+            
+            // Pie Chart with percentage
+            const total = dataValues.reduce((a, b) => a + b, 0);
+            categoryCharts.pie = new Chart(document.getElementById('categoryPieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: bgColors,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'right', labels: { font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return context.label + ': ' + value + ' (' + percent + '%)';
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'datalabels',
+                    afterDatasetsDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        chart.data.datasets.forEach((dataset, i) => {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach((element, index) => {
+                                const value = dataset.data[index];
+                                if (value > 0 && total > 0) {
+                                    const percent = ((value / total) * 100).toFixed(0);
+                                    const position = element.tooltipPosition();
+                                    ctx.fillStyle = '#fff';
+                                    ctx.font = 'bold 11px Arial';
+                                    ctx.textAlign = 'center';
+                                    ctx.fillText(percent + '%', position.x, position.y);
+                                }
+                            });
+                        });
+                    }
+                }]
+            });
         }
         function openCategoryModal(c = null) {
             document.getElementById('category-modal').classList.add('active');
@@ -995,9 +1164,23 @@
 
         // Orders
         async function loadOrders() {
-            const search = document.getElementById('order-search').value;
-            const status = document.getElementById('order-status-filter').value;
-            const data = await apiCall(`/admin/orders?search=${search}&status=${status}`);
+            const search = document.getElementById('order-search')?.value || '';
+            const status = document.getElementById('order-status-filter')?.value || '';
+            console.log('Loading orders...', { search, status });
+            
+            try {
+                const data = await apiCall(`/admin/orders?search=${encodeURIComponent(search)}&status=${encodeURIComponent(status)}`);
+                console.log('Orders response:', data);
+                
+                if (!data.success) {
+                    document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-500">Lỗi: ' + (data.message || 'Không thể tải đơn hàng') + '</td></tr>';
+                    return;
+                }
+                
+                if (!data.data || data.data.length === 0) {
+                    document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có đơn hàng nào. Click "Tạo đơn hàng mẫu" để test.</td></tr>';
+                    return;
+                }
             
             if (data.success) {
                 const html = data.data.map(o => `
@@ -1008,18 +1191,18 @@
                         <td class="px-4 py-3 text-center">${getStatusBadge(o.trang_thai)}</td>
                         <td class="px-4 py-3 text-center text-gray-600">${formatDate(o.ngay_dat)}</td>
                         <td class="px-4 py-3">
-                            <div class="flex flex-wrap gap-1 justify-center">
-                                <button onclick="viewOrder(${o.ma_don_hang})" class="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200" title="Xem chi tiết">👁️</button>
-                                <button onclick="updateOrderStatus(${o.ma_don_hang}, 'cho_xac_nhan')" class="px-2 py-1 rounded text-xs font-medium ${o.trang_thai === 'cho_xac_nhan' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}" title="Chờ xác nhận">⏳</button>
-                                <button onclick="updateOrderStatus(${o.ma_don_hang}, 'da_xac_nhan')" class="px-2 py-1 rounded text-xs font-medium ${o.trang_thai === 'da_xac_nhan' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}" title="Đã xác nhận">✅</button>
-                                <button onclick="updateOrderStatus(${o.ma_don_hang}, 'dang_giao')" class="px-2 py-1 rounded text-xs font-medium ${o.trang_thai === 'dang_giao' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}" title="Đang giao">🚚</button>
-                                <button onclick="updateOrderStatus(${o.ma_don_hang}, 'da_giao')" class="px-2 py-1 rounded text-xs font-medium ${o.trang_thai === 'da_giao' ? 'bg-green-500 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'}" title="Đã giao">📦</button>
-                                <button onclick="updateOrderStatus(${o.ma_don_hang}, 'da_huy')" class="px-2 py-1 rounded text-xs font-medium ${o.trang_thai === 'da_huy' ? 'bg-red-500 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'}" title="Đã hủy">❌</button>
+                            <div class="flex gap-2 justify-center items-center">
+                                <button onclick="viewOrder(${o.ma_don_hang})" class="px-3 py-1.5 rounded text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200" title="Xem chi tiết">👁️</button>
+                                ${getNextStatusButton(o.ma_don_hang, o.trang_thai)}
                             </div>
                         </td>
                     </tr>
                 `).join('');
-                document.getElementById('orders-table').innerHTML = html || '<tr><td colspan="6" class="text-center py-8 text-gray-500">Không có đơn hàng</td></tr>';
+                document.getElementById('orders-table').innerHTML = html;
+            }
+            } catch (error) {
+                console.error('Load orders error:', error);
+                document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-500">Lỗi kết nối server</td></tr>';
             }
         }
         function searchOrders() { clearTimeout(window.ost); window.ost = setTimeout(loadOrders, 300); }
@@ -1056,8 +1239,21 @@
         function closeOrderModal() { document.getElementById('order-modal').classList.remove('active'); }
         async function createSampleOrders() {
             if (!confirm('Tạo 5 đơn hàng mẫu để test?')) return;
-            const d = await apiCall('/admin/create-sample-orders', 'POST');
-            if (d.success) { alert(d.message); loadOrders(); loadDashboard(); } else alert(d.message || 'Lỗi tạo đơn hàng');
+            try {
+                console.log('Creating sample orders...');
+                const d = await apiCall('/admin/create-sample-orders', 'POST');
+                console.log('Create sample orders response:', d);
+                if (d.success) { 
+                    alert(d.message || 'Đã tạo đơn hàng mẫu!'); 
+                    loadOrders(); 
+                    loadDashboard(); 
+                } else {
+                    alert('Lỗi: ' + (d.message || 'Không thể tạo đơn hàng'));
+                }
+            } catch (error) {
+                console.error('Create sample orders error:', error);
+                alert('Lỗi kết nối server: ' + error.message);
+            }
         }
         async function updateOrderStatus(id, status) {
             if (!status) return;
@@ -1140,6 +1336,41 @@
         }
         async function toggleReviewStatus(id) { const d = await apiCall(`/admin/reviews/${id}/toggle-status`, 'PUT'); if (d.success) loadReviews(); }
         async function deleteReview(id) { if (!confirm('Xóa đánh giá này?')) return; const d = await apiCall(`/admin/reviews/${id}`, 'DELETE'); if (d.success) { alert('Đã xóa!'); loadReviews(); } }
+
+        // News
+        async function loadNews() {
+            const search = document.getElementById('news-search')?.value || '';
+            const data = await apiCall(`/admin/news?search=${encodeURIComponent(search)}`);
+            if (data.success) {
+                const html = data.data.map(n => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3"><img src="${getImageUrl(n.hinh_anh)}" class="w-16 h-12 object-cover rounded" onerror="this.src='https://via.placeholder.com/64x48?text=News'"></td>
+                        <td class="px-4 py-3 font-medium">${n.tieu_de}</td>
+                        <td class="px-4 py-3 text-gray-600">${n.danh_muc || 'Chung'}</td>
+                        <td class="px-4 py-3 text-center text-gray-600">${formatDate(n.ngay_dang)}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${n.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}">${n.trang_thai === 1 ? 'Hiển thị' : 'Ẩn'}</span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="editNews(${n.ma_tin_tuc})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm mr-1">Sửa</button>
+                            <button onclick="deleteNews(${n.ma_tin_tuc})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Xóa</button>
+                        </td>
+                    </tr>
+                `).join('');
+                document.getElementById('news-table').innerHTML = html || '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có tin tức nào</td></tr>';
+            } else {
+                document.getElementById('news-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có tin tức nào</td></tr>';
+            }
+        }
+        function searchNews() { clearTimeout(window.nst); window.nst = setTimeout(loadNews, 300); }
+        function openNewsModal(news = null) { alert('Chức năng thêm/sửa tin tức đang phát triển'); }
+        async function editNews(id) { alert('Chức năng sửa tin tức đang phát triển'); }
+        async function deleteNews(id) {
+            if (!confirm('Xóa tin tức này?')) return;
+            const d = await apiCall(`/admin/news/${id}`, 'DELETE');
+            if (d.success) { alert('Đã xóa!'); loadNews(); } else alert(d.message || 'Lỗi xóa tin tức');
+        }
     </script>
 </body>
 </html>
+

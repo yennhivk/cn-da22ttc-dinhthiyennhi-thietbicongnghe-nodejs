@@ -424,8 +424,8 @@ router.get('/orders', authenticateToken, requireAdmin, async (req, res) => {
             params.push(status);
         }
         if (search) {
-            query += ` AND (dh.ma_don_hang LIKE ? OR tk.ten_dang_nhap LIKE ? OR tk.email LIKE ? OR dh.dia_chi_giao LIKE ?)`;
-            params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
+            query += ` AND (CAST(dh.ma_don_hang AS CHAR) LIKE ? OR tk.ten_dang_nhap LIKE ? OR tk.email LIKE ? OR dh.dia_chi_giao LIKE ? OR dh.so_dien_thoai LIKE ?)`;
+            params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
         }
 
         query += ` ORDER BY dh.ngay_dat DESC LIMIT ? OFFSET ?`;
