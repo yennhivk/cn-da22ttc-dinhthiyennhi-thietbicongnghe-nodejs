@@ -101,6 +101,40 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
             ORDER BY month DESC
         `);
 
+        // Thống kê sản phẩm theo danh mục (DỮ LIỆU THỰC)
+        const [categoryStats] = await db.query(`
+            SELECT 
+                dm.ten_danh_muc,
+                COUNT(sp.ma_san_pham) as so_san_pham,
+                COALESCE(SUM(sp.so_luong), 0) as tong_ton_kho,
+                COALESCE(SUM(sp.so_luong * sp.gia), 0) as gia_tri_ton_kho
+            FROM danh_muc_san_pham dm
+            LEFT JOIN san_pham sp ON dm.ma_danh_muc = sp.ma_danh_muc AND sp.trang_thai = 'hien_thi'
+            GROUP BY dm.ma_danh_muc, dm.ten_danh_muc
+            ORDER BY dm.ten_danh_muc
+        `);
+
+        // Doanh thu theo danh mục (DỮ LIỆU THỰC)
+        const [categoryRevenue] = await db.query(`
+            SELECT 
+                dm.ten_danh_muc,
+                COALESCE(SUM(ctdh.so_luong * ctdh.gia_ban), 0) as doanh_thu
+            FROM danh_muc_san_pham dm
+            LEFT JOIN san_pham sp ON dm.ma_danh_muc = sp.ma_danh_muc
+            LEFT JOIN chi_tiet_don_hang ctdh ON sp.ma_san_pham = ctdh.ma_san_pham
+            LEFT JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang AND dh.trang_thai_don_hang = 'hoan_thanh'
+            GROUP BY dm.ma_danh_muc, dm.ten_danh_muc
+            ORDER BY doanh_thu DESC
+        `);
+
+        // Tổng số lượng sản phẩm đã bán
+        const [totalSold] = await db.query(`
+            SELECT COALESCE(SUM(ctdh.so_luong), 0) as total_sold
+            FROM chi_tiet_don_hang ctdh
+            JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang
+            WHERE dh.trang_thai_don_hang = 'hoan_thanh'
+        `);
+
         res.json({
             success: true,
             data: {
@@ -108,12 +142,15 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
                     total_revenue: revenue[0].total_revenue,
                     total_orders: orders[0].total_orders,
                     total_products: products[0].total_products,
-                    total_customers: customers[0].total_customers
+                    total_customers: customers[0].total_customers,
+                    total_sold: totalSold[0].total_sold
                 },
                 orders_by_status: ordersByStatus,
                 recent_orders: recentOrders,
                 top_products: topProducts,
-                monthly_revenue: monthlyRevenue
+                monthly_revenue: monthlyRevenue,
+                category_stats: categoryStats,
+                category_revenue: categoryRevenue
             }
         });
     } catch (error) {
@@ -404,6 +441,79 @@ router.delete('/categories/:id', authenticateToken, requireAdmin, async (req, re
 // ==========================================
 // QUẢN LÝ ĐƠN HÀNG
 // ==========================================
+
+// API thống kê đơn hàng chi tiết
+router.get('/orders/stats', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        // Tổng đơn hàng và doanh thu
+        const [totalStats] = await db.query(`
+            SELECT 
+                COUNT(*) as total_orders,
+                COALESCE(SUM(tong_tien), 0) as total_revenue,
+                COALESCE(SUM(CASE WHEN trang_thai_don_hang = 'hoan_thanh' THEN tong_tien ELSE 0 END), 0) as completed_revenue
+            FROM don_hang
+        `);
+
+        // Đơn hàng theo trạng thái
+        const [statusStats] = await db.query(`
+            SELECT 
+                trang_thai_don_hang as trang_thai,
+                COUNT(*) as count,
+                COALESCE(SUM(tong_tien), 0) as revenue
+            FROM don_hang
+            GROUP BY trang_thai_don_hang
+        `);
+
+        // Doanh thu theo tháng (12 tháng gần nhất)
+        const [monthlyRevenue] = await db.query(`
+            SELECT 
+                DATE_FORMAT(ngay_tao, '%Y-%m') as month,
+                DATE_FORMAT(ngay_tao, '%m/%Y') as month_label,
+                COUNT(*) as order_count,
+                COALESCE(SUM(tong_tien), 0) as revenue
+            FROM don_hang
+            WHERE ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+            GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m')
+            ORDER BY month ASC
+        `);
+
+        // Doanh thu theo phương thức thanh toán
+        const [paymentStats] = await db.query(`
+            SELECT 
+                tt.phuong_thuc,
+                COUNT(*) as count,
+                COALESCE(SUM(tt.so_tien), 0) as revenue
+            FROM thanh_toan tt
+            GROUP BY tt.phuong_thuc
+        `);
+
+        // Đơn hàng gần đây
+        const [recentOrders] = await db.query(`
+            SELECT dh.ma_don_hang, dh.tong_tien, dh.trang_thai_don_hang as trang_thai, 
+                   dh.ngay_tao, tk.ten_dang_nhap
+            FROM don_hang dh
+            LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
+            ORDER BY dh.ngay_tao DESC
+            LIMIT 5
+        `);
+
+        res.json({
+            success: true,
+            data: {
+                total_orders: totalStats[0].total_orders,
+                total_revenue: totalStats[0].total_revenue,
+                completed_revenue: totalStats[0].completed_revenue,
+                status_stats: statusStats,
+                monthly_revenue: monthlyRevenue,
+                payment_stats: paymentStats,
+                recent_orders: recentOrders
+            }
+        });
+    } catch (error) {
+        console.error('Order stats error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
 
 router.get('/orders', authenticateToken, requireAdmin, async (req, res) => {
     try {
