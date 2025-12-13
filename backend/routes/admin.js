@@ -47,7 +47,7 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         const [revenue] = await db.query(`
             SELECT COALESCE(SUM(tong_tien), 0) as total_revenue 
             FROM don_hang 
-            WHERE trang_thai = 'da_giao'
+            WHERE trang_thai_don_hang = 'hoan_thanh'
         `);
 
         // Tổng đơn hàng
@@ -63,17 +63,17 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
 
         // Đơn hàng theo trạng thái
         const [ordersByStatus] = await db.query(`
-            SELECT trang_thai, COUNT(*) as count 
+            SELECT trang_thai_don_hang as trang_thai, COUNT(*) as count 
             FROM don_hang 
-            GROUP BY trang_thai
+            GROUP BY trang_thai_don_hang
         `);
 
         // Đơn hàng gần đây
         const [recentOrders] = await db.query(`
-            SELECT dh.*, tk.ten_dang_nhap, tk.email
+            SELECT dh.*, dh.trang_thai_don_hang as trang_thai, tk.ten_dang_nhap, tk.email
             FROM don_hang dh
             LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
-            ORDER BY dh.ngay_dat DESC
+            ORDER BY dh.ngay_tao DESC
             LIMIT 10
         `);
 
@@ -84,7 +84,7 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
                    COALESCE(SUM(ctdh.so_luong), 0) as total_sold
             FROM san_pham sp
             LEFT JOIN chi_tiet_don_hang ctdh ON sp.ma_san_pham = ctdh.ma_san_pham
-            LEFT JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang AND dh.trang_thai = 'da_giao'
+            LEFT JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang AND dh.trang_thai_don_hang = 'hoan_thanh'
             GROUP BY sp.ma_san_pham
             ORDER BY total_sold DESC
             LIMIT 5
@@ -93,11 +93,11 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         // Doanh thu theo tháng (12 tháng gần nhất)
         const [monthlyRevenue] = await db.query(`
             SELECT 
-                DATE_FORMAT(ngay_dat, '%Y-%m') as month,
+                DATE_FORMAT(ngay_tao, '%Y-%m') as month,
                 SUM(tong_tien) as revenue
             FROM don_hang
-            WHERE trang_thai = 'da_giao' AND ngay_dat >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
-            GROUP BY DATE_FORMAT(ngay_dat, '%Y-%m')
+            WHERE trang_thai_don_hang = 'hoan_thanh' AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+            GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m')
             ORDER BY month DESC
         `);
 
@@ -411,7 +411,8 @@ router.get('/orders', authenticateToken, requireAdmin, async (req, res) => {
         const offset = (page - 1) * limit;
 
         let query = `
-            SELECT dh.*, tk.ten_dang_nhap, tk.email,
+            SELECT dh.*, dh.trang_thai_don_hang as trang_thai, dh.dia_chi_giao_hang as dia_chi_giao, 
+                   tk.ten_dang_nhap, tk.email,
                    (SELECT COUNT(*) FROM chi_tiet_don_hang WHERE ma_don_hang = dh.ma_don_hang) as so_san_pham
             FROM don_hang dh
             LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
@@ -420,15 +421,15 @@ router.get('/orders', authenticateToken, requireAdmin, async (req, res) => {
         const params = [];
 
         if (status) {
-            query += ` AND dh.trang_thai = ?`;
+            query += ` AND dh.trang_thai_don_hang = ?`;
             params.push(status);
         }
         if (search) {
-            query += ` AND (CAST(dh.ma_don_hang AS CHAR) LIKE ? OR tk.ten_dang_nhap LIKE ? OR tk.email LIKE ? OR dh.dia_chi_giao LIKE ? OR dh.so_dien_thoai LIKE ?)`;
-            params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
+            query += ` AND (CAST(dh.ma_don_hang AS CHAR) LIKE ? OR tk.ten_dang_nhap LIKE ? OR tk.email LIKE ? OR dh.dia_chi_giao_hang LIKE ?)`;
+            params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
         }
 
-        query += ` ORDER BY dh.ngay_dat DESC LIMIT ? OFFSET ?`;
+        query += ` ORDER BY dh.ngay_tao DESC LIMIT ? OFFSET ?`;
         params.push(parseInt(limit), parseInt(offset));
 
         const [orders] = await db.query(query, params);
@@ -454,7 +455,8 @@ router.get('/orders', authenticateToken, requireAdmin, async (req, res) => {
 router.get('/orders/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const [orders] = await db.query(`
-            SELECT dh.*, tk.ten_dang_nhap, tk.email, tk.so_dien_thoai as sdt_tai_khoan
+            SELECT dh.*, dh.trang_thai_don_hang as trang_thai, dh.dia_chi_giao_hang as dia_chi_giao,
+                   tk.ten_dang_nhap, tk.email
             FROM don_hang dh
             LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
             WHERE dh.ma_don_hang = ?
@@ -485,13 +487,13 @@ router.get('/orders/:id', authenticateToken, requireAdmin, async (req, res) => {
 router.put('/orders/:id/status', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const { trang_thai } = req.body;
-        const validStatuses = ['cho_xac_nhan', 'da_xac_nhan', 'dang_giao', 'da_giao', 'da_huy'];
+        const validStatuses = ['dang_xu_ly', 'dang_giao', 'hoan_thanh', 'da_huy'];
 
         if (!validStatuses.includes(trang_thai)) {
             return res.status(400).json({ success: false, message: 'Trạng thái không hợp lệ' });
         }
 
-        await db.query(`UPDATE don_hang SET trang_thai = ?, ngay_cap_nhat = NOW() WHERE ma_don_hang = ?`, 
+        await db.query(`UPDATE don_hang SET trang_thai_don_hang = ? WHERE ma_don_hang = ?`, 
             [trang_thai, req.params.id]);
 
         res.json({ success: true, message: 'Cập nhật trạng thái đơn hàng thành công' });
@@ -566,9 +568,9 @@ router.get('/users/:id', authenticateToken, requireAdmin, async (req, res) => {
 
         // Lấy lịch sử đơn hàng
         const [orders] = await db.query(`
-            SELECT ma_don_hang, tong_tien, trang_thai, ngay_dat
+            SELECT ma_don_hang, tong_tien, trang_thai_don_hang as trang_thai, ngay_tao
             FROM don_hang WHERE ma_tai_khoan = ?
-            ORDER BY ngay_dat DESC LIMIT 10
+            ORDER BY ngay_tao DESC LIMIT 10
         `, [req.params.id]);
 
         res.json({
@@ -724,21 +726,21 @@ router.post('/create-sample-orders', authenticateToken, requireAdmin, async (req
         // Lấy ma_tai_khoan của admin hiện tại
         const adminId = req.user.ma_tai_khoan;
 
-        // Tạo 5 đơn hàng mẫu với các trạng thái khác nhau
+        // Tạo 5 đơn hàng mẫu với các trạng thái khác nhau (theo schema: dang_xu_ly, dang_giao, hoan_thanh, da_huy)
         const orders = [
-            { tong_tien: 25990000, trang_thai: 'cho_xac_nhan', dia_chi: '123 Nguyễn Văn A, Q.1, TP.HCM', sdt: '0901234567', ghi_chu: 'Giao giờ hành chính' },
-            { tong_tien: 15500000, trang_thai: 'da_xac_nhan', dia_chi: '456 Lê Văn B, Q.3, TP.HCM', sdt: '0912345678', ghi_chu: 'Gọi trước khi giao' },
-            { tong_tien: 34900000, trang_thai: 'dang_giao', dia_chi: '789 Trần Văn C, Q.7, TP.HCM', sdt: '0923456789', ghi_chu: 'Shipper đang giao' },
-            { tong_tien: 8990000, trang_thai: 'da_giao', dia_chi: '321 Phạm Văn D, Q.Bình Thạnh, TP.HCM', sdt: '0934567890', ghi_chu: 'Đã nhận hàng' },
-            { tong_tien: 12000000, trang_thai: 'da_huy', dia_chi: '654 Hoàng Văn E, Q.Tân Bình, TP.HCM', sdt: '0945678901', ghi_chu: 'Khách hủy đơn' }
+            { tong_tien: 25990000, trang_thai: 'dang_xu_ly', dia_chi: '123 Nguyễn Văn A, Q.1, TP.HCM' },
+            { tong_tien: 15500000, trang_thai: 'dang_xu_ly', dia_chi: '456 Lê Văn B, Q.3, TP.HCM' },
+            { tong_tien: 34900000, trang_thai: 'dang_giao', dia_chi: '789 Trần Văn C, Q.7, TP.HCM' },
+            { tong_tien: 8990000, trang_thai: 'hoan_thanh', dia_chi: '321 Phạm Văn D, Q.Bình Thạnh, TP.HCM' },
+            { tong_tien: 12000000, trang_thai: 'da_huy', dia_chi: '654 Hoàng Văn E, Q.Tân Bình, TP.HCM' }
         ];
 
         const insertedOrders = [];
         for (const order of orders) {
             const [result] = await db.query(`
-                INSERT INTO don_hang (ma_tai_khoan, tong_tien, trang_thai, dia_chi_giao, so_dien_thoai, ghi_chu, ngay_dat)
-                VALUES (?, ?, ?, ?, ?, ?, NOW() - INTERVAL FLOOR(RAND() * 7) DAY)
-            `, [adminId, order.tong_tien, order.trang_thai, order.dia_chi, order.sdt, order.ghi_chu]);
+                INSERT INTO don_hang (ma_tai_khoan, tong_tien, trang_thai_don_hang, dia_chi_giao_hang, ngay_tao)
+                VALUES (?, ?, ?, ?, NOW() - INTERVAL FLOOR(RAND() * 7) DAY)
+            `, [adminId, order.tong_tien, order.trang_thai, order.dia_chi]);
             insertedOrders.push(result.insertId);
         }
 

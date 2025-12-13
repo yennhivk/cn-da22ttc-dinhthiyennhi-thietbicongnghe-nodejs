@@ -7,17 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3; border-top: 4px solid #1e40af;
-            border-radius: 50%; width: 50px; height: 50px;
-            animation: spin 1s linear infinite;
-        }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #1e40af; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .sidebar { background: linear-gradient(180deg, #1e3a5f 0%, #0f2744 100%); }
         .sidebar-item { transition: all 0.2s; border-left: 3px solid transparent; }
@@ -29,31 +20,11 @@
         .content-section.active { display: block; }
         .modal { display: none; }
         .modal.active { display: flex; }
-        .gauge-container { position: relative; width: 180px; height: 100px; }
-        .trend-up { color: #10b981; }
-        .trend-down { color: #ef4444; }
-        
-        /* Tăng cỡ chữ toàn trang */
-        body { font-size: 18px; }
-        table { font-size: 17px; }
-        table th { font-size: 16px; font-weight: 600; }
-        table td { font-size: 17px; padding: 16px 18px !important; }
-        .text-xs { font-size: 15px !important; }
-        .text-sm { font-size: 16px !important; }
-        .text-base { font-size: 18px !important; }
-        .text-lg { font-size: 20px !important; }
-        .text-xl { font-size: 24px !important; }
-        .text-2xl { font-size: 30px !important; }
-        .text-3xl { font-size: 36px !important; }
-        input, select, textarea { font-size: 17px !important; padding: 12px 16px !important; }
-        button { font-size: 16px; padding: 10px 18px; }
-        .sidebar-item { font-size: 17px; padding: 14px 18px !important; }
-        .sidebar-item span:first-child { font-size: 20px; }
-        h2, h3 { font-size: 26px !important; }
-        p { font-size: 17px; }
+        body { font-size: 16px; }
+        table { font-size: 15px; }
     </style>
 </head>
-<body class="bg-gray-100 text-base"></body>
+<body class="bg-gray-100">
     <!-- Loading -->
     <div id="loading-overlay" class="loading-overlay">
         <div class="spinner"></div>
@@ -65,7 +36,7 @@
         <!-- Sidebar -->
         <aside class="sidebar w-64 text-white fixed h-full z-40 flex flex-col">
             <div class="p-4 border-b border-blue-800">
-                <a href="../index.html" class="flex items-center gap-3 hover:opacity-80 transition">
+                <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition hover:scale-105">
                     <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 object-cover rounded-full shadow-lg">
                     <div class="flex items-baseline gap-1">
                         <span class="text-lg font-bold text-red-400">Yến Nhi</span>
@@ -73,265 +44,145 @@
                     </div>
                 </a>
             </div>
-            
             <nav class="flex-1 py-4 overflow-y-auto">
                 <p class="px-4 text-xs text-blue-400 uppercase mb-2">Menu chính</p>
-                <a href="#" onclick="showSection('dashboard')" class="sidebar-item active flex items-center gap-3 px-4 py-3" data-section="dashboard">
-                    <span class="text-lg">📈</span> <span>Báo cáo bán hàng</span>
-                </a>
-                <a href="#" onclick="showSection('products')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="products">
-                    <span class="text-lg">📦</span> <span>Sản phẩm</span>
-                </a>
-                <a href="#" onclick="showSection('categories')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="categories">
-                    <span class="text-lg">📁</span> <span>Danh mục</span>
-                </a>
-                <a href="#" onclick="showSection('orders')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="orders">
-                    <span class="text-lg">🛒</span> <span>Đơn hàng</span>
-                </a>
-                
+                <a href="#" onclick="showSection('dashboard')" class="sidebar-item active flex items-center gap-3 px-4 py-3" data-section="dashboard">📈 Báo cáo</a>
+                <a href="#" onclick="showSection('products')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="products">📦 Sản phẩm</a>
+                <a href="#" onclick="showSection('categories')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="categories">📁 Danh mục</a>
+                <a href="#" onclick="showSection('orders')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="orders">🛒 Đơn hàng</a>
                 <p class="px-4 text-xs text-blue-400 uppercase mt-6 mb-2">Quản lý</p>
-                <a href="#" onclick="showSection('users')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="users">
-                    <span class="text-lg">👥</span> <span>Khách hàng</span>
-                </a>
-                <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">
-                    <span class="text-lg">⭐</span> <span>Đánh giá</span>
-                </a>
-                <a href="#" onclick="showSection('news')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="news">
-                    <span class="text-lg">📰</span> <span>Tin tức</span>
-                </a>
+                <a href="#" onclick="showSection('users')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="users">👥 Khách hàng</a>
+                <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">⭐ Đánh giá</a>
             </nav>
-
             <div class="p-4 border-t border-blue-800">
                 <div class="flex items-center gap-3 mb-3">
-                    <div id="admin-avatar" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center overflow-hidden">
-                        <span>👤</span>
-                    </div>
+                    <div id="admin-avatar" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">👤</div>
                     <div class="flex-1 min-w-0">
                         <p id="admin-name" class="font-semibold text-sm truncate"></p>
                         <p class="text-xs text-blue-300">Quản trị viên</p>
                     </div>
                 </div>
-                <button onclick="handleLogout()" class="w-full bg-red-500/80 hover:bg-red-500 py-2 rounded text-sm font-medium transition">
-                    🚪 Đăng xuất
-                </button>
+                <button onclick="handleLogout()" class="w-full bg-red-500/80 hover:bg-red-500 py-2 rounded text-sm font-medium">🚪 Đăng xuất</button>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="flex-1 ml-64">
-            <!-- Header -->
             <header class="bg-white shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-30">
                 <div>
                     <h2 id="page-title" class="text-xl font-bold text-gray-800">Báo cáo bán hàng</h2>
                     <p class="text-sm text-gray-500">Tổng quan hoạt động kinh doanh</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <select id="time-filter" class="border rounded-lg px-3 py-2 text-sm" onchange="loadDashboard()">
-                        <option value="today">Hôm nay</option>
-                        <option value="week">Tuần này</option>
-                        <option value="month" selected>Tháng này</option>
-                        <option value="year">Năm nay</option>
-                    </select>
-                    <button onclick="loadDashboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                        🔄 Làm mới
-                    </button>
-                </div>
+                <button onclick="loadDashboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">🔄 Làm mới</button>
             </header>
 
             <div class="p-6">
                 <!-- Dashboard Section -->
                 <section id="section-dashboard" class="content-section active">
-                    <!-- Stats Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                         <div class="stat-card bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-5 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-white font-semibold text-base">Tổng doanh thu</p>
-                                    <p id="stat-revenue" class="text-3xl font-extrabold mt-1">0đ</p>
-                                    <p class="text-base font-medium mt-2"><span id="revenue-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
-                                </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">💰</span></div>
-                            </div>
+                            <p class="text-white/80 text-sm">Tổng doanh thu</p>
+                            <p id="stat-revenue" class="text-2xl font-bold mt-1">0đ</p>
                         </div>
                         <div class="stat-card bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl p-5 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-white font-semibold text-base">Số đơn đặt hàng</p>
-                                    <p id="stat-orders" class="text-3xl font-extrabold mt-1">0</p>
-                                    <p class="text-base font-medium mt-2"><span id="orders-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
-                                </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">🛒</span></div>
-                            </div>
+                            <p class="text-white/80 text-sm">Số đơn hàng</p>
+                            <p id="stat-orders" class="text-2xl font-bold mt-1">0</p>
                         </div>
                         <div class="stat-card bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl p-5 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-white font-semibold text-base">Số khách hàng</p>
-                                    <p id="stat-customers" class="text-3xl font-extrabold mt-1">0</p>
-                                    <p class="text-base font-medium mt-2"><span id="customers-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
-                                </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">👥</span></div>
-                            </div>
+                            <p class="text-white/80 text-sm">Khách hàng</p>
+                            <p id="stat-customers" class="text-2xl font-bold mt-1">0</p>
                         </div>
                         <div class="stat-card bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-5 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-white font-semibold text-base">Số lượng bán</p>
-                                    <p id="stat-products-sold" class="text-3xl font-extrabold mt-1">0</p>
-                                    <p class="text-base font-medium mt-2"><span id="products-trend" class="bg-white/20 px-2 py-0.5 rounded font-bold">↑ 0%</span> so với kỳ trước</p>
-                                </div>
-                                <div class="bg-white/20 p-3 rounded-xl"><span class="text-4xl">📦</span></div>
-                            </div>
+                            <p class="text-white/80 text-sm">Sản phẩm</p>
+                            <p id="stat-products-sold" class="text-2xl font-bold mt-1">0</p>
                         </div>
                     </div>
-
-                    <!-- Charts Row 1 -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                        <!-- Gauge Chart -->
-                        <div class="bg-white rounded-xl shadow p-5">
-                            <h3 class="font-bold text-gray-700 mb-4">Tỷ lệ hoàn thành KPI</h3>
-                            <div class="flex justify-center">
-                                <canvas id="gaugeChart" width="200" height="120"></canvas>
-                            </div>
-                            <p id="kpi-percent" class="text-center text-2xl font-bold text-blue-600 mt-2">0%</p>
-                            <p class="text-center text-sm text-gray-500">Mục tiêu doanh thu tháng</p>
-                        </div>
-                        
-                        <!-- Revenue Chart -->
-                        <div class="bg-white rounded-xl shadow p-5 lg:col-span-2">
-                            <h3 class="font-bold text-gray-700 mb-4">Doanh thu thực tế so với kế hoạch</h3>
-                            <canvas id="revenueChart" height="150"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Charts Row 2 -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                        <!-- Growth Chart -->
-                        <div class="bg-white rounded-xl shadow p-5">
-                            <h3 class="font-bold text-gray-700 mb-4">Tỷ lệ tăng trưởng khách hàng</h3>
-                            <canvas id="growthChart" height="200"></canvas>
-                        </div>
-                        
-                        <!-- Category Revenue -->
-                        <div class="bg-white rounded-xl shadow p-5">
-                            <h3 class="font-bold text-gray-700 mb-4">Doanh thu theo danh mục</h3>
-                            <canvas id="categoryChart" height="200"></canvas>
-                        </div>
-                        
-                        <!-- Top Products -->
-                        <div class="bg-white rounded-xl shadow p-5">
-                            <h3 class="font-bold text-gray-700 mb-4">Top 5 sản phẩm bán chạy</h3>
-                            <div id="top-products" class="space-y-3"></div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Orders & Order Status -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white rounded-xl shadow p-5">
                             <h3 class="font-bold text-gray-700 mb-4">Đơn hàng gần đây</h3>
                             <div id="recent-orders" class="space-y-3 max-h-80 overflow-y-auto"></div>
                         </div>
                         <div class="bg-white rounded-xl shadow p-5">
-                            <h3 class="font-bold text-gray-700 mb-4">Trạng thái đơn hàng</h3>
-                            <canvas id="orderStatusChart" height="200"></canvas>
-                            <div id="order-status-legend" class="mt-4 grid grid-cols-2 gap-2 text-sm"></div>
+                            <h3 class="font-bold text-gray-700 mb-4">Top sản phẩm bán chạy</h3>
+                            <div id="top-products" class="space-y-3"></div>
                         </div>
                     </div>
                 </section>
 
                 <!-- Products Section -->
                 <section id="section-products" class="content-section">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Quản lý sản phẩm</h2>
+                    <div class="flex justify-end mb-6">
                         <button onclick="openProductModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">+ Thêm sản phẩm</button>
                     </div>
                     <div class="bg-white rounded-xl shadow p-5">
                         <div class="flex gap-4 mb-4">
-                            <input type="text" id="product-search" placeholder="Tìm kiếm sản phẩm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchProducts()" onchange="loadProducts()">
+                            <input type="text" id="product-search" placeholder="Tìm kiếm sản phẩm..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchProducts()">
                             <select id="product-category-filter" class="border rounded-lg px-4 py-2" onchange="loadProducts()">
                                 <option value="">Tất cả danh mục</option>
                             </select>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50 text-left">
-                                    <tr>
-                                        <th class="px-4 py-3 font-semibold">Ảnh</th>
-                                        <th class="px-4 py-3 font-semibold">Tên sản phẩm</th>
-                                        <th class="px-4 py-3 font-semibold">Danh mục</th>
-                                        <th class="px-4 py-3 font-semibold text-right">Giá</th>
-                                        <th class="px-4 py-3 font-semibold text-center">Tồn kho</th>
-                                        <th class="px-4 py-3 font-semibold text-center">Trạng thái</th>
-                                        <th class="px-4 py-3 font-semibold text-center">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="products-table"></tbody>
-                            </table>
-                        </div>
+                        <table class="w-full">
+                            <thead class="bg-gray-50 text-left">
+                                <tr>
+                                    <th class="px-4 py-3">Ảnh</th>
+                                    <th class="px-4 py-3">Tên sản phẩm</th>
+                                    <th class="px-4 py-3">Danh mục</th>
+                                    <th class="px-4 py-3 text-right">Giá</th>
+                                    <th class="px-4 py-3 text-center">Tồn kho</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table"></tbody>
+                        </table>
                     </div>
                 </section>
 
                 <!-- Categories Section -->
                 <section id="section-categories" class="content-section">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Quản lý danh mục</h2>
+                    <div class="flex justify-end mb-6">
                         <button onclick="openCategoryModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">+ Thêm danh mục</button>
                     </div>
-                    <div class="bg-white rounded-xl shadow p-5 mb-6">
+                    <div class="bg-white rounded-xl shadow p-5">
                         <table class="w-full">
-                            <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-left">
+                            <thead class="bg-gray-50 text-left">
                                 <tr>
-                                    <th class="px-4 py-4 font-semibold rounded-tl-lg">Icon</th>
-                                    <th class="px-4 py-4 font-semibold">Tên danh mục</th>
-                                    <th class="px-4 py-4 font-semibold">Mô tả</th>
-                                    <th class="px-4 py-4 font-semibold text-center">Số sản phẩm</th>
-                                    <th class="px-4 py-4 font-semibold text-center rounded-tr-lg">Thao tác</th>
+                                    <th class="px-4 py-3">Tên danh mục</th>
+                                    <th class="px-4 py-3">Mô tả</th>
+                                    <th class="px-4 py-3 text-center">Số sản phẩm</th>
+                                    <th class="px-4 py-3 text-center">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="categories-table"></tbody>
                         </table>
                     </div>
-                    
-                    <!-- Biểu đồ số lượng sản phẩm theo danh mục -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow p-4">
-                            <h3 class="font-bold text-gray-700 mb-3 text-base">📊 Biểu đồ cột - Số lượng sản phẩm</h3>
-                            <canvas id="categoryBarChart" height="180"></canvas>
-                        </div>
-                        <div class="bg-white rounded-xl shadow p-4">
-                            <h3 class="font-bold text-gray-700 mb-3 text-base">🍩 Biểu đồ tròn - Tỷ lệ sản phẩm</h3>
-                            <canvas id="categoryPieChart" height="180"></canvas>
-                        </div>
-                    </div>
                 </section>
 
                 <!-- Orders Section -->
                 <section id="section-orders" class="content-section">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Quản lý đơn hàng</h2>
+                    <div class="flex justify-end mb-6">
                         <button onclick="createSampleOrders()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm">+ Tạo đơn hàng mẫu</button>
                     </div>
                     <div class="bg-white rounded-xl shadow p-5">
                         <div class="flex gap-4 mb-4">
                             <input type="text" id="order-search" placeholder="Tìm kiếm đơn hàng..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchOrders()">
                             <select id="order-status-filter" class="border rounded-lg px-4 py-2" onchange="loadOrders()">
-                                <option value="">📋 Tất cả trạng thái</option>
-                                <option value="cho_xac_nhan">⏳ Chờ xác nhận</option>
-                                <option value="da_xac_nhan">✅ Đã xác nhận</option>
-                                <option value="dang_giao">🚚 Đang giao</option>
-                                <option value="da_giao">📦 Đã giao</option>
-                                <option value="da_huy">❌ Đã hủy</option>
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="dang_xu_ly">Đang xử lý</option>
+                                <option value="dang_giao">Đang giao</option>
+                                <option value="hoan_thanh">Hoàn thành</option>
+                                <option value="da_huy">Đã hủy</option>
                             </select>
                         </div>
                         <table class="w-full">
-                            <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-left">
+                            <thead class="bg-gray-50 text-left">
                                 <tr>
-                                    <th class="px-4 py-4 font-semibold rounded-tl-lg">Mã ĐH</th>
-                                    <th class="px-4 py-4 font-semibold">Khách hàng</th>
-                                    <th class="px-4 py-4 font-semibold text-right">Tổng tiền</th>
-                                    <th class="px-4 py-4 font-semibold text-center">Trạng thái</th>
-                                    <th class="px-4 py-4 font-semibold text-center">Ngày đặt</th>
-                                    <th class="px-4 py-4 font-semibold text-center rounded-tr-lg">Thao tác</th>
+                                    <th class="px-4 py-3">Mã ĐH</th>
+                                    <th class="px-4 py-3">Khách hàng</th>
+                                    <th class="px-4 py-3 text-right">Tổng tiền</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center">Ngày đặt</th>
+                                    <th class="px-4 py-3 text-center">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="orders-table"></tbody>
@@ -341,8 +192,7 @@
 
                 <!-- Users Section -->
                 <section id="section-users" class="content-section">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Quản lý khách hàng</h2>
+                    <div class="flex justify-end mb-6">
                         <button onclick="openUserModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">+ Thêm tài khoản</button>
                     </div>
                     <div class="bg-white rounded-xl shadow p-5">
@@ -357,12 +207,12 @@
                         <table class="w-full">
                             <thead class="bg-gray-50 text-left">
                                 <tr>
-                                    <th class="px-4 py-3 font-semibold">ID</th>
-                                    <th class="px-4 py-3 font-semibold">Tên</th>
-                                    <th class="px-4 py-3 font-semibold">Email</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Vai trò</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Trạng thái</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Thao tác</th>
+                                    <th class="px-4 py-3">ID</th>
+                                    <th class="px-4 py-3">Tên</th>
+                                    <th class="px-4 py-3">Email</th>
+                                    <th class="px-4 py-3 text-center">Vai trò</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="users-table"></tbody>
@@ -372,46 +222,19 @@
 
                 <!-- Reviews Section -->
                 <section id="section-reviews" class="content-section">
-                    <h2 class="text-xl font-bold mb-6">Quản lý đánh giá</h2>
                     <div class="bg-white rounded-xl shadow p-5">
                         <table class="w-full">
                             <thead class="bg-gray-50 text-left">
                                 <tr>
-                                    <th class="px-4 py-3 font-semibold">Sản phẩm</th>
-                                    <th class="px-4 py-3 font-semibold">Người đánh giá</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Điểm</th>
-                                    <th class="px-4 py-3 font-semibold">Nội dung</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Trạng thái</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Thao tác</th>
+                                    <th class="px-4 py-3">Sản phẩm</th>
+                                    <th class="px-4 py-3">Người đánh giá</th>
+                                    <th class="px-4 py-3 text-center">Điểm</th>
+                                    <th class="px-4 py-3">Nội dung</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="reviews-table"></tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- News Section -->
-                <section id="section-news" class="content-section">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Quản lý tin tức</h2>
-                        <button onclick="openNewsModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">+ Thêm tin tức</button>
-                    </div>
-                    <div class="bg-white rounded-xl shadow p-5">
-                        <div class="flex gap-4 mb-4">
-                            <input type="text" id="news-search" placeholder="Tìm kiếm tin tức..." class="flex-1 border rounded-lg px-4 py-2" onkeyup="searchNews()">
-                        </div>
-                        <table class="w-full">
-                            <thead class="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-left">
-                                <tr>
-                                    <th class="px-4 py-3 font-semibold rounded-tl-lg">Ảnh</th>
-                                    <th class="px-4 py-3 font-semibold">Tiêu đề</th>
-                                    <th class="px-4 py-3 font-semibold">Danh mục</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Ngày đăng</th>
-                                    <th class="px-4 py-3 font-semibold text-center">Trạng thái</th>
-                                    <th class="px-4 py-3 font-semibold text-center rounded-tr-lg">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="news-table"></tbody>
                         </table>
                     </div>
                 </section>
@@ -430,7 +253,7 @@
                 <input type="hidden" id="product-id">
                 <div>
                     <label class="block text-sm font-medium mb-1">Tên sản phẩm *</label>
-                    <input type="text" id="product-name" required class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="text" id="product-name" required class="w-full border rounded-lg px-4 py-2">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -464,13 +287,9 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Hình ảnh sản phẩm</label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('product-images').click()">
-                        <input type="file" id="product-images" multiple accept="image/*" class="hidden" onchange="previewImages(this)">
-                        <div id="image-preview" class="flex flex-wrap gap-2 justify-center mb-2"></div>
-                        <p class="text-gray-500"><span class="text-blue-600 font-medium">Click để chọn ảnh</span> hoặc kéo thả vào đây</p>
-                        <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP (tối đa 5 ảnh, mỗi ảnh ≤ 5MB)</p>
-                    </div>
+                    <label class="block text-sm font-medium mb-1">Hình ảnh</label>
+                    <input type="file" id="product-images" multiple accept="image/*" class="w-full border rounded-lg px-4 py-2">
+                    <div id="image-preview" class="flex flex-wrap gap-2 mt-2"></div>
                 </div>
                 <div class="flex gap-3 pt-4">
                     <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium">Lưu</button>
@@ -556,7 +375,6 @@
         const API_URL = 'http://localhost:3300/api';
         let adminToken = '';
         let adminUser = null;
-        let charts = {};
 
         // Auth
         document.addEventListener('DOMContentLoaded', checkAuth);
@@ -580,9 +398,11 @@
                 document.getElementById('admin-content').style.display = 'flex';
                 document.getElementById('admin-name').textContent = adminUser.ten_dang_nhap || adminUser.email;
                 
+                // Hiển thị avatar
+                const avatarEl = document.getElementById('admin-avatar');
                 if (adminUser.hinh_anh) {
-                    const avatarUrl = adminUser.hinh_anh.startsWith('http') ? adminUser.hinh_anh : API_URL.replace('/api', '') + adminUser.hinh_anh;
-                    document.getElementById('admin-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover" alt="Avatar">`;
+                    const avatarUrl = adminUser.hinh_anh.startsWith('http') ? adminUser.hinh_anh : 'http://localhost:3300' + adminUser.hinh_anh;
+                    avatarEl.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full" alt="Avatar" onerror="this.parentElement.innerHTML='👤'">`;
                 }
                 
                 loadDashboard();
@@ -613,15 +433,7 @@
             document.getElementById('section-' + section).classList.add('active');
             document.querySelector(`[data-section="${section}"]`).classList.add('active');
 
-            const titles = {
-                dashboard: 'Báo cáo bán hàng',
-                products: 'Quản lý sản phẩm',
-                categories: 'Quản lý danh mục',
-                orders: 'Quản lý đơn hàng',
-                users: 'Quản lý khách hàng',
-                reviews: 'Quản lý đánh giá',
-                news: 'Quản lý tin tức'
-            };
+            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', reviews: 'Quản lý đánh giá' };
             document.getElementById('page-title').textContent = titles[section] || section;
 
             if (section === 'dashboard') loadDashboard();
@@ -630,65 +442,39 @@
             else if (section === 'orders') loadOrders();
             else if (section === 'users') loadUsers();
             else if (section === 'reviews') loadReviews();
-            else if (section === 'news') loadNews();
         }
 
         // Helpers
-        function formatPrice(price) {
-            return new Intl.NumberFormat('vi-VN').format(price || 0) + 'đ';
-        }
+        function formatPrice(price) { return new Intl.NumberFormat('vi-VN').format(price || 0) + 'đ'; }
         function getImageUrl(path) {
             if (!path) return 'https://via.placeholder.com/100x100?text=Ảnh';
             if (path.startsWith('http')) return path;
-            // Xử lý đường dẫn tương đối - backend chạy trên port 3300
-            const baseUrl = 'http://localhost:3300';
-            if (path.startsWith('/')) return baseUrl + path;
-            return baseUrl + '/' + path;
+            return 'http://localhost:3300/' + (path.startsWith('/') ? path.slice(1) : path);
         }
-        function formatDate(date) {
-            return new Date(date).toLocaleDateString('vi-VN');
-        }
+        function formatDate(date) { return new Date(date).toLocaleDateString('vi-VN'); }
         function getStatusBadge(status) {
             const map = {
-                'cho_xac_nhan': '<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">Chờ xác nhận</span>',
-                'da_xac_nhan': '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">Đã xác nhận</span>',
-                'dang_giao': '<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium">Đang giao</span>',
-                'da_giao': '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Đã giao</span>',
-                'da_huy': '<span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-medium">Đã hủy</span>'
+                'dang_xu_ly': '<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">Đang xử lý</span>',
+                'dang_giao': '<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs">Đang giao</span>',
+                'hoan_thanh': '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">Hoàn thành</span>',
+                'da_huy': '<span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs">Đã hủy</span>'
             };
             return map[status] || status;
         }
-
-        // Lấy nút chuyển trạng thái tiếp theo
         function getNextStatusButton(orderId, currentStatus) {
             const flow = {
-                'cho_xac_nhan': { next: 'da_xac_nhan', label: '✅ Xác nhận', class: 'bg-blue-500 hover:bg-blue-600 text-white' },
-                'da_xac_nhan': { next: 'dang_giao', label: '🚚 Giao hàng', class: 'bg-purple-500 hover:bg-purple-600 text-white' },
-                'dang_giao': { next: 'da_giao', label: '📦 Đã giao', class: 'bg-green-500 hover:bg-green-600 text-white' },
-                'da_giao': null,
-                'da_huy': null
+                'dang_xu_ly': { next: 'dang_giao', label: '🚚 Giao hàng', cls: 'bg-purple-500 text-white' },
+                'dang_giao': { next: 'hoan_thanh', label: '✅ Hoàn thành', cls: 'bg-green-500 text-white' },
+                'hoan_thanh': null, 'da_huy': null
             };
             const nextStep = flow[currentStatus];
-            if (!nextStep) {
-                return '<span class="text-gray-400 text-sm">Hoàn tất</span>';
-            }
-            return `
-                <button onclick="updateOrderStatus(${orderId}, '${nextStep.next}')" 
-                    class="px-3 py-1.5 rounded text-sm font-medium ${nextStep.class}">
-                    ${nextStep.label}
-                </button>
-                <button onclick="updateOrderStatus(${orderId}, 'da_huy')" 
-                    class="px-3 py-1.5 rounded text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200" title="Hủy đơn">
-                    ❌
-                </button>
-            `;
+            if (!nextStep) return '<span class="text-gray-400 text-sm">Hoàn tất</span>';
+            return `<button onclick="updateOrderStatus(${orderId}, '${nextStep.next}')" class="px-3 py-1 rounded text-sm ${nextStep.cls}">${nextStep.label}</button>
+                    <button onclick="updateOrderStatus(${orderId}, 'da_huy')" class="px-2 py-1 rounded text-sm bg-red-100 text-red-600">❌</button>`;
         }
 
         async function apiCall(endpoint, method = 'GET', body = null) {
-            const options = {
-                method,
-                headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' }
-            };
+            const options = { method, headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' } };
             if (body) options.body = JSON.stringify(body);
             const res = await fetch(`${API_URL}${endpoint}`, options);
             return res.json();
@@ -699,19 +485,17 @@
             try {
                 const data = await apiCall('/admin/dashboard');
                 if (!data.success) return;
-
                 const s = data.data.stats;
                 document.getElementById('stat-revenue').textContent = formatPrice(s.total_revenue);
                 document.getElementById('stat-orders').textContent = s.total_orders;
                 document.getElementById('stat-customers').textContent = s.total_customers;
                 document.getElementById('stat-products-sold').textContent = s.total_products;
 
-                // Recent orders
                 const ordersHtml = data.data.recent_orders.slice(0, 5).map(o => `
-                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                         <div>
-                            <p class="font-semibold text-gray-800">#${o.ma_don_hang} - ${o.ten_dang_nhap || 'Khách'}</p>
-                            <p class="text-sm text-gray-500">${formatDate(o.ngay_dat)}</p>
+                            <p class="font-semibold">#${o.ma_don_hang} - ${o.ten_dang_nhap || 'Khách'}</p>
+                            <p class="text-sm text-gray-500">${formatDate(o.ngay_tao)}</p>
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-green-600">${formatPrice(o.tong_tien)}</p>
@@ -721,131 +505,18 @@
                 `).join('');
                 document.getElementById('recent-orders').innerHTML = ordersHtml || '<p class="text-gray-500 text-center py-4">Chưa có đơn hàng</p>';
 
-                // Top products
                 const productsHtml = data.data.top_products.map((p, i) => `
                     <div class="flex items-center gap-3">
                         <span class="w-6 h-6 rounded-full ${i < 3 ? 'bg-amber-500' : 'bg-gray-300'} text-white text-xs flex items-center justify-center font-bold">${i + 1}</span>
                         <div class="flex-1 min-w-0">
-                            <p class="font-medium text-gray-800 truncate">${p.ten_san_pham}</p>
+                            <p class="font-medium truncate">${p.ten_san_pham}</p>
                             <p class="text-sm text-gray-500">Đã bán: ${p.total_sold}</p>
                         </div>
                         <span class="font-bold text-green-600 text-sm">${formatPrice(p.gia)}</span>
                     </div>
                 `).join('');
                 document.getElementById('top-products').innerHTML = productsHtml || '<p class="text-gray-500 text-center py-4">Chưa có dữ liệu</p>';
-
-                // Draw charts
-                drawCharts(data.data);
-            } catch (e) {
-                console.error('Dashboard error:', e);
-            }
-        }
-
-        function drawCharts(data) {
-            // Destroy existing charts
-            Object.values(charts).forEach(c => c && c.destroy());
-
-            // Gauge Chart (KPI)
-            const kpiPercent = Math.min(100, Math.round((data.stats.total_revenue / 500000000) * 100));
-            document.getElementById('kpi-percent').textContent = kpiPercent + '%';
-            
-            const gaugeCtx = document.getElementById('gaugeChart').getContext('2d');
-            charts.gauge = new Chart(gaugeCtx, {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [kpiPercent, 100 - kpiPercent],
-                        backgroundColor: [kpiPercent >= 80 ? '#10b981' : kpiPercent >= 50 ? '#f59e0b' : '#ef4444', '#e5e7eb'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    circumference: 180,
-                    rotation: -90,
-                    cutout: '75%',
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
-                }
-            });
-
-            // Revenue Chart
-            const months = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
-            const revenueData = new Array(12).fill(0);
-            const planData = new Array(12).fill(50000000);
-            
-            data.monthly_revenue?.forEach(m => {
-                const monthIndex = parseInt(m.month.split('-')[1]) - 1;
-                revenueData[monthIndex] = m.revenue;
-            });
-
-            charts.revenue = new Chart(document.getElementById('revenueChart'), {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [
-                        { label: 'Thực tế', data: revenueData, backgroundColor: '#3b82f6' },
-                        { label: 'Kế hoạch', data: planData, backgroundColor: '#e5e7eb' }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000) + 'M' } } }
-                }
-            });
-
-            // Growth Chart
-            charts.growth = new Chart(document.getElementById('growthChart'), {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Tăng trưởng %',
-                        data: [5, 8, 12, 15, 10, 18, 22, 20, 25, 28, 30, 35],
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } } }
-            });
-
-            // Category Chart
-            charts.category = new Chart(document.getElementById('categoryChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Điện thoại', 'Laptop', 'Phụ kiện', 'Tablet', 'Khác'],
-                    datasets: [{
-                        data: [40, 25, 15, 12, 8],
-                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#6b7280']
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-            });
-
-            // Order Status Chart
-            const statusData = { cho_xac_nhan: 0, da_xac_nhan: 0, dang_giao: 0, da_giao: 0, da_huy: 0 };
-            data.orders_by_status?.forEach(s => { statusData[s.trang_thai] = s.count; });
-
-            charts.orderStatus = new Chart(document.getElementById('orderStatusChart'), {
-                type: 'pie',
-                data: {
-                    labels: ['Chờ xác nhận', 'Đã xác nhận', 'Đang giao', 'Đã giao', 'Đã hủy'],
-                    datasets: [{
-                        data: Object.values(statusData),
-                        backgroundColor: ['#fbbf24', '#3b82f6', '#8b5cf6', '#10b981', '#ef4444']
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } } }
-            });
-
-            document.getElementById('order-status-legend').innerHTML = `
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400"></span>Chờ xác nhận: ${statusData.cho_xac_nhan}</div>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500"></span>Đã xác nhận: ${statusData.da_xac_nhan}</div>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-500"></span>Đang giao: ${statusData.dang_giao}</div>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500"></span>Đã giao: ${statusData.da_giao}</div>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span>Đã hủy: ${statusData.da_huy}</div>
-            `;
+            } catch (e) { console.error('Dashboard error:', e); }
         }
 
         // Products
@@ -863,24 +534,21 @@
         async function loadProducts() {
             const search = document.getElementById('product-search').value.trim();
             const category = document.getElementById('product-category-filter').value;
-            console.log('🔍 Searching products:', search, 'Category:', category);
             const data = await apiCall(`/admin/products?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}`);
-            
-            console.log('API response:', data);
             if (data.success) {
                 if (data.data.length === 0) {
-                    document.getElementById('products-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500">Không tìm thấy sản phẩm nào</td></tr>';
+                    document.getElementById('products-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500">Không tìm thấy sản phẩm</td></tr>';
                     return;
                 }
                 const html = data.data.map(p => `
                     <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-3"><img src="${getImageUrl(p.anh_chinh)}" class="w-12 h-12 object-cover rounded" onerror="this.src='https://via.placeholder.com/50?text=No+Image'"></td>
+                        <td class="px-4 py-3"><img src="${getImageUrl(p.anh_chinh)}" class="w-12 h-12 object-cover rounded" onerror="this.src='https://via.placeholder.com/50'"></td>
                         <td class="px-4 py-3 font-medium">${p.ten_san_pham}</td>
                         <td class="px-4 py-3 text-gray-600">${p.ten_danh_muc || '-'}</td>
                         <td class="px-4 py-3 text-right font-bold text-green-600">${formatPrice(p.gia)}</td>
                         <td class="px-4 py-3 text-center">${p.so_luong}</td>
                         <td class="px-4 py-3 text-center">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${p.trang_thai === 'hien_thi' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}">${p.trang_thai === 'hien_thi' ? 'Hiển thị' : 'Ẩn'}</span>
+                            <span class="px-2 py-1 rounded-full text-xs ${p.trang_thai === 'hien_thi' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}">${p.trang_thai === 'hien_thi' ? 'Hiển thị' : 'Ẩn'}</span>
                         </td>
                         <td class="px-4 py-3 text-center">
                             <button onclick="editProduct(${p.ma_san_pham})" class="text-blue-600 hover:underline mr-2">Sửa</button>
@@ -889,39 +557,15 @@
                     </tr>
                 `).join('');
                 document.getElementById('products-table').innerHTML = html;
-            } else {
-                console.error('API error:', data.message);
-                document.getElementById('products-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-500">Lỗi: ' + (data.message || 'Không thể tải sản phẩm') + '</td></tr>';
             }
         }
-
-        function searchProducts() { 
-            console.log('searchProducts called!');
-            clearTimeout(window.pst); 
-            window.pst = setTimeout(() => {
-                console.log('Timeout fired, calling loadProducts');
-                loadProducts();
-            }, 300); 
-        }
-        
-        // Thêm event listener khi DOM ready
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('product-search');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    console.log('Input event:', this.value);
-                    searchProducts();
-                });
-            }
-        });
+        function searchProducts() { clearTimeout(window.pst); window.pst = setTimeout(loadProducts, 300); }
         function openProductModal(p = null) {
             document.getElementById('product-modal').classList.add('active');
             document.getElementById('product-modal-title').textContent = p ? 'Sửa sản phẩm' : 'Thêm sản phẩm';
             document.getElementById('product-form').reset();
             document.getElementById('product-id').value = p?.ma_san_pham || '';
             document.getElementById('image-preview').innerHTML = '';
-            document.getElementById('product-images').value = '';
-            
             if (p) {
                 document.getElementById('product-name').value = p.ten_san_pham;
                 document.getElementById('product-price').value = p.gia;
@@ -930,16 +574,6 @@
                 document.getElementById('product-category').value = p.ma_danh_muc || '';
                 document.getElementById('product-desc').value = p.mo_ta || '';
                 document.getElementById('product-status').value = p.trang_thai;
-                
-                // Hiển thị ảnh hiện tại nếu có
-                if (p.images && p.images.length > 0) {
-                    document.getElementById('image-preview').innerHTML = p.images.map((img, i) => `
-                        <div class="relative">
-                            <img src="${API_URL.replace('/api', '')}${img.duong_dan_anh}" class="w-20 h-20 object-cover rounded-lg border">
-                            ${img.la_anh_chinh ? '<span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1 rounded">Chính</span>' : ''}
-                        </div>
-                    `).join('');
-                }
             }
         }
         function closeProductModal() { document.getElementById('product-modal').classList.remove('active'); }
@@ -949,24 +583,6 @@
             const d = await apiCall(`/admin/products/${id}`, 'DELETE');
             if (d.success) { alert('Đã xóa!'); loadProducts(); } else alert(d.message);
         }
-        // Preview images before upload
-        function previewImages(input) {
-            const preview = document.getElementById('image-preview');
-            preview.innerHTML = '';
-            if (input.files) {
-                Array.from(input.files).slice(0, 5).forEach((file, i) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        preview.innerHTML += `<div class="relative">
-                            <img src="${e.target.result}" class="w-20 h-20 object-cover rounded-lg border">
-                            ${i === 0 ? '<span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1 rounded">Chính</span>' : ''}
-                        </div>`;
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-        }
-
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('product-id').value;
@@ -979,166 +595,41 @@
                 mo_ta: document.getElementById('product-desc').value,
                 trang_thai: document.getElementById('product-status').value
             };
-            
-            // Tạo hoặc cập nhật sản phẩm
             const d = await apiCall(`/admin/products${id ? '/' + id : ''}`, id ? 'PUT' : 'POST', body);
-            
             if (d.success) {
                 const productId = id || d.data.ma_san_pham;
-                
-                // Upload ảnh nếu có
                 const imageInput = document.getElementById('product-images');
                 if (imageInput.files && imageInput.files.length > 0) {
                     const formData = new FormData();
-                    Array.from(imageInput.files).slice(0, 5).forEach(file => {
-                        formData.append('images', file);
-                    });
+                    Array.from(imageInput.files).slice(0, 5).forEach(file => formData.append('images', file));
                     formData.append('is_main', 'true');
-                    
-                    try {
-                        const uploadRes = await fetch(`${API_URL}/admin/products/${productId}/images`, {
-                            method: 'POST',
-                            headers: { 'Authorization': `Bearer ${adminToken}` },
-                            body: formData
-                        });
-                        const uploadData = await uploadRes.json();
-                        if (!uploadData.success) {
-                            alert('Sản phẩm đã lưu nhưng upload ảnh thất bại: ' + uploadData.message);
-                        }
-                    } catch (err) {
-                        alert('Sản phẩm đã lưu nhưng upload ảnh lỗi: ' + err.message);
-                    }
+                    await fetch(`${API_URL}/admin/products/${productId}/images`, {
+                        method: 'POST', headers: { 'Authorization': `Bearer ${adminToken}` }, body: formData
+                    });
                 }
-                
-                alert(id ? 'Đã cập nhật sản phẩm!' : 'Đã thêm sản phẩm!');
+                alert(id ? 'Đã cập nhật!' : 'Đã thêm!');
                 closeProductModal();
                 loadProducts();
-            } else {
-                alert(d.message);
-            }
+            } else alert(d.message);
         });
 
         // Categories
-        let categoryCharts = {};
         async function loadCategories() {
             const data = await apiCall('/admin/categories');
-            const colors = [
-                { bg: 'bg-blue-50', border: 'border-l-blue-500', icon: '1F4F1', iconBg: 'bg-blue-100', hex: '#3b82f6' },
-                { bg: 'bg-green-50', border: 'border-l-green-500', icon: '1F4BB', iconBg: 'bg-green-100', hex: '#22c55e' },
-                { bg: 'bg-purple-50', border: 'border-l-purple-500', icon: '1F3A7', iconBg: 'bg-purple-100', hex: '#a855f7' },
-                { bg: 'bg-amber-50', border: 'border-l-amber-500', icon: '231A', iconBg: 'bg-amber-100', hex: '#f59e0b' },
-                { bg: 'bg-pink-50', border: 'border-l-pink-500', icon: '1F4E6', iconBg: 'bg-pink-100', hex: '#ec4899' },
-                { bg: 'bg-cyan-50', border: 'border-l-cyan-500', icon: '1F5A5', iconBg: 'bg-cyan-100', hex: '#06b6d4' }
-            ];
-            const getEmoji = (code) => String.fromCodePoint(parseInt(code, 16));
             if (data.success) {
-                const html = data.data.map((c, i) => {
-                    const color = colors[i % colors.length];
-                    return `
-                    <tr class="${color.bg} border-l-4 ${color.border} hover:brightness-95 transition">
-                        <td class="px-4 py-4">
-                            <span class="${color.iconBg} w-10 h-10 rounded-full inline-flex items-center justify-center text-xl">${getEmoji(color.icon)}</span>
-                        </td>
-                        <td class="px-4 py-4 font-bold text-gray-800 text-lg">${c.ten_danh_muc}</td>
-                        <td class="px-4 py-4 text-gray-600">${c.mo_ta || '<span class="text-gray-400 italic">Chưa có mô tả</span>'}</td>
-                        <td class="px-4 py-4 text-center">
-                            <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow">${c.so_san_pham} sản phẩm</span>
-                        </td>
-                        <td class="px-4 py-4 text-center">
-                            <button onclick="editCategory(${c.ma_danh_muc}, '${c.ten_danh_muc}', '${(c.mo_ta || '').replace(/'/g, "\\'")}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium mr-2 transition">✏️ Sửa</button>
-                            <button onclick="deleteCategory(${c.ma_danh_muc})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition">🗑️ Xóa</button>
+                const html = data.data.map(c => `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3 font-medium">${c.ten_danh_muc}</td>
+                        <td class="px-4 py-3 text-gray-600">${c.mo_ta || '-'}</td>
+                        <td class="px-4 py-3 text-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">${c.so_san_pham} SP</span></td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="editCategory(${c.ma_danh_muc}, '${c.ten_danh_muc}', '${(c.mo_ta || '').replace(/'/g, "\\'")}')" class="text-blue-600 hover:underline mr-2">Sửa</button>
+                            <button onclick="deleteCategory(${c.ma_danh_muc})" class="text-red-600 hover:underline">Xóa</button>
                         </td>
                     </tr>
-                `}).join('');
-                document.getElementById('categories-table').innerHTML = html || '<tr><td colspan="5" class="text-center py-8 text-gray-500">Không có danh mục</td></tr>';
-                
-                // Vẽ biểu đồ
-                drawCategoryCharts(data.data, colors);
+                `).join('');
+                document.getElementById('categories-table').innerHTML = html || '<tr><td colspan="4" class="text-center py-8 text-gray-500">Không có danh mục</td></tr>';
             }
-        }
-        
-        function drawCategoryCharts(categories, colors) {
-            // Destroy existing charts
-            if (categoryCharts.bar) categoryCharts.bar.destroy();
-            if (categoryCharts.pie) categoryCharts.pie.destroy();
-            
-            const labels = categories.map(c => c.ten_danh_muc);
-            const dataValues = categories.map(c => c.so_san_pham || 0);
-            const bgColors = categories.map((c, i) => colors[i % colors.length].hex);
-            
-            // Bar Chart
-            categoryCharts.bar = new Chart(document.getElementById('categoryBarChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Số sản phẩm',
-                        data: dataValues,
-                        backgroundColor: bgColors,
-                        borderRadius: 8,
-                        borderSkipped: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
-                    }
-                }
-            });
-            
-            // Pie Chart with percentage
-            const total = dataValues.reduce((a, b) => a + b, 0);
-            categoryCharts.pie = new Chart(document.getElementById('categoryPieChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: dataValues,
-                        backgroundColor: bgColors,
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'right', labels: { font: { size: 11 } } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.raw;
-                                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                    return context.label + ': ' + value + ' (' + percent + '%)';
-                                }
-                            }
-                        }
-                    }
-                },
-                plugins: [{
-                    id: 'datalabels',
-                    afterDatasetsDraw: function(chart) {
-                        const ctx = chart.ctx;
-                        chart.data.datasets.forEach((dataset, i) => {
-                            const meta = chart.getDatasetMeta(i);
-                            meta.data.forEach((element, index) => {
-                                const value = dataset.data[index];
-                                if (value > 0 && total > 0) {
-                                    const percent = ((value / total) * 100).toFixed(0);
-                                    const position = element.tooltipPosition();
-                                    ctx.fillStyle = '#fff';
-                                    ctx.font = 'bold 11px Arial';
-                                    ctx.textAlign = 'center';
-                                    ctx.fillText(percent + '%', position.x, position.y);
-                                }
-                            });
-                        });
-                    }
-                }]
-            });
         }
         function openCategoryModal(c = null) {
             document.getElementById('category-modal').classList.add('active');
@@ -1166,43 +657,28 @@
         async function loadOrders() {
             const search = document.getElementById('order-search')?.value || '';
             const status = document.getElementById('order-status-filter')?.value || '';
-            console.log('Loading orders...', { search, status });
-            
             try {
                 const data = await apiCall(`/admin/orders?search=${encodeURIComponent(search)}&status=${encodeURIComponent(status)}`);
-                console.log('Orders response:', data);
-                
-                if (!data.success) {
-                    document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-500">Lỗi: ' + (data.message || 'Không thể tải đơn hàng') + '</td></tr>';
+                if (!data.success || !data.data || data.data.length === 0) {
+                    document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có đơn hàng</td></tr>';
                     return;
                 }
-                
-                if (!data.data || data.data.length === 0) {
-                    document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có đơn hàng nào. Click "Tạo đơn hàng mẫu" để test.</td></tr>';
-                    return;
-                }
-            
-            if (data.success) {
                 const html = data.data.map(o => `
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-4 py-3 font-medium">#${o.ma_don_hang}</td>
                         <td class="px-4 py-3">${o.ten_dang_nhap || o.email || 'Khách'}</td>
                         <td class="px-4 py-3 text-right font-bold text-green-600">${formatPrice(o.tong_tien)}</td>
                         <td class="px-4 py-3 text-center">${getStatusBadge(o.trang_thai)}</td>
-                        <td class="px-4 py-3 text-center text-gray-600">${formatDate(o.ngay_dat)}</td>
-                        <td class="px-4 py-3">
-                            <div class="flex gap-2 justify-center items-center">
-                                <button onclick="viewOrder(${o.ma_don_hang})" class="px-3 py-1.5 rounded text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200" title="Xem chi tiết">👁️</button>
-                                ${getNextStatusButton(o.ma_don_hang, o.trang_thai)}
-                            </div>
+                        <td class="px-4 py-3 text-center text-gray-600">${formatDate(o.ngay_tao)}</td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="viewOrder(${o.ma_don_hang})" class="px-2 py-1 rounded text-sm bg-gray-100 mr-1">👁️</button>
+                            ${getNextStatusButton(o.ma_don_hang, o.trang_thai)}
                         </td>
                     </tr>
                 `).join('');
                 document.getElementById('orders-table').innerHTML = html;
-            }
             } catch (error) {
-                console.error('Load orders error:', error);
-                document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-500">Lỗi kết nối server</td></tr>';
+                document.getElementById('orders-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-500">Lỗi kết nối</td></tr>';
             }
         }
         function searchOrders() { clearTimeout(window.ost); window.ost = setTimeout(loadOrders, 300); }
@@ -1214,23 +690,22 @@
                 document.getElementById('order-detail-content').innerHTML = `
                     <div class="grid grid-cols-2 gap-6 mb-6">
                         <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="font-bold mb-3 text-gray-700">👤 Thông tin khách hàng</h4>
-                            <p class="text-sm"><span class="text-gray-500">Tên:</span> ${o.ten_dang_nhap || 'Khách'}</p>
-                            <p class="text-sm"><span class="text-gray-500">Email:</span> ${o.email || '-'}</p>
-                            <p class="text-sm"><span class="text-gray-500">SĐT:</span> ${o.so_dien_thoai || '-'}</p>
-                            <p class="text-sm"><span class="text-gray-500">Địa chỉ:</span> ${o.dia_chi_giao || '-'}</p>
+                            <h4 class="font-bold mb-3">👤 Khách hàng</h4>
+                            <p class="text-sm">Tên: ${o.ten_dang_nhap || 'Khách'}</p>
+                            <p class="text-sm">Email: ${o.email || '-'}</p>
+                            <p class="text-sm">Địa chỉ: ${o.dia_chi_giao || '-'}</p>
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg">
-                            <h4 class="font-bold mb-3 text-gray-700">📋 Thông tin đơn hàng</h4>
-                            <p class="text-sm"><span class="text-gray-500">Ngày đặt:</span> ${formatDate(o.ngay_dat)}</p>
-                            <p class="text-sm"><span class="text-gray-500">Trạng thái:</span> ${getStatusBadge(o.trang_thai)}</p>
-                            <p class="text-sm"><span class="text-gray-500">Tổng tiền:</span> <span class="text-green-600 font-bold text-lg">${formatPrice(o.tong_tien)}</span></p>
+                            <h4 class="font-bold mb-3">📋 Đơn hàng</h4>
+                            <p class="text-sm">Ngày đặt: ${formatDate(o.ngay_tao)}</p>
+                            <p class="text-sm">Trạng thái: ${getStatusBadge(o.trang_thai)}</p>
+                            <p class="text-sm">Tổng tiền: <span class="text-green-600 font-bold">${formatPrice(o.tong_tien)}</span></p>
                         </div>
                     </div>
-                    <h4 class="font-bold mb-3 text-gray-700">📦 Sản phẩm</h4>
+                    <h4 class="font-bold mb-3">📦 Sản phẩm</h4>
                     <table class="w-full">
                         <thead class="bg-gray-50"><tr><th class="px-4 py-2 text-left">Sản phẩm</th><th class="px-4 py-2 text-center">SL</th><th class="px-4 py-2 text-right">Đơn giá</th><th class="px-4 py-2 text-right">Thành tiền</th></tr></thead>
-                        <tbody>${o.items?.map(i => `<tr class="border-b"><td class="px-4 py-2">${i.ten_san_pham}</td><td class="px-4 py-2 text-center">${i.so_luong}</td><td class="px-4 py-2 text-right">${formatPrice(i.gia)}</td><td class="px-4 py-2 text-right font-bold">${formatPrice(i.so_luong * i.gia)}</td></tr>`).join('') || ''}</tbody>
+                        <tbody>${o.items?.map(i => `<tr class="border-b"><td class="px-4 py-2">${i.ten_san_pham}</td><td class="px-4 py-2 text-center">${i.so_luong}</td><td class="px-4 py-2 text-right">${formatPrice(i.gia_ban)}</td><td class="px-4 py-2 text-right font-bold">${formatPrice(i.so_luong * i.gia_ban)}</td></tr>`).join('') || '<tr><td colspan="4" class="text-center py-4 text-gray-500">Không có sản phẩm</td></tr>'}</tbody>
                     </table>
                 `;
                 document.getElementById('order-modal').classList.add('active');
@@ -1238,25 +713,11 @@
         }
         function closeOrderModal() { document.getElementById('order-modal').classList.remove('active'); }
         async function createSampleOrders() {
-            if (!confirm('Tạo 5 đơn hàng mẫu để test?')) return;
-            try {
-                console.log('Creating sample orders...');
-                const d = await apiCall('/admin/create-sample-orders', 'POST');
-                console.log('Create sample orders response:', d);
-                if (d.success) { 
-                    alert(d.message || 'Đã tạo đơn hàng mẫu!'); 
-                    loadOrders(); 
-                    loadDashboard(); 
-                } else {
-                    alert('Lỗi: ' + (d.message || 'Không thể tạo đơn hàng'));
-                }
-            } catch (error) {
-                console.error('Create sample orders error:', error);
-                alert('Lỗi kết nối server: ' + error.message);
-            }
+            if (!confirm('Tạo 5 đơn hàng mẫu?')) return;
+            const d = await apiCall('/admin/create-sample-orders', 'POST');
+            if (d.success) { alert(d.message); loadOrders(); loadDashboard(); } else alert(d.message || 'Lỗi');
         }
         async function updateOrderStatus(id, status) {
-            if (!status) return;
             const d = await apiCall(`/admin/orders/${id}/status`, 'PUT', { trang_thai: status });
             if (d.success) { alert('Đã cập nhật!'); loadOrders(); } else alert(d.message);
         }
@@ -1266,7 +727,6 @@
             const search = document.getElementById('user-search').value;
             const role = document.getElementById('user-role-filter').value;
             const data = await apiCall(`/admin/users?search=${search}&role=${role}`);
-            
             if (data.success) {
                 const html = data.data.map(u => `
                     <tr class="border-b hover:bg-gray-50">
@@ -1274,10 +734,10 @@
                         <td class="px-4 py-3 font-medium">${u.ten_dang_nhap}</td>
                         <td class="px-4 py-3 text-gray-600">${u.email}</td>
                         <td class="px-4 py-3 text-center">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${u.vai_tro === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">${u.vai_tro === 'admin' ? 'Admin' : 'Khách hàng'}</span>
+                            <span class="px-2 py-1 rounded-full text-xs ${u.vai_tro === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">${u.vai_tro === 'admin' ? 'Admin' : 'Khách hàng'}</span>
                         </td>
                         <td class="px-4 py-3 text-center">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${u.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${u.trang_thai === 1 ? 'Hoạt động' : 'Khóa'}</span>
+                            <span class="px-2 py-1 rounded-full text-xs ${u.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${u.trang_thai === 1 ? 'Hoạt động' : 'Khóa'}</span>
                         </td>
                         <td class="px-4 py-3 text-center">
                             <button onclick="editUser(${u.ma_tai_khoan})" class="text-blue-600 hover:underline mr-1">Sửa</button>
@@ -1320,10 +780,10 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-4 py-3">${r.ten_san_pham || '-'}</td>
                         <td class="px-4 py-3">${r.ten_dang_nhap || 'Ẩn danh'}</td>
-                        <td class="px-4 py-3 text-center text-yellow-500">${'★'.repeat(r.diem_danh_gia || 0)}${'☆'.repeat(5 - (r.diem_danh_gia || 0))}</td>
+                        <td class="px-4 py-3 text-center text-yellow-500">${'★'.repeat(r.so_sao || 0)}${'☆'.repeat(5 - (r.so_sao || 0))}</td>
                         <td class="px-4 py-3 text-gray-600 max-w-xs truncate">${r.noi_dung || '-'}</td>
                         <td class="px-4 py-3 text-center">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${r.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${r.trang_thai === 1 ? 'Hiện' : 'Ẩn'}</span>
+                            <span class="px-2 py-1 rounded-full text-xs ${r.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${r.trang_thai === 1 ? 'Hiện' : 'Ẩn'}</span>
                         </td>
                         <td class="px-4 py-3 text-center">
                             <button onclick="toggleReviewStatus(${r.ma_danh_gia})" class="text-yellow-600 hover:underline mr-2">${r.trang_thai === 1 ? 'Ẩn' : 'Hiện'}</button>
@@ -1336,41 +796,6 @@
         }
         async function toggleReviewStatus(id) { const d = await apiCall(`/admin/reviews/${id}/toggle-status`, 'PUT'); if (d.success) loadReviews(); }
         async function deleteReview(id) { if (!confirm('Xóa đánh giá này?')) return; const d = await apiCall(`/admin/reviews/${id}`, 'DELETE'); if (d.success) { alert('Đã xóa!'); loadReviews(); } }
-
-        // News
-        async function loadNews() {
-            const search = document.getElementById('news-search')?.value || '';
-            const data = await apiCall(`/admin/news?search=${encodeURIComponent(search)}`);
-            if (data.success) {
-                const html = data.data.map(n => `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-3"><img src="${getImageUrl(n.hinh_anh)}" class="w-16 h-12 object-cover rounded" onerror="this.src='https://via.placeholder.com/64x48?text=News'"></td>
-                        <td class="px-4 py-3 font-medium">${n.tieu_de}</td>
-                        <td class="px-4 py-3 text-gray-600">${n.danh_muc || 'Chung'}</td>
-                        <td class="px-4 py-3 text-center text-gray-600">${formatDate(n.ngay_dang)}</td>
-                        <td class="px-4 py-3 text-center">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${n.trang_thai === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}">${n.trang_thai === 1 ? 'Hiển thị' : 'Ẩn'}</span>
-                        </td>
-                        <td class="px-4 py-3 text-center">
-                            <button onclick="editNews(${n.ma_tin_tuc})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm mr-1">Sửa</button>
-                            <button onclick="deleteNews(${n.ma_tin_tuc})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Xóa</button>
-                        </td>
-                    </tr>
-                `).join('');
-                document.getElementById('news-table').innerHTML = html || '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có tin tức nào</td></tr>';
-            } else {
-                document.getElementById('news-table').innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có tin tức nào</td></tr>';
-            }
-        }
-        function searchNews() { clearTimeout(window.nst); window.nst = setTimeout(loadNews, 300); }
-        function openNewsModal(news = null) { alert('Chức năng thêm/sửa tin tức đang phát triển'); }
-        async function editNews(id) { alert('Chức năng sửa tin tức đang phát triển'); }
-        async function deleteNews(id) {
-            if (!confirm('Xóa tin tức này?')) return;
-            const d = await apiCall(`/admin/news/${id}`, 'DELETE');
-            if (d.success) { alert('Đã xóa!'); loadNews(); } else alert(d.message || 'Lỗi xóa tin tức');
-        }
     </script>
 </body>
 </html>
-
