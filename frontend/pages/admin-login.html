@@ -7,18 +7,76 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: white;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 25%, #FF6347 50%, #FFD700 75%, #FFA500 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
         }
+
+        /* Nền Tết với hoa đào và đèn lồng */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=1920&q=80'),
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(220, 20, 60, 0.3) 0%, transparent 50%);
+            background-size: cover, 600px 600px, 600px 600px;
+            background-position: center, left, right;
+            background-repeat: no-repeat, no-repeat, no-repeat;
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Tuyết rơi */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes fall {
+            0% {
+                top: -10%;
+                transform: translateX(0) rotate(0deg);
+            }
+            100% {
+                top: 110%;
+                transform: translateX(100px) rotate(360deg);
+            }
+        }
+
         .admin-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.3);
             animation: slideUp 0.5s ease-out;
+            position: relative;
+            z-index: 10;
+            border: 2px solid rgba(255, 215, 0, 0.3);
         }
+
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -29,30 +87,59 @@
                 transform: translateY(0);
             }
         }
+
         .google-btn {
             transition: all 0.3s ease;
         }
+
         .google-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
+
         .shield-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #DC143C 0%, #FF6347 50%, #FFD700 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
             animation: pulse 2s infinite;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
+
         @keyframes pulse {
             0%, 100% {
                 transform: scale(1);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
             }
             50% {
                 transform: scale(1.05);
+                box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        /* Hiệu ứng pháo hoa nhỏ */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: sparkle 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
             }
         }
     </style>
@@ -210,7 +297,47 @@
             if (message) {
                 showAlert(decodeURIComponent(message));
             }
+
+            // Tạo tuyết rơi
+            createSnowflakes();
+            // Tạo pháo hoa nhỏ
+            createSparkles();
         });
+
+        // Hàm tạo bông tuyết
+        function createSnowflakes() {
+            const snowflakeChars = ['❄', '❅', '❆', '✻', '✼', '❉', '✺'];
+            const numberOfSnowflakes = 50;
+
+            for (let i = 0; i < numberOfSnowflakes; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakeChars[Math.floor(Math.random() * snowflakeChars.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowflake.style.fontSize = (Math.random() * 0.8 + 0.5) + 'em';
+                snowflake.style.opacity = Math.random() * 0.6 + 0.4;
+                document.body.appendChild(snowflake);
+            }
+        }
+
+        // Hàm tạo hiệu ứng pháo hoa nhỏ
+        function createSparkles() {
+            const numberOfSparkles = 30;
+            const colors = ['#FFD700', '#FF6347', '#DC143C', '#FFA500'];
+
+            for (let i = 0; i < numberOfSparkles; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                sparkle.style.animationDelay = Math.random() * 3 + 's';
+                sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(sparkle);
+            }
+        }
     </script>
 </body>
 </html>

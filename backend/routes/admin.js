@@ -623,25 +623,37 @@ router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
         const offset = (page - 1) * limit;
 
         let query = `
-            SELECT ma_tai_khoan, ten_dang_nhap, email, vai_tro, trang_thai, hinh_anh, ngay_tao, google_id
-            FROM tai_khoan WHERE 1=1
+            SELECT 
+                tk.ma_tai_khoan, 
+                tk.ten_dang_nhap, 
+                tk.email, 
+                tk.vai_tro, 
+                tk.trang_thai, 
+                tk.hinh_anh, 
+                tk.ngay_tao, 
+                tk.google_id,
+                tk.so_dien_thoai,
+                COUNT(DISTINCT dh.ma_don_hang) as so_don_hang
+            FROM tai_khoan tk
+            LEFT JOIN don_hang dh ON tk.ma_tai_khoan = dh.ma_tai_khoan
+            WHERE 1=1
         `;
         const params = [];
 
         if (role) {
-            query += ` AND vai_tro = ?`;
+            query += ` AND tk.vai_tro = ?`;
             params.push(role);
         }
         if (status !== undefined) {
-            query += ` AND trang_thai = ?`;
+            query += ` AND tk.trang_thai = ?`;
             params.push(parseInt(status));
         }
         if (search) {
-            query += ` AND (ten_dang_nhap LIKE ? OR email LIKE ?)`;
+            query += ` AND (tk.ten_dang_nhap LIKE ? OR tk.email LIKE ?)`;
             params.push(`%${search}%`, `%${search}%`);
         }
 
-        query += ` ORDER BY ngay_tao DESC LIMIT ? OFFSET ?`;
+        query += ` GROUP BY tk.ma_tai_khoan ORDER BY tk.ngay_tao DESC LIMIT ? OFFSET ?`;
         params.push(parseInt(limit), parseInt(offset));
 
         const [users] = await db.query(query, params);
@@ -665,11 +677,26 @@ router.get('/users', authenticateToken, requireAdmin, async (req, res) => {
 router.get('/users/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const [users] = await db.query(`
-            SELECT tk.ma_tai_khoan, tk.ten_dang_nhap, tk.email, tk.vai_tro, tk.trang_thai, tk.hinh_anh, tk.ngay_tao,
-                   kh.ho_ten, kh.so_dien_thoai, kh.dia_chi, kh.tinh_thanh, kh.quan_huyen
+            SELECT 
+                tk.ma_tai_khoan, 
+                tk.ten_dang_nhap, 
+                tk.email, 
+                tk.vai_tro, 
+                tk.trang_thai, 
+                tk.hinh_anh, 
+                tk.ngay_tao,
+                tk.google_id,
+                tk.so_dien_thoai,
+                kh.ho_ten, 
+                kh.dia_chi, 
+                kh.tinh_thanh, 
+                kh.quan_huyen,
+                COUNT(DISTINCT dh.ma_don_hang) as so_don_hang
             FROM tai_khoan tk
             LEFT JOIN khach_hang kh ON tk.ma_tai_khoan = kh.ma_tai_khoan
+            LEFT JOIN don_hang dh ON tk.ma_tai_khoan = dh.ma_tai_khoan
             WHERE tk.ma_tai_khoan = ?
+            GROUP BY tk.ma_tai_khoan
         `, [req.params.id]);
 
         if (users.length === 0) {
