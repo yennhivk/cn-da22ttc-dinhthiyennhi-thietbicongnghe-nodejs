@@ -259,6 +259,129 @@
             background: #1e40af;
             transform: translateX(5px);
         }
+
+        /* Nhánh mai trang trí header */
+        .mai-branch-decor {
+            position: absolute;
+            width: 200px;
+            height: 150px;
+            z-index: 5;
+        }
+
+        .mai-branch-decor.left {
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%) scaleX(-1);
+        }
+
+        .mai-branch-decor.right {
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .mai-branch-line {
+            position: absolute;
+            background: linear-gradient(to right, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+            border-radius: 3px;
+        }
+
+        .branch-main {
+            width: 120px;
+            height: 4px;
+            top: 75px;
+            left: 0;
+            transform: rotate(-15deg);
+        }
+
+        .branch-sub1 {
+            width: 60px;
+            height: 3px;
+            top: 60px;
+            left: 40px;
+            transform: rotate(-35deg);
+        }
+
+        .branch-sub2 {
+            width: 50px;
+            height: 2px;
+            top: 85px;
+            left: 50px;
+            transform: rotate(10deg);
+        }
+
+        .mai-flower-decor {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+        }
+
+        .mai-petal-decor {
+            position: absolute;
+            width: 14px;
+            height: 16px;
+            background: linear-gradient(to bottom, #FFED4E 0%, #FFD700 50%, #FFC700 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform-origin: center bottom;
+        }
+
+        .mai-petal-decor:nth-child(1) {
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .mai-petal-decor:nth-child(2) {
+            top: 8px;
+            right: 4px;
+            transform: rotate(72deg);
+        }
+
+        .mai-petal-decor:nth-child(3) {
+            bottom: 6px;
+            right: 7px;
+            transform: rotate(144deg);
+        }
+
+        .mai-petal-decor:nth-child(4) {
+            bottom: 6px;
+            left: 7px;
+            transform: rotate(216deg);
+        }
+
+        .mai-petal-decor:nth-child(5) {
+            top: 8px;
+            left: 4px;
+            transform: rotate(288deg);
+        }
+
+        .mai-flower-decor::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #FFA500 0%, #FF8C00 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 165, 0, 0.8);
+            z-index: 3;
+        }
+
+        .mai-bud-decor {
+            position: absolute;
+            width: 10px;
+            height: 14px;
+            background: linear-gradient(to bottom, #90EE90 0%, #9ACD32 100%);
+            border-radius: 50% 50% 45% 45%;
+        }
+
+        @media (max-width: 1024px) {
+            .mai-branch-decor {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -619,6 +742,82 @@
 
         <!-- Header with HOT badge -->
         <section class="relative py-6 border-b-2 border-orange-300" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);">
+            <!-- Nhánh mai bên trái -->
+            <div class="mai-branch-decor left">
+                <div class="mai-branch-line branch-main"></div>
+                <div class="mai-branch-line branch-sub1"></div>
+                <div class="mai-branch-line branch-sub2"></div>
+                
+                <!-- Hoa mai 1 -->
+                <div class="mai-flower-decor" style="top: 35px; left: 50px;">
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                </div>
+                
+                <!-- Hoa mai 2 -->
+                <div class="mai-flower-decor" style="top: 50px; left: 80px; transform: scale(0.9);">
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                </div>
+                
+                <!-- Hoa mai 3 -->
+                <div class="mai-flower-decor" style="top: 90px; left: 65px; transform: scale(0.8);">
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                </div>
+                
+                <!-- Nụ hoa -->
+                <div class="mai-bud-decor" style="top: 70px; left: 100px;"></div>
+                <div class="mai-bud-decor" style="top: 45px; left: 35px; transform: scale(0.8);"></div>
+            </div>
+
+            <!-- Nhánh mai bên phải -->
+            <div class="mai-branch-decor right">
+                <div class="mai-branch-line branch-main"></div>
+                <div class="mai-branch-line branch-sub1"></div>
+                <div class="mai-branch-line branch-sub2"></div>
+                
+                <!-- Hoa mai 1 -->
+                <div class="mai-flower-decor" style="top: 35px; left: 50px;">
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                </div>
+                
+                <!-- Hoa mai 2 -->
+                <div class="mai-flower-decor" style="top: 50px; left: 80px; transform: scale(0.9);">
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                </div>
+                
+                <!-- Hoa mai 3 -->
+                <div class="mai-flower-decor" style="top: 90px; left: 65px; transform: scale(0.8);">
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                    <div class="mai-petal-decor"></div>
+                </div>
+                
+                <!-- Nụ hoa -->
+                <div class="mai-bud-decor" style="top: 70px; left: 100px;"></div>
+                <div class="mai-bud-decor" style="top: 45px; left: 35px; transform: scale(0.8);"></div>
+            </div>
+
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex items-center justify-center gap-3">
                     <h1 class="text-3xl md:text-4xl font-black text-red-600" style="text-shadow: 2px 2px 4px rgba(255,215,0,0.5);">🎉 CHƯƠNG TRÌNH KHUYẾN MÃI ĐẶC SẮC 🎉</h1>
@@ -951,7 +1150,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="text-sm text-gray-900">
                         <p>&copy; 2024 Yến Nhi Tech. All rights reserved.</p>
-                        <p class="mt-1">📍 Địa chỉ: 123 Đường ABC, Quận 1, TP.HCM</p>
+                        <p class="mt-1">📍 Địa chỉ: 74-76 Lê Lợi, Khóm 3, Phường 1, TP. Trà Vinh, Tỉnh Trà Vinh</p>
                     </div>
                     <div class="flex gap-4">
                         <a href="#" class="bg-blue-600 hover:bg-blue-700 p-2 rounded-full transition">
