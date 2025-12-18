@@ -49,6 +49,44 @@ function setupEventListeners() {
             }
         });
     }
+
+    // Price filter checkboxes
+    const priceCheckboxes = document.querySelectorAll('.price-filter-checkbox');
+    priceCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Uncheck all other checkboxes
+                priceCheckboxes.forEach(cb => {
+                    if (cb !== this) cb.checked = false;
+                });
+                
+                // Filter products
+                filterByPrice(this.value);
+            } else {
+                // If unchecked, show all (or check "Tất cả")
+                const allCheckbox = document.querySelector('.price-filter-checkbox[value="all"]');
+                if (allCheckbox) {
+                    allCheckbox.checked = true;
+                    filterByPrice("all");
+                }
+            }
+        });
+    });
+}
+
+// Filter products by price range
+function filterByPrice(range) {
+    if (range === 'all') {
+        filteredProducts = allProducts;
+    } else {
+        const [min, max] = range.split('-').map(Number);
+        filteredProducts = allProducts.filter(product => {
+            const price = product.gia;
+            return price >= min && price <= max;
+        });
+    }
+    displayProducts(filteredProducts);
+    updateResultCount(filteredProducts.length);
 }
 
 // Load products from API
@@ -91,27 +129,26 @@ async function loadProducts() {
 
 // Display products in grid
 function displayProducts(products) {
-    const container = document.querySelector('.grid.grid-cols-1.sm\\:grid-cols-2');
+    const container = document.getElementById('productGrid');
+    const container2 = document.getElementById('productGrid2');
     
-    if (!container) {
-        console.error('Không tìm thấy container sản phẩm');
+    if (!container && !container2) {
+        console.error('Không tìm thấy container sản phẩm (#productGrid hoặc #productGrid2)');
         return;
     }
     
-    if (products.length === 0) {
-        container.innerHTML = `
-            <div class="col-span-full text-center py-20">
-                <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                </svg>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">Không tìm thấy sản phẩm</h3>
-                <p class="text-gray-500">Vui lòng thử lại với từ khóa khác</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = products.map(product => createProductCard(product)).join('');
+    const html = products.length === 0 ? `
+        <div class="col-span-full text-center py-20">
+            <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">Không tìm thấy sản phẩm</h3>
+            <p class="text-gray-500">Vui lòng thử lại với từ khóa khác</p>
+        </div>
+    ` : products.map(product => createProductCard(product)).join('');
+
+    if (container) container.innerHTML = html;
+    if (container2) container2.innerHTML = html;
 }
 
 // Create product card HTML
@@ -128,9 +165,12 @@ function createProductCard(product) {
             imageUrl = `${API_URL.replace('/api', '')}/${product.anh_chinh}`;
         }
     }
+    
     const price = formatPrice(product.gia);
-    const oldPrice = formatPrice(product.gia * 1.15); // Giả sử giá cũ cao hơn 15%
-    const discount = 15; // Giả sử giảm 15%
+    const oldPriceValue = product.gia * 1.15;
+    const oldPrice = formatPrice(oldPriceValue);
+    const discount = 15;
+    const discountAmount = formatPrice(oldPriceValue - product.gia);
     
     return `
         <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group product-card">
@@ -145,10 +185,10 @@ function createProductCard(product) {
             </div>
             
             <!-- Product Image -->
-            <div class="relative p-4 bg-gray-50 cursor-pointer" onclick="viewProduct(${product.ma_san_pham})">
+            <div class="relative p-4 bg-gray-50 cursor-pointer overflow-hidden" onclick="viewProduct(${product.ma_san_pham})">
                 <img src="${imageUrl}" 
                      alt="${product.ten_san_pham}" 
-                     class="product-image w-full h-48 object-contain"
+                     class="product-image w-full h-48 object-contain group-hover:scale-110 transition-transform duration-500"
                      onerror="this.onerror=null; this.src=PLACEHOLDER_IMAGE">
             </div>
             
@@ -161,41 +201,42 @@ function createProductCard(product) {
                         <span class="text-red-600 text-xs font-bold">-${discount}%</span>
                     </div>
                     <div class="text-xl font-bold text-red-600">${price}</div>
-                    <div class="text-xs text-green-600 font-medium">Giảm ${formatPrice(product.gia * 0.15)}</div>
+                    <div class="text-xs text-green-600 font-medium">Giảm ${discountAmount}</div>
                 </div>
                 
                 <!-- Product Name -->
-                <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 cursor-pointer hover:text-red-600" onclick="viewProduct(${product.ma_san_pham})">
+                <h3 class="font-semibold text-gray-900 text-base mb-2 line-clamp-2 cursor-pointer hover:text-red-600 h-12" onclick="viewProduct(${product.ma_san_pham})">
                     ${product.ten_san_pham}
                 </h3>
                 
-                <!-- Category Badge -->
-                ${product.ten_danh_muc ? `
-                <div class="mb-2">
-                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                <!-- Category & Brand -->
+                <div class="flex items-center gap-2 mb-3">
+                    ${product.ten_danh_muc ? `
+                    <span class="inline-block bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded font-medium">
                         ${product.ten_danh_muc}
                     </span>
+                    ` : ''}
+                    ${product.thuong_hieu ? `
+                    <span class="inline-block bg-gray-100 text-gray-800 text-[10px] px-2 py-0.5 rounded font-medium">
+                        ${product.thuong_hieu}
+                    </span>
+                    ` : ''}
                 </div>
-                ` : ''}
-                
-                <!-- Description -->
-                ${product.mo_ta ? `
-                <p class="text-xs text-gray-600 mb-2 line-clamp-2">${product.mo_ta}</p>
-                ` : ''}
                 
                 <!-- Action Buttons -->
-                <div class="flex gap-2 mt-3">
-                    <button onclick="addToCart(${product.ma_san_pham})" 
-                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm ${product.so_luong === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                <div class="flex gap-2 mt-4">
+                    <button onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})" 
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-2 rounded-lg transition duration-200 text-sm flex items-center justify-center gap-1 ${product.so_luong === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
                             ${product.so_luong === 0 ? 'disabled' : ''}>
-                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        ${product.so_luong === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}
+                        <span>${product.so_luong === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}</span>
                     </button>
                     <button onclick="viewProduct(${product.ma_san_pham})" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition duration-200"
+                            title="Xem chi tiết">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>

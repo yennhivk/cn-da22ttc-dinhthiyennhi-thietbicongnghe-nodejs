@@ -441,31 +441,31 @@
                             </button>
                             <div id="priceFilter" class="space-y-3">
                                 <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="checkbox" class="w-4 h-4 accent-red-600 rounded" checked>
+                                    <input type="checkbox" name="price-range" value="all" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded" checked>
                                     <span class="text-sm text-gray-700">Tất cả</span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="checkbox" class="w-4 h-4 accent-red-600 rounded">
+                                    <input type="checkbox" name="price-range" value="0-2000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
                                     <span class="text-sm text-gray-700">Dưới 2 triệu</span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="checkbox" class="w-4 h-4 accent-red-600 rounded">
+                                    <input type="checkbox" name="price-range" value="2000000-4000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
                                     <span class="text-sm text-gray-700">Từ 2 - 4 triệu</span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="checkbox" class="w-4 h-4 accent-red-600 rounded">
+                                    <input type="checkbox" name="price-range" value="4000000-7000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
                                     <span class="text-sm text-gray-700">Từ 4 - 7 triệu</span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="checkbox" class="w-4 h-4 accent-red-600 rounded">
+                                    <input type="checkbox" name="price-range" value="7000000-13000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
                                     <span class="text-sm text-gray-700">Từ 7 - 13 triệu</span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="checkbox" class="w-4 h-4 accent-red-600 rounded">
+                                    <input type="checkbox" name="price-range" value="13000000-20000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
                                     <span class="text-sm text-gray-700">Từ 13 - 20 triệu</span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="checkbox" class="w-4 h-4 accent-red-600 rounded">
+                                    <input type="checkbox" name="price-range" value="20000000-999999999" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
                                     <span class="text-sm text-gray-700">Trên 20 triệu</span>
                                 </label>
                                 
@@ -524,278 +524,12 @@
                                     <option>Mới nhất</option>
                                 </select>
                             </div>
-                            <div class="flex items-center gap-4 text-sm">
-                                <span class="text-gray-500">Tìm thấy <strong class="text-red-600">86</strong> kết quả với từ khóa <strong>iphone 17</strong></span>
-                                <div class="flex items-center gap-2">
-                                    <button class="text-red-600 font-semibold hover:underline">Nổi bật</button>
-                                    <span class="text-gray-400">•</span>
-                                    <button class="text-gray-600 hover:text-red-600">Giá tăng dần</button>
-                                    <span class="text-gray-400">•</span>
-                                    <button class="text-gray-600 hover:text-red-600">Giá giảm dần</button>
-                                    <span class="text-gray-400">•</span>
-                                    <button class="text-gray-600 hover:text-red-600">Trả góp 0%</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
                     <!-- Products Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        <!-- Product Card 1 - iPhone 16 128GB -->
-                        <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                            
-                            <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
-                                
-                                <!-- Freeship Badge -->
-                                <div class="absolute top-2 left-2 z-10">
-                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                        <div class="text-center">
-                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-3">
-                                <!-- Pricing -->
-                                <div class="mb-2">
-                                    <div class="flex items-baseline gap-2 mb-1">
-                                        <span class="text-base text-gray-400 line-through">22.490.000đ</span>
-                                        <span class="text-red-600 text-sm font-bold">-6%</span>
-                                    </div>
-                                    <div class="text-2xl font-bold text-red-600">21.090.000đ</div>
-                                    <div class="text-sm text-green-600 font-medium">Giảm 1.400.000đ</div>
-                                    <div class="text-sm text-gray-500 mt-1">Còn 00 ngày 12:31:32</div>
-                                </div>
-                                
-                                <!-- Product Name -->
-                                <h3 class="font-semibold text-gray-900 text-base mb-2">iPhone 16 128GB</h3>
-                                
-                                <!-- Color Options -->
-                                <div class="flex items-center gap-1 mb-2">
-                                    <div class="w-5 h-5 rounded-full bg-pink-300 border-2 border-red-500 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-gray-800 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-blue-300 border border-gray-300 cursor-pointer"></div>
-                                    <span class="text-xs text-blue-600 ml-1">+ 1 màu</span>
-                                </div>
-                                
-                                <!-- Storage Options -->
-                                <div class="flex gap-2 mb-3">
-                                    <button class="px-3 py-1 text-sm border-2 border-red-500 text-red-600 rounded font-medium bg-red-50">128 GB</button>
-                                    <button class="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:border-red-500">256 GB</button>
-                                    <button class="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded hover:border-red-500">512 GB</button>
-                                </div>
-                                
-                                <!-- Payment Methods -->
-                                <div class="flex gap-2 mb-2">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/home-paylater.png" alt="Home PayLater" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/04/GameApp/logo-visa-200x200.png" alt="Visa" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/03/GameApp/image-200x200-3.png" alt="OCB" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/zalopay.png" alt="ZaloPay" class="h-6 object-contain">
-                                </div>
-                                
-                                <p class="text-[11px] text-gray-600 mb-2 leading-tight">Giảm 5% tối đa 80K khi thanh toán lần đầu qua HomePayLater.</p>
-                                
-                                <button class="text-blue-600 text-xs font-medium hover:underline flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                    </svg>
-                                    Thêm vào so sánh
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Product Card 2 - iPhone 16 Plus 128GB -->
-                        <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                            
-                            <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16 Plus" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
-                                
-                                <div class="absolute top-2 left-2 z-10">
-                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                        <div class="text-center">
-                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-3">
-                                <div class="mb-2">
-                                    <div class="flex items-baseline gap-2 mb-1">
-                                        <span class="text-sm text-gray-400 line-through">25.990.000đ</span>
-                                    </div>
-                                    <div class="text-xl font-bold text-red-600">24.990.000đ</div>
-                                    <div class="text-xs text-green-600 font-medium">Giảm 1.000.000đ</div>
-                                    <div class="text-xs text-gray-500 mt-1">Còn 00 ngày 12:31:32</div>
-                                </div>
-                                
-                                <h3 class="font-semibold text-gray-900 text-sm mb-2">iPhone 16 Plus 128GB</h3>
-                                
-                                <div class="flex items-center gap-1 mb-2">
-                                    <div class="w-5 h-5 rounded-full bg-gray-800 border-2 border-red-500 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-pink-300 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-teal-300 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-blue-300 border border-gray-300 cursor-pointer"></div>
-                                    <span class="text-xs text-blue-600 ml-1">+ 1 màu</span>
-                                </div>
-                                
-                                <div class="flex gap-2 mb-3">
-                                    <button class="px-3 py-1 text-xs border-2 border-red-500 text-red-600 rounded font-medium bg-red-50">128 GB</button>
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">256 GB</button>
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">512 GB</button>
-                                </div>
-                                
-                                <div class="flex gap-2 mb-2">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/home-paylater.png" alt="Home PayLater" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/04/GameApp/logo-visa-200x200.png" alt="Visa" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/03/GameApp/image-200x200-3.png" alt="OCB" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/zalopay.png" alt="ZaloPay" class="h-6 object-contain">
-                                </div>
-                                
-                                <p class="text-[11px] text-gray-600 mb-2 leading-tight">Giảm 5% tối đa 80K khi thanh toán lần đầu qua HomePayLater.</p>
-                                
-                                <button class="text-blue-600 text-xs font-medium hover:underline flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                    </svg>
-                                    Thêm vào so sánh
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Product Card 3 - iPhone 16 Pro 256GB -->
-                        <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                            
-                            <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16 Pro" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
-                                
-                                <div class="absolute top-2 left-2 z-10">
-                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                        <div class="text-center">
-                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-3">
-                                <div class="mb-3">
-                                    <div class="flex items-baseline gap-2 mb-1">
-                                        <span class="text-sm text-gray-400 line-through">31.390.000đ</span>
-                                        <span class="text-red-600 text-xs font-bold">-9%</span>
-                                    </div>
-                                    <div class="text-xl font-bold text-red-600 mb-1">28.590.000đ</div>
-                                    <div class="text-xs text-green-600 font-medium">Giảm 2.800.000đ</div>
-                                    <div class="text-xs text-gray-500 mt-1">Còn 00 ngày 11:53:13</div>
-                                </div>
-                                
-                                <h3 class="font-semibold text-gray-900 text-sm mb-3">iPhone 16 Pro 256GB</h3>
-                                
-                                <div class="flex items-center gap-1 mb-2">
-                                    <div class="w-5 h-5 rounded-full bg-gray-100 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-gray-400 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-amber-700 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-gray-800 border-2 border-red-500 cursor-pointer"></div>
-                                </div>
-                                
-                                <div class="flex gap-2 mb-2">
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">128 GB</button>
-                                    <button class="px-3 py-1 text-xs border-2 border-red-500 text-red-600 rounded font-medium bg-red-50">256 GB</button>
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">512 GB</button>
-                                </div>
-                                <div class="mb-3">
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">1 TB</button>
-                                </div>
-                                
-                                <div class="flex gap-2 mb-2">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/home-paylater.png" alt="Home PayLater" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/04/GameApp/logo-visa-200x200.png" alt="Visa" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/03/GameApp/image-200x200-3.png" alt="OCB" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/zalopay.png" alt="ZaloPay" class="h-6 object-contain">
-                                </div>
-                                
-                                <p class="text-[11px] text-gray-600 mb-2 leading-tight">Giảm 5% tối đa 80K khi thanh toán lần đầu qua HomePayLater.</p>
-                                
-                                <button class="text-blue-600 text-xs font-medium hover:underline flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                    </svg>
-                                    Thêm vào so sánh
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Product Card 4 - iPhone 16 Pro Max 256GB -->
-                        <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                            <!-- 11.11 Badge -->
-                            <div class="absolute top-2 right-2 z-10">
-                                <img src="https://cdn.tgdd.vn/2023/10/campaign/label-1111-80x48-4.png" alt="11.11 Sale" class="w-16 h-auto">
-                            </div>
-                            
-                            <div class="relative p-4 bg-gray-50">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Crect fill='%23f3f4f6' width='300' height='300'/%3E%3C/svg%3E" alt="iPhone 16 Pro Max" class="w-full h-48 object-contain group-hover:scale-105 transition-transform duration-300">
-                                
-                                <div class="absolute top-2 left-2 z-10">
-                                    <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                                        <div class="text-center">
-                                            <div class="text-[10px] font-bold leading-tight">FREESHIP</div>
-                                            <div class="text-[8px] leading-tight">TOÀN QUỐC</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="p-3">
-                                <div class="mb-2">
-                                    <div class="flex items-baseline gap-2 mb-1">
-                                        <span class="text-sm text-gray-400 line-through">34.290.000đ</span>
-                                        <span class="text-red-600 text-xs font-bold">-12%</span>
-                                    </div>
-                                    <div class="text-xl font-bold text-red-600">30.090.000đ</div>
-                                    <div class="text-xs text-green-600 font-medium">Giảm 4.200.000đ</div>
-                                    <div class="text-xs text-gray-500 mt-1">Còn 00 ngày 12:31:32</div>
-                                </div>
-                                
-                                <h3 class="font-semibold text-gray-900 text-sm mb-2">iPhone 16 Pro Max 256GB</h3>
-                                
-                                <div class="flex items-center gap-1 mb-2">
-                                    <div class="w-5 h-5 rounded-full bg-amber-700 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-gray-100 border border-gray-300 cursor-pointer"></div>
-                                    <div class="w-5 h-5 rounded-full bg-gray-800 border-2 border-red-500 cursor-pointer"></div>
-                                </div>
-                                
-                                <div class="flex gap-2 mb-3">
-                                    <button class="px-3 py-1 text-xs border-2 border-red-500 text-red-600 rounded font-medium bg-red-50">256 GB</button>
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">512 GB</button>
-                                    <button class="px-3 py-1 text-xs border border-gray-300 text-gray-700 rounded hover:border-red-500">1 TB</button>
-                                </div>
-                                
-                                <div class="mb-2 px-3 py-2 bg-pink-50 border border-pink-200 rounded">
-                                    <span class="text-[11px] font-semibold text-pink-700">🎁 Bạn cần</span>
-                                </div>
-                                
-                                <div class="flex gap-2 mb-2">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/home-paylater.png" alt="Home PayLater" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/04/GameApp/logo-visa-200x200.png" alt="Visa" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/2020/03/GameApp/image-200x200-3.png" alt="OCB" class="h-6 object-contain">
-                                    <img src="https://cdn.tgdd.vn/ValueIcons/zalopay.png" alt="ZaloPay" class="h-6 object-contain">
-                                </div>
-                                
-                                <p class="text-[11px] text-gray-600 mb-2 leading-tight">Giảm 5% tối đa 80K khi thanh toán lần đầu qua HomePayLater.</p>
-                                
-                                <button class="text-blue-600 text-xs font-medium hover:underline flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                    </svg>
-                                    Thêm vào so sánh
-                                </button>
-                            </div>
-                        </div>
+                    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Dữ liệu sẽ được đổ vào đây từ products.js -->
                     </div>
 
                     <!-- Load More Button -->
@@ -808,165 +542,22 @@
                         </button>
                     </div>
 
-                    <!-- Related Articles Section -->
-                    <div class="mt-12">
-                        <div class="flex items-center justify-between mb-6">
-                            <h2 class="text-xl font-bold text-gray-800">Tìm thấy 1642 kết quả với từ khóa "iphone 16"</h2>
-                        </div>
-
-                        <div class="flex gap-6">
-                            <!-- Sidebar Filters for Articles -->
-                            <aside class="w-72 flex-shrink-0">
-                                <!-- Filter Box -->
-                                <div class="bg-white rounded-lg shadow-sm p-5 mb-5">
-                                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-                                        </svg>
-                                        Bộ lọc tìm kiếm
-                                    </h3>
-                                    
-                                    <!-- Time Filter -->
-                                    <div class="mb-4">
-                                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                                            <span>Thời gian đăng</span>
-                                            <button class="ml-auto text-gray-400 hover:text-gray-600">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                                </svg>
-                                            </button>
-                                        </h4>
-                                        <div class="space-y-2">
-                                            <label class="flex items-center gap-2 cursor-pointer group">
-                                                <div class="relative flex items-center">
-                                                    <input type="radio" name="time" value="all" checked class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
-                                                    <div class="absolute inset-0 rounded-full border-2 border-red-600 pointer-events-none"></div>
-                                                </div>
-                                                <span class="text-sm text-gray-700 group-hover:text-red-600">Tất cả</span>
-                                            </label>
-                                            <label class="flex items-center gap-2 cursor-pointer group">
-                                                <input type="radio" name="time" value="week" class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
-                                                <span class="text-sm text-gray-700 group-hover:text-red-600">Tuần trước</span>
-                                            </label>
-                                            <label class="flex items-center gap-2 cursor-pointer group">
-                                                <input type="radio" name="time" value="month" class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
-                                                <span class="text-sm text-gray-700 group-hover:text-red-600">Tháng trước</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </aside>
-
-                            <!-- Articles Grid -->
-                            <div class="flex-1">
-                                <div class="space-y-5">
-                                    <!-- Article Card 1 -->
-                                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                                        <div class="flex gap-4 p-4">
-                                            <div class="w-64 h-40 flex-shrink-0 rounded-lg overflow-hidden">
-                                                <img src="https://images.unsplash.com/photo-1556656793-08538906a9f8?w=400&h=250&fit=crop" alt="iPhone 14 vs iPhone 16e" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                                            </div>
-                                            <div class="flex-1 flex flex-col justify-between py-1">
-                                                <div>
-                                                    <div class="flex items-center gap-2 mb-2">
-                                                        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded">hỏi đáp</span>
-                                                        <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs font-semibold rounded">kiến thức hay</span>
-                                                    </div>
-                                                    <h3 class="font-bold text-gray-900 text-lg mb-2 line-clamp-2 hover:text-red-600 cursor-pointer">
-                                                        So sánh iPhone 14 và iPhone 16e: Hai dòng máy này có gì khác nhau? Có đáng để nâng cấp?
-                                                    </h3>
-                                                    <p class="text-sm text-gray-600 line-clamp-2 mb-2">
-                                                        So sánh iPhone 14 và iPhone 16e là chủ đề được nhiều người dùng quan tâm khi cần nhắc năng cấp thiết bị. Bài viết phân tích toàn diện về sự khác biệt giữa hai mẫu...
-                                                    </p>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-xs text-gray-500">
-                                                    <button class="text-blue-600 hover:underline font-medium flex items-center gap-1">
-                                                        Xem thêm
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                                        </svg>
-                                                    </button>
-                                                    <span class="ml-auto">1 ngày trước</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Article Card 2 -->
-                                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                                        <div class="flex gap-4 p-4">
-                                            <div class="w-64 h-40 flex-shrink-0 rounded-lg overflow-hidden">
-                                                <img src="https://images.unsplash.com/photo-1611786398348-6d0494669918?w=400&h=250&fit=crop" alt="OxygenOS 16" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                                            </div>
-                                            <div class="flex-1 flex flex-col justify-between py-1">
-                                                <div>
-                                                    <h3 class="font-bold text-gray-900 text-lg mb-2 line-clamp-2 hover:text-red-600 cursor-pointer">
-                                                        OnePlus tung bản cập nhật OxygenOS 16 đúng hẹn: AI thông minh hơn, giao diện đẹp mê ly
-                                                    </h3>
-                                                    <p class="text-sm text-gray-600 line-clamp-2 mb-2">
-                                                        Người dùng các thiết bị OnePlus thế hệ trước đã chờ đợi bản cập nhật này, theo lời hứa của hãng, và điều đó cuối cùng đã xảy ra, đúng theo lịch trình!
-                                                    </p>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-xs text-gray-500">
-                                                    <button class="text-blue-600 hover:underline font-medium flex items-center gap-1">
-                                                        Xem thêm
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                                        </svg>
-                                                    </button>
-                                                    <span class="ml-auto">1 ngày trước</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Article Card 3 -->
-                                    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                                        <div class="flex gap-4 p-4">
-                                            <div class="w-64 h-40 flex-shrink-0 rounded-lg overflow-hidden">
-                                                <img src="https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=400&h=250&fit=crop" alt="iPhone 16 Pro Max" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                                            </div>
-                                            <div class="flex-1 flex flex-col justify-between py-1">
-                                                <div>
-                                                    <div class="flex items-center gap-2 mb-2">
-                                                        <span class="px-2 py-1 bg-green-50 text-green-600 text-xs font-semibold rounded">đánh giá</span>
-                                                    </div>
-                                                    <h3 class="font-bold text-gray-900 text-lg mb-2 line-clamp-2 hover:text-red-600 cursor-pointer">
-                                                        iPhone 16 Pro Max - Chiếc điện thoại đáng mua nhất năm 2024 với camera cực đỉnh
-                                                    </h3>
-                                                    <p class="text-sm text-gray-600 line-clamp-2 mb-2">
-                                                        iPhone 16 Pro Max đã chính thức ra mắt với nhiều nâng cấp đáng kể về camera, hiệu năng và thời lượng pin. Liệu có đáng để nâng cấp từ iPhone 15 Pro Max?
-                                                    </p>
-                                                </div>
-                                                <div class="flex items-center gap-2 text-xs text-gray-500">
-                                                    <button class="text-blue-600 hover:underline font-medium flex items-center gap-1">
-                                                        Xem thêm
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                                        </svg>
-                                                    </button>
-                                                    <span class="ml-auto">2 ngày trước</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Load More Articles Button -->
-                                    <div class="flex justify-center pt-4">
-                                        <button class="px-8 py-3 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-red-500 hover:text-red-600 transition flex items-center gap-2">
-                                            <span>Xem thêm bài viết</span>
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
+                    <!-- Feedback Section -->
+                    <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 text-center">
+                        <div class="max-w-2xl mx-auto">
+                            <div class="text-6xl mb-4">🌟⭐✨</div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Bạn có hài lòng với kết quả tìm kiếm không?</h3>
+                            <p class="text-gray-600 mb-6">Phản hồi của bạn giúp chúng tôi cải thiện trải nghiệm mua sắm tốt hơn</p>
+                            <div class="flex items-center justify-center gap-4">
+                                <button class="px-8 py-3 bg-white border-2 border-red-500 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition">
+                                    Hài lòng
+                                </button>
+                                <button class="px-8 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition">
+                                    Không hài lòng
+                                </button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Feedback Section -->
-                    <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 text-center">
                         <div class="max-w-2xl mx-auto">
                             <div class="text-6xl mb-4">🌟⭐✨</div>
                             <h3 class="text-2xl font-bold text-gray-800 mb-3">Bạn có hài lòng với kết quả tìm kiếm không?</h3>
@@ -1008,33 +599,33 @@
                                     </svg>
                                 </button>
                                 <div id="priceFilter" class="space-y-3">
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <input type="checkbox" checked class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                                        <span class="text-sm text-gray-700 group-hover:text-red-600">Tất cả</span>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
+                                        <input type="checkbox" name="price-range" value="all" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded" checked>
+                                        <span class="text-sm text-gray-700">Tất cả</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <input type="checkbox" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                                        <span class="text-sm text-gray-700 group-hover:text-red-600">Dưới 2 triệu</span>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
+                                        <input type="checkbox" name="price-range" value="0-2000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
+                                        <span class="text-sm text-gray-700">Dưới 2 triệu</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <input type="checkbox" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                                        <span class="text-sm text-gray-700 group-hover:text-red-600">Từ 2 - 4 triệu</span>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
+                                        <input type="checkbox" name="price-range" value="2000000-4000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
+                                        <span class="text-sm text-gray-700">Từ 2 - 4 triệu</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <input type="checkbox" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                                        <span class="text-sm text-gray-700 group-hover:text-red-600">Từ 4 - 7 triệu</span>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
+                                        <input type="checkbox" name="price-range" value="4000000-7000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
+                                        <span class="text-sm text-gray-700">Từ 4 - 7 triệu</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <input type="checkbox" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                                        <span class="text-sm text-gray-700 group-hover:text-red-600">Từ 7 - 13 triệu</span>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
+                                        <input type="checkbox" name="price-range" value="7000000-13000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
+                                        <span class="text-sm text-gray-700">Từ 7 - 13 triệu</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <input type="checkbox" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                                        <span class="text-sm text-gray-700 group-hover:text-red-600">Từ 13 - 20 triệu</span>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
+                                        <input type="checkbox" name="price-range" value="13000000-20000000" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
+                                        <span class="text-sm text-gray-700">Từ 13 - 20 triệu</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <input type="checkbox" class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500">
-                                        <span class="text-sm text-gray-700 group-hover:text-red-600">Trên 20 triệu</span>
+                                    <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
+                                        <input type="checkbox" name="price-range" value="20000000-999999999" class="price-filter-checkbox w-4 h-4 accent-red-600 rounded">
+                                        <span class="text-sm text-gray-700">Trên 20 triệu</span>
                                     </label>
                                     
                                     <!-- Price Range Slider -->
@@ -1103,23 +694,11 @@
                                         <option>Mới nhất</option>
                                     </select>
                                 </div>
-                                <div class="flex items-center gap-4 text-sm">
-                                    <span class="text-gray-500">Tìm thấy <strong class="text-red-600">86</strong> kết quả với từ khóa <strong>iphone 17</strong></span>
-                                    <div class="flex items-center gap-2">
-                                        <button class="text-red-600 font-semibold hover:underline">Nổi bật</button>
-                                        <span class="text-gray-400">•</span>
-                                        <button class="text-gray-600 hover:text-red-600">Giá tăng dần</button>
-                                        <span class="text-gray-400">•</span>
-                                        <button class="text-gray-600 hover:text-red-600">Giá giảm dần</button>
-                                        <span class="text-gray-400">•</span>
-                                        <button class="text-gray-600 hover:text-red-600">Trả góp 0%</button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
                         <!-- Products Grid -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <div id="productGrid2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <!-- Product Card 1 - iPhone 17 256GB -->
                             <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
                                 <div class="relative p-4 bg-gray-50">
@@ -1260,54 +839,6 @@
                                     </button>
                                 </div>
                             </div>
-
-                            <!-- Product Card 4 - Accessory -->
-                            <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group">
-                                <div class="relative p-4 bg-gray-50">
-                                    <img src="https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=400&fit=crop" alt="Miếng dán màn hình" class="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300">
-                                    
-                                    <div class="absolute top-2 right-2 space-y-1">
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">Độ bền cao</span>
-                                        </div>
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">Che phủ toàn màn hình</span>
-                                        </div>
-                                        <div class="bg-white/95 backdrop-blur-sm px-2 py-1 rounded shadow-sm border border-gray-200">
-                                            <span class="text-[10px] font-medium text-gray-700">Chống dấu vân tay</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="p-3">
-                                    <div class="mb-2">
-                                        <div class="flex items-baseline gap-2">
-                                            <span class="text-sm text-gray-400 line-through">399.000đ</span>
-                                            <span class="text-red-600 text-xs font-bold">-10%</span>
-                                        </div>
-                                        <div class="text-xl font-bold text-gray-900">359.000đ</div>
-                                        <div class="text-xs text-green-600 font-medium">Giảm 40.000đ</div>
-                                    </div>
-                                    
-                                    <h3 class="font-semibold text-gray-900 text-sm mb-3 line-clamp-2">Miếng dán màn hình kính cường lực iPhone 17/17 Pro...</h3>
-                                    
-                                    <div class="flex gap-2 mb-2 flex-wrap">
-                                        <img src="https://cdn.tgdd.vn/ValueIcons/logo-visa.png" alt="Visa" class="h-5">
-                                        <img src="https://cdn.tgdd.vn/ValueIcons/home-paylater.png" alt="Home PayLater" class="h-5">
-                                        <img src="https://cdn.tgdd.vn/ValueIcons/logo-circle-k.png" alt="Circle K" class="h-5">
-                                        <img src="https://cdn.tgdd.vn/ValueIcons/logo-ocb.png" alt="OCB" class="h-5">
-                                    </div>
-                                    
-                                    <p class="text-[11px] text-gray-600 mb-2 line-clamp-2">Giảm đến 800.000đ trả góp qua thẻ Visa</p>
-                                    
-                                    <button class="text-blue-600 text-xs font-medium hover:underline flex items-center gap-1">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                        </svg>
-                                        Thêm vào so sánh
-                                    </button>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Load More Button -->
@@ -1344,9 +875,6 @@
             <!-- Bài viết Tab -->
             <div id="content-bai-viet" class="hidden">
                 <div class="max-w-7xl mx-auto">
-                    <div class="mb-6">
-                        <h2 class="text-base text-gray-600">Tìm thấy <strong class="text-gray-900">1549</strong> kết quả với từ khóa <strong class="text-gray-900">"iphone 17"</strong></h2>
-                    </div>
 
                     <div class="flex gap-6">
                         <!-- Sidebar Filters for Articles -->
