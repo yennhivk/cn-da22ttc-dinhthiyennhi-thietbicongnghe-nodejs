@@ -684,25 +684,32 @@ router.get('/google/callback',
             const user = req.user;
             const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
             
+            console.log('📝 [CALLBACK] === XỬ LÝ GOOGLE CALLBACK ===');
+            console.log('📝 [CALLBACK] User Email:', user.email);
+            console.log('📝 [CALLBACK] User Role:', user.vai_tro);
+            console.log('📝 [CALLBACK] Frontend URL:', frontendUrl);
+            
             // Kiểm tra state từ query parameter
             const state = req.query.state;
             const isAdminLogin = (state === 'admin_login') || (req.session.oauth_state === 'admin_login');
             
-            console.log('📝 [CALLBACK] User:', user.email);
             console.log('📝 [CALLBACK] State from query:', state);
             console.log('📝 [CALLBACK] State from session:', req.session.oauth_state);
             console.log('📝 [CALLBACK] Is Admin Login:', isAdminLogin);
-            console.log('📝 [CALLBACK] User Role:', user.vai_tro);
             
             // Xóa state từ session
             delete req.session.oauth_state;
             
             // Nếu là admin login, kiểm tra quyền
             if (isAdminLogin) {
+                console.log('🔐 [CALLBACK] Kiểm tra quyền admin...');
                 if (user.vai_tro !== 'admin') {
-                    console.log('❌ Google admin login failed - not admin:', user.email);
+                    console.error('❌ [CALLBACK] User không có quyền admin!');
+                    console.error('❌ [CALLBACK] Email:', user.email);
+                    console.error('❌ [CALLBACK] Vai trò:', user.vai_tro);
                     return res.redirect(`${frontendUrl}/pages/admin-login.html?message=${encodeURIComponent('Tài khoản không có quyền admin')}`);
                 }
+                console.log('✅ [CALLBACK] User có quyền admin!');
             }
             
             // Đăng nhập trực tiếp (không cần xác nhận OTP)
@@ -717,6 +724,8 @@ router.get('/google/callback',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
 
+            console.log('🎟️ [CALLBACK] JWT Token created');
+
             if (isAdminLogin) {
                 req.session.admin = {
                     ma_tai_khoan: user.ma_tai_khoan,
@@ -724,6 +733,7 @@ router.get('/google/callback',
                     email: user.email,
                     vai_tro: user.vai_tro
                 };
+                console.log('✅ [CALLBACK] Admin session created');
             } else {
                 req.session.user = {
                     ma_tai_khoan: user.ma_tai_khoan,
@@ -731,6 +741,7 @@ router.get('/google/callback',
                     email: user.email,
                     vai_tro: user.vai_tro
                 };
+                console.log('✅ [CALLBACK] User session created');
             }
 
             const userData = encodeURIComponent(JSON.stringify({
@@ -743,9 +754,14 @@ router.get('/google/callback',
             
             // Redirect đến callback tương ứng
             const callbackPage = isAdminLogin ? 'admin-callback.html' : 'auth-callback.html';
-            res.redirect(`${frontendUrl}/pages/${callbackPage}?token=${token}&user=${userData}`);
+            const redirectUrl = `${frontendUrl}/pages/${callbackPage}?token=${token}&user=${userData}`;
+            
+            console.log('🔄 [CALLBACK] Redirect to:', callbackPage);
+            console.log('🔄 [CALLBACK] Full URL:', redirectUrl.substring(0, 100) + '...');
+            
+            res.redirect(redirectUrl);
         } catch (error) {
-            console.error('Google callback error:', error);
+            console.error('❌ [CALLBACK] Error:', error);
             res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5500'}/pages/login.html?error=server_error`);
         }
     }
@@ -1015,12 +1031,17 @@ router.get('/verify-admin', authenticateToken, async (req, res) => {
 // GOOGLE OAUTH CHO ADMIN
 // ==========================================
 router.get('/google-admin', (req, res, next) => {
-    console.log('🔐 [ADMIN LOGIN] Starting admin Google OAuth flow');
+    console.log('🔐 [ADMIN LOGIN] === BẮT ĐẦU GOOGLE OAUTH ===');
+    console.log('🔐 [ADMIN LOGIN] Request URL:', req.originalUrl);
+    console.log('🔐 [ADMIN LOGIN] Session ID:', req.sessionID);
+    
     // Lưu state vào session trước khi redirect
     req.session.oauth_state = 'admin_login';
     req.session.save((err) => {
         if (err) {
             console.error('❌ [ADMIN LOGIN] Session save error:', err);
+        } else {
+            console.log('✅ [ADMIN LOGIN] Session saved with state: admin_login');
         }
         passport.authenticate('google', {
             scope: ['profile', 'email'],

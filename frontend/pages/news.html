@@ -37,6 +37,13 @@
         .scrollbar-thin::-webkit-scrollbar-thumb:hover {
             background: #CA8A04;
         }
+        .news-card {
+            transition: all 0.3s ease;
+        }
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -387,187 +394,152 @@
         </div>
     </section>
 
-    <!-- Page Header -->
-    <section class="pt-20 pb-8 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center">
-                <h1 class="text-3xl md:text-5xl font-black text-blue-700 mb-3">TIN TỨC CÔNG NGHỆ</h1>
-                <p class="text-lg text-red-600 font-semibold">Cập nhật tin tức và xu hướng công nghệ mới nhất</p>
-            </div>
-        </div>
-    </section>
-
     <!-- Main Content -->
-    <section class="py-8">
+    <section class="py-8 pt-20">
         <div class="max-w-7xl mx-auto px-4">
-            <!-- Category Filter -->
-            <div class="mb-8 flex flex-wrap gap-3">
-                <button class="px-6 py-2 bg-yellow-400 text-red-700 font-bold rounded-lg hover:bg-yellow-500 transition">Tất cả</button>
-                <button class="px-6 py-2 bg-white text-gray-700 font-semibold rounded-lg hover:bg-yellow-50 hover:text-red-600 transition shadow-sm">Điện thoại</button>
-                <button class="px-6 py-2 bg-white text-gray-700 font-semibold rounded-lg hover:bg-yellow-50 hover:text-red-600 transition shadow-sm">Laptop</button>
-                <button class="px-6 py-2 bg-white text-gray-700 font-semibold rounded-lg hover:bg-yellow-50 hover:text-red-600 transition shadow-sm">Công nghệ</button>
-                <button class="px-6 py-2 bg-white text-gray-700 font-semibold rounded-lg hover:bg-yellow-50 hover:text-red-600 transition shadow-sm">Đánh giá</button>
-            </div>
-
-            <!-- News Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- News Card 1 -->
-                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1592286927505-38a0ac555c8e?w=500&h=300&fit=crop" alt="iPhone 16" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
-                        <span class="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">HOT</span>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span class="flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-                                5 Tháng 11, 2024
-                            </span>
-                            <span>•</span>
-                            <span>Điện thoại</span>
+            <div class="grid grid-cols-12 gap-6">
+                <!-- Left Sidebar - Filter -->
+                <div class="col-span-12 lg:col-span-3">
+                    <div class="bg-white rounded-xl shadow-md p-6 sticky top-24">
+                        <!-- Filter Header -->
+                        <div class="flex items-center gap-2 mb-6">
+                            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                            </svg>
+                            <h2 class="text-lg font-bold text-gray-800">Bộ lọc tìm kiếm</h2>
                         </div>
-                        <h3 class="font-bold text-lg mb-3 text-gray-800 line-clamp-2 group-hover:text-red-600 transition">iPhone 16 Pro Max: Đánh giá chi tiết và so sánh với thế hệ cũ</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">Apple vừa ra mắt iPhone 16 Pro Max với nhiều cải tiến đáng chú ý về camera, hiệu năng và thời lượng pin. Cùng tìm hiểu chi tiết về sản phẩm...</p>
-                        <a href="#" class="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition">
-                            Đọc thêm
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-                </article>
 
-                <!-- News Card 2 -->
-                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=500&h=300&fit=crop" alt="Samsung Galaxy" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-red-700 px-3 py-1 rounded-full text-xs font-bold">MỚI</span>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span class="flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-                                4 Tháng 11, 2024
-                            </span>
-                            <span>•</span>
-                            <span>Điện thoại</span>
+                        <!-- Time Filter -->
+                        <div class="mb-6">
+                            <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Thời gian đăng
+                            </h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="timeFilter" value="all" checked class="w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Tất cả</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="timeFilter" value="today" class="w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Hôm nay</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="timeFilter" value="week" class="w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Tuần trước</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="timeFilter" value="month" class="w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Tháng trước</span>
+                                </label>
+                            </div>
                         </div>
-                        <h3 class="font-bold text-lg mb-3 text-gray-800 line-clamp-2 group-hover:text-red-600 transition">Samsung Galaxy S24 Ultra với AI thông minh: Trải nghiệm thực tế</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">Samsung Galaxy S24 Ultra tích hợp AI Galaxy mạnh mẽ giúp tối ưu hóa trải nghiệm người dùng. Đây là những tính năng nổi bật nhất...</p>
-                        <a href="#" class="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition">
-                            Đọc thêm
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-                </article>
 
-                <!-- News Card 3 -->
-                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=300&fit=crop" alt="MacBook" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span class="flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-                                3 Tháng 11, 2024
-                            </span>
-                            <span>•</span>
-                            <span>Laptop</span>
+                        <!-- Category Filter -->
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                                </svg>
+                                Danh mục
+                            </h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Tư vấn mua hàng</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Đánh giá điện thoại</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Tin công nghệ</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Khuyến mãi</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Thủ thuật</span>
+                                </label>
+                            </div>
                         </div>
-                        <h3 class="font-bold text-lg mb-3 text-gray-800 line-clamp-2 group-hover:text-red-600 transition">MacBook Pro M3: Hiệu năng vượt trội cho công việc chuyên nghiệp</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">Chip M3 mới nhất của Apple mang lại hiệu năng vượt trội, đặc biệt cho các tác vụ đồ họa và render video chuyên nghiệp...</p>
-                        <a href="#" class="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition">
-                            Đọc thêm
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
                     </div>
-                </article>
+                </div>
 
-                <!-- News Card 4 -->
-                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=500&h=300&fit=crop" alt="iPad" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
+                <!-- Right Content - News List -->
+                <div class="col-span-12 lg:col-span-9">
+                    <!-- Search Result Info -->
+                    <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <p id="searchInfo" class="text-gray-700">
+                            Đang tải tin tức...
+                        </p>
                     </div>
-                    <div class="p-5">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span class="flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-                                2 Tháng 11, 2024
-                            </span>
-                            <span>•</span>
-                            <span>Tablet</span>
+
+                    <!-- Tin tức nổi bật -->
+                    <div class="mb-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🔥</span>
+                            <h2 class="text-xl font-bold text-gray-800">Tin tức nổi bật</h2>
                         </div>
-                        <h3 class="font-bold text-lg mb-3 text-gray-800 line-clamp-2 group-hover:text-red-600 transition">iPad Pro M2: Thiết bị hoàn hảo cho sáng tạo nội dung</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">iPad Pro với chip M2 và màn hình ProMotion mang lại trải nghiệm tuyệt vời cho các nhà sáng tạo nội dung và họa sĩ...</p>
-                        <a href="#" class="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition">
-                            Đọc thêm
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- News Card 5 -->
-                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=500&h=300&fit=crop" alt="AirPods" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
-                        <span class="absolute top-3 left-3 bg-yellow-400 text-red-700 px-3 py-1 rounded-full text-xs font-bold">REVIEW</span>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span class="flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-                                1 Tháng 11, 2024
-                            </span>
-                            <span>•</span>
-                            <span>Phụ kiện</span>
+                        <div id="featuredNews" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Featured news sẽ được load từ API -->
+                            <div class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
+                            <div class="space-y-4">
+                                <div class="animate-pulse bg-gray-200 rounded-xl h-24"></div>
+                                <div class="animate-pulse bg-gray-200 rounded-xl h-24"></div>
+                                <div class="animate-pulse bg-gray-200 rounded-xl h-24"></div>
+                            </div>
                         </div>
-                        <h3 class="font-bold text-lg mb-3 text-gray-800 line-clamp-2 group-hover:text-red-600 transition">AirPods Pro Gen 2: Chất lượng âm thanh và chống ồn tuyệt vời</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">AirPods Pro thế hệ 2 với chip H2 mới mang đến chất lượng âm thanh vượt trội và khả năng chống ồn chủ động tốt hơn 2 lần...</p>
-                        <a href="#" class="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition">
-                            Đọc thêm
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
                     </div>
-                </article>
 
-                <!-- News Card 6 -->
-                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group">
-                    <div class="relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=500&h=300&fit=crop" alt="Tech Trend" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300">
-                        <span class="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">TRENDING</span>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span class="flex items-center gap-1">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-                                31 Tháng 10, 2024
-                            </span>
-                            <span>•</span>
-                            <span>Công nghệ</span>
+                    <!-- Tin mới nhất hôm nay -->
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">📰</span>
+                                <h2 class="text-xl font-bold text-gray-800">Tin mới nhất hôm nay</h2>
+                            </div>
+                            <a href="#" class="text-red-600 hover:text-red-700 font-semibold text-sm flex items-center gap-1">
+                                Xem tất cả
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </a>
                         </div>
-                        <h3 class="font-bold text-lg mb-3 text-gray-800 line-clamp-2 group-hover:text-red-600 transition">Xu hướng công nghệ 2025: AI và IoT thống trị thị trường</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">Trí tuệ nhân tạo và Internet vạn vật sẽ là hai xu hướng công nghệ lớn nhất năm 2025, thay đổi cách chúng ta sống và làm việc...</p>
-                        <a href="#" class="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition">
-                            Đọc thêm
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </a>
+                        <div id="todayNews" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Today news sẽ được load từ API -->
+                            <div class="animate-pulse bg-gray-200 rounded-lg h-44"></div>
+                            <div class="animate-pulse bg-gray-200 rounded-lg h-44"></div>
+                            <div class="animate-pulse bg-gray-200 rounded-lg h-44"></div>
+                            <div class="animate-pulse bg-gray-200 rounded-lg h-44"></div>
+                        </div>
                     </div>
-                </article>
 
-            </div>
+                    <!-- Divider -->
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="flex-1 h-px bg-gray-300"></div>
+                        <span class="text-gray-500 font-semibold text-sm">TẤT CẢ TIN TỨC</span>
+                        <div class="flex-1 h-px bg-gray-300"></div>
+                    </div>
 
-            <!-- Pagination -->
-            <div class="mt-12 flex justify-center">
-                <div class="flex gap-2">
-                    <button class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 transition">
-                        ← Trước
-                    </button>
-                    <button class="px-4 py-2 bg-yellow-400 text-red-700 font-bold rounded-lg">1</button>
-                    <button class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 transition">2</button>
-                    <button class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 transition">3</button>
-                    <button class="px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-yellow-400 hover:bg-yellow-50 transition">
-                        Sau →
-                    </button>
+                    <!-- News Grid - Bố cục ô vuông 3 cột -->
+                    <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- News sẽ được load từ API -->
+                        <div class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
+                        <div class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
+                        <div class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
+                        <div class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
+                        <div class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
+                        <div class="animate-pulse bg-gray-200 rounded-xl h-72"></div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div id="newsPagination" class="mt-8 flex justify-center items-center gap-2">
+                        <!-- Pagination sẽ được load từ JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -660,7 +632,7 @@
             </div>
 
             <!-- Payment & Shipping Methods -->
-            <div class="border-t border-gray-600 pt-8 mb-8">
+            <div class="border-t border-gray-300 pt-8 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Shipping -->
                     <div>
@@ -672,48 +644,38 @@
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📮 VNPost</div>
                         </div>
                     </div>
-
                     <!-- Payment -->
                     <div>
                         <h4 class="text-sm font-bold mb-4 text-gray-900">PHƯƠNG THỨC THANH TOÁN</h4>
                         <div class="flex flex-wrap gap-4">
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💳 Visa/Master</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💳 VISA</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💳 MasterCard</div>
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏦 ATM</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💰 Momo</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏧 ZaloPay</div>
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💵 COD</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📱 MoMo</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Social & Copyright -->
-            <div class="border-t border-gray-600 pt-6">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-sm text-gray-900">
-                        <p>&copy; 2024 Yến Nhi Tech. All rights reserved.</p>
-                        <p class="mt-1">📍 Địa chỉ: 123 Đường ABC, Quận 1, TP.HCM</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <a href="#" class="bg-blue-600 hover:bg-blue-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        </a>
-                        <a href="#" class="bg-red-600 hover:bg-red-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                        </a>
-                        <a href="#" class="bg-pink-600 hover:bg-pink-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        </a>
-                    </div>
-                </div>
+            <!-- Copyright -->
+            <div class="border-t border-gray-300 pt-6 text-center text-sm text-gray-600">
+                <p>© 2024 Yến Nhi Tech. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="../js/auth-ui.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/news.js"></script>
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
+            const closeIcon = document.getElementById('closeIcon');
+            menu.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>
-
-
-

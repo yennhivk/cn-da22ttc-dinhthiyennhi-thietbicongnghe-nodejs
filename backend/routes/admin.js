@@ -687,13 +687,8 @@ router.get('/users/:id', authenticateToken, requireAdmin, async (req, res) => {
                 tk.ngay_tao,
                 tk.google_id,
                 tk.so_dien_thoai,
-                kh.ho_ten, 
-                kh.dia_chi, 
-                kh.tinh_thanh, 
-                kh.quan_huyen,
                 COUNT(DISTINCT dh.ma_don_hang) as so_don_hang
             FROM tai_khoan tk
-            LEFT JOIN khach_hang kh ON tk.ma_tai_khoan = kh.ma_tai_khoan
             LEFT JOIN don_hang dh ON tk.ma_tai_khoan = dh.ma_tai_khoan
             WHERE tk.ma_tai_khoan = ?
             GROUP BY tk.ma_tai_khoan
