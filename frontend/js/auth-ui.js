@@ -101,5 +101,6 @@ function handleLogoutGlobal() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     alert('Đăng xuất thành công!');
-    window.location.href = getBasePath() + 'index.html';
+    const path = window.location.pathname;
+    window.location.href = path.includes('/pages/') ? '../index.html' : 'index.html';
 }

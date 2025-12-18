@@ -40,14 +40,16 @@ async function logout() {
         localStorage.removeItem('user');
         
         // Chuyển về trang chủ
-        window.location.href = '/frontend/index.html';
+        const path = window.location.pathname;
+        window.location.href = path.includes('/pages/') ? '../index.html' : 'index.html';
         
     } catch (error) {
         console.error('Lỗi đăng xuất:', error);
         // Vẫn xóa thông tin local dù có lỗi
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/frontend/index.html';
+        const path = window.location.pathname;
+        window.location.href = path.includes('/pages/') ? '../index.html' : 'index.html';
     }
 }
 

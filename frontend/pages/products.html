@@ -493,18 +493,18 @@
                     <!-- Category Tabs -->
                     <div class="bg-white rounded-lg shadow-sm mb-5 p-4">
                         <div class="flex flex-wrap gap-3">
-                            <button class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border-2 border-red-600 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white transition">
+                            <button onclick="filterByCategory('all')" class="category-btn active flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border-2 border-red-600 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                                 </svg>
                                 <span>Tất cả</span>
                             </button>
-                            <button class="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                            <button onclick="filterByCategory('Phụ kiện')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                 <span class="text-2xl">🎧</span>
                                 <span>Phụ kiện</span>
                                 <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(97)</span>
                             </button>
-                            <button class="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                            <button onclick="filterByCategory('Điện thoại')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                 <span class="text-2xl">📱</span>
                                 <span>Điện thoại</span>
                                 <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(5)</span>
@@ -517,11 +517,11 @@
                         <div class="flex flex-wrap items-center justify-between gap-4">
                             <div class="flex items-center gap-2">
                                 <span class="text-sm text-gray-600">Lọc nhanh:</span>
-                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-400 bg-white">
-                                    <option>Hàng sản xuất</option>
-                                    <option>Giá thấp đến cao</option>
-                                    <option>Giá cao đến thấp</option>
-                                    <option>Mới nhất</option>
+                                <select id="sortSelect" onchange="handleSort(this.value)" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-400 bg-white">
+                                    <option value="default">Hàng sản xuất</option>
+                                    <option value="price_asc">Giá thấp đến cao</option>
+                                    <option value="price_desc">Giá cao đến thấp</option>
+                                    <option value="newest">Mới nhất</option>
                                 </select>
                             </div>
                         </div>
@@ -534,7 +534,7 @@
 
                     <!-- Load More Button -->
                     <div class="mt-8 flex justify-center">
-                        <button class="px-8 py-3 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-red-500 hover:text-red-600 transition flex items-center gap-2">
+                        <button id="loadMoreBtn" onclick="loadMore()" class="px-8 py-3 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-red-500 hover:text-red-600 transition flex items-center gap-2">
                             <span>Xem thêm 78 kết quả</span>
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -542,36 +542,6 @@
                         </button>
                     </div>
 
-                    <!-- Feedback Section -->
-                    <div class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 text-center">
-                        <div class="max-w-2xl mx-auto">
-                            <div class="text-6xl mb-4">🌟⭐✨</div>
-                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Bạn có hài lòng với kết quả tìm kiếm không?</h3>
-                            <p class="text-gray-600 mb-6">Phản hồi của bạn giúp chúng tôi cải thiện trải nghiệm mua sắm tốt hơn</p>
-                            <div class="flex items-center justify-center gap-4">
-                                <button class="px-8 py-3 bg-white border-2 border-red-500 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition">
-                                    Hài lòng
-                                </button>
-                                <button class="px-8 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition">
-                                    Không hài lòng
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                        <div class="max-w-2xl mx-auto">
-                            <div class="text-6xl mb-4">🌟⭐✨</div>
-                            <h3 class="text-2xl font-bold text-gray-800 mb-3">Bạn có hài lòng với kết quả tìm kiếm không?</h3>
-                            <p class="text-gray-600 mb-6">Phản hồi của bạn giúp chúng tôi cải thiện trải nghiệm mua sắm tốt hơn</p>
-                            <div class="flex items-center justify-center gap-4">
-                                <button class="px-8 py-3 bg-white border-2 border-red-500 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition">
-                                    Hài lòng
-                                </button>
-                                <button class="px-8 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition">
-                                    Không hài lòng
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </main>
             </div>
 
@@ -662,22 +632,21 @@
                         <!-- Category Tabs -->
                         <div class="bg-white rounded-lg shadow-sm mb-5 p-4">
                             <div class="flex flex-wrap gap-3">
-                                <button class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border-2 border-red-600 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white transition">
+                                <button onclick="filterByCategory('all')" class="category-btn active flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border-2 border-red-600 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white transition">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                                     </svg>
                                     <span>Tất cả</span>
                                 </button>
-                                <button class="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                                <button onclick="filterByCategory('Phụ kiện')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                     <span class="text-2xl">🎧</span>
                                     <span>Phụ kiện</span>
                                     <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(82)</span>
                                 </button>
-                                <button class="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                                <button onclick="filterByCategory('Điện thoại')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                     <span class="text-2xl">📱</span>
                                     <span>Điện thoại</span>
-                                        <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(4)</span>
-                                    </div>
+                                    <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(4)</span>
                                 </button>
                             </div>
                         </div>
@@ -687,11 +656,11 @@
                             <div class="flex flex-wrap items-center justify-between gap-4">
                                 <div class="flex items-center gap-2">
                                     <span class="text-sm text-gray-600">Lọc nhanh:</span>
-                                    <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-400 bg-white">
-                                        <option>Hàng sản xuất</option>
-                                        <option>Giá thấp đến cao</option>
-                                        <option>Giá cao đến thấp</option>
-                                        <option>Mới nhất</option>
+                                    <select id="sortSelect2" onchange="handleSort(this.value)" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-400 bg-white">
+                                        <option value="default">Hàng sản xuất</option>
+                                        <option value="price_asc">Giá thấp đến cao</option>
+                                        <option value="price_desc">Giá cao đến thấp</option>
+                                        <option value="newest">Mới nhất</option>
                                     </select>
                                 </div>
                             </div>
@@ -843,7 +812,7 @@
 
                         <!-- Load More Button -->
                         <div class="mt-8 flex justify-center">
-                            <button class="px-8 py-3 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-red-500 hover:text-red-600 transition flex items-center gap-2">
+                            <button id="loadMoreBtn2" onclick="loadMore()" class="px-8 py-3 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-red-500 hover:text-red-600 transition flex items-center gap-2">
                                 <span>Xem thêm 62 kết quả</span>
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -851,23 +820,6 @@
                             </button>
                         </div>
 
-                        <!-- Feedback Section -->
-                        <div class="mt-12 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-2xl p-8 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-64 h-64 opacity-20">
-                                <img src="https://cdn-icons-png.flaticon.com/512/3588/3588592.png" alt="decoration" class="w-full h-full object-contain">
-                            </div>
-                            <div class="relative z-10">
-                                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Bạn có hài lòng với kết quả tìm kiếm không?</h3>
-                                <div class="flex items-center justify-center gap-6 mt-6">
-                                    <button class="px-10 py-3 bg-white border-2 border-red-500 text-red-600 font-bold rounded-full hover:bg-red-50 transition shadow-md">
-                                        Hài lòng
-                                    </button>
-                                    <button class="px-10 py-3 bg-white border-2 border-gray-300 text-gray-700 font-bold rounded-full hover:bg-gray-50 transition shadow-md">
-                                        Không hài lòng
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </main>
                 </div>
             </div>
