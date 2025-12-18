@@ -37,6 +37,228 @@
         .scrollbar-thin::-webkit-scrollbar-thumb:hover {
             background: #CA8A04;
         }
+
+        /* Nền Tết với hoa mai */
+        .tet-background {
+            background: linear-gradient(135deg, #FFE5B4 0%, #FFF8DC 25%, #FFFACD 50%, #FFF8DC 75%, #FFE5B4 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tet-background::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 140, 0, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Hiệu ứng hoa mai rơi */
+        .hoa-mai {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            animation: fall-mai linear infinite;
+            z-index: 1;
+        }
+
+        /* Tâm hoa mai (nhụy) */
+        .hoa-mai::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #FFA500 0%, #FF8C00 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(255, 165, 0, 0.8);
+            z-index: 3;
+        }
+
+        /* 5 cánh hoa mai */
+        .hoa-mai::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background: #FFD700;
+            border-radius: 50% 0 50% 0;
+            transform: translate(-50%, -50%) rotate(0deg);
+            box-shadow: 
+                0 0 0 0 #FFD700,
+                0 0 0 0 #FFD700,
+                0 0 0 0 #FFD700,
+                0 0 0 0 #FFD700;
+            animation: bloom 0.5s ease-out;
+        }
+
+        /* Tạo các cánh hoa xung quanh */
+        .canh-hoa {
+            position: absolute;
+            width: 12px;
+            height: 16px;
+            background: linear-gradient(to bottom, #FFED4E 0%, #FFD700 50%, #FFC700 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform-origin: center bottom;
+            opacity: 0.95;
+        }
+
+        .canh-hoa:nth-child(1) {
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .canh-hoa:nth-child(2) {
+            top: 8px;
+            right: 3px;
+            transform: rotate(72deg);
+        }
+
+        .canh-hoa:nth-child(3) {
+            bottom: 5px;
+            right: 6px;
+            transform: rotate(144deg);
+        }
+
+        .canh-hoa:nth-child(4) {
+            bottom: 5px;
+            left: 6px;
+            transform: rotate(216deg);
+        }
+
+        .canh-hoa:nth-child(5) {
+            top: 8px;
+            left: 3px;
+            transform: rotate(288deg);
+        }
+
+        @keyframes bloom {
+            from {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fall-mai {
+            0% {
+                top: -10%;
+                transform: translateX(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                top: 110%;
+                transform: translateX(100px) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        /* Tuyết rơi cho không khí Tết */
+        .tuyet-roi {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: fall-tuyet linear infinite;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes fall-tuyet {
+            0% {
+                top: -10%;
+                transform: translateX(0) rotate(0deg) scale(1);
+            }
+            50% {
+                transform: translateX(50px) rotate(180deg) scale(1.2);
+            }
+            100% {
+                top: 110%;
+                transform: translateX(-30px) rotate(360deg) scale(0.8);
+            }
+        }
+
+        /* Promotion Card Style */
+        .promo-card {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .promo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .promo-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .promo-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .promo-info {
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .promo-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e40af;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .promo-date {
+            font-size: 13px;
+            color: #dc2626;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .btn-detail {
+            background: #2563eb;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-detail:hover {
+            background: #1e40af;
+            transform: translateX(5px);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -387,51 +609,228 @@
         </div>
     </section>
 
-    <!-- Category Filter Bar -->
-    <section class="py-4 bg-white shadow-sm sticky top-28 z-30">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                <button class="px-6 py-2.5 bg-yellow-400 text-gray-800 rounded-lg font-bold whitespace-nowrap shadow-md hover:bg-yellow-500 transition">Tất cả</button>
-                <button class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-semibold whitespace-nowrap hover:bg-yellow-400 transition">Điện thoại</button>
-                <button class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-semibold whitespace-nowrap hover:bg-yellow-400 transition">Laptop</button>
-                <button class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-semibold whitespace-nowrap hover:bg-yellow-400 transition">Tablet</button>
-                <button class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-semibold whitespace-nowrap hover:bg-yellow-400 transition">Phụ kiện</button>
+    <!-- Main Content -->
+    <main class="pt-20 tet-background">
+        <!-- Hoa mai rơi -->
+        <div id="hoaMaiContainer"></div>
+        
+        <!-- Tuyết rơi -->
+        <div id="tuyetRoiContainer"></div>
+
+        <!-- Header with HOT badge -->
+        <section class="relative py-6 border-b-2 border-orange-300" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex items-center justify-center gap-3">
+                    <h1 class="text-3xl md:text-4xl font-black text-red-600" style="text-shadow: 2px 2px 4px rgba(255,215,0,0.5);">🎉 CHƯƠNG TRÌNH KHUYẾN MÃI ĐẶC SẮC 🎉</h1>
+                </div>
+                <p class="text-center mt-3 text-gray-700 text-sm md:text-base font-medium">
+                    🌸 <span class="text-red-600 font-bold">XUÂN VUI - TẾT ĐẸP - DEAL NGẬP TRÀN</span> 🌸
+                </p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Page Header -->
-    <section class="pt-20 pb-8 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-blue-700 mb-3 uppercase">KHUYẾN MÃI HẤP DẪN</h1>
-            <p class="text-lg md:text-xl text-red-600 font-semibold">Cập nhật chương trình ưu đãi mới nhất</p>
-        </div>
-    </section>
+        <!-- Banner Notification -->
+        <section class="relative py-4" style="background: rgba(255, 240, 200, 0.8);">
+            <div class="max-w-7xl mx-auto px-4">
+                <p class="text-center text-gray-800 text-base md:text-lg font-bold">
+                    ⚡ Hãy thường xuyên theo dõi các chương trình khuyến mãi để có cơ hội mua <span class="text-red-600 font-black">HÀNG CHÍNH HÃNG GIÁ TỐT NHẤT</span> ⚡
+                </p>
+            </div>
+        </section>
 
-    <section class="py-8 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&h=500&fit=crop" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" alt="iPhone">
-                        <span class="absolute top-4 left-4 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold">HOT</span>
-                        <span class="absolute top-4 right-4 bg-yellow-400 text-red-700 px-4 py-2 rounded-lg text-xl font-black">-30%</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">iPhone 16 Pro Max: Giảm 30%</h3>
-                        <p class="text-gray-600 mb-4">Apple vừa ra mắt iPhone 16 Pro Max với nhiều cải tiến đáng chú ý...</p>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <span class="text-2xl font-black text-red-600">24.990.000đ</span>
-                                <span class="text-gray-400 line-through ml-2">35.990.000đ</span>
-                            </div>
-                            <button class="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold px-6 py-2 rounded-lg transition">Xem ngay</button>
+        <!-- Promotions Grid -->
+        <section class="py-12 relative">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Promotion Card 1 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1600705722908-bab1e61c0b4d?w=1000&h=600&fit=crop" 
+                                 alt="RƯỚC RTX 50 SERIES">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">RƯỚC RTX 50 SERIES - RINH XẾ ĐIỆN "GREEN"</h3>
+                            <p class="promo-date">08/12 - 15/01/2026</p>
+                            <button class="btn-detail">Xem chi tiết</button>
                         </div>
                     </div>
+
+                    <!-- Promotion Card 2 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=1000&h=600&fit=crop" 
+                                 alt="Màn hình G27I">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">ƯU ĐÃI MÀN HÌNH G27I CHỈ 3.120 TRIỆU</h3>
+                            <p class="promo-date">12/10 - 31/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 3 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1000&h=600&fit=crop" 
+                                 alt="Kaspersky">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">ƯU ĐÃI 100K PHẦN MỀM KASPERSKY KHI MUA KÈM PC HÀNG</h3>
+                            <p class="promo-date">01/12 - 31/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 4 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1512428813834-c702c7702b78?w=1000&h=600&fit=crop" 
+                                 alt="Halioweek">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">ƯU ĐÃI GIÁNG SINH CÙNG HALIOWEEK</h3>
+                            <p class="promo-date">12/10 - 31/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 5 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=1000&h=600&fit=crop" 
+                                 alt="Bàn phím cơ">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">BÀN PHÍM CƠ - VĂN PHÒNG GAMING - GỖ LÀ MÊ</h3>
+                            <p class="promo-date">01/12 - 31/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 6 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1000&h=600&fit=crop" 
+                                 alt="Laptop Lenovo Commercial">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">ĐỒNG HÀNH CÙNG DOANH NGHIỆP – TUẦN LỄ VÀNG LAPTOP LENOVO COMMERCIAL</h3>
+                            <p class="promo-date">01/12 - 31/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 7 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1000&h=600&fit=crop" 
+                                 alt="Build PC">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">BUILD PC NGAY - NHẬN QUÀ LIỀN TAY</h3>
+                            <p class="promo-date">05/12 - 30/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 8 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1000&h=600&fit=crop" 
+                                 alt="PC Gaming">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">PC GAMING SIÊU CHẤT - CHIẾN TẤT MỌI GAME</h3>
+                            <p class="promo-date">01/12 - 31/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 9 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?w=1000&h=600&fit=crop" 
+                                 alt="Gaming Gear">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">GEAR SALE SỐC - MUA SẮM THẢ GA</h3>
+                            <p class="promo-date">10/12 - 31/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
+                    <!-- Promotion Card 10 -->
+                    <div class="promo-card">
+                        <div class="relative overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1000&h=600&fit=crop" 
+                                 alt="Laptop Gaming">
+                        </div>
+                        <div class="promo-info">
+                            <h3 class="promo-title">LAPTOP GAMING - CHIẾN GAME MỌI NƠI</h3>
+                            <p class="promo-date">05/12 - 25/12/2025</p>
+                            <button class="btn-detail">Xem chi tiết</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
+
+    <script>
+        // Tạo hiệu ứng hoa mai rơi với 5 cánh
+        function createHoaMai() {
+            const container = document.getElementById('hoaMaiContainer');
+            const hoaMai = document.createElement('div');
+            hoaMai.className = 'hoa-mai';
+            
+            // Tạo 5 cánh hoa
+            for (let i = 0; i < 5; i++) {
+                const canh = document.createElement('div');
+                canh.className = 'canh-hoa';
+                hoaMai.appendChild(canh);
+            }
+            
+            // Tạo nhụy hoa (sẽ dùng ::before trong CSS)
+            
+            hoaMai.style.left = Math.random() * 100 + '%';
+            hoaMai.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            hoaMai.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(hoaMai);
+
+            setTimeout(() => {
+                hoaMai.remove();
+            }, 10000);
+        }
+
+        // Tạo hiệu ứng tuyết rơi
+        function createTuyetRoi() {
+            const container = document.getElementById('tuyetRoiContainer');
+            const tuyet = document.createElement('div');
+            tuyet.className = 'tuyet-roi';
+            tuyet.style.left = Math.random() * 100 + '%';
+            tuyet.style.width = (Math.random() * 5 + 5) + 'px';
+            tuyet.style.height = tuyet.style.width;
+            tuyet.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            tuyet.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(tuyet);
+
+            setTimeout(() => {
+                tuyet.remove();
+            }, 7000);
+        }
+
+        // Khởi tạo hiệu ứng
+        setInterval(createHoaMai, 800);
+        setInterval(createTuyetRoi, 600);
+
+        // Tạo hoa mai ban đầu
+        for (let i = 0; i < 15; i++) {
+            setTimeout(createHoaMai, i * 200);
+            setTimeout(createTuyetRoi, i * 150);
+        }
+    </script>
 
     <!-- Footer -->
     <footer class="bg-yellow-100 text-gray-900 pt-12 pb-6">
