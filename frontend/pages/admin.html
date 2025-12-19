@@ -239,24 +239,6 @@
                         </div>
                     </div>
 
-                    <!-- Biểu đồ sản phẩm -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-4">
-                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-blue-400">
-                            <h3 class="font-bold text-gray-700 mb-2 text-sm">📊 SP theo danh mục</h3>
-                            <div class="flex justify-center" style="max-width: 70px; max-height: 70px; margin: 0 auto;">
-                                <canvas id="productCategoryChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-green-400">
-                            <h3 class="font-bold text-gray-700 mb-2 text-sm">📈 Tồn kho danh mục</h3>
-                            <canvas id="stockByCategoryChart" height="120"></canvas>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-purple-400">
-                            <h3 class="font-bold text-gray-700 mb-2 text-sm">💰 Giá trị tồn kho</h3>
-                            <canvas id="stockValueChart" height="120"></canvas>
-                        </div>
-                    </div>
-
                     <!-- Bảng sản phẩm -->
                     <div class="flex justify-end mb-4">
                         <button onclick="openProductModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-lg">+ Thêm sản phẩm</button>
@@ -1201,7 +1183,6 @@
             }
         }
 
-        let productCharts = {};
         async function loadProducts() {
             const search = document.getElementById('product-search').value.trim();
             const category = document.getElementById('product-category-filter').value;
@@ -1219,9 +1200,6 @@
                 document.getElementById('product-active').textContent = active;
                 document.getElementById('product-low-stock').textContent = lowStock;
                 document.getElementById('product-out-stock').textContent = outStock;
-                
-                // Vẽ biểu đồ
-                drawProductCharts(products);
                 
                 if (products.length === 0) {
                     document.getElementById('products-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500">Không tìm thấy sản phẩm</td></tr>';
@@ -1247,86 +1225,6 @@
             }
         }
         
-        async function drawProductCharts(products) {
-            // Destroy existing charts
-            Object.values(productCharts).forEach(c => c && c.destroy());
-            
-            // Lấy dữ liệu thống kê từ API dashboard để có dữ liệu chính xác từ database
-            let categoryStats = [];
-            try {
-                const dashboardData = await apiCall('/admin/dashboard');
-                if (dashboardData.success && dashboardData.data.category_stats) {
-                    categoryStats = dashboardData.data.category_stats;
-                }
-            } catch (e) {
-                console.log('Fallback to local calculation');
-            }
-            
-            // Nếu có dữ liệu từ API, sử dụng nó
-            let labels, categoryCountData, categoryStockData, categoryValueData;
-            
-            if (categoryStats.length > 0) {
-                // Sử dụng dữ liệu thực từ database
-                labels = categoryStats.map(c => c.ten_danh_muc);
-                categoryCountData = categoryStats.map(c => parseInt(c.so_san_pham) || 0);
-                categoryStockData = categoryStats.map(c => parseInt(c.tong_ton_kho) || 0);
-                categoryValueData = categoryStats.map(c => parseFloat(c.gia_tri_ton_kho) || 0);
-            } else {
-                // Fallback: tính toán từ products nếu API không có dữ liệu
-                const categoryCount = {};
-                const categoryStock = {};
-                const categoryValue = {};
-                products.forEach(p => {
-                    const cat = p.ten_danh_muc || 'Khác';
-                    categoryCount[cat] = (categoryCount[cat] || 0) + 1;
-                    categoryStock[cat] = (categoryStock[cat] || 0) + (parseInt(p.so_luong) || 0);
-                    categoryValue[cat] = (categoryValue[cat] || 0) + ((parseInt(p.so_luong) || 0) * parseFloat(p.gia));
-                });
-                labels = Object.keys(categoryCount);
-                categoryCountData = Object.values(categoryCount);
-                categoryStockData = Object.values(categoryStock);
-                categoryValueData = Object.values(categoryValue);
-            }
-            
-            const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
-            
-            // 1. Biểu đồ tròn - Sản phẩm theo danh mục (DỮ LIỆU THỰC)
-            productCharts.category = new Chart(document.getElementById('productCategoryChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{ data: categoryCountData, backgroundColor: colors.slice(0, labels.length), borderWidth: 2, borderColor: '#fff' }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: true,
-                    aspectRatio: 1,
-                    plugins: { 
-                        legend: { position: 'bottom', labels: { font: { size: 14, weight: 'bold' }, padding: 12, boxWidth: 15 } } 
-                    } 
-                }
-            });
-            
-            // 2. Biểu đồ cột - Tồn kho theo danh mục (DỮ LIỆU THỰC)
-            productCharts.stock = new Chart(document.getElementById('stockByCategoryChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ label: 'Tồn kho', data: categoryStockData, backgroundColor: colors.slice(0, labels.length), borderRadius: 8 }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-            });
-            
-            // 3. Biểu đồ cột ngang - Giá trị tồn kho (DỮ LIỆU THỰC)
-            productCharts.value = new Chart(document.getElementById('stockValueChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ label: 'Giá trị (VNĐ)', data: categoryValueData, backgroundColor: colors.slice(0, labels.length), borderRadius: 8 }]
-                },
-                options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { callback: v => (v/1000000).toFixed(0) + 'M' } } } }
-            });
-        }
         function searchProducts() { clearTimeout(window.pst); window.pst = setTimeout(loadProducts, 300); }
         function openProductModal(p = null) {
             document.getElementById('product-modal').classList.add('active');

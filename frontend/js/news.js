@@ -123,11 +123,21 @@ async function loadTodayNews() {
 }
 
 // Load tất cả tin tức (grid)
-async function loadAllNews(page = 1, category = '', search = '') {
+async function loadAllNews(page = 1, categories = [], search = '', time = 'all') {
     try {
         let url = `${NEWS_API_URL}?page=${page}&limit=6`;
-        if (category) url += `&category=${encodeURIComponent(category)}`;
-        if (search) url += `&search=${encodeURIComponent(search)}`;
+        
+        if (categories && categories.length > 0) {
+            url += `&category=${encodeURIComponent(categories.join(','))}`;
+        }
+        
+        if (search) {
+            url += `&search=${encodeURIComponent(search)}`;
+        }
+
+        if (time && time !== 'all') {
+            url += `&time=${time}`;
+        }
 
         const response = await fetch(url);
         const result = await response.json();
@@ -220,28 +230,37 @@ function updateSearchInfo(total, search) {
 
 // Change page
 let currentPage = 1;
-let currentCategory = '';
+let currentCategories = [];
 let currentSearch = '';
+let currentTime = 'all';
 
 function changePage(page) {
     if (page < 1) return;
     currentPage = page;
-    loadAllNews(currentPage, currentCategory, currentSearch);
+    loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
     window.scrollTo({ top: document.getElementById('newsGrid').offsetTop - 100, behavior: 'smooth' });
 }
 
 // Filter by category
-function filterByCategory(category) {
-    currentCategory = category;
+function updateCategoryFilter() {
+    const checkboxes = document.querySelectorAll('.category-checkbox:checked');
+    currentCategories = Array.from(checkboxes).map(cb => cb.value);
     currentPage = 1;
-    loadAllNews(currentPage, currentCategory, currentSearch);
+    loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
+}
+
+// Filter by time
+function updateTimeFilter(time) {
+    currentTime = time;
+    currentPage = 1;
+    loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
 }
 
 // Search news
 function searchNews(query) {
     currentSearch = query;
     currentPage = 1;
-    loadAllNews(currentPage, currentCategory, currentSearch);
+    loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
 }
 
 // Initialize
@@ -259,4 +278,18 @@ document.addEventListener('DOMContentLoaded', function() {
             timeout = setTimeout(() => searchNews(this.value), 500);
         });
     }
+
+    // Setup category filter
+    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+    categoryCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateCategoryFilter);
+    });
+
+    // Setup time filter
+    const timeRadios = document.querySelectorAll('input[name="timeFilter"]');
+    timeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            updateTimeFilter(this.value);
+        });
+    });
 });

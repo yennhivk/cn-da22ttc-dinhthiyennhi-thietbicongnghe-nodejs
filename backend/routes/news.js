@@ -17,13 +17,28 @@ router.get('/', async (req, res) => {
         const params = [];
 
         if (category) {
-            whereClause += ` AND danh_muc = ?`;
-            params.push(category);
+            const categories = Array.isArray(category) ? category : category.split(',');
+            whereClause += ` AND danh_muc IN (?)`;
+            params.push(categories);
         }
+        
         if (search) {
             whereClause += ` AND (tieu_de LIKE ? OR mo_ta_ngan LIKE ?)`;
             params.push(`%${search}%`, `%${search}%`);
         }
+
+        // Lọc theo thời gian
+        const { time } = req.query;
+        if (time) {
+            if (time === 'today') {
+                whereClause += ` AND DATE(ngay_tao) = CURDATE()`;
+            } else if (time === 'week') {
+                whereClause += ` AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 7 DAY)`;
+            } else if (time === 'month') {
+                whereClause += ` AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 30 DAY)`;
+            }
+        }
+
         if (featured === 'true') {
             whereClause += ` AND noi_bat = 1`;
         }

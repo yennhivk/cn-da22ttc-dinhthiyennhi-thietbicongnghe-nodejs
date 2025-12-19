@@ -409,6 +409,16 @@
                             <h2 class="text-lg font-bold text-gray-800">Bộ lọc tìm kiếm</h2>
                         </div>
 
+                        <!-- Search News -->
+                        <div class="mb-6">
+                            <div class="relative">
+                                <input type="text" id="newsSearchInput" placeholder="Tìm tin tức..." class="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+
                         <!-- Time Filter -->
                         <div class="mb-6">
                             <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -445,25 +455,25 @@
                                 </svg>
                                 Danh mục
                             </h3>
-                            <div class="space-y-2">
+                            <div class="space-y-2" id="categoryFilter">
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <input type="checkbox" value="Tư vấn mua hàng" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
                                     <span class="text-gray-700 font-medium">Tư vấn mua hàng</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <input type="checkbox" value="Đánh giá điện thoại" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
                                     <span class="text-gray-700 font-medium">Đánh giá điện thoại</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <input type="checkbox" value="Tin công nghệ" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
                                     <span class="text-gray-700 font-medium">Tin công nghệ</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <input type="checkbox" value="Khuyến mãi" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
                                     <span class="text-gray-700 font-medium">Khuyến mãi</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" class="w-4 h-4 text-red-600 rounded focus:ring-red-500">
+                                    <input type="checkbox" value="Thủ thuật" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
                                     <span class="text-gray-700 font-medium">Thủ thuật</span>
                                 </label>
                             </div>
