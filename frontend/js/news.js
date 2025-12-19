@@ -282,15 +282,16 @@ function changePage(page) {
 
 // Filter by category
 function updateCategoryFilter() {
-    const checkboxes = document.querySelectorAll('.category-checkbox:checked');
-    currentCategories = Array.from(checkboxes).map(cb => cb.value);
+    const selectedRadio = document.querySelector('.category-radio:checked');
+    const selectedValue = selectedRadio ? selectedRadio.value : '';
+    currentCategories = selectedValue ? [selectedValue] : [];
     currentPage = 1;
     loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
     
-    // Highlight selected categories
-    document.querySelectorAll('.category-checkbox').forEach(cb => {
-        const label = cb.closest('label');
-        if (cb.checked) {
+    // Highlight selected category
+    document.querySelectorAll('.category-radio').forEach(radio => {
+        const label = radio.closest('label');
+        if (radio.checked) {
             label.classList.add('bg-red-50', 'border-red-200');
             label.classList.remove('hover:bg-gray-50');
         } else {
@@ -342,12 +343,19 @@ function resetFilters() {
     const allTimeRadio = document.querySelector('input[name="timeFilter"][value="all"]');
     if (allTimeRadio) allTimeRadio.checked = true;
     
-    // Uncheck all category checkboxes
-    document.querySelectorAll('.category-checkbox').forEach(cb => {
-        cb.checked = false;
-        const label = cb.closest('label');
-        label.classList.remove('bg-red-50', 'border-red-200');
-        label.classList.add('hover:bg-gray-50');
+    // Reset category filter to "Tất cả danh mục"
+    const allCategoryRadio = document.querySelector('.category-radio[value=""]');
+    if (allCategoryRadio) allCategoryRadio.checked = true;
+    
+    document.querySelectorAll('.category-radio').forEach(radio => {
+        const label = radio.closest('label');
+        if (radio.value === '') {
+            label.classList.add('bg-red-50', 'border-red-200');
+            label.classList.remove('hover:bg-gray-50');
+        } else {
+            label.classList.remove('bg-red-50', 'border-red-200');
+            label.classList.add('hover:bg-gray-50');
+        }
     });
     
     // Reset time filter highlights
@@ -382,10 +390,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Setup category filter
-    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
-    categoryCheckboxes.forEach(cb => {
-        cb.addEventListener('change', updateCategoryFilter);
+    const categoryRadios = document.querySelectorAll('.category-radio');
+    categoryRadios.forEach(radio => {
+        radio.addEventListener('change', updateCategoryFilter);
     });
+    
+    // Initial highlight for "Tất cả danh mục" category filter
+    const allCategoryRadio = document.querySelector('.category-radio[value=""]');
+    if (allCategoryRadio) {
+        const label = allCategoryRadio.closest('label');
+        label.classList.add('bg-red-50', 'border-red-200');
+    }
 
     // Setup time filter
     const timeRadios = document.querySelectorAll('input[name="timeFilter"]');
