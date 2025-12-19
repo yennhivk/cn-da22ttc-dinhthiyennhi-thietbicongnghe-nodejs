@@ -139,9 +139,13 @@ async function loadAllNews(page = 1, categories = [], search = '', time = 'all')
             url += `&time=${time}`;
         }
 
+        console.log('🔍 Loading news with URL:', url);
+
         const response = await fetch(url);
         const result = await response.json();
         
+        console.log('📰 News API Response:', result);
+
         if (!result.success) {
             console.log('Không có tin tức');
             return;
@@ -153,16 +157,19 @@ async function loadAllNews(page = 1, categories = [], search = '', time = 'all')
         if (result.data.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-12">
-                    <p class="text-gray-500 text-lg">Không tìm thấy tin tức nào</p>
+                    <div class="text-6xl mb-4">📭</div>
+                    <p class="text-gray-500 text-lg font-semibold">Không tìm thấy tin tức nào</p>
+                    <p class="text-gray-400 text-sm mt-2">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
                 </div>
             `;
+            updateSearchInfo(0, search, categories, time);
             return;
         }
 
         container.innerHTML = result.data.map(news => `
             <article class="news-card bg-white rounded-xl shadow-md overflow-hidden group cursor-pointer" onclick="window.location.href='news-detail.html?id=${news.ma_tin_tuc}'">
                 <div class="relative h-48 overflow-hidden">
-                    <img src="${news.hinh_anh}" alt="${news.tieu_de}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                    <img src="${news.hinh_anh}" alt="${news.tieu_de}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/400x200?text=Tin+tức'">
                     <span class="absolute top-3 left-3 ${getTagColor(news.mau_tag)} px-3 py-1 rounded-full text-xs font-bold">${news.tag}</span>
                 </div>
                 <div class="p-4">
@@ -184,9 +191,19 @@ async function loadAllNews(page = 1, categories = [], search = '', time = 'all')
         updatePagination(result.pagination);
 
         // Update search result info
-        updateSearchInfo(result.pagination.total, search);
+        updateSearchInfo(result.pagination.total, search, categories, time);
     } catch (error) {
         console.error('Lỗi load tin tức:', error);
+        const container = document.getElementById('newsGrid');
+        if (container) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="text-6xl mb-4">❌</div>
+                    <p class="text-red-500 text-lg font-semibold">Lỗi tải tin tức</p>
+                    <p class="text-gray-400 text-sm mt-2">Vui lòng thử lại sau</p>
+                </div>
+            `;
+        }
     }
 }
 
@@ -217,12 +234,34 @@ function updatePagination(pagination) {
 }
 
 // Update search info
-function updateSearchInfo(total, search) {
+function updateSearchInfo(total, search, categories = [], time = 'all') {
     const container = document.getElementById('searchInfo');
     if (!container) return;
 
+    let filterInfo = [];
+    
+    // Thông tin tìm kiếm
     if (search) {
-        container.innerHTML = `Tìm thấy <span class="font-bold text-red-600">${total}</span> kết quả với từ khóa <span class="font-bold text-blue-600">"${search}"</span>`;
+        filterInfo.push(`từ khóa <span class="font-bold text-blue-600">"${search}"</span>`);
+    }
+    
+    // Thông tin danh mục
+    if (categories && categories.length > 0) {
+        filterInfo.push(`danh mục <span class="font-bold text-green-600">${categories.join(', ')}</span>`);
+    }
+    
+    // Thông tin thời gian
+    const timeLabels = {
+        'today': 'hôm nay',
+        'week': 'tuần này',
+        'month': 'tháng này'
+    };
+    if (time && time !== 'all' && timeLabels[time]) {
+        filterInfo.push(`thời gian <span class="font-bold text-purple-600">${timeLabels[time]}</span>`);
+    }
+
+    if (filterInfo.length > 0) {
+        container.innerHTML = `Tìm thấy <span class="font-bold text-red-600">${total}</span> kết quả với ${filterInfo.join(', ')}`;
     } else {
         container.innerHTML = `Hiển thị <span class="font-bold text-red-600">${total}</span> tin tức`;
     }
@@ -247,6 +286,18 @@ function updateCategoryFilter() {
     currentCategories = Array.from(checkboxes).map(cb => cb.value);
     currentPage = 1;
     loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
+    
+    // Highlight selected categories
+    document.querySelectorAll('.category-checkbox').forEach(cb => {
+        const label = cb.closest('label');
+        if (cb.checked) {
+            label.classList.add('bg-red-50', 'border-red-200');
+            label.classList.remove('hover:bg-gray-50');
+        } else {
+            label.classList.remove('bg-red-50', 'border-red-200');
+            label.classList.add('hover:bg-gray-50');
+        }
+    });
 }
 
 // Filter by time
@@ -254,6 +305,18 @@ function updateTimeFilter(time) {
     currentTime = time;
     currentPage = 1;
     loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
+    
+    // Highlight selected time filter
+    document.querySelectorAll('input[name="timeFilter"]').forEach(radio => {
+        const label = radio.closest('label');
+        if (radio.checked) {
+            label.classList.add('bg-red-50', 'border-red-200');
+            label.classList.remove('hover:bg-gray-50');
+        } else {
+            label.classList.remove('bg-red-50', 'border-red-200');
+            label.classList.add('hover:bg-gray-50');
+        }
+    });
 }
 
 // Search news
@@ -261,6 +324,45 @@ function searchNews(query) {
     currentSearch = query;
     currentPage = 1;
     loadAllNews(currentPage, currentCategories, currentSearch, currentTime);
+}
+
+// Reset all filters
+function resetFilters() {
+    // Reset variables
+    currentPage = 1;
+    currentCategories = [];
+    currentSearch = '';
+    currentTime = 'all';
+    
+    // Reset search input
+    const searchInput = document.getElementById('newsSearchInput');
+    if (searchInput) searchInput.value = '';
+    
+    // Reset time filter to "all"
+    const allTimeRadio = document.querySelector('input[name="timeFilter"][value="all"]');
+    if (allTimeRadio) allTimeRadio.checked = true;
+    
+    // Uncheck all category checkboxes
+    document.querySelectorAll('.category-checkbox').forEach(cb => {
+        cb.checked = false;
+        const label = cb.closest('label');
+        label.classList.remove('bg-red-50', 'border-red-200');
+        label.classList.add('hover:bg-gray-50');
+    });
+    
+    // Reset time filter highlights
+    document.querySelectorAll('input[name="timeFilter"]').forEach(radio => {
+        const label = radio.closest('label');
+        if (radio.value === 'all') {
+            label.classList.add('bg-red-50', 'border-red-200');
+        } else {
+            label.classList.remove('bg-red-50', 'border-red-200');
+            label.classList.add('hover:bg-gray-50');
+        }
+    });
+    
+    // Reload news
+    loadAllNews();
 }
 
 // Initialize
@@ -292,4 +394,12 @@ document.addEventListener('DOMContentLoaded', function() {
             updateTimeFilter(this.value);
         });
     });
+    
+    // Initial highlight for "Tất cả" time filter
+    const allTimeRadio = document.querySelector('input[name="timeFilter"][value="all"]');
+    if (allTimeRadio) {
+        const label = allTimeRadio.closest('label');
+        label.classList.add('bg-red-50', 'border-red-200');
+        label.classList.remove('hover:bg-gray-50');
+    }
 });

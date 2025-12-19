@@ -74,6 +74,7 @@
                 <a href="#" onclick="showSection('users')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="users">👥 Khách hàng</a>
                 <a href="#" onclick="showSection('news')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="news">📰 Tin tức</a>
                 <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">⭐ Đánh giá</a>
+                <a href="#" onclick="showSection('promotions')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="promotions">🎁 Khuyến mãi</a>
             </nav>
             <div class="p-4 border-t border-blue-800">
                 <div class="flex items-center gap-3 mb-3">
@@ -644,6 +645,29 @@
                         </table>
                     </div>
                 </section>
+
+                <!-- Section Khuyến mãi -->
+                <section id="section-promotions" class="content-section">
+                    <div class="flex justify-end mb-4">
+                        <button onclick="openPromotionModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-lg">+ Thêm khuyến mãi</button>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-5">
+                        <table class="w-full">
+                            <thead class="bg-gradient-to-r from-orange-500 to-red-500 text-white text-left">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-tl-lg">Tên khuyến mãi</th>
+                                    <th class="px-4 py-3">Mã giảm giá</th>
+                                    <th class="px-4 py-3">Mô tả</th>
+                                    <th class="px-4 py-3">Ngày bắt đầu</th>
+                                    <th class="px-4 py-3">Ngày kết thúc</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center rounded-tr-lg">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="promotions-table"></tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
@@ -725,6 +749,56 @@
                 <div class="flex gap-3 pt-4">
                     <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium">Lưu</button>
                     <button type="button" onclick="closeCategoryModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 py-2.5 rounded-lg font-medium">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Promotion Modal -->
+    <div id="promotion-modal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-lg m-4">
+            <div class="p-5 border-b flex justify-between items-center bg-gradient-to-r from-orange-500 to-red-500 rounded-t-xl">
+                <h3 id="promotion-modal-title" class="text-lg font-bold text-white">Thêm khuyến mãi</h3>
+                <button onclick="closePromotionModal()" class="text-white hover:text-gray-200 text-2xl">&times;</button>
+            </div>
+            <form id="promotion-form" class="p-5 space-y-4">
+                <input type="hidden" id="promotion-id">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Tên khuyến mãi *</label>
+                    <input type="text" id="promotion-name" required class="w-full border rounded-lg px-4 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Mã giảm giá *</label>
+                    <input type="text" id="promotion-code" required class="w-full border rounded-lg px-4 py-2 uppercase" placeholder="VD: SALE2025">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Mô tả</label>
+                    <textarea id="promotion-desc" rows="2" class="w-full border rounded-lg px-4 py-2"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Ngày bắt đầu *</label>
+                        <input type="datetime-local" id="promotion-start" required class="w-full border rounded-lg px-4 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Ngày kết thúc *</label>
+                        <input type="datetime-local" id="promotion-end" required class="w-full border rounded-lg px-4 py-2">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Điều kiện áp dụng</label>
+                    <input type="text" id="promotion-condition" class="w-full border rounded-lg px-4 py-2" placeholder="VD: Đơn hàng >= 1.000.000đ">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Trạng thái</label>
+                    <select id="promotion-status" class="w-full border rounded-lg px-4 py-2">
+                        <option value="1">Hoạt động</option>
+                        <option value="0">Tạm dừng</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg font-medium">Lưu</button>
+                    <button type="button" onclick="closePromotionModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 py-2.5 rounded-lg font-medium">Hủy</button>
                 </div>
             </form>
         </div>
@@ -968,7 +1042,7 @@
             document.getElementById('section-' + section).classList.add('active');
             document.querySelector(`[data-section="${section}"]`).classList.add('active');
 
-            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', news: 'Quản lý tin tức', reviews: 'Quản lý đánh giá' };
+            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', news: 'Quản lý tin tức', reviews: 'Quản lý đánh giá', promotions: 'Quản lý khuyến mãi' };
             document.getElementById('page-title').textContent = titles[section] || section;
 
             if (section === 'dashboard') loadDashboard();
@@ -978,6 +1052,7 @@
             else if (section === 'users') loadUsers();
             else if (section === 'news') loadNews();
             else if (section === 'reviews') loadReviews();
+            else if (section === 'promotions') loadPromotions();
         }
 
         // Helpers
@@ -2218,6 +2293,111 @@
         }
         async function toggleReviewStatus(id) { const d = await apiCall(`/admin/reviews/${id}/toggle-status`, 'PUT'); if (d.success) loadReviews(); }
         async function deleteReview(id) { if (!confirm('Xóa đánh giá này?')) return; const d = await apiCall(`/admin/reviews/${id}`, 'DELETE'); if (d.success) { alert('Đã xóa!'); loadReviews(); } }
+
+        // ==================== PROMOTIONS ====================
+        async function loadPromotions() {
+            const data = await apiCall('/admin/promotions');
+            if (data.success) {
+                const promotions = data.data;
+                if (promotions.length === 0) {
+                    document.getElementById('promotions-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500">Không có khuyến mãi nào</td></tr>';
+                    return;
+                }
+                const html = promotions.map(p => {
+                    const now = new Date();
+                    const start = new Date(p.ngay_bat_dau);
+                    const end = new Date(p.ngay_ket_thuc);
+                    let statusClass = '', statusText = '';
+                    if (p.trang_thai == 0) {
+                        statusClass = 'bg-gray-200 text-gray-600';
+                        statusText = '⏸ Tạm dừng';
+                    } else if (now < start) {
+                        statusClass = 'bg-yellow-100 text-yellow-700';
+                        statusText = '⏳ Sắp diễn ra';
+                    } else if (now > end) {
+                        statusClass = 'bg-red-100 text-red-600';
+                        statusText = '❌ Hết hạn';
+                    } else {
+                        statusClass = 'bg-green-100 text-green-700';
+                        statusText = '✓ Đang chạy';
+                    }
+                    return `
+                    <tr class="border-b hover:bg-orange-50 transition">
+                        <td class="px-4 py-3 font-semibold text-gray-800">${p.ten_khuyen_mai}</td>
+                        <td class="px-4 py-3"><span class="bg-orange-100 text-orange-700 px-2 py-1 rounded font-mono font-bold">${p.ma_giam_gia}</span></td>
+                        <td class="px-4 py-3 text-sm text-gray-600">${p.mo_ta || '-'}</td>
+                        <td class="px-4 py-3 text-sm">${formatDate(p.ngay_bat_dau)}</td>
+                        <td class="px-4 py-3 text-sm">${formatDate(p.ngay_ket_thuc)}</td>
+                        <td class="px-4 py-3 text-center"><span class="px-3 py-1 rounded-full text-xs font-semibold ${statusClass}">${statusText}</span></td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="editPromotion(${p.ma_khuyen_mai})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm mr-1">Sửa</button>
+                            <button onclick="deletePromotion(${p.ma_khuyen_mai})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Xóa</button>
+                        </td>
+                    </tr>
+                `;
+                }).join('');
+                document.getElementById('promotions-table').innerHTML = html;
+            }
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN', {hour: '2-digit', minute: '2-digit'});
+        }
+
+        function openPromotionModal(p = null) {
+            document.getElementById('promotion-modal').classList.add('active');
+            document.getElementById('promotion-modal-title').textContent = p ? 'Sửa khuyến mãi' : 'Thêm khuyến mãi';
+            document.getElementById('promotion-form').reset();
+            document.getElementById('promotion-id').value = p?.ma_khuyen_mai || '';
+            if (p) {
+                document.getElementById('promotion-name').value = p.ten_khuyen_mai;
+                document.getElementById('promotion-code').value = p.ma_giam_gia;
+                document.getElementById('promotion-desc').value = p.mo_ta || '';
+                document.getElementById('promotion-start').value = p.ngay_bat_dau ? p.ngay_bat_dau.slice(0, 16) : '';
+                document.getElementById('promotion-end').value = p.ngay_ket_thuc ? p.ngay_ket_thuc.slice(0, 16) : '';
+                document.getElementById('promotion-condition').value = p.dieu_kien_ap_dung || '';
+                document.getElementById('promotion-status').value = p.trang_thai;
+            }
+        }
+
+        function closePromotionModal() { document.getElementById('promotion-modal').classList.remove('active'); }
+
+        async function editPromotion(id) {
+            const d = await apiCall(`/admin/promotions/${id}`);
+            if (d.success) openPromotionModal(d.data);
+        }
+
+        async function deletePromotion(id) {
+            if (!confirm('Xóa khuyến mãi này?')) return;
+            const d = await apiCall(`/admin/promotions/${id}`, 'DELETE');
+            if (d.success) { alert('Đã xóa!'); loadPromotions(); } else alert(d.message);
+        }
+
+        document.getElementById('promotion-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('promotion-id').value;
+            const body = {
+                ten_khuyen_mai: document.getElementById('promotion-name').value,
+                ma_giam_gia: document.getElementById('promotion-code').value.toUpperCase(),
+                mo_ta: document.getElementById('promotion-desc').value,
+                ngay_bat_dau: document.getElementById('promotion-start').value,
+                ngay_ket_thuc: document.getElementById('promotion-end').value,
+                dieu_kien_ap_dung: document.getElementById('promotion-condition').value,
+                trang_thai: parseInt(document.getElementById('promotion-status').value)
+            };
+            const url = id ? `/admin/promotions/${id}` : '/admin/promotions';
+            const method = id ? 'PUT' : 'POST';
+            const d = await apiCall(url, method, body);
+            if (d.success) {
+                alert(id ? 'Cập nhật thành công!' : 'Thêm thành công!');
+                closePromotionModal();
+                loadPromotions();
+            } else {
+                alert(d.message || 'Có lỗi xảy ra');
+            }
+        });
     </script>
 </body>
 </html>

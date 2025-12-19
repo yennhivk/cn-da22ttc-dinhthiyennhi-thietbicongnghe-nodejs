@@ -10,26 +10,28 @@ const { authenticateToken, requireAdmin } = require('./auth');
 // Lấy tất cả tin tức (public)
 router.get('/', async (req, res) => {
     try {
-        const { page = 1, limit = 12, category, search, featured } = req.query;
+        const { page = 1, limit = 12, category, search, featured, time } = req.query;
         const offset = (page - 1) * limit;
 
         let whereClause = "trang_thai = 'hien_thi'";
         const params = [];
 
+        // Lọc theo danh mục (hỗ trợ nhiều danh mục)
         if (category) {
             const categories = Array.isArray(category) ? category : category.split(',');
-            whereClause += ` AND danh_muc IN (?)`;
-            params.push(categories);
+            const placeholders = categories.map(() => '?').join(', ');
+            whereClause += ` AND danh_muc IN (${placeholders})`;
+            params.push(...categories);
         }
         
+        // Lọc theo tìm kiếm
         if (search) {
             whereClause += ` AND (tieu_de LIKE ? OR mo_ta_ngan LIKE ?)`;
             params.push(`%${search}%`, `%${search}%`);
         }
 
         // Lọc theo thời gian
-        const { time } = req.query;
-        if (time) {
+        if (time && time !== 'all') {
             if (time === 'today') {
                 whereClause += ` AND DATE(ngay_tao) = CURDATE()`;
             } else if (time === 'week') {
@@ -42,6 +44,9 @@ router.get('/', async (req, res) => {
         if (featured === 'true') {
             whereClause += ` AND noi_bat = 1`;
         }
+
+        console.log('📰 News Filter - Where:', whereClause);
+        console.log('📰 News Filter - Params:', params);
 
         const [news] = await db.query(`
             SELECT ma_tin_tuc, tieu_de, mo_ta_ngan, hinh_anh, danh_muc, tag, mau_tag, luot_xem, noi_bat, ngay_tao

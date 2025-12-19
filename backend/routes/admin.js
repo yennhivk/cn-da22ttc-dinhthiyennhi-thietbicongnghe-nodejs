@@ -887,4 +887,109 @@ router.post('/create-sample-orders', authenticateToken, requireAdmin, async (req
     }
 });
 
+// ==========================================
+// QUẢN LÝ KHUYẾN MÃI
+// ==========================================
+
+// Lấy tất cả khuyến mãi
+router.get('/promotions', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const [promotions] = await db.query(`
+            SELECT * FROM khuyen_mai ORDER BY ma_khuyen_mai DESC
+        `);
+        res.json({ success: true, data: promotions });
+    } catch (error) {
+        console.error('Get promotions error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi lấy danh sách khuyến mãi' });
+    }
+});
+
+// Lấy chi tiết 1 khuyến mãi
+router.get('/promotions/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const [promotions] = await db.query('SELECT * FROM khuyen_mai WHERE ma_khuyen_mai = ?', [req.params.id]);
+        if (promotions.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy khuyến mãi' });
+        }
+        res.json({ success: true, data: promotions[0] });
+    } catch (error) {
+        console.error('Get promotion error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi lấy thông tin khuyến mãi' });
+    }
+});
+
+// Thêm khuyến mãi mới
+router.post('/promotions', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { ten_khuyen_mai, ma_giam_gia, mo_ta, ngay_bat_dau, ngay_ket_thuc, dieu_kien_ap_dung, trang_thai } = req.body;
+        
+        // Kiểm tra mã giảm giá đã tồn tại
+        const [existing] = await db.query('SELECT ma_khuyen_mai FROM khuyen_mai WHERE ma_giam_gia = ?', [ma_giam_gia]);
+        if (existing.length > 0) {
+            return res.status(400).json({ success: false, message: 'Mã giảm giá đã tồn tại' });
+        }
+
+        const [result] = await db.query(`
+            INSERT INTO khuyen_mai (ten_khuyen_mai, ma_giam_gia, mo_ta, ngay_bat_dau, ngay_ket_thuc, dieu_kien_ap_dung, trang_thai)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `, [ten_khuyen_mai, ma_giam_gia, mo_ta, ngay_bat_dau, ngay_ket_thuc, dieu_kien_ap_dung, trang_thai || 1]);
+
+        res.json({ success: true, message: 'Thêm khuyến mãi thành công', data: { id: result.insertId } });
+    } catch (error) {
+        console.error('Create promotion error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi thêm khuyến mãi: ' + error.message });
+    }
+});
+
+// Cập nhật khuyến mãi
+router.put('/promotions/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { ten_khuyen_mai, ma_giam_gia, mo_ta, ngay_bat_dau, ngay_ket_thuc, dieu_kien_ap_dung, trang_thai } = req.body;
+        
+        // Kiểm tra mã giảm giá trùng với khuyến mãi khác
+        const [existing] = await db.query('SELECT ma_khuyen_mai FROM khuyen_mai WHERE ma_giam_gia = ? AND ma_khuyen_mai != ?', [ma_giam_gia, req.params.id]);
+        if (existing.length > 0) {
+            return res.status(400).json({ success: false, message: 'Mã giảm giá đã được sử dụng' });
+        }
+
+        await db.query(`
+            UPDATE khuyen_mai 
+            SET ten_khuyen_mai = ?, ma_giam_gia = ?, mo_ta = ?, ngay_bat_dau = ?, ngay_ket_thuc = ?, dieu_kien_ap_dung = ?, trang_thai = ?
+            WHERE ma_khuyen_mai = ?
+        `, [ten_khuyen_mai, ma_giam_gia, mo_ta, ngay_bat_dau, ngay_ket_thuc, dieu_kien_ap_dung, trang_thai, req.params.id]);
+
+        res.json({ success: true, message: 'Cập nhật khuyến mãi thành công' });
+    } catch (error) {
+        console.error('Update promotion error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi cập nhật khuyến mãi: ' + error.message });
+    }
+});
+
+// Xóa khuyến mãi
+router.delete('/promotions/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await db.query('DELETE FROM khuyen_mai WHERE ma_khuyen_mai = ?', [req.params.id]);
+        res.json({ success: true, message: 'Xóa khuyến mãi thành công' });
+    } catch (error) {
+        console.error('Delete promotion error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi xóa khuyến mãi' });
+    }
+});
+
+// API public cho trang frontend lấy khuyến mãi đang hoạt động
+router.get('/public/promotions', async (req, res) => {
+    try {
+        const [promotions] = await db.query(`
+            SELECT ma_khuyen_mai, ten_khuyen_mai, ma_giam_gia, mo_ta, ngay_bat_dau, ngay_ket_thuc, dieu_kien_ap_dung
+            FROM khuyen_mai 
+            WHERE trang_thai = 1 AND ngay_ket_thuc >= NOW()
+            ORDER BY ngay_bat_dau ASC
+        `);
+        res.json({ success: true, data: promotions });
+    } catch (error) {
+        console.error('Get public promotions error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi lấy danh sách khuyến mãi' });
+    }
+});
+
 module.exports = router;

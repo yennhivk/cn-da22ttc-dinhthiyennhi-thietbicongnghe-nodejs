@@ -840,46 +840,15 @@
         <!-- Voucher Section -->
         <section class="py-8 bg-white/50 backdrop-blur-sm">
             <div class="max-w-7xl mx-auto px-4">
-                <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-                    <!-- Voucher 1 -->
-                    <div class="flex-shrink-0 w-80 bg-white border-2 border-dashed border-red-200 rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex-1">
-                            <div class="text-red-600 font-bold text-xl">Giảm 100kđ</div>
-                            <div class="text-gray-600 text-sm font-medium">Đơn Tối Thiểu 1,8trđ</div>
-                            <div class="inline-block border border-red-200 text-red-500 text-[10px] px-2 py-0.5 rounded mt-2 font-bold uppercase">Sản phẩm nhất định</div>
-                            <div class="text-gray-400 text-xs mt-3">HSD: 31.12.2025</div>
-                        </div>
-                        <button class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700 transition shadow-sm">Lưu</button>
-                    </div>
-                    <!-- Voucher 2 -->
-                    <div class="flex-shrink-0 w-80 bg-white border-2 border-dashed border-red-200 rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex-1">
-                            <div class="text-red-600 font-bold text-xl">Giảm 100kđ</div>
-                            <div class="text-gray-600 text-sm font-medium">Đơn Tối Thiểu 2,5trđ</div>
-                            <div class="inline-block border border-red-200 text-red-500 text-[10px] px-2 py-0.5 rounded mt-2 font-bold uppercase">Sản phẩm nhất định</div>
-                            <div class="text-gray-400 text-xs mt-3">HSD: 31.12.2025</div>
-                        </div>
-                        <button class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700 transition shadow-sm">Lưu</button>
-                    </div>
-                    <!-- Voucher 3 -->
-                    <div class="flex-shrink-0 w-80 bg-white border-2 border-dashed border-red-200 rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex-1">
-                            <div class="text-red-600 font-bold text-xl">Giảm 150kđ</div>
-                            <div class="text-gray-600 text-sm font-medium">Đơn Tối Thiểu 3,5trđ</div>
-                            <div class="inline-block border border-red-200 text-red-500 text-[10px] px-2 py-0.5 rounded mt-2 font-bold uppercase">Sản phẩm nhất định</div>
-                            <div class="text-gray-400 text-xs mt-3">HSD: 31.12.2025</div>
-                        </div>
-                        <button class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700 transition shadow-sm">Lưu</button>
-                    </div>
-                    <!-- Voucher 4 -->
-                    <div class="flex-shrink-0 w-80 bg-white border-2 border-dashed border-red-200 rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex-1">
-                            <div class="text-red-600 font-bold text-xl">Giảm 150kđ</div>
-                            <div class="text-gray-600 text-sm font-medium">Đơn Tối Thiểu 4,8trđ</div>
-                            <div class="inline-block border border-red-200 text-red-500 text-[10px] px-2 py-0.5 rounded mt-2 font-bold uppercase">Sản phẩm nhất định</div>
-                            <div class="text-gray-400 text-xs mt-3">HSD: 31.12.2025</div>
-                        </div>
-                        <button class="bg-red-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-700 transition shadow-sm">Lưu</button>
+                <h2 class="text-2xl font-bold text-red-600 mb-6 flex items-center gap-2">
+                    🎁 Mã Khuyến Mãi Đang Hoạt Động
+                </h2>
+                <div id="voucher-container" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                    <!-- Loading placeholder -->
+                    <div class="flex-shrink-0 w-80 bg-gray-100 rounded-xl p-4 animate-pulse">
+                        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                        <div class="h-3 bg-gray-200 rounded w-2/3"></div>
                     </div>
                 </div>
             </div>
@@ -1333,5 +1302,83 @@
 
     <script src="../js/auth-ui.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        // Load khuyến mãi từ database
+        const API_BASE = 'http://localhost:3300/api';
+        
+        async function loadPromotions() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/public/promotions`);
+                const data = await response.json();
+                
+                const container = document.getElementById('voucher-container');
+                
+                if (data.success && data.data.length > 0) {
+                    container.innerHTML = data.data.map(promo => {
+                        const endDate = new Date(promo.ngay_ket_thuc);
+                        const now = new Date();
+                        const startDate = new Date(promo.ngay_bat_dau);
+                        
+                        let statusBadge = '';
+                        if (now < startDate) {
+                            statusBadge = '<span class="inline-block bg-yellow-100 text-yellow-700 text-[10px] px-2 py-0.5 rounded font-bold">SẮP DIỄN RA</span>';
+                        } else if (now <= endDate) {
+                            statusBadge = '<span class="inline-block bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded font-bold">ĐANG DIỄN RA</span>';
+                        }
+                        
+                        return `
+                            <div class="flex-shrink-0 w-80 bg-white border-2 border-dashed border-red-200 rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow-md transition-shadow">
+                                <div class="flex-1">
+                                    <div class="text-red-600 font-bold text-xl">${promo.ten_khuyen_mai}</div>
+                                    <div class="text-gray-600 text-sm font-medium">${promo.mo_ta || ''}</div>
+                                    <div class="flex items-center gap-2 mt-2">
+                                        <span class="inline-block bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded font-mono font-bold">${promo.ma_giam_gia}</span>
+                                        ${statusBadge}
+                                    </div>
+                                    ${promo.dieu_kien_ap_dung ? `<div class="inline-block border border-red-200 text-red-500 text-[10px] px-2 py-0.5 rounded mt-2 font-bold uppercase">${promo.dieu_kien_ap_dung}</div>` : ''}
+                                    <div class="text-gray-400 text-xs mt-3">HSD: ${endDate.toLocaleDateString('vi-VN')}</div>
+                                </div>
+                                <button onclick="copyPromoCode('${promo.ma_giam_gia}')" class="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition shadow-sm text-sm">
+                                    📋 Sao chép
+                                </button>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="w-full text-center py-8">
+                            <div class="text-gray-400 text-lg">🎁 Chưa có khuyến mãi nào đang diễn ra</div>
+                            <p class="text-gray-400 text-sm mt-2">Hãy quay lại sau nhé!</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading promotions:', error);
+                document.getElementById('voucher-container').innerHTML = `
+                    <div class="w-full text-center py-8">
+                        <div class="text-red-500 text-lg">❌ Không thể tải khuyến mãi</div>
+                    </div>
+                `;
+            }
+        }
+        
+        function copyPromoCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert(`Đã sao chép mã: ${code}`);
+            }).catch(() => {
+                // Fallback
+                const input = document.createElement('input');
+                input.value = code;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                alert(`Đã sao chép mã: ${code}`);
+            });
+        }
+        
+        // Load khi trang được tải
+        document.addEventListener('DOMContentLoaded', loadPromotions);
+    </script>
 </body>
 </html>

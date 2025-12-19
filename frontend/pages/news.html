@@ -457,26 +457,33 @@
                             </h3>
                             <div class="space-y-2" id="categoryFilter">
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" value="Tư vấn mua hàng" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
-                                    <span class="text-gray-700 font-medium">Tư vấn mua hàng</span>
+                                    <input type="radio" name="categoryFilter" value="" class="category-radio w-4 h-4 text-red-600 focus:ring-red-500" checked>
+                                    <span class="text-gray-700 font-medium">Tất cả danh mục</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" value="Đánh giá điện thoại" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
-                                    <span class="text-gray-700 font-medium">Đánh giá điện thoại</span>
+                                    <input type="radio" name="categoryFilter" value="Điện thoại" class="category-radio w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Điện thoại</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" value="Tin công nghệ" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
-                                    <span class="text-gray-700 font-medium">Tin công nghệ</span>
+                                    <input type="radio" name="categoryFilter" value="Laptop" class="category-radio w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Laptop</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" value="Khuyến mãi" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
-                                    <span class="text-gray-700 font-medium">Khuyến mãi</span>
+                                    <input type="radio" name="categoryFilter" value="Phụ kiện" class="category-radio w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Phụ kiện</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition">
-                                    <input type="checkbox" value="Thủ thuật" class="category-checkbox w-4 h-4 text-red-600 rounded focus:ring-red-500">
-                                    <span class="text-gray-700 font-medium">Thủ thuật</span>
+                                    <input type="radio" name="categoryFilter" value="Công nghệ" class="category-radio w-4 h-4 text-red-600 focus:ring-red-500">
+                                    <span class="text-gray-700 font-medium">Công nghệ</span>
                                 </label>
                             </div>
+                            <!-- Reset Filter Button -->
+                            <button onclick="resetFilters()" class="mt-4 w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Đặt lại bộ lọc
+                            </button>
                         </div>
                     </div>
                 </div>
