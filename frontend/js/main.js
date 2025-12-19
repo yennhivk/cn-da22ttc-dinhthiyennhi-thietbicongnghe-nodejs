@@ -334,6 +334,9 @@ function logout() {
 
 // Chatbot Functions
 let chatbotOpen = false;
+let chatHistory = [];
+let currentConversationId = null;
+const CHATBOT_API = 'http://localhost:3300/api/chatbot';
 
 function toggleChatbot() {
     const chatbotWindow = document.getElementById('chatbotWindow');
@@ -343,54 +346,481 @@ function toggleChatbot() {
     }
 }
 
-function sendChatMessage() {
+// Lấy token từ localStorage
+function getAuthToken() {
+    return localStorage.getItem('token');
+}
+
+// Hiển thị modal yêu cầu đăng nhập
+function showLoginRequiredModal() {
+    const modal = document.createElement('div');
+    modal.id = 'loginRequiredModal';
+    modal.className = 'fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center';
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl p-6 max-w-sm mx-4 shadow-2xl">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Yêu cầu đăng nhập</h3>
+                <p class="text-gray-600 mb-6">Vui lòng đăng nhập để xem và lưu lịch sử chat của bạn.</p>
+                <div class="flex gap-3 justify-center">
+                    <button onclick="closeLoginRequiredModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition">Đóng</button>
+                    <a href="pages/login.html" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Đăng nhập</a>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function closeLoginRequiredModal() {
+    const modal = document.getElementById('loginRequiredModal');
+    if (modal) modal.remove();
+}
+
+// Hiển thị lịch sử các cuộc hội thoại
+async function showChatHistory() {
+    const token = getAuthToken();
+    if (!token) {
+        showLoginRequiredModal();
+        return;
+    }
+
+    try {
+        const response = await fetch(`${CHATBOT_API}/conversations`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            if (response.status === 401) {
+                showLoginRequiredModal();
+                return;
+            }
+            alert('Có lỗi xảy ra: ' + data.message);
+            return;
+        }
+
+        // Hiển thị danh sách cuộc hội thoại
+        showConversationsList(data.conversations);
+
+    } catch (error) {
+        console.error('Error fetching conversations:', error);
+        alert('Không thể tải lịch sử chat!');
+    }
+}
+
+// Hiển thị danh sách cuộc hội thoại
+function showConversationsList(conversations) {
+    const messagesArea = document.getElementById('chatMessages');
+    if (!messagesArea) return;
+
+    let html = `
+        <div class="p-2">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Lịch sử chat
+                </h4>
+                <button onclick="backToChatView()" class="text-blue-600 text-sm hover:underline">← Quay lại</button>
+            </div>
+    `;
+
+    if (conversations.length === 0) {
+        html += `
+            <div class="text-center text-gray-500 py-8">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                <p>Chưa có cuộc hội thoại nào</p>
+                <button onclick="createNewConversation()" class="mt-3 text-blue-600 hover:underline text-sm">+ Tạo cuộc hội thoại mới</button>
+            </div>
+        `;
+    } else {
+        html += `<div class="space-y-2 max-h-[250px] overflow-y-auto">`;
+        conversations.forEach(conv => {
+            const date = new Date(conv.updatedAt).toLocaleDateString('vi-VN');
+            const time = new Date(conv.updatedAt).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+            html += `
+                <div class="bg-white border rounded-lg p-3 hover:border-blue-300 cursor-pointer transition group" onclick="loadConversation(${conv.id})">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-gray-800 truncate text-sm">${escapeHtml(conv.title)}</p>
+                            <p class="text-xs text-gray-500 mt-1">${conv.messageCount} tin nhắn · ${date} ${time}</p>
+                        </div>
+                        <button onclick="event.stopPropagation(); deleteConversation(${conv.id})" class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition p-1" title="Xóa">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+    }
+
+    html += `</div>`;
+    messagesArea.innerHTML = html;
+}
+
+// Tải cuộc hội thoại cụ thể
+async function loadConversation(conversationId) {
+    const token = getAuthToken();
+    if (!token) {
+        showLoginRequiredModal();
+        return;
+    }
+
+    try {
+        const response = await fetch(`${CHATBOT_API}/conversations/${conversationId}/messages`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert('Có lỗi xảy ra: ' + data.message);
+            return;
+        }
+
+        // Cập nhật conversationId hiện tại
+        currentConversationId = conversationId;
+        
+        // Xóa lịch sử chat local và thay thế bằng lịch sử từ server
+        chatHistory = [];
+        
+        // Hiển thị tin nhắn
+        displayConversationMessages(data.messages);
+
+    } catch (error) {
+        console.error('Error loading conversation:', error);
+        alert('Không thể tải cuộc hội thoại!');
+    }
+}
+
+// Hiển thị tin nhắn của cuộc hội thoại
+function displayConversationMessages(messages) {
+    const messagesArea = document.getElementById('chatMessages');
+    if (!messagesArea) return;
+
+    let html = '';
+    
+    messages.forEach(msg => {
+        const time = new Date(msg.timestamp).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+        
+        // User message
+        html += `
+            <div class="flex justify-end mb-3">
+                <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-br-none max-w-[80%]">
+                    <p class="text-sm">${escapeHtml(msg.question)}</p>
+                    <span class="text-xs text-blue-200 mt-1 block">${time}</span>
+                </div>
+            </div>
+        `;
+        
+        // Bot reply
+        html += `
+            <div class="flex justify-start mb-3">
+                <div class="flex gap-2 max-w-[80%]">
+                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                        </svg>
+                    </div>
+                    <div class="bg-white shadow-md px-4 py-2 rounded-2xl rounded-tl-none">
+                        <p class="text-sm text-gray-800 whitespace-pre-wrap">${escapeHtml(msg.answer)}</p>
+                        <span class="text-xs text-gray-400 mt-1 block">${time}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Thêm vào chatHistory để duy trì context
+        chatHistory.push({ role: 'user', content: msg.question });
+        chatHistory.push({ role: 'assistant', content: msg.answer });
+    });
+
+    messagesArea.innerHTML = html;
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+}
+
+// Quay lại giao diện chat chính
+function backToChatView() {
+    currentConversationId = null;
+    chatHistory = [];
+    
+    const messagesArea = document.getElementById('chatMessages');
+    if (!messagesArea) return;
+
+    messagesArea.innerHTML = `
+        <!-- Bot Message -->
+        <div class="flex justify-start mb-4">
+            <div class="flex gap-2 max-w-[80%]">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                    </svg>
+                </div>
+                <div class="bg-white shadow-md px-4 py-2 rounded-2xl rounded-tl-none">
+                    <p class="text-sm text-gray-800">Xin chào! Chúng tôi có thể giúp gì cho bạn? 😊</p>
+                    <span class="text-xs text-gray-400 mt-1 block">Vừa xong</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Reply Options -->
+        <div class="flex flex-wrap gap-2 mb-4">
+            <button onclick="quickChat('Tư vấn sản phẩm')" class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">📱 Tư vấn sản phẩm</button>
+            <button onclick="quickChat('Khuyến mãi')" class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">💰 Khuyến mãi</button>
+            <button onclick="quickChat('Giao hàng')" class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">🚚 Giao hàng</button>
+        </div>
+    `;
+}
+
+// Tạo cuộc hội thoại mới
+async function createNewConversation() {
+    const token = getAuthToken();
+    if (!token) {
+        showLoginRequiredModal();
+        return;
+    }
+
+    try {
+        const response = await fetch(`${CHATBOT_API}/conversations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ title: 'Cuộc hội thoại mới' })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            if (response.status === 401) {
+                showLoginRequiredModal();
+                return;
+            }
+            alert('Có lỗi xảy ra: ' + data.message);
+            return;
+        }
+
+        // Cập nhật conversationId và reset giao diện
+        currentConversationId = data.conversation.id;
+        chatHistory = [];
+        backToChatView();
+
+    } catch (error) {
+        console.error('Error creating conversation:', error);
+        alert('Không thể tạo cuộc hội thoại mới!');
+    }
+}
+
+// Xóa cuộc hội thoại
+async function deleteConversation(conversationId) {
+    if (!confirm('Bạn có chắc muốn xóa cuộc hội thoại này?')) return;
+
+    const token = getAuthToken();
+    if (!token) {
+        showLoginRequiredModal();
+        return;
+    }
+
+    try {
+        const response = await fetch(`${CHATBOT_API}/conversations/${conversationId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Nếu đang xóa cuộc hội thoại hiện tại
+            if (currentConversationId === conversationId) {
+                currentConversationId = null;
+                chatHistory = [];
+            }
+            // Refresh danh sách
+            showChatHistory();
+        } else {
+            alert('Có lỗi xảy ra: ' + data.message);
+        }
+
+    } catch (error) {
+        console.error('Error deleting conversation:', error);
+        alert('Không thể xóa cuộc hội thoại!');
+    }
+}
+
+// Quick chat với các lựa chọn nhanh
+function quickChat(message) {
+    const input = document.getElementById('chatInput');
+    if (input) {
+        input.value = message;
+        sendChatMessage();
+    }
+}
+
+async function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const messages = document.getElementById('chatMessages');
     
     if (input && input.value.trim() && messages) {
         const userMessage = input.value.trim();
         
-        // Add user message
+        // Add user message to UI
         const userDiv = document.createElement('div');
         userDiv.className = 'flex justify-end mb-3';
         userDiv.innerHTML = `
-            <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xs">
-                ${userMessage}
+            <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-br-none max-w-[80%]">
+                <p class="text-sm">${escapeHtml(userMessage)}</p>
+                <span class="text-xs text-blue-200 mt-1 block">${new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span>
             </div>
         `;
         messages.appendChild(userDiv);
         
         input.value = '';
-        
-        // Simulate bot response
-        setTimeout(() => {
+        messages.scrollTop = messages.scrollHeight;
+
+        // Add loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'flex justify-start mb-3';
+        loadingDiv.id = 'chatLoading';
+        loadingDiv.innerHTML = `
+            <div class="flex gap-2 max-w-[80%]">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                    </svg>
+                </div>
+                <div class="bg-white shadow-md px-4 py-2 rounded-2xl rounded-tl-none">
+                    <div class="flex items-center gap-1">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+        messages.appendChild(loadingDiv);
+        messages.scrollTop = messages.scrollHeight;
+
+        // Add to history
+        chatHistory.push({ role: 'user', content: userMessage });
+
+        try {
+            // Chuẩn bị headers với token nếu có
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            const token = getAuthToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            // Call AI API
+            const response = await fetch(`${CHATBOT_API}/send`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    message: userMessage,
+                    history: chatHistory.slice(-10), // Keep last 10 messages for context
+                    conversationId: currentConversationId
+                })
+            });
+
+            const data = await response.json();
+
+            // Remove loading indicator
+            const loading = document.getElementById('chatLoading');
+            if (loading) loading.remove();
+
+            // Add bot response
+            const botReply = data.success ? data.reply : 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau!';
+            
             const botDiv = document.createElement('div');
             botDiv.className = 'flex justify-start mb-3';
             botDiv.innerHTML = `
-                <div class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg max-w-xs">
-                    Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.
+                <div class="flex gap-2 max-w-[80%]">
+                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                        </svg>
+                    </div>
+                    <div class="bg-white shadow-md px-4 py-2 rounded-2xl rounded-tl-none">
+                        <p class="text-sm text-gray-800 whitespace-pre-wrap">${escapeHtml(botReply)}</p>
+                        <span class="text-xs text-gray-400 mt-1 block">${new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
                 </div>
             `;
             messages.appendChild(botDiv);
             messages.scrollTop = messages.scrollHeight;
+
+            // Add to history
+            chatHistory.push({ role: 'assistant', content: botReply });
+
+        } catch (error) {
+            console.error('Chatbot error:', error);
             
-            // Save chat history
-            saveChatHistory(userMessage, 'Cảm ơn bạn đã liên hệ!');
-        }, 1000);
-        
-        messages.scrollTop = messages.scrollHeight;
+            // Remove loading indicator
+            const loading = document.getElementById('chatLoading');
+            if (loading) loading.remove();
+
+            // Show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'flex justify-start mb-3';
+            errorDiv.innerHTML = `
+                <div class="flex gap-2 max-w-[80%]">
+                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                        </svg>
+                    </div>
+                    <div class="bg-white shadow-md px-4 py-2 rounded-2xl rounded-tl-none">
+                        <p class="text-sm text-gray-800">Cảm ơn bạn đã liên hệ! Để được hỗ trợ nhanh nhất, vui lòng gọi hotline 1900.5301 ạ! 😊</p>
+                        <span class="text-xs text-gray-400 mt-1 block">${new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                </div>
+            `;
+            messages.appendChild(errorDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
     }
 }
 
-function saveChatHistory(userMessage, botReply) {
-    let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
-    history.push({
-        timestamp: new Date().toISOString(),
-        user: userMessage,
-        bot: botReply
-    });
-    localStorage.setItem('chatHistory', JSON.stringify(history));
+// Escape HTML để tránh XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
+
+// Cho phép gửi tin nhắn bằng Enter
+document.addEventListener('DOMContentLoaded', function() {
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+    }
+});
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -429,3 +859,14 @@ window.addEventListener('scroll', function() {
         }
     }
 });
+
+// Export chatbot functions to global scope for onclick handlers
+window.toggleChatbot = toggleChatbot;
+window.showChatHistory = showChatHistory;
+window.createNewConversation = createNewConversation;
+window.loadConversation = loadConversation;
+window.deleteConversation = deleteConversation;
+window.backToChatView = backToChatView;
+window.quickChat = quickChat;
+window.sendChatMessage = sendChatMessage;
+window.closeLoginRequiredModal = closeLoginRequiredModal;

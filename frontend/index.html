@@ -1383,16 +1383,31 @@
                             <p class="text-xs text-blue-100">● Online</p>
                         </div>
                     </div>
-                    <button onclick="toggleChatbot()" class="text-white hover:bg-white/20 p-1 rounded-full transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
+                    <div class="flex items-center gap-1">
+                        <!-- Nút xem lịch sử chat -->
+                        <button onclick="showChatHistory()" class="text-white hover:bg-white/20 p-1.5 rounded-full transition" title="Lịch sử chat">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </button>
+                        <!-- Nút tạo cuộc hội thoại mới -->
+                        <button onclick="createNewConversation()" class="text-white hover:bg-white/20 p-1.5 rounded-full transition" title="Cuộc hội thoại mới">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                        <!-- Nút đóng -->
+                        <button onclick="toggleChatbot()" class="text-white hover:bg-white/20 p-1.5 rounded-full transition" title="Đóng">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <!-- Messages Area -->
-            <div id="chatMessages" class="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-gray-50 to-white" style="height: 300px;">
+            <div id="chatMessages" class="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-gray-50 to-white" style="height: 320px;">
                 <!-- Bot Message -->
                 <div class="flex justify-start mb-4">
                     <div class="flex gap-2 max-w-[80%]">
@@ -1410,9 +1425,9 @@
                 
                 <!-- Quick Reply Options -->
                 <div class="flex flex-wrap gap-2 mb-4">
-                    <button class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">📱 Tư vấn sản phẩm</button>
-                    <button class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">💰 Khuyến mãi</button>
-                    <button class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">🚚 Giao hàng</button>
+                    <button onclick="quickChat('Tư vấn sản phẩm')" class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">📱 Tư vấn sản phẩm</button>
+                    <button onclick="quickChat('Khuyến mãi')" class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">💰 Khuyến mãi</button>
+                    <button onclick="quickChat('Giao hàng')" class="bg-blue-100 text-blue-700 text-xs px-3 py-2 rounded-full hover:bg-blue-200 transition">🚚 Giao hàng</button>
                 </div>
             </div>
 
