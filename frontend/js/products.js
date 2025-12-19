@@ -29,6 +29,31 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
 });
 
+// Cập nhật số lượng sản phẩm theo danh mục
+function updateCategoryCounts() {
+    // Đếm số sản phẩm theo từng danh mục
+    const categoryCounts = {};
+    allProducts.forEach(product => {
+        const category = product.ten_danh_muc || 'Khác';
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+    
+    // Cập nhật số liệu trên giao diện
+    const categoryCountElements = document.querySelectorAll('.category-count');
+    categoryCountElements.forEach(el => {
+        const categoryName = el.getAttribute('data-category');
+        if (categoryName === 'all') {
+            el.textContent = `(${allProducts.length})`;
+        } else if (categoryCounts[categoryName] !== undefined) {
+            el.textContent = `(${categoryCounts[categoryName]})`;
+        } else {
+            el.textContent = '(0)';
+        }
+    });
+    
+    console.log('📊 Category counts:', categoryCounts);
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Search functionality
@@ -223,6 +248,9 @@ async function loadProducts(searchTerm = null) {
                 displayProducts(filteredProducts);
                 updateResultCount(filteredProducts.length);
             }
+            
+            // Cập nhật số lượng sản phẩm theo danh mục
+            updateCategoryCounts();
         } else {
             showError('Không thể tải sản phẩm');
         }
@@ -335,27 +363,27 @@ function createProductCard(product) {
                 <!-- Pricing -->
                 <div class="mb-2">
                     <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-sm text-gray-400 line-through">${oldPrice}</span>
-                        <span class="text-red-600 text-xs font-bold">-${discount}%</span>
+                        <span class="text-base text-gray-400 line-through price-old">${oldPrice}</span>
+                        <span class="text-red-600 text-sm font-bold">-${discount}%</span>
                     </div>
-                    <div class="text-xl font-bold text-red-600">${price}</div>
-                    <div class="text-xs text-green-600 font-medium">Giảm ${discountAmount}</div>
+                    <div class="text-2xl font-bold text-red-600 price-current">${price}</div>
+                    <div class="text-sm text-green-600 font-medium">Giảm ${discountAmount}</div>
                 </div>
                 
                 <!-- Product Name -->
-                <h3 class="font-semibold text-gray-900 text-base mb-2 line-clamp-2 cursor-pointer hover:text-red-600 h-12" onclick="viewProduct(${product.ma_san_pham})">
+                <h3 class="font-semibold text-gray-900 text-lg mb-2 line-clamp-2 cursor-pointer hover:text-red-600 h-14" onclick="viewProduct(${product.ma_san_pham})">
                     ${product.ten_san_pham}
                 </h3>
                 
                 <!-- Category & Brand -->
                 <div class="flex items-center gap-2 mb-3">
                     ${product.ten_danh_muc ? `
-                    <span class="inline-block bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded font-medium">
+                    <span class="inline-block bg-blue-100 text-blue-800 text-sm px-2.5 py-1 rounded font-medium tag-label">
                         ${product.ten_danh_muc}
                     </span>
                     ` : ''}
                     ${product.thuong_hieu ? `
-                    <span class="inline-block bg-gray-100 text-gray-800 text-[10px] px-2 py-0.5 rounded font-medium">
+                    <span class="inline-block bg-gray-100 text-gray-800 text-sm px-2.5 py-1 rounded font-medium tag-label">
                         ${product.thuong_hieu}
                     </span>
                     ` : ''}
@@ -363,18 +391,18 @@ function createProductCard(product) {
                 
                 <!-- Action Buttons -->
                 <div class="flex gap-2 mt-4">
-                    <button onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})" 
-                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-2 rounded-lg transition duration-200 text-sm flex items-center justify-center gap-1 ${product.so_luong === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                    <button onclick="addToCart(${product.ma_san_pham})" 
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-3 rounded-lg transition duration-200 text-base flex items-center justify-center gap-2 ${product.so_luong === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
                             ${product.so_luong === 0 ? 'disabled' : ''}>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                         <span>${product.so_luong === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}</span>
                     </button>
                     <button onclick="viewProduct(${product.ma_san_pham})" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition duration-200"
+                            class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-lg transition duration-200"
                             title="Xem chi tiết">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
@@ -426,16 +454,28 @@ function getCartKey() {
 }
 
 // Add to cart
-function addToCart(productId) {
+function addToCart(productOrId) {
     // Kiểm tra đăng nhập
     if (!isLoggedIn()) {
         showLoginRequired();
         return;
     }
     
-    const product = allProducts.find(p => p.ma_san_pham === productId);
-    if (!product) return;
+    let product;
     
+    // Kiểm tra xem tham số là object product hay productId
+    if (typeof productOrId === 'object' && productOrId !== null) {
+        product = productOrId;
+    } else {
+        product = allProducts.find(p => p.ma_san_pham === productOrId);
+    }
+    
+    if (!product) {
+        console.error('Không tìm thấy sản phẩm');
+        return;
+    }
+    
+    const productId = product.ma_san_pham;
     const cartKey = getCartKey();
     
     // Get cart from localStorage

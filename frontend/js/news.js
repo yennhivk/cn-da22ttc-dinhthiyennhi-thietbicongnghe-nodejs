@@ -1,6 +1,9 @@
 // News API Configuration
 const NEWS_API_URL = 'http://localhost:3300/api/news';
 
+// Biến lưu tất cả tin tức để đếm theo danh mục
+let allNewsData = [];
+
 // Format thời gian
 function formatTimeAgo(dateString) {
     const date = new Date(dateString);
@@ -30,6 +33,50 @@ function getTagColor(mauTag) {
         'pink': 'bg-pink-600 text-white'
     };
     return colors[mauTag] || 'bg-gray-600 text-white';
+}
+
+// Load tất cả tin tức để đếm theo danh mục
+async function loadNewsCategoryCounts() {
+    try {
+        // Load tất cả tin tức (không phân trang) để đếm
+        const response = await fetch(`${NEWS_API_URL}?limit=1000`);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            allNewsData = result.data;
+            updateNewsCategoryCounts();
+        }
+    } catch (error) {
+        console.error('Lỗi load news category counts:', error);
+    }
+}
+
+// Cập nhật số lượng tin tức theo danh mục
+function updateNewsCategoryCounts() {
+    // Đếm số tin tức theo từng danh mục
+    const categoryCounts = {};
+    let totalCount = allNewsData.length;
+    
+    allNewsData.forEach(news => {
+        const category = news.danh_muc || 'Khác';
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+    
+    // Cập nhật số liệu trên giao diện
+    const categoryCountElements = document.querySelectorAll('.news-category-count');
+    categoryCountElements.forEach(el => {
+        const categoryName = el.getAttribute('data-category');
+        if (categoryName === 'all') {
+            el.textContent = `(${totalCount})`;
+        } else if (categoryCounts[categoryName] !== undefined) {
+            el.textContent = `(${categoryCounts[categoryName]})`;
+        } else {
+            el.textContent = '(0)';
+        }
+    });
+    
+    console.log('📊 News category counts:', categoryCounts);
+    console.log('📰 Total news:', totalCount);
 }
 
 // Load tin tức nổi bật
@@ -378,6 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadFeaturedNews();
     loadTodayNews();
     loadAllNews();
+    loadNewsCategoryCounts(); // Load số lượng tin tức theo danh mục
 
     // Setup search
     const searchInput = document.getElementById('newsSearchInput');

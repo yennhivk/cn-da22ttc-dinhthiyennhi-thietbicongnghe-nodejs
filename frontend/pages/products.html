@@ -31,19 +31,35 @@
         
         /* Tăng cỡ chữ cho trang sản phẩm */
         .product-card h3 {
-            font-size: 1rem !important; /* text-base thay vì text-sm */
+            font-size: 1.125rem !important; /* text-lg */
+            line-height: 1.5;
         }
         .product-card .text-xl {
-            font-size: 1.5rem !important; /* text-2xl */
+            font-size: 1.625rem !important; /* lớn hơn text-2xl */
         }
         .product-card .text-sm {
-            font-size: 0.9375rem !important; /* tăng từ 0.875rem */
+            font-size: 1rem !important; /* text-base */
         }
         .product-card .text-xs {
-            font-size: 0.8125rem !important; /* tăng từ 0.75rem */
+            font-size: 0.9375rem !important; /* tăng từ 0.75rem */
         }
         .product-card .text-\[11px\] {
-            font-size: 0.875rem !important; /* text-sm */
+            font-size: 0.9375rem !important; /* tăng lên */
+        }
+        /* Tăng cỡ chữ giá */
+        .product-card .price-current {
+            font-size: 1.5rem !important;
+        }
+        .product-card .price-old {
+            font-size: 1rem !important;
+        }
+        /* Tăng cỡ chữ nút */
+        .product-card button {
+            font-size: 0.9375rem !important;
+        }
+        /* Tăng cỡ chữ tag */
+        .product-card .tag-label {
+            font-size: 0.875rem !important;
         }
         .line-clamp-2 {
             display: -webkit-box;
@@ -498,16 +514,22 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                                 </svg>
                                 <span>Tất cả</span>
+                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="all">(0)</span>
                             </button>
                             <button onclick="filterByCategory('Phụ kiện')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                 <span class="text-2xl">🎧</span>
                                 <span>Phụ kiện</span>
-                                <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(97)</span>
+                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Phụ kiện">(0)</span>
                             </button>
                             <button onclick="filterByCategory('Điện thoại')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                 <span class="text-2xl">📱</span>
                                 <span>Điện thoại</span>
-                                <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(5)</span>
+                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Điện thoại">(0)</span>
+                            </button>
+                            <button onclick="filterByCategory('Laptop')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                                <span class="text-2xl">💻</span>
+                                <span>Laptop</span>
+                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Laptop">(0)</span>
                             </button>
                         </div>
                     </div>
@@ -637,16 +659,22 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                                     </svg>
                                     <span>Tất cả</span>
+                                    <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="all">(0)</span>
                                 </button>
                                 <button onclick="filterByCategory('Phụ kiện')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                     <span class="text-2xl">🎧</span>
                                     <span>Phụ kiện</span>
-                                    <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(82)</span>
+                                    <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Phụ kiện">(0)</span>
                                 </button>
                                 <button onclick="filterByCategory('Điện thoại')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
                                     <span class="text-2xl">📱</span>
                                     <span>Điện thoại</span>
-                                    <span class="bg-gray-200 px-2 py-0.5 rounded-full text-xs">(4)</span>
+                                    <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Điện thoại">(0)</span>
+                                </button>
+                                <button onclick="filterByCategory('Laptop')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
+                                    <span class="text-2xl">💻</span>
+                                    <span>Laptop</span>
+                                    <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Laptop">(0)</span>
                                 </button>
                             </div>
                         </div>
