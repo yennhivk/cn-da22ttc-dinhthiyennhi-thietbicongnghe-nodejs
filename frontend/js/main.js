@@ -336,7 +336,7 @@ function logout() {
 let chatbotOpen = false;
 let chatHistory = [];
 let currentConversationId = null;
-const CHATBOT_API = 'http://localhost:3300/api/chatbot';
+const CHATBOT_API = 'http://127.0.0.1:3300/api/chatbot';
 
 function toggleChatbot() {
     const chatbotWindow = document.getElementById('chatbotWindow');
@@ -390,7 +390,8 @@ async function showChatHistory() {
     }
 
     try {
-        const response = await fetch(`${CHATBOT_API}/conversations`, {
+        // Sử dụng API /history đơn giản hơn
+        const response = await fetch(`${CHATBOT_API}/history`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -403,21 +404,22 @@ async function showChatHistory() {
                 showLoginRequiredModal();
                 return;
             }
-            alert('Có lỗi xảy ra: ' + data.message);
+            alert('Có lỗi xảy ra: ' + (data.message || 'Unknown'));
             return;
         }
 
-        // Hiển thị danh sách cuộc hội thoại
-        showConversationsList(data.conversations);
+        // Hiển thị lịch sử chat đơn giản
+        showSimpleHistory(data.history);
 
     } catch (error) {
-        console.error('Error fetching conversations:', error);
-        alert('Không thể tải lịch sử chat!');
+        console.error('Error fetching history:', error);
+        // Hiển thị lịch sử local nếu không lấy được từ server
+        showLocalHistory();
     }
 }
 
-// Hiển thị danh sách cuộc hội thoại
-function showConversationsList(conversations) {
+// Hiển thị lịch sử chat đơn giản
+function showSimpleHistory(history) {
     const messagesArea = document.getElementById('chatMessages');
     if (!messagesArea) return;
 
@@ -434,33 +436,66 @@ function showConversationsList(conversations) {
             </div>
     `;
 
-    if (conversations.length === 0) {
+    if (!history || history.length === 0) {
         html += `
             <div class="text-center text-gray-500 py-8">
                 <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                 </svg>
-                <p>Chưa có cuộc hội thoại nào</p>
-                <button onclick="createNewConversation()" class="mt-3 text-blue-600 hover:underline text-sm">+ Tạo cuộc hội thoại mới</button>
+                <p>Chưa có lịch sử chat</p>
             </div>
         `;
     } else {
-        html += `<div class="space-y-2 max-h-[250px] overflow-y-auto">`;
-        conversations.forEach(conv => {
-            const date = new Date(conv.updatedAt).toLocaleDateString('vi-VN');
-            const time = new Date(conv.updatedAt).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+        html += `<div class="space-y-3 max-h-[300px] overflow-y-auto">`;
+        history.slice(0, 20).forEach(item => {
+            const date = new Date(item.timestamp).toLocaleDateString('vi-VN');
+            const time = new Date(item.timestamp).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
             html += `
-                <div class="bg-white border rounded-lg p-3 hover:border-blue-300 cursor-pointer transition group" onclick="loadConversation(${conv.id})">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-medium text-gray-800 truncate text-sm">${escapeHtml(conv.title)}</p>
-                            <p class="text-xs text-gray-500 mt-1">${conv.messageCount} tin nhắn · ${date} ${time}</p>
-                        </div>
-                        <button onclick="event.stopPropagation(); deleteConversation(${conv.id})" class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition p-1" title="Xóa">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                        </button>
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="text-xs text-gray-400 mb-2">${date} ${time}</div>
+                    <div class="text-sm text-gray-800 mb-1"><strong>Bạn:</strong> ${escapeHtml(item.question)}</div>
+                    <div class="text-sm text-blue-600"><strong>Bot:</strong> ${escapeHtml(item.answer?.substring(0, 100) || '')}...</div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+    }
+
+    html += `</div>`;
+    messagesArea.innerHTML = html;
+}
+
+// Hiển thị lịch sử local (từ session hiện tại)
+function showLocalHistory() {
+    const messagesArea = document.getElementById('chatMessages');
+    if (!messagesArea) return;
+
+    let html = `
+        <div class="p-2">
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Lịch sử chat (phiên hiện tại)
+                </h4>
+                <button onclick="backToChatView()" class="text-blue-600 text-sm hover:underline">← Quay lại</button>
+            </div>
+    `;
+
+    if (chatHistory.length === 0) {
+        html += `
+            <div class="text-center text-gray-500 py-8">
+                <p>Chưa có tin nhắn nào trong phiên này</p>
+            </div>
+        `;
+    } else {
+        html += `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+        chatHistory.forEach(item => {
+            html += `
+                <div class="bg-gray-50 rounded-lg p-2 text-sm">
+                    <div class="${item.role === 'user' ? 'text-gray-800' : 'text-blue-600'}">
+                        <strong>${item.role === 'user' ? 'Bạn' : 'Bot'}:</strong> ${escapeHtml(item.content?.substring(0, 80) || '')}...
                     </div>
                 </div>
             `;
@@ -588,44 +623,37 @@ function backToChatView() {
     `;
 }
 
-// Tạo cuộc hội thoại mới
-async function createNewConversation() {
-    const token = getAuthToken();
-    if (!token) {
-        showLoginRequiredModal();
-        return;
+// Tạo cuộc hội thoại mới - đơn giản chỉ reset chat
+function createNewConversation() {
+    console.log('🔵 createNewConversation called');
+    
+    // Reset chat history local
+    chatHistory = [];
+    currentConversationId = null;
+    
+    // Reset giao diện chat
+    backToChatView();
+    
+    // Thông báo
+    const messagesArea = document.getElementById('chatMessages');
+    if (messagesArea) {
+        // Thêm tin nhắn chào mừng
+        messagesArea.innerHTML = `
+            <div class="flex items-start gap-3 mb-4">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-3 max-w-[85%]">
+                    <p class="text-gray-800 text-sm">Xin chào! 👋 Đây là cuộc hội thoại mới. Tôi có thể giúp gì cho bạn?</p>
+                    <span class="text-xs text-gray-400 mt-1 block">Vừa xong</span>
+                </div>
+            </div>
+        `;
     }
-
-    try {
-        const response = await fetch(`${CHATBOT_API}/conversations`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ title: 'Cuộc hội thoại mới' })
-        });
-
-        const data = await response.json();
-
-        if (!data.success) {
-            if (response.status === 401) {
-                showLoginRequiredModal();
-                return;
-            }
-            alert('Có lỗi xảy ra: ' + data.message);
-            return;
-        }
-
-        // Cập nhật conversationId và reset giao diện
-        currentConversationId = data.conversation.id;
-        chatHistory = [];
-        backToChatView();
-
-    } catch (error) {
-        console.error('Error creating conversation:', error);
-        alert('Không thể tạo cuộc hội thoại mới!');
-    }
+    
+    console.log('✅ Đã tạo cuộc hội thoại mới');
 }
 
 // Xóa cuộc hội thoại
@@ -751,18 +779,32 @@ async function sendChatMessage() {
 
             // Add bot response
             const botReply = data.success ? data.reply : 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau!';
+            const images = data.images || [];
+            
+            // Tạo HTML cho hình ảnh sản phẩm
+            let imagesHtml = '';
+            if (images.length > 0) {
+                imagesHtml = `
+                    <div class="flex gap-2 mt-3 overflow-x-auto pb-2">
+                        ${images.map(img => `
+                            <div class="flex-shrink-0 bg-gray-50 rounded-lg p-2 text-center cursor-pointer hover:bg-gray-100 transition" style="width: 100px;">
+                                <img src="${img.url}" alt="${img.name}" class="w-16 h-16 object-cover rounded-lg mx-auto mb-1" onerror="this.src='https://via.placeholder.com/64?text=SP'">
+                                <p class="text-xs text-gray-700 font-medium truncate">${escapeHtml(img.name)}</p>
+                                <p class="text-xs text-red-600 font-bold">${img.price}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
             
             const botDiv = document.createElement('div');
             botDiv.className = 'flex justify-start mb-3';
             botDiv.innerHTML = `
-                <div class="flex gap-2 max-w-[80%]">
-                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                        </svg>
-                    </div>
+                <div class="flex gap-2 max-w-[85%]">
+                    <img src="images/Screenshot 2025-11-10 154306.png" alt="Logo" class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-gray-200">
                     <div class="bg-white shadow-md px-4 py-2 rounded-2xl rounded-tl-none">
                         <p class="text-sm text-gray-800 whitespace-pre-wrap">${escapeHtml(botReply)}</p>
+                        ${imagesHtml}
                         <span class="text-xs text-gray-400 mt-1 block">${new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span>
                     </div>
                 </div>

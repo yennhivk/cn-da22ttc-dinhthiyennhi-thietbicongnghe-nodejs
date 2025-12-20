@@ -97,19 +97,34 @@ router.post('/send', optionalAuth, async (req, res) => {
         // Lấy userId từ token (nếu có)
         const userId = req.user?.ma_tai_khoan;
 
+        // Ưu tiên dùng fallback cho câu hỏi phổ biến (phản hồi nhanh)
+        const quickResponse = getQuickResponse(message);
+        if (quickResponse) {
+            if (userId) {
+                saveChatHistory(userId, message, quickResponse.text, conversationId);
+            }
+            return res.json({
+                success: true,
+                reply: quickResponse.text,
+                images: quickResponse.images || [],
+                source: 'quick'
+            });
+        }
+
         // Kiểm tra API key
         if (!GROQ_API_KEY || GROQ_API_KEY === 'your_groq_api_key_here') {
             // Fallback response nếu chưa có API key
-            const fallbackReply = getFallbackResponse(message);
+            const fallbackResponse = getFallbackResponse(message);
             
             // Lưu lịch sử chat vào database (nếu user đã đăng nhập)
             if (userId) {
-                await saveChatHistory(userId, message, fallbackReply, conversationId);
+                await saveChatHistory(userId, message, fallbackResponse.text, conversationId);
             }
             
             return res.json({
                 success: true,
-                reply: fallbackReply,
+                reply: fallbackResponse.text,
+                images: fallbackResponse.images || [],
                 source: 'fallback'
             });
         }
@@ -136,7 +151,7 @@ router.post('/send', optionalAuth, async (req, res) => {
             content: message
         });
 
-        // Gọi Groq API
+        // Gọi Groq API - sử dụng model nhanh hơn
         const response = await fetch(GROQ_API_URL, {
             method: 'POST',
             headers: {
@@ -144,11 +159,11 @@ router.post('/send', optionalAuth, async (req, res) => {
                 'Authorization': `Bearer ${GROQ_API_KEY}`
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
+                model: 'llama-3.1-8b-instant',  // Model nhỏ, phản hồi nhanh hơn
                 messages: messages,
                 temperature: 0.7,
-                max_tokens: 500,
-                top_p: 0.95
+                max_tokens: 300,  // Giảm để phản hồi nhanh hơn
+                top_p: 0.9
             })
         });
 
@@ -186,71 +201,135 @@ router.post('/send', optionalAuth, async (req, res) => {
     }
 });
 
-// Fallback responses khi không có API key hoặc lỗi
-function getFallbackResponse(message) {
-    const lowerMessage = message.toLowerCase();
+// Quick responses cho câu hỏi phổ biến (phản hồi tức thì) - trả về object {text, images}
+function getQuickResponse(message) {
+    const lowerMessage = message.toLowerCase().trim();
 
     // Chào hỏi
-    if (lowerMessage.match(/xin chào|hello|hi|chào|hey/)) {
-        return 'Xin chào! 👋 Chào mừng bạn đến với Yến Nhi Tech. Tôi có thể giúp gì cho bạn ạ?';
+    if (lowerMessage.match(/^(xin chào|hello|hi|chào|hey|alo|chào bạn|xin chao)$/i)) {
+        return { text: 'Xin chào! 👋 Chào mừng bạn đến với Yến Nhi Tech. Tôi có thể giúp gì cho bạn ạ?', images: [] };
     }
 
-    // Hỏi về sản phẩm
-    if (lowerMessage.match(/iphone|điện thoại|phone|samsung|xiaomi|oppo/)) {
-        return '📱 Yến Nhi Tech có đa dạng điện thoại chính hãng: iPhone, Samsung, Xiaomi, OPPO... với nhiều ưu đãi hấp dẫn! Bạn quan tâm dòng nào, để tôi tư vấn chi tiết ạ?';
+    // Tư vấn sản phẩm chung
+    if (lowerMessage.match(/^(tư vấn sản phẩm|tư vấn|muốn mua|cần mua|mua gì)$/i)) {
+        return { text: '📱 Yến Nhi Tech có đa dạng sản phẩm:\n• Điện thoại: iPhone, Samsung, Xiaomi, OPPO...\n• Laptop: MacBook, Dell, Asus, Lenovo...\n• Tablet: iPad, Samsung Tab...\n• Phụ kiện: Tai nghe, sạc, ốp lưng...\n\nBạn đang quan tâm đến loại sản phẩm nào ạ?', images: [] };
     }
 
-    if (lowerMessage.match(/laptop|macbook|dell|asus|lenovo|hp/)) {
-        return '💻 Chúng tôi có nhiều laptop từ gaming đến văn phòng: MacBook, Dell, Asus, Lenovo, HP... Bạn cần laptop cho mục đích gì để tôi tư vấn phù hợp ạ?';
+    // iPhone
+    if (lowerMessage.match(/iphone|ip\s?\d+/i) && !lowerMessage.match(/^apple$/i)) {
+        return {
+            text: '🍎 iPhone tại Yến Nhi Tech:\n• iPhone 15 Pro Max: 29.990.000đ\n• iPhone 15 Pro: 25.990.000đ\n• iPhone 15: 19.990.000đ\n\n✅ Bảo hành 12 tháng | Trả góp 0%',
+            images: [
+                { url: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=120&h=120&fit=crop', name: 'iPhone 15 Pro Max', price: '29.990.000đ' },
+                { url: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=120&h=120&fit=crop', name: 'iPhone 15 Pro', price: '25.990.000đ' }
+            ]
+        };
     }
 
-    // Giá cả
-    if (lowerMessage.match(/giá|bao nhiêu|price|tiền/)) {
-        return '💰 Để báo giá chính xác, bạn vui lòng cho tôi biết sản phẩm cụ thể bạn quan tâm, hoặc liên hệ hotline 1900.5301 để được tư vấn chi tiết ạ!';
+    // Samsung
+    if (lowerMessage.match(/samsung|galaxy/i)) {
+        return {
+            text: '📱 Samsung tại Yến Nhi Tech:\n• Galaxy S24 Ultra: 27.990.000đ\n• Galaxy S24+: 22.990.000đ\n• Galaxy Z Flip: 25.990.000đ\n\n✅ Bảo hành 12 tháng | Trả góp 0%',
+            images: [
+                { url: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=120&h=120&fit=crop', name: 'Galaxy S24 Ultra', price: '27.990.000đ' },
+                { url: 'https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=120&h=120&fit=crop', name: 'Galaxy S24+', price: '22.990.000đ' }
+            ]
+        };
     }
 
-    // Khuyến mãi
-    if (lowerMessage.match(/khuyến mãi|giảm giá|sale|ưu đãi|promotion/)) {
-        return '🎉 Hiện tại shop đang có nhiều chương trình khuyến mãi hấp dẫn! Bạn có thể xem tại trang Khuyến mãi trên website hoặc liên hệ hotline 1900.5301 để biết thêm chi tiết ạ!';
+    // Xiaomi
+    if (lowerMessage.match(/xiaomi|redmi|poco/i)) {
+        return {
+            text: '📱 Xiaomi tại Yến Nhi Tech:\n• Xiaomi 14 Ultra: 23.990.000đ\n• Redmi Note 13: 4.490.000đ\n\n✅ Giá tốt nhất | Bảo hành 18 tháng',
+            images: [
+                { url: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=120&h=120&fit=crop', name: 'Xiaomi 14 Ultra', price: '23.990.000đ' }
+            ]
+        };
     }
 
-    // Giao hàng
-    if (lowerMessage.match(/giao hàng|ship|delivery|vận chuyển/)) {
-        return '🚚 Yến Nhi Tech giao hàng toàn quốc! Miễn phí ship nội thành Trà Vinh. Thời gian giao hàng 1-3 ngày tùy khu vực. Bạn cần giao đến đâu ạ?';
+    // Laptop/MacBook
+    if (lowerMessage.match(/laptop|macbook|dell|asus|lenovo|hp|máy tính xách tay/i)) {
+        return {
+            text: '💻 Laptop tại Yến Nhi Tech:\n• MacBook Pro M3: 39.990.000đ\n• MacBook Air M3: 27.990.000đ\n• Dell XPS: 15.990.000đ\n\n✅ Bảo hành 12-24 tháng | Cài phần mềm miễn phí',
+            images: [
+                { url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=120&h=120&fit=crop', name: 'MacBook Pro M3', price: '39.990.000đ' },
+                { url: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=120&h=120&fit=crop', name: 'MacBook Air M3', price: '27.990.000đ' }
+            ]
+        };
     }
 
-    // Bảo hành
-    if (lowerMessage.match(/bảo hành|warranty|lỗi|hỏng|sửa/)) {
-        return '🛡️ Sản phẩm tại Yến Nhi Tech được bảo hành chính hãng 12-24 tháng. Nếu cần hỗ trợ bảo hành, vui lòng liên hệ hotline 1900.5325 (8:00 - 21:00) ạ!';
+    // iPad/Tablet
+    if (lowerMessage.match(/tablet|ipad|máy tính bảng/i)) {
+        return {
+            text: '📱 Tablet tại Yến Nhi Tech:\n• iPad Pro M4: 25.990.000đ\n• iPad Air M2: 15.990.000đ\n• iPad 10: 9.990.000đ\n\n✅ Tặng bao da, bút cảm ứng',
+            images: [
+                { url: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=120&h=120&fit=crop', name: 'iPad Pro M4', price: '25.990.000đ' }
+            ]
+        };
     }
 
-    // Địa chỉ
-    if (lowerMessage.match(/địa chỉ|ở đâu|cửa hàng|shop|location/)) {
-        return '📍 Yến Nhi Tech: 74-76 Lê Lợi, khóm 3, Trà Vinh. Mở cửa: 8:00 - 21:30 hàng ngày. Rất hân hạnh được đón tiếp bạn!';
+    // Tai nghe
+    if (lowerMessage.match(/tai nghe|airpods|headphone|earbuds/i)) {
+        return {
+            text: '🎧 Tai nghe tại Yến Nhi Tech:\n• AirPods Pro 2: 5.990.000đ\n• AirPods 3: 4.290.000đ\n• Samsung Buds: 2.490.000đ\n\n✅ Chính hãng 100%',
+            images: [
+                { url: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=120&h=120&fit=crop', name: 'AirPods Pro 2', price: '5.990.000đ' }
+            ]
+        };
     }
 
-    // Liên hệ
-    if (lowerMessage.match(/hotline|số điện thoại|liên hệ|contact|gọi/)) {
-        return '📞 Hotline Yến Nhi Tech:\n• Mua hàng: 1900.5301 (8:00 - 21:30)\n• Bảo hành: 1900.5325 (8:00 - 21:00)\n• Khiếu nại: 1900.5310\n• Email: support@yennhitech.vn';
+    // Apple chung
+    if (lowerMessage.match(/apple/i)) {
+        return {
+            text: '🍎 Sản phẩm Apple tại Yến Nhi Tech:\n• iPhone 15 series: từ 19.990.000đ\n• MacBook: từ 27.990.000đ\n• iPad: từ 9.990.000đ\n• AirPods: từ 4.290.000đ\n\n✅ Chính hãng Apple Việt Nam',
+            images: [
+                { url: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=120&h=120&fit=crop', name: 'iPhone 15 Pro', price: '25.990.000đ' },
+                { url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=120&h=120&fit=crop', name: 'MacBook Pro', price: '39.990.000đ' }
+            ]
+        };
     }
 
-    // Trả góp
-    if (lowerMessage.match(/trả góp|installment|góp|0%/)) {
-        return '💳 Yến Nhi Tech hỗ trợ trả góp 0% lãi suất qua thẻ tín dụng các ngân hàng. Bạn cần tư vấn thêm về điều kiện trả góp không ạ?';
+    // Các response không có hình
+    if (lowerMessage.match(/khuyến mãi|giảm giá|sale|ưu đãi/i)) {
+        return { text: '🎉 Khuyến mãi HOT:\n• Giảm đến 30% điện thoại\n• Tặng phụ kiện 2 triệu\n• Trả góp 0%\n• Freeship toàn quốc\n\n📞 Hotline: 1900.5301', images: [] };
+    }
+    if (lowerMessage.match(/giao hàng|ship|vận chuyển/i)) {
+        return { text: '🚚 Giao hàng:\n• Miễn phí nội thành Trà Vinh\n• Toàn quốc: 20-50k\n• Đơn >5 triệu: Freeship\n• Thời gian: 1-3 ngày', images: [] };
+    }
+    if (lowerMessage.match(/bảo hành|warranty/i)) {
+        return { text: '🛡️ Bảo hành:\n• Điện thoại: 12-24 tháng\n• Laptop: 12-24 tháng\n• Đổi mới 7 ngày nếu lỗi\n\n📞 Hotline: 1900.5325', images: [] };
+    }
+    if (lowerMessage.match(/địa chỉ|ở đâu|cửa hàng/i)) {
+        return { text: '📍 Yến Nhi Tech:\n🏪 74-76 Lê Lợi, Khóm 3, Trà Vinh\n⏰ 8:00 - 21:30 hàng ngày\n📞 1900.5301', images: [] };
+    }
+    if (lowerMessage.match(/hotline|liên hệ|số điện thoại/i)) {
+        return { text: '📞 Liên hệ:\n• Mua hàng: 1900.5301\n• Bảo hành: 1900.5325\n• Email: support@yennhitech.vn', images: [] };
+    }
+    if (lowerMessage.match(/trả góp|góp/i)) {
+        return { text: '💳 Trả góp 0% lãi suất qua thẻ tín dụng\n• Duyệt hồ sơ 15 phút\n• Chỉ cần CMND + Bằng lái\n\n📞 1900.5301', images: [] };
+    }
+    if (lowerMessage.match(/cảm ơn|thank/i)) {
+        return { text: 'Không có gì ạ! 😊 Rất vui được hỗ trợ bạn!', images: [] };
+    }
+    if (lowerMessage.match(/tạm biệt|bye/i)) {
+        return { text: 'Tạm biệt! 👋 Hẹn gặp lại bạn! 🌟', images: [] };
     }
 
-    // Thanh toán
-    if (lowerMessage.match(/thanh toán|payment|chuyển khoản|momo|zalopay/)) {
-        return '💵 Các hình thức thanh toán:\n• Tiền mặt khi nhận hàng (COD)\n• Chuyển khoản ngân hàng\n• Thẻ tín dụng/ghi nợ\n• Ví Momo, ZaloPay\nBạn muốn thanh toán theo hình thức nào ạ?';
-    }
+    return null;
+}
 
-    // Cảm ơn
-    if (lowerMessage.match(/cảm ơn|thank|thanks|tks/)) {
-        return 'Không có gì ạ! 😊 Rất vui được hỗ trợ bạn. Nếu cần thêm thông tin gì, đừng ngại hỏi nhé!';
-    }
-
-    // Default response
-    return 'Cảm ơn bạn đã liên hệ Yến Nhi Tech! 😊 Để được tư vấn chi tiết hơn, bạn vui lòng liên hệ hotline 1900.5301 hoặc cho tôi biết cụ thể bạn cần hỗ trợ về vấn đề gì ạ?';
+// Fallback responses khi không có API key hoặc lỗi
+// Fallback response khi AI không khả dụng
+function getFallbackResponse(message) {
+    // Thử quick response trước
+    const quickReply = getQuickResponse(message);
+    if (quickReply) return quickReply;
+    
+    // Default response cho các câu hỏi không match
+    return {
+        text: 'Cảm ơn bạn đã liên hệ Yến Nhi Tech! 😊\n\nTôi có thể hỗ trợ bạn về:\n• Tư vấn sản phẩm (iPhone, Samsung, Laptop...)\n• Khuyến mãi & giá cả\n• Giao hàng & thanh toán\n• Bảo hành & đổi trả\n\nBạn cần hỗ trợ vấn đề gì ạ?',
+        images: []
+    };
 }
 
 // Lưu lịch sử chat vào database
@@ -384,7 +463,16 @@ router.get('/conversations', requireAuth, async (req, res) => {
 // Tạo cuộc hội thoại mới
 router.post('/conversations', requireAuth, async (req, res) => {
     try {
+        console.log('📝 [CREATE CONV] User:', req.user);
         const userId = req.user.ma_tai_khoan;
+        
+        if (!userId) {
+            console.log('❌ [CREATE CONV] Không có userId');
+            return res.status(400).json({
+                success: false,
+                message: 'Không tìm thấy thông tin người dùng!'
+            });
+        }
 
         const { title = 'Cuộc hội thoại mới' } = req.body;
 
@@ -394,6 +482,7 @@ router.post('/conversations', requireAuth, async (req, res) => {
         `;
 
         const result = await query(sql, [userId, title]);
+        console.log('✅ [CREATE CONV] Tạo thành công, ID:', result.insertId);
 
         res.json({
             success: true,
@@ -407,10 +496,10 @@ router.post('/conversations', requireAuth, async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Create conversation error:', error);
+        console.error('❌ [CREATE CONV] Error:', error);
         res.status(500).json({
             success: false,
-            message: 'Có lỗi xảy ra!'
+            message: 'Có lỗi xảy ra: ' + error.message
         });
     }
 });
