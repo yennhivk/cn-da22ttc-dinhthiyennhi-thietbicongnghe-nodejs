@@ -77,12 +77,6 @@ app.use('/api/auth', authRouter);
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/news', require('./routes/news'));
 app.use('/api/contact', require('./routes/contact'));
-
-// Log all chatbot requests
-app.use('/api/chatbot', (req, res, next) => {
-    console.log(`📨 [CHATBOT] ${req.method} ${req.path}`);
-    next();
-}, require('./routes/chatbot'));
 // app.use('/api/cart', require('./routes/cart'));
 // app.use('/api/orders', require('./routes/orders'));
 
