@@ -293,8 +293,7 @@
                 <div class="flex border-b overflow-x-auto">
                     <button class="tab-button tab-active px-6 py-4 font-medium whitespace-nowrap" data-tab="all">Tất cả</button>
                     <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="pending">Chờ xác nhận</button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="processing">Vận chuyển</button>
-                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="shipping">Chờ giao hàng</button>
+                    <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="shipping">Đang giao</button>
                     <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="completed">Hoàn thành</button>
                     <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="cancelled">Đã hủy</button>
                     <button class="tab-button px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="return">Trả hàng/Hoàn tiền</button>
@@ -333,7 +332,6 @@
         const tabToStatus = {
             'all': null,
             'pending': 'dang_xu_ly',
-            'processing': 'dang_xu_ly',
             'shipping': 'dang_giao',
             'completed': 'hoan_thanh',
             'cancelled': 'da_huy',
@@ -380,6 +378,15 @@
                 const result = await response.json();
 
                 if (result.success) {
+                    console.log('=== DEBUG API RESPONSE ===');
+                    console.log('Orders data:', result.data);
+                    if (result.data.length > 0) {
+                        console.log('First order items:', result.data[0].items);
+                        if (result.data[0].items && result.data[0].items.length > 0) {
+                            console.log('First item anh_chinh:', result.data[0].items[0].anh_chinh);
+                        }
+                    }
+                    
                     allOrders = result.data.map(order => {
                         const status = statusMap[order.trang_thai] || { key: 'pending', text: 'ĐANG XỬ LÝ', color: 'text-yellow-600' };
                         return {
