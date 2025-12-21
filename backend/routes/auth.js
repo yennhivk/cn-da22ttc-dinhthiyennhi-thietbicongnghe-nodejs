@@ -1050,6 +1050,129 @@ router.get('/google-admin', (req, res, next) => {
     });
 });
 
+// ==========================================
+// LẤY ĐƠN HÀNG CỦA USER
+// ==========================================
+router.get('/my-orders', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.ma_tai_khoan;
+        const { status, page = 1, limit = 20 } = req.query;
+        const offset = (page - 1) * limit;
+
+        let query = `
+            SELECT dh.*, dh.trang_thai_don_hang as trang_thai
+            FROM don_hang dh
+            WHERE dh.ma_tai_khoan = ?
+        `;
+        const params = [userId];
+
+        if (status && status !== 'all') {
+            query += ` AND dh.trang_thai_don_hang = ?`;
+            params.push(status);
+        }
+
+        query += ` ORDER BY dh.ngay_tao DESC LIMIT ? OFFSET ?`;
+        params.push(parseInt(limit), parseInt(offset));
+
+        const [orders] = await db.query(query, params);
+
+        // Lấy chi tiết sản phẩm cho mỗi đơn hàng
+        for (let order of orders) {
+            const [items] = await db.query(`
+                SELECT ctdh.*, sp.ten_san_pham, sp.thuong_hieu,
+                       (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
+                FROM chi_tiet_don_hang ctdh
+                LEFT JOIN san_pham sp ON ctdh.ma_san_pham = sp.ma_san_pham
+                WHERE ctdh.ma_don_hang = ?
+            `, [order.ma_don_hang]);
+            order.items = items;
+        }
+
+        // Đếm tổng số đơn hàng
+        const [countResult] = await db.query(
+            `SELECT COUNT(*) as total FROM don_hang WHERE ma_tai_khoan = ?`,
+            [userId]
+        );
+
+        res.json({
+            success: true,
+            data: orders,
+            pagination: {
+                page: parseInt(page),
+                limit: parseInt(limit),
+                total: countResult[0].total
+            }
+        });
+    } catch (error) {
+        console.error('Get my orders error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// Lấy chi tiết đơn hàng của user
+router.get('/my-orders/:id', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.ma_tai_khoan;
+        const orderId = req.params.id;
+
+        const [orders] = await db.query(`
+            SELECT dh.*, dh.trang_thai_don_hang as trang_thai
+            FROM don_hang dh
+            WHERE dh.ma_don_hang = ? AND dh.ma_tai_khoan = ?
+        `, [orderId, userId]);
+
+        if (orders.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
+        }
+
+        const [items] = await db.query(`
+            SELECT ctdh.*, sp.ten_san_pham, sp.thuong_hieu,
+                   (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
+            FROM chi_tiet_don_hang ctdh
+            LEFT JOIN san_pham sp ON ctdh.ma_san_pham = sp.ma_san_pham
+            WHERE ctdh.ma_don_hang = ?
+        `, [orderId]);
+
+        res.json({
+            success: true,
+            data: { ...orders[0], items }
+        });
+    } catch (error) {
+        console.error('Get order detail error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// Hủy đơn hàng (chỉ khi đang xử lý)
+router.put('/my-orders/:id/cancel', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.ma_tai_khoan;
+        const orderId = req.params.id;
+
+        // Kiểm tra đơn hàng thuộc về user và đang ở trạng thái có thể hủy
+        const [orders] = await db.query(`
+            SELECT * FROM don_hang 
+            WHERE ma_don_hang = ? AND ma_tai_khoan = ? AND trang_thai_don_hang = 'dang_xu_ly'
+        `, [orderId, userId]);
+
+        if (orders.length === 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Không thể hủy đơn hàng này. Đơn hàng không tồn tại hoặc đã được xử lý.' 
+            });
+        }
+
+        await db.query(`
+            UPDATE don_hang SET trang_thai_don_hang = 'da_huy' WHERE ma_don_hang = ?
+        `, [orderId]);
+
+        res.json({ success: true, message: 'Đã hủy đơn hàng thành công' });
+    } catch (error) {
+        console.error('Cancel order error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
 module.exports = router;
 module.exports.authenticateToken = authenticateToken;
 module.exports.requireAdmin = requireAdmin;

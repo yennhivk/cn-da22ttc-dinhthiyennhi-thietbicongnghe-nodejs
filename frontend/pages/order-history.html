@@ -336,6 +336,25 @@
         let currentTab = 'all';
         let allOrders = [];
 
+        // Map trạng thái từ backend sang frontend
+        const statusMap = {
+            'dang_xu_ly': { key: 'pending', text: 'CHỜ XÁC NHẬN', color: 'text-yellow-600' },
+            'dang_giao': { key: 'shipping', text: 'ĐANG GIAO', color: 'text-blue-600' },
+            'hoan_thanh': { key: 'completed', text: 'HOÀN THÀNH', color: 'text-green-600', success: true },
+            'da_huy': { key: 'cancelled', text: 'ĐÃ HỦY', color: 'text-red-600' }
+        };
+
+        // Map ngược từ tab sang trạng thái backend
+        const tabToStatus = {
+            'all': null,
+            'pending': 'dang_xu_ly',
+            'processing': 'dang_xu_ly',
+            'shipping': 'dang_giao',
+            'completed': 'hoan_thanh',
+            'cancelled': 'da_huy',
+            'return': 'da_huy'
+        };
+
         document.querySelectorAll('.tab-button').forEach(button => {
             button.addEventListener('click', function() {
                 document.querySelectorAll('.tab-button').forEach(btn => {
@@ -351,48 +370,70 @@
 
         async function loadOrders() {
             const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) {
+            const token = localStorage.getItem('token');
+            
+            if (!user || !token) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            allOrders = [
-                {
-                    id: '1',
-                    shopName: 'Shop Benbo',
-                    status: 'cancelled',
-                    statusText: 'ĐÃ HỦY',
-                    products: [{
-                        name: 'Đàn guitar acoustic dành cho người mới tập chơi',
-                        variant: 'Phân loại hàng: Màu đen',
-                        quantity: 1,
-                        price: 564999,
-                        originalPrice: 750000,
-                        image: '../images/Screenshot 2025-11-10 154306.png'
-                    }],
-                    total: 579499,
-                    createdAt: '2025-01-15'
-                },
-                {
-                    id: '2',
-                    shopName: 'Xưởng May Bảo Ngọc',
-                    status: 'completed',
-                    statusText: 'HOÀN THÀNH',
-                    deliverySuccess: true,
-                    products: [{
-                        name: 'Áo Thun Nam Nữ Balen Tay Ngắn Form Rộng',
-                        variant: 'Phân loại hàng: Xanh Than, S',
-                        quantity: 1,
-                        price: 65000,
-                        originalPrice: 118000,
-                        image: '../images/Screenshot 2025-11-10 154306.png'
-                    }],
-                    total: 65000,
-                    createdAt: '2025-01-10'
-                }
-            ];
+            const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = `
+                <div class="bg-white rounded-lg shadow p-12 text-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+                    <p class="text-gray-500">Đang tải đơn hàng...</p>
+                </div>
+            `;
 
-            filterOrders();
+            try {
+                const response = await fetch(`${API_URL}/auth/my-orders`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    allOrders = result.data.map(order => {
+                        const status = statusMap[order.trang_thai] || { key: 'pending', text: 'ĐANG XỬ LÝ', color: 'text-yellow-600' };
+                        return {
+                            id: order.ma_don_hang,
+                            shopName: 'Yến Nhi Tech',
+                            status: status.key,
+                            statusText: status.text,
+                            statusColor: status.color,
+                            deliverySuccess: status.success || false,
+                            backendStatus: order.trang_thai,
+                            products: (order.items || []).map(item => ({
+                                id: item.ma_san_pham,
+                                name: item.ten_san_pham || 'Sản phẩm',
+                                variant: item.thuong_hieu ? `Thương hiệu: ${item.thuong_hieu}` : '',
+                                quantity: item.so_luong,
+                                price: item.gia_ban || item.gia,
+                                image: item.anh_chinh ? `http://localhost:3300${item.anh_chinh}` : '../images/Screenshot 2025-11-10 154306.png'
+                            })),
+                            total: order.tong_tien,
+                            address: order.dia_chi_giao_hang,
+                            createdAt: order.ngay_tao
+                        };
+                    });
+                    filterOrders();
+                } else {
+                    ordersList.innerHTML = `
+                        <div class="bg-white rounded-lg shadow p-12 text-center">
+                            <p class="text-red-500">${result.message || 'Không thể tải đơn hàng'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Load orders error:', error);
+                ordersList.innerHTML = `
+                    <div class="bg-white rounded-lg shadow p-12 text-center">
+                        <p class="text-red-500">Lỗi kết nối server. Vui lòng thử lại sau.</p>
+                    </div>
+                `;
+            }
         }
 
         function filterOrders() {
@@ -403,15 +444,150 @@
             renderOrders(filtered);
         }
 
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
         function renderOrders(orders) {
             const ordersList = document.getElementById('ordersList');
             if (orders.length === 0) {
-                ordersList.innerHTML = '<div class="bg-white rounded-lg shadow p-12 text-center"><p class="text-gray-500 text-lg">Chưa có đơn hàng</p></div>';
+                ordersList.innerHTML = `
+                    <div class="bg-white rounded-lg shadow p-12 text-center">
+                        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <p class="text-gray-500 text-lg">Chưa có đơn hàng nào</p>
+                        <a href="products.html" class="inline-block mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
+                            Mua sắm ngay
+                        </a>
+                    </div>
+                `;
                 return;
             }
 
-            ordersList.innerHTML = orders.map(order => '<div class="bg-white rounded-lg shadow"><div class="flex items-center justify-between px-6 py-3 border-b bg-gray-50"><div class="flex items-center gap-4"><span class="font-medium">Yêu thích</span><span class="font-semibold">' + order.shopName + '</span><button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Xem Shop</button></div><div class="flex items-center gap-2">' + (order.deliverySuccess ? '<span class="text-green-600 text-sm">✓ Giao hàng thành công</span>' : '') + '<span class="text-orange-500 font-semibold">' + order.statusText + '</span></div></div><div class="p-6">' + order.products.map(product => '<div class="flex gap-4 mb-4"><img src="' + product.image + '" alt="' + product.name + '" class="w-20 h-20 object-cover rounded border"><div class="flex-1"><h3 class="font-medium mb-1 line-clamp-2">' + product.name + '</h3><p class="text-sm text-gray-600 mb-2">' + product.variant + '</p><p class="text-sm text-gray-600">x' + product.quantity + '</p></div><div class="text-right">' + (product.originalPrice ? '<p class="text-sm text-gray-400 line-through">' + product.originalPrice.toLocaleString('vi-VN') + 'đ</p>' : '') + '<p class="text-orange-500 font-medium">' + product.price.toLocaleString('vi-VN') + 'đ</p></div></div>').join('') + '</div><div class="px-6 py-4 border-t bg-gray-50"><div class="flex items-center justify-between"><div class="text-sm text-gray-600">Đã hủy bởi bạn</div><div class="flex items-center gap-6"><div class="text-right"><span class="text-gray-600">Thành tiền:</span><span class="text-2xl font-semibold text-orange-500 ml-2">' + order.total.toLocaleString('vi-VN') + 'đ</span></div><div class="flex gap-2">' + (order.status === 'cancelled' ? '<button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button><button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Xem Chi Tiết Hủy Đơn</button><button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>' : '') + (order.status === 'completed' ? '<button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Mua Lại</button><button class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50">Liên Hệ Người Bán</button>' : '') + '</div></div></div></div></div>').join('');
+            ordersList.innerHTML = orders.map(order => `
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-6 py-3 border-b bg-gray-50">
+                        <div class="flex items-center gap-4">
+                            <span class="text-orange-500">❤️</span>
+                            <span class="font-semibold">${order.shopName}</span>
+                            <a href="products.html" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100 transition">Xem Shop</a>
+                            <span class="text-gray-400 text-sm">Mã đơn: #${order.id}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${order.deliverySuccess ? '<span class="text-green-600 text-sm flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Giao hàng thành công</span>' : ''}
+                            <span class="${order.statusColor} font-semibold">${order.statusText}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Products -->
+                    <div class="p-6">
+                        ${order.products.map(product => `
+                            <div class="flex gap-4 mb-4 last:mb-0">
+                                <img src="${product.image}" alt="${product.name}" 
+                                     class="w-20 h-20 object-cover rounded border"
+                                     onerror="this.src='../images/Screenshot 2025-11-10 154306.png'">
+                                <div class="flex-1">
+                                    <h3 class="font-medium mb-1 line-clamp-2">${product.name}</h3>
+                                    ${product.variant ? `<p class="text-sm text-gray-600 mb-2">${product.variant}</p>` : ''}
+                                    <p class="text-sm text-gray-600">x${product.quantity}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-orange-500 font-medium">${Number(product.price).toLocaleString('vi-VN')}đ</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="px-6 py-4 border-t bg-gray-50">
+                        <div class="flex items-center justify-between flex-wrap gap-4">
+                            <div class="text-sm text-gray-600">
+                                ${order.createdAt ? `<span>Ngày đặt: ${formatDate(order.createdAt)}</span>` : ''}
+                                ${order.address ? `<br><span class="text-gray-500">📍 ${order.address}</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-6">
+                                <div class="text-right">
+                                    <span class="text-gray-600">Thành tiền:</span>
+                                    <span class="text-2xl font-semibold text-orange-500 ml-2">${Number(order.total).toLocaleString('vi-VN')}đ</span>
+                                </div>
+                                <div class="flex gap-2 flex-wrap">
+                                    ${order.status === 'pending' ? `
+                                        <button onclick="cancelOrder(${order.id})" class="px-4 py-2 border border-red-300 text-red-500 rounded hover:bg-red-50 transition">Hủy đơn</button>
+                                    ` : ''}
+                                    ${order.status === 'completed' || order.status === 'cancelled' ? `
+                                        <a href="products.html" class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition">Mua lại</a>
+                                    ` : ''}
+                                    <button onclick="viewOrderDetail(${order.id})" class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 transition">Chi tiết</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
+
+        async function cancelOrder(orderId) {
+            if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return;
+            
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${API_URL}/auth/my-orders/${orderId}/cancel`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert('Đã hủy đơn hàng thành công!');
+                    loadOrders();
+                } else {
+                    alert(result.message || 'Không thể hủy đơn hàng');
+                }
+            } catch (error) {
+                console.error('Cancel order error:', error);
+                alert('Lỗi kết nối server');
+            }
+        }
+
+        function viewOrderDetail(orderId) {
+            // Có thể mở modal hoặc chuyển trang chi tiết
+            const order = allOrders.find(o => o.id === orderId);
+            if (order) {
+                let detail = `Đơn hàng #${order.id}\n`;
+                detail += `Trạng thái: ${order.statusText}\n`;
+                detail += `Ngày đặt: ${formatDate(order.createdAt)}\n`;
+                detail += `Địa chỉ: ${order.address || 'Chưa có'}\n\n`;
+                detail += `Sản phẩm:\n`;
+                order.products.forEach(p => {
+                    detail += `- ${p.name} x${p.quantity}: ${Number(p.price).toLocaleString('vi-VN')}đ\n`;
+                });
+                detail += `\nTổng tiền: ${Number(order.total).toLocaleString('vi-VN')}đ`;
+                alert(detail);
+            }
+        }
+
+        // Search orders
+        document.getElementById('searchOrder').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            if (!searchTerm) {
+                filterOrders();
+                return;
+            }
+            
+            const filtered = allOrders.filter(order => {
+                const matchId = order.id.toString().includes(searchTerm);
+                const matchProduct = order.products.some(p => p.name.toLowerCase().includes(searchTerm));
+                return matchId || matchProduct;
+            });
+            renderOrders(filtered);
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             loadOrders();
