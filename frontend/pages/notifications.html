@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo - Yến Nhi Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tab-active {
+            color: #ee4d2d;
+            border-bottom: 2px solid #ee4d2d;
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .notification-item:hover { background-color: #f9fafb; }
+        .notification-unread { background-color: #fef3c7; border-left: 4px solid #f59e0b; }
+        .notification-unread:hover { background-color: #fef9c3; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-yellow-500 to-yellow-400 shadow-lg fixed top-0 left-0 right-0 z-50 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-16 gap-2 sm:gap-3 lg:gap-4">
+                <!-- Logo -->
+                <a href="../index.html" class="flex items-center gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0 hover:scale-105 transition-all duration-300">
+                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 md:w-14 md:h-14 object-cover rounded-full shadow-lg">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-lg md:text-xl font-bold text-red-600 drop-shadow-md">Yến Nhi</span>
+                        <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', 'Lucida Calligraphy', cursive;">Tech</span>
+                    </div>
+                </a>
+
+                <!-- Search Bar -->
+                <div class="flex flex-1 max-w-xl mx-2 sm:mx-3">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?" class="w-full pl-10 pr-3 py-2 md:py-2.5 rounded-lg border-0 text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <svg class="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex items-center gap-6 ml-auto text-black-500">
+                    <a href="../index.html" class="text-lg font-bold hover:text-red-600 transition">Trang chủ</a>
+                    <a href="products.html" class="text-lg font-bold hover:text-red-600 transition">Sản phẩm</a>
+                    <a href="news.html" class="text-lg font-bold hover:text-red-600 transition">Tin tức</a>
+                    <a href="promotions.html" class="text-lg font-bold hover:text-red-600 transition">Khuyến mãi</a>
+                    <a href="about.html" class="text-lg font-bold hover:text-red-600 transition">Giới thiệu</a>
+                    <a href="contact.html" class="text-lg font-bold hover:text-red-600 transition">Liên hệ</a>
+                </div>
+
+                <!-- Right items -->
+                <div class="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                    <!-- Cart Icon -->
+                    <a href="cart.html" class="relative text-black-500 hover:text-red-600 transition transform hover:scale-110 flex-shrink-0" title="Giỏ hàng">
+                        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-green-500 text-red-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+
+                    <!-- User Account -->
+                    <div id="userAccountContainer"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Secondary Navigation - Category Menu -->
+    <div class="bg-white shadow-md fixed top-16 left-0 right-0 z-40 hidden lg:block">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center gap-6 py-3 text-sm relative">
+                <!-- Danh mục Dropdown Button -->
+                <div class="relative group">
+                    <button class="flex items-center gap-2 font-bold text-white bg-gradient-to-r from-red-600 to-red-700 px-4 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <span>Danh mục</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Navigation Items -->
+                <a href="products.html" class="flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    Laptop
+                </a>
+                <a href="products.html" class="text-base font-bold text-red-500 hover:text-blue-600 transition">PC Gaming</a>
+                <a href="products.html" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Màn hình</a>
+                <a href="products.html" class="text-base font-bold text-red-500 hover:text-blue-600 transition">CPU, VGA</a>
+                <a href="products.html" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Case, Nguồn</a>
+                <a href="products.html" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Chuột, Bàn phím</a>
+                <a href="products.html" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Tai nghe</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promotional Banner -->
+    <section class="pt-16 lg:pt-28 bg-red-600 fixed top-0 left-0 right-0 z-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between overflow-x-auto gap-4 py-3 text-white scrollbar-hide">
+                <a href="promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🔥</span></div>
+                    <span class="font-bold text-sm md:text-base">Săn Deal Online</span>
+                </a>
+                <a href="products.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🎁</span></div>
+                    <span class="font-bold text-sm md:text-base">Samsung mua 1 tặng 1</span>
+                </a>
+                <a href="promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🎫</span></div>
+                    <span class="font-bold text-sm md:text-base">Voucher tặng bạn mới</span>
+                </a>
+                <a href="products.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🚿</span></div>
+                    <span class="font-bold text-sm md:text-base">Máy nước nóng từ 2.29 triệu</span>
+                </a>
+                <a href="promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
+                    <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse">
+                        <span class="font-black text-red-600 text-sm">11.11</span>
+                    </div>
+                    <span class="font-bold text-sm md:text-base">Trợ giá cực đã - Sale 50%</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <br><br>
+
+    <!-- Main Content -->
+    <main class="pt-40 pb-12 min-h-screen">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-2xl font-bold">Thông báo</h1>
+                <button id="markAllRead" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                    Đánh dấu tất cả đã đọc
+                </button>
+            </div>
+
+            <!-- Notification Tabs -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="flex border-b overflow-x-auto">
+                    <button class="notification-tab tab-active px-6 py-4 font-medium whitespace-nowrap" data-tab="all">Tất cả</button>
+                    <button class="notification-tab px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="order">Đơn hàng</button>
+                    <button class="notification-tab px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="promotion">Khuyến mãi</button>
+                    <button class="notification-tab px-6 py-4 font-medium whitespace-nowrap text-gray-600 hover:text-gray-900" data-tab="system">Hệ thống</button>
+                </div>
+            </div>
+
+            <!-- Notifications List -->
+            <div id="notificationsList" class="space-y-3"></div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden bg-white rounded-lg shadow p-12 text-center">
+                <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <p class="text-gray-500 text-lg">Không có thông báo nào</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-yellow-100 text-gray-900 pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">VỀ YẾN NHI MOBILE</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="about.html" class="hover:text-gray-900 hover:font-semibold transition">Giới thiệu công ty</a></li>
+                        <li><a href="#" class="hover:text-gray-900 hover:font-semibold transition">Tuyển dụng</a></li>
+                        <li><a href="#" class="hover:text-gray-900 hover:font-semibold transition">Hệ thống cửa hàng</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">CHÍNH SÁCH</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="#" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo hành</a></li>
+                        <li><a href="#" class="hover:text-gray-900 hover:font-semibold transition">Chính sách đổi trả</a></li>
+                        <li><a href="#" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">THÔNG TIN</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="contact.html" class="hover:text-gray-900 hover:font-semibold transition">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#" class="hover:text-gray-900 hover:font-semibold transition">Hướng dẫn thanh toán</a></li>
+                        <li><a href="order-history.html" class="hover:text-gray-900 hover:font-semibold transition">Tra cứu đơn hàng</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">TỔNG ĐÀI HỖ TRỢ</h3>
+                    <div class="space-y-2 text-sm">
+                        <p class="text-gray-900 font-semibold">Mua hàng: 1900.5301</p>
+                        <p class="text-gray-900 font-semibold">Bảo hành: 1900.5325</p>
+                        <p class="text-gray-900 font-semibold">Email: support@yennhimobile.vn</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-300 pt-6 text-center text-sm text-gray-600">
+                <p>© 2025 Yến Nhi Tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentTab = 'all';
+        let allNotifications = [];
+
+        const sampleNotifications = [
+            { id: 1, type: 'order', title: 'Đơn hàng đã được xác nhận', message: 'Đơn hàng #3 của bạn đã được xác nhận và đang được chuẩn bị.', time: new Date(Date.now() - 1000 * 60 * 30), read: false, icon: 'fa-box', iconColor: 'text-blue-500', link: 'order-history.html' },
+            { id: 2, type: 'promotion', title: 'Khuyến mãi đặc biệt!', message: 'Giảm 20% cho tất cả sản phẩm Apple trong tuần này. Nhanh tay đặt hàng!', time: new Date(Date.now() - 1000 * 60 * 60 * 2), read: false, icon: 'fa-tag', iconColor: 'text-red-500', link: 'promotions.html' },
+            { id: 3, type: 'order', title: 'Đơn hàng đang được giao', message: 'Đơn hàng #2 của bạn đang trên đường giao đến bạn.', time: new Date(Date.now() - 1000 * 60 * 60 * 24), read: true, icon: 'fa-truck', iconColor: 'text-green-500', link: 'order-history.html' },
+            { id: 4, type: 'system', title: 'Chào mừng bạn đến với Yến Nhi Tech!', message: 'Cảm ơn bạn đã đăng ký tài khoản. Khám phá ngay các sản phẩm công nghệ hàng đầu.', time: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), read: true, icon: 'fa-bell', iconColor: 'text-yellow-500', link: null }
+        ];
+
+        function formatTimeAgo(date) {
+            const diff = new Date() - date;
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (minutes < 60) return `${minutes} phút trước`;
+            if (hours < 24) return `${hours} giờ trước`;
+            if (days < 7) return `${days} ngày trước`;
+            return date.toLocaleDateString('vi-VN');
+        }
+
+        function renderNotifications(notifications) {
+            const container = document.getElementById('notificationsList');
+            const emptyState = document.getElementById('emptyState');
+            if (notifications.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+            container.innerHTML = notifications.map(notif => `
+                <div class="notification-item ${notif.read ? '' : 'notification-unread'} bg-white rounded-lg shadow p-4 cursor-pointer transition" onclick="handleNotificationClick(${notif.id}, '${notif.link || ''}')">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <i class="fas ${notif.icon} ${notif.iconColor}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <h3 class="font-semibold text-gray-900">${notif.title}</h3>
+                                ${notif.read ? '' : '<span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></span>'}
+                            </div>
+                            <p class="text-gray-600 text-sm mb-2">${notif.message}</p>
+                            <span class="text-xs text-gray-400">${formatTimeAgo(notif.time)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleNotificationClick(id, link) {
+            const notif = allNotifications.find(n => n.id === id);
+            if (notif) notif.read = true;
+            filterNotifications();
+            if (link) window.location.href = link;
+        }
+
+        function filterNotifications() {
+            let filtered = currentTab === 'all' ? allNotifications : allNotifications.filter(n => n.type === currentTab);
+            renderNotifications(filtered);
+        }
+
+        document.querySelectorAll('.notification-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.notification-tab').forEach(t => {
+                    t.classList.remove('tab-active');
+                    t.classList.add('text-gray-600');
+                });
+                this.classList.add('tab-active');
+                this.classList.remove('text-gray-600');
+                currentTab = this.dataset.tab;
+                filterNotifications();
+            });
+        });
+
+        document.getElementById('markAllRead').addEventListener('click', function() {
+            allNotifications.forEach(n => n.read = true);
+            filterNotifications();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            allNotifications = sampleNotifications;
+            filterNotifications();
+        });
+    </script>
+
+    <!-- Auth UI Script -->
+    <script src="../js/auth-ui.js"></script>
+    <!-- Chatbot Widget -->
+    <link rel="stylesheet" href="../css/chatbot.css">
+    <script src="../js/chatbot.js"></script>
+</body>
+</html>
