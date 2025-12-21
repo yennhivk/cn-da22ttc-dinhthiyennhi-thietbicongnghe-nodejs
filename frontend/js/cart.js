@@ -1,5 +1,8 @@
 // Cart JavaScript
-const API_URL = 'http://localhost:3300/api';
+// Chỉ khai báo nếu chưa tồn tại
+if (typeof API_URL === 'undefined') {
+    var API_URL = 'http://localhost:3300/api';
+}
 const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKhông có ảnh%3C/text%3E%3C/svg%3E';
 
 // Lưu trữ các sản phẩm được chọn (theo index)

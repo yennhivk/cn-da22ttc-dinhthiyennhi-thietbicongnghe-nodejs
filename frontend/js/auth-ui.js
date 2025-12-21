@@ -2,7 +2,10 @@
 // AUTH UI - Quản lý hiển thị đăng nhập/đăng xuất
 // ==========================================
 
-const AUTH_API_URL = 'http://localhost:3300/api';
+// Chỉ khai báo nếu chưa tồn tại
+if (typeof AUTH_API_URL === 'undefined') {
+    var AUTH_API_URL = 'http://localhost:3300/api';
+}
 
 // Khởi tạo Auth UI khi trang load
 document.addEventListener('DOMContentLoaded', function() {

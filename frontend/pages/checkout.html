@@ -382,19 +382,19 @@
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Tỉnh/Thành phố *</label>
-                                    <select id="tinhThanh" name="tinhThanh" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <select id="tinhThanh" name="tinhThanh" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                                         <option value="">Chọn tỉnh/thành</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Quận/Huyện *</label>
-                                    <select id="quanHuyen" name="quanHuyen" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" disabled>
+                                    <select id="quanHuyen" name="quanHuyen" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                                         <option value="">Chọn quận/huyện</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Phường/Xã *</label>
-                                    <select id="phuongXa" name="phuongXa" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" disabled>
+                                    <select id="phuongXa" name="phuongXa" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
                                         <option value="">Chọn phường/xã</option>
                                     </select>
                                 </div>
@@ -604,9 +604,22 @@
             const user = JSON.parse(localStorage.getItem('user'));
             const token = localStorage.getItem('token');
 
+            // Điền thông tin cơ bản từ localStorage trước
+            if (user) {
+                if (user.email) {
+                    document.getElementById('email').value = user.email;
+                }
+                if (user.ten_dang_nhap) {
+                    document.getElementById('hoTen').value = user.ten_dang_nhap;
+                }
+                if (user.so_dien_thoai) {
+                    document.getElementById('soDienThoai').value = user.so_dien_thoai;
+                }
+            }
+
+            // Nếu có token, thử lấy thông tin mới nhất từ server
             if (user && token) {
                 try {
-                    // Gọi API lấy thông tin chi tiết từ backend
                     const response = await fetch(`${API_URL}/auth/me`, {
                         method: 'GET',
                         headers: {
@@ -619,43 +632,22 @@
                         const data = await response.json();
                         const userInfo = data.user;
 
-                        // Tự động điền thông tin cơ bản
+                        // Cập nhật thông tin từ server
                         if (userInfo.ho_ten) {
                             document.getElementById('hoTen').value = userInfo.ho_ten;
                         }
                         if (userInfo.so_dien_thoai) {
                             document.getElementById('soDienThoai').value = userInfo.so_dien_thoai;
-                            // Cập nhật localStorage để dùng cho lần sau
                             user.so_dien_thoai = userInfo.so_dien_thoai;
                             localStorage.setItem('user', JSON.stringify(user));
                         }
                         if (userInfo.email) {
                             document.getElementById('email').value = userInfo.email;
                         }
-                    } else {
-                        // Fallback: Dùng thông tin từ localStorage
-                        if (user.email) {
-                            document.getElementById('email').value = user.email;
-                        }
-                        if (user.ten_dang_nhap) {
-                            document.getElementById('hoTen').value = user.ten_dang_nhap;
-                        }
-                        if (user.so_dien_thoai) {
-                            document.getElementById('soDienThoai').value = user.so_dien_thoai;
-                        }
                     }
+                    // Nếu 401, không làm gì - đã có thông tin từ localStorage
                 } catch (error) {
-                    console.error('Lỗi khi tải thông tin người dùng:', error);
-                    // Nếu API lỗi, dùng thông tin cơ bản từ localStorage
-                    if (user.email) {
-                        document.getElementById('email').value = user.email;
-                    }
-                    if (user.ten_dang_nhap) {
-                        document.getElementById('hoTen').value = user.ten_dang_nhap;
-                    }
-                    if (user.so_dien_thoai) {
-                        document.getElementById('soDienThoai').value = user.so_dien_thoai;
-                    }
+                    console.log('Không thể lấy thông tin mới từ server, sử dụng dữ liệu local');
                 }
 
                 // Load địa chỉ mặc định từ trang account
@@ -903,30 +895,119 @@
             }
         }
 
-        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Xóa checkout data và các sản phẩm đã chọn khỏi giỏ hàng
             const user = JSON.parse(localStorage.getItem('user'));
+            const token = localStorage.getItem('token');
+            
+            if (!user || !token) {
+                alert('Vui lòng đăng nhập để đặt hàng');
+                window.location.href = 'login.html';
+                return;
+            }
+            
             const checkoutKey = user ? `checkout_${user.ma_tai_khoan}` : 'checkout_guest';
             const cartKey = user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
             const selectedKey = user ? `selected_${user.ma_tai_khoan}` : 'selected_guest';
             
             // Lấy danh sách sản phẩm đã checkout
             const checkoutItems = JSON.parse(localStorage.getItem(checkoutKey)) || [];
-            const checkoutProductIds = checkoutItems.map(item => item.ma_san_pham);
             
-            // Xóa sản phẩm đã checkout khỏi giỏ hàng
-            const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-            const updatedCart = cart.filter(item => !checkoutProductIds.includes(item.ma_san_pham));
-            localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+            if (checkoutItems.length === 0) {
+                alert('Giỏ hàng trống! Vui lòng thêm sản phẩm vào giỏ hàng.');
+                window.location.href = 'cart.html';
+                return;
+            }
             
-            // Xóa checkout data và selected items
-            localStorage.removeItem(checkoutKey);
-            localStorage.removeItem(selectedKey);
+            // Lấy thông tin địa chỉ
+            const hoTen = document.getElementById('hoTen').value.trim();
+            const soDienThoai = document.getElementById('soDienThoai').value.trim();
+            const diaChi = document.getElementById('diaChi').value.trim();
+            const ghiChu = document.getElementById('ghiChu')?.value || '';
             
-            alert('Đặt hàng thành công! Cảm ơn bạn đã mua hàng.');
-            window.location.href = '../index.html';
+            // Validate các trường bắt buộc
+            if (!hoTen) {
+                alert('Vui lòng nhập họ và tên');
+                document.getElementById('hoTen').focus();
+                return;
+            }
+            if (!soDienThoai) {
+                alert('Vui lòng nhập số điện thoại');
+                document.getElementById('soDienThoai').focus();
+                return;
+            }
+            if (!diaChi) {
+                alert('Vui lòng nhập địa chỉ');
+                document.getElementById('diaChi').focus();
+                return;
+            }
+            
+            // Lấy text hiển thị từ select
+            const tinhThanh = document.getElementById('tinhThanh');
+            const quanHuyen = document.getElementById('quanHuyen');
+            const phuongXa = document.getElementById('phuongXa');
+            
+            const cityText = tinhThanh.options[tinhThanh.selectedIndex]?.text || '';
+            const districtText = quanHuyen.options[quanHuyen.selectedIndex]?.text || '';
+            const wardText = phuongXa.options[phuongXa.selectedIndex]?.text || '';
+            
+            // Lấy phương thức thanh toán
+            const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || 'cod';
+            
+            // Tạo địa chỉ đầy đủ
+            let fullAddress = `${hoTen}, ${soDienThoai}, ${diaChi}`;
+            if (wardText && wardText !== 'Chọn phường/xã') fullAddress += `, ${wardText}`;
+            if (districtText && districtText !== 'Chọn quận/huyện') fullAddress += `, ${districtText}`;
+            if (cityText && cityText !== 'Chọn tỉnh/thành') fullAddress += `, ${cityText}`;
+            
+            // Disable nút submit
+            const submitBtn = document.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang xử lý...';
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        items: checkoutItems,
+                        dia_chi_giao_hang: fullAddress,
+                        so_dien_thoai: soDienThoai,
+                        ghi_chu: ghiChu,
+                        phuong_thuc_thanh_toan: paymentMethod
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Xóa sản phẩm đã checkout khỏi giỏ hàng
+                    const checkoutProductIds = checkoutItems.map(item => item.ma_san_pham);
+                    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+                    const updatedCart = cart.filter(item => !checkoutProductIds.includes(item.ma_san_pham));
+                    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+                    
+                    // Xóa checkout data và selected items
+                    localStorage.removeItem(checkoutKey);
+                    localStorage.removeItem(selectedKey);
+                    
+                    alert(`🎉 ${result.message}\nMã đơn hàng: #${result.data.ma_don_hang}`);
+                    window.location.href = 'order-history.html';
+                } else {
+                    alert(result.message || 'Đặt hàng thất bại');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Đặt hàng';
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Lỗi kết nối server. Vui lòng thử lại.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Đặt hàng';
+            }
         });
 
         // Gọi cả hai hàm khi trang load

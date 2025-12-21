@@ -1051,6 +1051,132 @@ router.get('/google-admin', (req, res, next) => {
 });
 
 // ==========================================
+// TẠO ĐƠN HÀNG MẪU CHO USER HIỆN TẠI
+// ==========================================
+router.post('/create-sample-orders', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.ma_tai_khoan;
+        console.log('=== CREATE SAMPLE ORDERS ===');
+        console.log('User ID:', userId);
+
+        // Lấy danh sách sản phẩm có sẵn
+        const [products] = await db.query('SELECT ma_san_pham, ten_san_pham, gia FROM san_pham LIMIT 6');
+        
+        if (products.length === 0) {
+            return res.status(400).json({ success: false, message: 'Không có sản phẩm trong database' });
+        }
+
+        const sampleOrders = [
+            { trang_thai: 'dang_xu_ly', thanh_toan: 'cho_xu_ly', dia_chi: '123 Nguyễn Văn A, Quận 1, TP.HCM' },
+            { trang_thai: 'dang_giao', thanh_toan: 'da_thanh_toan', dia_chi: '456 Lê Văn B, Quận 3, TP.HCM' },
+            { trang_thai: 'hoan_thanh', thanh_toan: 'da_thanh_toan', dia_chi: '789 Trần Văn C, Quận 7, TP.HCM' },
+            { trang_thai: 'da_huy', thanh_toan: 'cho_xu_ly', dia_chi: '321 Phạm Văn D, Quận Bình Thạnh, TP.HCM' }
+        ];
+
+        const createdOrders = [];
+
+        for (let i = 0; i < sampleOrders.length; i++) {
+            const order = sampleOrders[i];
+            const product = products[i % products.length];
+            const quantity = Math.floor(Math.random() * 2) + 1;
+            const tongTien = product.gia * quantity;
+
+            // Tạo đơn hàng
+            const [orderResult] = await db.query(`
+                INSERT INTO don_hang (ma_tai_khoan, tong_tien, trang_thai_thanh_toan, trang_thai_don_hang, dia_chi_giao_hang, ngay_tao)
+                VALUES (?, ?, ?, ?, ?, NOW() - INTERVAL ? DAY)
+            `, [userId, tongTien, order.thanh_toan, order.trang_thai, order.dia_chi, i * 2]);
+
+            const orderId = orderResult.insertId;
+
+            // Thêm chi tiết đơn hàng
+            await db.query(`
+                INSERT INTO chi_tiet_don_hang (ma_don_hang, ma_san_pham, so_luong, gia_ban)
+                VALUES (?, ?, ?, ?)
+            `, [orderId, product.ma_san_pham, quantity, product.gia]);
+
+            createdOrders.push({
+                ma_don_hang: orderId,
+                san_pham: product.ten_san_pham,
+                trang_thai: order.trang_thai
+            });
+        }
+
+        res.json({
+            success: true,
+            message: `Đã tạo ${createdOrders.length} đơn hàng mẫu`,
+            data: createdOrders
+        });
+    } catch (error) {
+        console.error('Create sample orders error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// ==========================================
+// TẠO ĐƠN HÀNG MỚI
+// ==========================================
+router.post('/orders', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.ma_tai_khoan;
+        const { items, dia_chi_giao_hang, so_dien_thoai, ghi_chu, phuong_thuc_thanh_toan } = req.body;
+
+        if (!items || items.length === 0) {
+            return res.status(400).json({ success: false, message: 'Giỏ hàng trống' });
+        }
+
+        if (!dia_chi_giao_hang) {
+            return res.status(400).json({ success: false, message: 'Vui lòng nhập địa chỉ giao hàng' });
+        }
+
+        // Tính tổng tiền
+        let tongTien = 0;
+        for (const item of items) {
+            const gia = parseFloat(item.gia_ban) || parseFloat(item.gia) || 0;
+            const soLuong = parseInt(item.so_luong) || 1;
+            tongTien += gia * soLuong;
+        }
+
+        // Tạo đơn hàng
+        const [orderResult] = await db.query(`
+            INSERT INTO don_hang (ma_tai_khoan, tong_tien, trang_thai_thanh_toan, trang_thai_don_hang, dia_chi_giao_hang, ngay_tao)
+            VALUES (?, ?, ?, 'dang_xu_ly', ?, NOW())
+        `, [userId, tongTien, phuong_thuc_thanh_toan === 'COD' ? 'cho_xu_ly' : 'da_thanh_toan', dia_chi_giao_hang]);
+
+        const orderId = orderResult.insertId;
+
+        // Thêm chi tiết đơn hàng
+        for (const item of items) {
+            const gia = parseFloat(item.gia_ban) || parseFloat(item.gia) || 0;
+            const soLuong = parseInt(item.so_luong) || 1;
+            
+            await db.query(`
+                INSERT INTO chi_tiet_don_hang (ma_don_hang, ma_san_pham, so_luong, gia_ban)
+                VALUES (?, ?, ?, ?)
+            `, [orderId, item.ma_san_pham, soLuong, gia]);
+        }
+
+        // Thêm thông tin thanh toán
+        await db.query(`
+            INSERT INTO thanh_toan (ma_don_hang, phuong_thuc, so_tien, ma_giao_dich)
+            VALUES (?, ?, ?, ?)
+        `, [orderId, phuong_thuc_thanh_toan || 'COD', tongTien, `GD${Date.now()}`]);
+
+        res.json({
+            success: true,
+            message: 'Đặt hàng thành công!',
+            data: {
+                ma_don_hang: orderId,
+                tong_tien: tongTien
+            }
+        });
+    } catch (error) {
+        console.error('Create order error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server khi tạo đơn hàng' });
+    }
+});
+
+// ==========================================
 // LẤY ĐƠN HÀNG CỦA USER
 // ==========================================
 router.get('/my-orders', authenticateToken, async (req, res) => {
@@ -1079,12 +1205,14 @@ router.get('/my-orders', authenticateToken, async (req, res) => {
         // Lấy chi tiết sản phẩm cho mỗi đơn hàng
         for (let order of orders) {
             const [items] = await db.query(`
-                SELECT ctdh.*, sp.ten_san_pham, sp.thuong_hieu,
+                SELECT ctdh.*, sp.ten_san_pham, sp.thuong_hieu, sp.gia,
                        (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
                 FROM chi_tiet_don_hang ctdh
                 LEFT JOIN san_pham sp ON ctdh.ma_san_pham = sp.ma_san_pham
                 WHERE ctdh.ma_don_hang = ?
             `, [order.ma_don_hang]);
+            
+            // Giữ nguyên đường dẫn ảnh từ database (frontend sẽ xử lý)
             order.items = items;
         }
 

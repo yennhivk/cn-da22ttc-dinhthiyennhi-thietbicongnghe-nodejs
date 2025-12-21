@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -19,24 +19,12 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* Hide all Live Server overlays and notifications */
-        body::before,
-        body::after,
-        #vscode-live-server-indicator,
-        [id*="vscode"],
-        [class*="live-server"],
-        div[style*="position: fixed"][style*="top: 0"],
-        div[style*="z-index: 999"] {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-        }
     </style>
 </head>
 <body class="bg-gray-50">
     <div id="header-placeholder"></div>
 
-     <!-- Secondary Navigation - Category Menu -->
+    <!-- Secondary Navigation - Category Menu -->
     <div class="bg-white shadow-md fixed top-16 left-0 right-0 z-40 hidden lg:block">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex items-center gap-6 py-3 text-sm relative">
@@ -128,7 +116,7 @@
                             <!-- Right Content - Gợi ý -->
                             <div class="col-span-9 p-6 flex flex-col h-[500px]">
                                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 flex-shrink-0">
-                                    <span class="text-xl">🔥</span>
+                                    <span class="text-xl">💡</span>
                                     <span>Gợi ý cho bạn</span>
                                 </h3>
 
@@ -180,7 +168,7 @@
                                         <a href="#" class="group text-center">
                                             <div class="bg-gray-50 rounded-lg p-3 mb-2 group-hover:bg-red-50 transition">
                                                 <div class="w-14 h-14 mx-auto flex items-center justify-center">
-                                                    <span class="text-4xl">📲</span>
+                                                    <span class="text-4xl">📞</span>
                                                 </div>
                                             </div>
                                             <p class="text-sm font-semibold text-gray-700 group-hover:text-red-600">Phổ thông 4G</p>
@@ -254,7 +242,7 @@
                 <!-- Deal 2 -->
                 <a href="../pages/products.html?brand=samsung" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
                     <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">📱</span>
+                        <span class="text-2xl">🎁</span>
                     </div>
                     <span class="font-bold text-sm md:text-base">Samsung mua 1 tặng 1</span>
                 </a>
@@ -262,7 +250,7 @@
                 <!-- Deal 3 -->
                 <a href="../pages/promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
                     <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">🎁</span>
+                        <span class="text-2xl">🎫</span>
                     </div>
                     <span class="font-bold text-sm md:text-base">Voucher tặng bạn mới</span>
                 </a>
@@ -270,7 +258,7 @@
                 <!-- Deal 4 -->
                 <a href="../pages/products.html?category=appliances" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
                     <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">❄️</span>
+                        <span class="text-2xl">🚿</span>
                     </div>
                     <span class="font-bold text-sm md:text-base">Máy nước nóng từ 2.29 triệu</span>
                 </a>
@@ -280,13 +268,13 @@
                     <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse">
                         <span class="font-black text-red-600 text-sm">11.11</span>
                     </div>
-                    <span class="font-bold text-sm md:text-base">Trở giá cực đã - Sale 50%</span>
+                    <span class="font-bold text-sm md:text-base">Trợ giá cực đã - Sale 50%</span>
                 </a>
             </div>
         </div>
     </section>
 
-<br><br>
+    <br><br>
     
     <main class="pt-28 pb-12 min-h-screen">
         <div class="max-w-7xl mx-auto px-4">
@@ -295,7 +283,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                   
+                    Quay lại
                 </a>
             </div>
 
@@ -327,15 +315,12 @@
         </div>
     </main>
 
-    
-
     <script src="../js/load-components.js"></script>
     <script src="../js/auth-ui.js"></script>
     <script>
-        const API_URL = 'http://localhost:3300/api';
+        const ORDER_API_URL = 'http://localhost:3300/api';
         let currentTab = 'all';
         let allOrders = [];
-
         // Map trạng thái từ backend sang frontend
         const statusMap = {
             'dang_xu_ly': { key: 'pending', text: 'CHỜ XÁC NHẬN', color: 'text-yellow-600' },
@@ -386,7 +371,7 @@
             `;
 
             try {
-                const response = await fetch(`${API_URL}/auth/my-orders`, {
+                const response = await fetch(`${ORDER_API_URL}/auth/my-orders`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -405,14 +390,27 @@
                             statusColor: status.color,
                             deliverySuccess: status.success || false,
                             backendStatus: order.trang_thai,
-                            products: (order.items || []).map(item => ({
-                                id: item.ma_san_pham,
-                                name: item.ten_san_pham || 'Sản phẩm',
-                                variant: item.thuong_hieu ? `Thương hiệu: ${item.thuong_hieu}` : '',
-                                quantity: item.so_luong,
-                                price: item.gia_ban || item.gia,
-                                image: item.anh_chinh ? `http://localhost:3300${item.anh_chinh}` : '../images/Screenshot 2025-11-10 154306.png'
-                            })),
+                            products: (order.items || []).map(item => {
+                                // Xử lý đường dẫn ảnh giống products.js
+                                let imageUrl = '../images/placeholder.png';
+                                if (item.anh_chinh) {
+                                    if (item.anh_chinh.startsWith('http')) {
+                                        imageUrl = item.anh_chinh;
+                                    } else if (item.anh_chinh.startsWith('images/')) {
+                                        imageUrl = `http://localhost:3300/${item.anh_chinh}`;
+                                    } else {
+                                        imageUrl = `http://localhost:3300/${item.anh_chinh}`;
+                                    }
+                                }
+                                return {
+                                    id: item.ma_san_pham,
+                                    name: item.ten_san_pham || 'Sản phẩm',
+                                    variant: item.thuong_hieu ? `Thương hiệu: ${item.thuong_hieu}` : '',
+                                    quantity: item.so_luong,
+                                    price: item.gia_ban || item.gia,
+                                    image: imageUrl
+                                };
+                            }),
                             total: order.tong_tien,
                             address: order.dia_chi_giao_hang,
                             createdAt: order.ngay_tao
@@ -452,14 +450,15 @@
 
         function renderOrders(orders) {
             const ordersList = document.getElementById('ordersList');
+            
             if (orders.length === 0) {
                 ordersList.innerHTML = `
                     <div class="bg-white rounded-lg shadow p-12 text-center">
                         <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
-                        <p class="text-gray-500 text-lg">Chưa có đơn hàng nào</p>
-                        <a href="products.html" class="inline-block mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
+                        <p class="text-gray-500 text-lg mb-4">Chưa có đơn hàng nào</p>
+                        <a href="products.html" class="inline-block px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition">
                             Mua sắm ngay
                         </a>
                     </div>
@@ -469,7 +468,6 @@
 
             ordersList.innerHTML = orders.map(order => `
                 <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <!-- Header -->
                     <div class="flex items-center justify-between px-6 py-3 border-b bg-gray-50">
                         <div class="flex items-center gap-4">
                             <span class="text-orange-500">❤️</span>
@@ -483,7 +481,6 @@
                         </div>
                     </div>
                     
-                    <!-- Products -->
                     <div class="p-6">
                         ${order.products.map(product => `
                             <div class="flex gap-4 mb-4 last:mb-0">
@@ -502,7 +499,6 @@
                         `).join('')}
                     </div>
                     
-                    <!-- Footer -->
                     <div class="px-6 py-4 border-t bg-gray-50">
                         <div class="flex items-center justify-between flex-wrap gap-4">
                             <div class="text-sm text-gray-600">
@@ -535,7 +531,7 @@
             
             const token = localStorage.getItem('token');
             try {
-                const response = await fetch(`${API_URL}/auth/my-orders/${orderId}/cancel`, {
+                const response = await fetch(`${ORDER_API_URL}/auth/my-orders/${orderId}/cancel`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -557,20 +553,76 @@
         }
 
         function viewOrderDetail(orderId) {
-            // Có thể mở modal hoặc chuyển trang chi tiết
             const order = allOrders.find(o => o.id === orderId);
             if (order) {
-                let detail = `Đơn hàng #${order.id}\n`;
-                detail += `Trạng thái: ${order.statusText}\n`;
-                detail += `Ngày đặt: ${formatDate(order.createdAt)}\n`;
-                detail += `Địa chỉ: ${order.address || 'Chưa có'}\n\n`;
-                detail += `Sản phẩm:\n`;
-                order.products.forEach(p => {
-                    detail += `- ${p.name} x${p.quantity}: ${Number(p.price).toLocaleString('vi-VN')}đ\n`;
-                });
-                detail += `\nTổng tiền: ${Number(order.total).toLocaleString('vi-VN')}đ`;
-                alert(detail);
+                // Tạo modal hiển thị chi tiết đơn hàng
+                const modalHtml = `
+                    <div id="orderDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onclick="closeOrderModal(event)">
+                        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+                            <div class="p-6 border-b">
+                                <div class="flex justify-between items-center">
+                                    <h2 class="text-xl font-bold">Chi tiết đơn hàng #${order.id}</h2>
+                                    <button onclick="closeOrderModal()" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <div class="mb-4">
+                                    <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${order.statusColor} bg-gray-100">${order.statusText}</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+                                    <div>
+                                        <p class="text-gray-500">Ngày đặt hàng</p>
+                                        <p class="font-medium">${formatDate(order.createdAt)}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500">Địa chỉ giao hàng</p>
+                                        <p class="font-medium">${order.address || 'Chưa có'}</p>
+                                    </div>
+                                </div>
+                                <div class="border-t pt-4">
+                                    <h3 class="font-semibold mb-4">Sản phẩm</h3>
+                                    <div class="space-y-4">
+                                        ${order.products.map(p => `
+                                            <div class="flex gap-4">
+                                                <img src="${p.image}" alt="${p.name}" class="w-16 h-16 object-cover rounded border" onerror="this.src='../images/placeholder.png'">
+                                                <div class="flex-1">
+                                                    <p class="font-medium">${p.name}</p>
+                                                    ${p.variant ? `<p class="text-sm text-gray-500">${p.variant}</p>` : ''}
+                                                    <p class="text-sm text-gray-500">Số lượng: ${p.quantity}</p>
+                                                </div>
+                                                <p class="text-orange-500 font-medium">${Number(p.price).toLocaleString('vi-VN')}đ</p>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                <div class="border-t mt-4 pt-4">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-lg font-semibold">Tổng tiền:</span>
+                                        <span class="text-2xl font-bold text-orange-500">${Number(order.total).toLocaleString('vi-VN')}đ</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 border-t bg-gray-50 flex justify-end gap-3">
+                                ${order.status === 'pending' ? `
+                                    <button onclick="closeOrderModal(); cancelOrder(${order.id})" class="px-4 py-2 border border-red-300 text-red-500 rounded hover:bg-red-50 transition">Hủy đơn</button>
+                                ` : ''}
+                                <button onclick="closeOrderModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
             }
+        }
+
+        function closeOrderModal(event) {
+            if (event && event.target.id !== 'orderDetailModal') return;
+            const modal = document.getElementById('orderDetailModal');
+            if (modal) modal.remove();
         }
 
         // Search orders
@@ -693,16 +745,16 @@
             </div>
 
             <!-- Payment & Shipping Methods -->
-            <div class="border-t border-gray-600 pt-8 mb-8">
+            <div class="border-t border-gray-300 pt-8 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Shipping -->
                     <div>
                         <h4 class="text-sm font-bold mb-4 text-gray-900">ĐƠN VỊ VẬN CHUYỂN</h4>
                         <div class="flex flex-wrap gap-4">
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 GHTK</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📦 Viettel Post</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚛 J&T Express</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📮 VNPost</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 Viettel Post</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 J&T Express</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 VNPost</div>
                         </div>
                     </div>
 
@@ -711,9 +763,9 @@
                         <h4 class="text-sm font-bold mb-4 text-gray-900">PHƯƠNG THỨC THANH TOÁN</h4>
                         <div class="flex flex-wrap gap-4">
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💳 Visa/Master</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏦 ATM</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💰 Momo</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏧 ZaloPay</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏧 ATM</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📱 Momo</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📱 ZaloPay</div>
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💵 COD</div>
                         </div>
                     </div>
@@ -721,7 +773,7 @@
             </div>
 
             <!-- Social & Copyright -->
-            <div class="border-t border-gray-600 pt-6">
+            <div class="border-t border-gray-300 pt-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="text-sm text-gray-900">
                         <p>&copy; 2024 Yến Nhi Tech. All rights reserved.</p>
@@ -729,13 +781,13 @@
                     </div>
                     <div class="flex gap-4">
                         <a href="#" class="bg-blue-600 hover:bg-blue-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
                         <a href="#" class="bg-red-600 hover:bg-red-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                         </a>
                         <a href="#" class="bg-pink-600 hover:bg-pink-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                         </a>
                     </div>
                 </div>
@@ -750,7 +802,6 @@
         </svg>
     </button>
 
-    <script src="../js/auth-ui.js"></script>
     <script src="../js/cart.js"></script>
     <script src="../js/main.js"></script>
     <!-- Chatbot Widget -->
