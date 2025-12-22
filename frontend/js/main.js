@@ -340,11 +340,56 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if user is logged in and update UI
     if (isLoggedIn()) {
         const user = getCurrentUser();
+        
+        // Cập nhật phần user account area (cho các trang có cấu trúc mới)
+        const userAccountArea = document.getElementById('userAccountArea');
+        const loginBtn = document.getElementById('loginBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        const userDisplayName = document.getElementById('userDisplayName');
+        const userAvatarLetter = document.getElementById('userAvatarLetter');
+        const userAvatarImg = document.getElementById('userAvatarImg');
+        const dropdownUserName = document.getElementById('dropdownUserName');
+        const dropdownUserEmail = document.getElementById('dropdownUserEmail');
+        
+        if (userAccountArea && loginBtn && userDropdown) {
+            // Ẩn nút đăng nhập, hiện dropdown user
+            loginBtn.classList.add('hidden');
+            userDropdown.classList.remove('hidden');
+            
+            // Hiển thị tên user
+            const displayName = user.ho_ten || user.ten_dang_nhap || 'User';
+            if (userDisplayName) {
+                userDisplayName.textContent = displayName;
+            }
+            
+            // Hiển thị chữ cái đầu trong avatar
+            if (userAvatarLetter) {
+                userAvatarLetter.textContent = displayName.charAt(0).toLowerCase();
+            }
+            
+            // Hiển thị avatar nếu có
+            if (userAvatarImg && user.hinh_anh) {
+                const avatarSrc = user.hinh_anh.startsWith('http') ? user.hinh_anh : 'http://localhost:3300' + user.hinh_anh;
+                userAvatarImg.src = avatarSrc;
+                userAvatarImg.classList.remove('hidden');
+                if (userAvatarLetter) userAvatarLetter.classList.add('hidden');
+            }
+            
+            // Cập nhật dropdown info
+            if (dropdownUserName) {
+                dropdownUserName.textContent = displayName;
+            }
+            if (dropdownUserEmail) {
+                dropdownUserEmail.textContent = user.email || '';
+            }
+        }
+        
+        // Fallback cho các trang cũ
         const loginButtons = document.querySelectorAll('[href*="login.html"]');
         loginButtons.forEach(btn => {
             if (btn.textContent.includes('Đăng nhập')) {
                 btn.textContent = user.name || user.ten_dang_nhap || 'Tài khoản';
-                btn.href = 'pages/profile.html';
+                btn.href = 'pages/account.html';
             }
         });
     }
