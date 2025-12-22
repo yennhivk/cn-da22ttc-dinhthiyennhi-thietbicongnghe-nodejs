@@ -1,7 +1,6 @@
 // Chatbot Widget with Groq AI + Chat History (User-based)
 (function() {
-    const GROQ_API_KEY = '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';
-    const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+    const CHATBOT_API_URL = 'http://localhost:3300/api/chatbot/chat';
     const STORAGE_PREFIX = 'yennhi_chat_';
     
     const isInPages = window.location.pathname.includes('/pages/');
@@ -520,20 +519,16 @@ Hãy trả lời ngắn gọn (tối đa 3-4 câu), thân thiện và sử dụn
             saveSessions();
         }
 
-        const response = await fetch(GROQ_API_URL, {
+        const response = await fetch(CHATBOT_API_URL, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${GROQ_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: 'system', content: SYSTEM_PROMPT },
                     ...conversationHistory
-                ],
-                temperature: 0.7,
-                max_tokens: 500
+                ]
             })
         });
 
