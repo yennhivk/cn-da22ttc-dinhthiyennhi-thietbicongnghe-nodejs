@@ -119,26 +119,54 @@ function handleLogoutGlobal() {
 }
 
 // Hàm cập nhật badge số thông báo chưa đọc
-function updateNotificationBadge() {
+async function updateNotificationBadge() {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) return;
+    const token = localStorage.getItem('token');
     
-    // Lấy thông báo từ localStorage (dùng chung key với trang notifications)
-    const storageKey = 'yennhi_notifications_' + (user.ma_tai_khoan || user.ma_khach_hang || 'guest');
-    let notifications = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    // Lấy số từ localStorage trước (đã được cập nhật bởi trang notifications)
+    const cachedCount = parseInt(localStorage.getItem('notification_unread_count') || '0');
+    updateAllNotificationBadges(cachedCount);
     
-    // Nếu chưa có thông báo trong storage, dùng mẫu mặc định
-    if (notifications.length === 0) {
-        notifications = [
-            { id: 1, read: false },
-            { id: 2, read: false }
-        ];
+    if (!user || !token) return;
+    
+    try {
+        // Gọi API lấy tổng số thông báo
+        const response = await fetch(`${AUTH_API_URL}/notifications`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success && result.data) {
+                // Lấy danh sách ID đã đọc từ localStorage
+                const readKey = `read_notifications_${user.ma_tai_khoan}`;
+                let readIds = [];
+                try {
+                    readIds = JSON.parse(localStorage.getItem(readKey)) || [];
+                } catch { readIds = []; }
+                
+                // Đếm số thông báo chưa đọc
+                const unreadCount = result.data.filter(n => {
+                    const id = n.id || n.ma_thong_bao;
+                    const isRead = n.read === true || n.read === 1 || readIds.includes(id);
+                    return !isRead;
+                }).length;
+                
+                // Lưu vào localStorage
+                localStorage.setItem('notification_unread_count', unreadCount);
+                
+                // Cập nhật tất cả badge trên trang
+                updateAllNotificationBadges(unreadCount);
+            }
+        }
+    } catch (error) {
+        console.log('Error fetching notification count:', error);
     }
-    
-    // Đếm số thông báo chưa đọc
-    const unreadCount = notifications.filter(n => !n.read).length;
-    
-    // Cập nhật badge
+}
+
+// Cập nhật tất cả badge thông báo trên trang
+function updateAllNotificationBadges(unreadCount) {
+    // Cập nhật badge trong dropdown user
     const badge = document.getElementById('notificationBadge');
     if (badge) {
         if (unreadCount > 0) {
@@ -148,4 +176,20 @@ function updateNotificationBadge() {
             badge.classList.add('hidden');
         }
     }
+    
+    // Cập nhật badge ở index.html nếu có
+    const badgeIndex = document.getElementById('notificationBadgeIndex');
+    if (badgeIndex) {
+        if (unreadCount > 0) {
+            badgeIndex.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badgeIndex.classList.remove('hidden');
+        } else {
+            badgeIndex.classList.add('hidden');
+        }
+    }
+}
+
+// Hàm để các trang khác gọi khi cần refresh badge
+function refreshNotificationBadge() {
+    updateNotificationBadge();
 }

@@ -409,13 +409,27 @@
                     <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl shadow-lg p-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">🎁 Mã giảm giá</h3>
                         <div class="flex gap-2">
-                            <input type="text" placeholder="Nhập mã giảm giá..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">Áp dụng</button>
+                            <input type="text" id="promoCodeInput" placeholder="Nhập mã giảm giá..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button onclick="applyPromoCode()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">Áp dụng</button>
                         </div>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <button class="bg-white border-2 border-yellow-400 text-gray-900 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-yellow-50 transition">GIAM100K</button>
-                            <button class="bg-white border-2 border-yellow-400 text-gray-900 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-yellow-50 transition">FREESHIP</button>
-                            <button class="bg-white border-2 border-yellow-400 text-gray-900 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-yellow-50 transition">SALE20</button>
+                        
+                        <!-- Mã đã lưu từ trang khuyến mãi -->
+                        <div id="savedPromosContainer" class="mt-4">
+                            <p class="text-sm text-gray-600 mb-2 font-medium">📌 Mã đã lưu:</p>
+                            <div id="savedPromosList" class="flex flex-wrap gap-2">
+                                <!-- Sẽ được render bằng JS -->
+                            </div>
+                        </div>
+                        
+                        <!-- Mã đang áp dụng -->
+                        <div id="appliedPromoContainer" class="hidden mt-4 p-3 bg-green-100 rounded-lg border border-green-300">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-green-700 font-bold">✅ Đang áp dụng: </span>
+                                    <span id="appliedPromoCode" class="text-green-800 font-mono font-bold"></span>
+                                </div>
+                                <button onclick="removeAppliedPromo()" class="text-red-500 hover:text-red-700 font-bold text-sm">✕ Xóa</button>
+                            </div>
                         </div>
                     </div>
                     

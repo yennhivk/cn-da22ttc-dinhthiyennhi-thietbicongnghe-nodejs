@@ -2391,7 +2391,7 @@
             const method = id ? 'PUT' : 'POST';
             const d = await apiCall(url, method, body);
             if (d.success) {
-                alert(id ? 'Cập nhật thành công!' : 'Thêm thành công!');
+                alert(id ? 'Cập nhật thành công!' : 'Thêm thành công! Thông báo đã được gửi đến người dùng.');
                 closePromotionModal();
                 loadPromotions();
             } else {

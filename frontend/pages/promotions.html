@@ -1257,12 +1257,15 @@
                                     ${promo.dieu_kien_ap_dung ? `<div class="inline-block border border-red-200 text-red-500 text-[10px] px-2 py-0.5 rounded mt-2 font-bold uppercase">${promo.dieu_kien_ap_dung}</div>` : ''}
                                     <div class="text-gray-400 text-xs mt-3">HSD: ${endDate.toLocaleDateString('vi-VN')}</div>
                                 </div>
-                                <button onclick="copyPromoCode('${promo.ma_giam_gia}')" class="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition shadow-sm text-sm">
-                                    📋 Sao chép
+                                <button onclick="savePromoCode('${promo.ma_giam_gia}', '${promo.ten_khuyen_mai.replace(/'/g, "\\'")}', this)" class="save-promo-btn bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition shadow-sm text-sm">
+                                    💾 Lưu mã
                                 </button>
                             </div>
                         `;
                     }).join('');
+                    
+                    // Cập nhật trạng thái nút sau khi render
+                    updateSavedPromoButtons();
                 } else {
                     container.innerHTML = `
                         <div class="w-full text-center py-8">
@@ -1281,18 +1284,73 @@
             }
         }
         
-        function copyPromoCode(code) {
-            navigator.clipboard.writeText(code).then(() => {
-                alert(`Đã sao chép mã: ${code}`);
-            }).catch(() => {
-                // Fallback
-                const input = document.createElement('input');
-                input.value = code;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand('copy');
-                document.body.removeChild(input);
-                alert(`Đã sao chép mã: ${code}`);
+        // Lấy key lưu mã khuyến mãi theo user
+        function getSavedPromosKey() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            return user ? `saved_promos_${user.ma_tai_khoan}` : 'saved_promos_guest';
+        }
+        
+        // Lấy danh sách mã đã lưu
+        function getSavedPromos() {
+            try {
+                return JSON.parse(localStorage.getItem(getSavedPromosKey())) || [];
+            } catch {
+                return [];
+            }
+        }
+        
+        // Lưu mã khuyến mãi
+        function savePromoCode(code, name, button) {
+            const savedPromos = getSavedPromos();
+            
+            // Kiểm tra xem mã đã được lưu chưa
+            const existingIndex = savedPromos.findIndex(p => p.code === code);
+            
+            if (existingIndex >= 0) {
+                // Đã lưu rồi -> Xóa mã
+                savedPromos.splice(existingIndex, 1);
+                localStorage.setItem(getSavedPromosKey(), JSON.stringify(savedPromos));
+                
+                // Cập nhật giao diện nút
+                button.innerHTML = '💾 Lưu mã';
+                button.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                alert(`Đã xóa mã "${code}" khỏi danh sách đã lưu!`);
+            } else {
+                // Chưa lưu -> Lưu mã mới
+                savedPromos.push({
+                    code: code,
+                    name: name,
+                    savedAt: new Date().toISOString()
+                });
+                localStorage.setItem(getSavedPromosKey(), JSON.stringify(savedPromos));
+                
+                // Cập nhật giao diện nút
+                button.innerHTML = '✅ Đã lưu';
+                button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                button.classList.add('bg-gray-400', 'hover:bg-gray-500');
+                
+                alert(`Đã lưu mã "${code}" vào giỏ hàng!\nBạn có thể sử dụng mã này khi thanh toán.`);
+            }
+        }
+        
+        // Cập nhật trạng thái các nút đã lưu
+        function updateSavedPromoButtons() {
+            const savedPromos = getSavedPromos();
+            const savedCodes = savedPromos.map(p => p.code);
+            
+            document.querySelectorAll('.save-promo-btn').forEach(btn => {
+                const onclickAttr = btn.getAttribute('onclick');
+                const match = onclickAttr.match(/savePromoCode\('([^']+)'/);
+                if (match) {
+                    const code = match[1];
+                    if (savedCodes.includes(code)) {
+                        btn.innerHTML = '✅ Đã lưu';
+                        btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        btn.classList.add('bg-gray-400', 'hover:bg-gray-500');
+                    }
+                }
             });
         }
         

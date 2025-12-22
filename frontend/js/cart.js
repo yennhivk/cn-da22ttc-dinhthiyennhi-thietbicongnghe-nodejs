@@ -452,3 +452,147 @@ function toggleMobileMenu() {
         mobileMenu.classList.toggle('hidden');
     }
 }
+
+
+// ==========================================
+// PROMO CODE FUNCTIONS
+// ==========================================
+
+// Lấy key lưu mã khuyến mãi theo user
+function getSavedPromosKey() {
+    const user = getCurrentUser();
+    return user ? `saved_promos_${user.ma_tai_khoan}` : 'saved_promos_guest';
+}
+
+// Lấy danh sách mã đã lưu
+function getSavedPromos() {
+    try {
+        return JSON.parse(localStorage.getItem(getSavedPromosKey())) || [];
+    } catch {
+        return [];
+    }
+}
+
+// Lấy key lưu mã đang áp dụng
+function getAppliedPromoKey() {
+    const user = getCurrentUser();
+    return user ? `applied_promo_${user.ma_tai_khoan}` : 'applied_promo_guest';
+}
+
+// Lấy mã đang áp dụng
+function getAppliedPromo() {
+    return localStorage.getItem(getAppliedPromoKey()) || '';
+}
+
+// Lưu mã đang áp dụng
+function setAppliedPromo(code) {
+    localStorage.setItem(getAppliedPromoKey(), code);
+}
+
+// Load và hiển thị mã đã lưu
+function loadSavedPromos() {
+    const container = document.getElementById('savedPromosList');
+    const savedContainer = document.getElementById('savedPromosContainer');
+    if (!container) return;
+    
+    const savedPromos = getSavedPromos();
+    
+    if (savedPromos.length === 0) {
+        if (savedContainer) savedContainer.classList.add('hidden');
+        return;
+    }
+    
+    if (savedContainer) savedContainer.classList.remove('hidden');
+    
+    container.innerHTML = savedPromos.map(promo => `
+        <button onclick="selectPromoCode('${promo.code}')" 
+                class="saved-promo-btn bg-green-100 border-2 border-green-400 text-green-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-green-200 transition flex items-center gap-2">
+            <span>🎫</span>
+            <span>${promo.code}</span>
+        </button>
+    `).join('');
+}
+
+// Chọn mã khuyến mãi (điền vào input)
+function selectPromoCode(code) {
+    const input = document.getElementById('promoCodeInput');
+    if (input) {
+        input.value = code;
+        input.focus();
+    }
+}
+
+// Áp dụng mã khuyến mãi
+function applyPromoCode() {
+    const input = document.getElementById('promoCodeInput');
+    const code = input ? input.value.trim().toUpperCase() : '';
+    
+    if (!code) {
+        showNotification('Vui lòng nhập mã giảm giá');
+        return;
+    }
+    
+    // Lưu mã đang áp dụng
+    setAppliedPromo(code);
+    
+    // Hiển thị mã đang áp dụng
+    const appliedContainer = document.getElementById('appliedPromoContainer');
+    const appliedCode = document.getElementById('appliedPromoCode');
+    
+    if (appliedContainer && appliedCode) {
+        appliedCode.textContent = code;
+        appliedContainer.classList.remove('hidden');
+    }
+    
+    // Clear input
+    if (input) input.value = '';
+    
+    showNotification(`Đã áp dụng mã "${code}"!`);
+    
+    // TODO: Gọi API để kiểm tra và tính giảm giá thực tế
+    // Hiện tại chỉ hiển thị UI
+}
+
+// Xóa mã đang áp dụng
+function removeAppliedPromo() {
+    setAppliedPromo('');
+    
+    const appliedContainer = document.getElementById('appliedPromoContainer');
+    if (appliedContainer) {
+        appliedContainer.classList.add('hidden');
+    }
+    
+    showNotification('Đã xóa mã giảm giá');
+}
+
+// Xóa mã đã lưu
+function removeSavedPromo(code) {
+    let savedPromos = getSavedPromos();
+    savedPromos = savedPromos.filter(p => p.code !== code);
+    localStorage.setItem(getSavedPromosKey(), JSON.stringify(savedPromos));
+    loadSavedPromos();
+    showNotification(`Đã xóa mã "${code}" khỏi danh sách đã lưu`);
+}
+
+// Load mã đang áp dụng khi trang load
+function loadAppliedPromo() {
+    const appliedCode = getAppliedPromo();
+    if (appliedCode) {
+        const appliedContainer = document.getElementById('appliedPromoContainer');
+        const appliedCodeEl = document.getElementById('appliedPromoCode');
+        
+        if (appliedContainer && appliedCodeEl) {
+            appliedCodeEl.textContent = appliedCode;
+            appliedContainer.classList.remove('hidden');
+        }
+    }
+}
+
+// Cập nhật DOMContentLoaded để load promo codes
+const originalDOMContentLoaded = document.addEventListener;
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved promos
+    loadSavedPromos();
+    // Load applied promo
+    loadAppliedPromo();
+});

@@ -1930,27 +1930,35 @@
         }
         
         // Hàm cập nhật badge số thông báo chưa đọc cho index.html
-        function updateNotificationBadgeIndex() {
+        async function updateNotificationBadgeIndex() {
             const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) return;
+            const token = localStorage.getItem('token');
+            if (!user || !token) return;
             
-            const storageKey = 'yennhi_notifications_' + (user.ma_tai_khoan || user.ma_khach_hang || 'guest');
-            let notifications = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            
-            // Nếu chưa có thông báo, dùng mẫu mặc định (2 thông báo chưa đọc)
-            if (notifications.length === 0) {
-                notifications = [{ id: 1, read: false }, { id: 2, read: false }];
-            }
-            
-            const unreadCount = notifications.filter(n => !n.read).length;
-            const badge = document.getElementById('notificationBadgeIndex');
-            if (badge) {
-                if (unreadCount > 0) {
-                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
+            try {
+                const response = await fetch('http://localhost:3000/api/notifications/unread-count', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        const unreadCount = result.data.unread_count || 0;
+                        localStorage.setItem('notification_unread_count', unreadCount);
+                        
+                        const badge = document.getElementById('notificationBadgeIndex');
+                        if (badge) {
+                            if (unreadCount > 0) {
+                                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                                badge.classList.remove('hidden');
+                            } else {
+                                badge.classList.add('hidden');
+                            }
+                        }
+                    }
                 }
+            } catch (error) {
+                console.log('Error fetching notification count:', error);
             }
         }
 
