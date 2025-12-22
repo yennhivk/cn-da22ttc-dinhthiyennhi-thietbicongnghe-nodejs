@@ -3,25 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoMo Sandbox - Thanh toán giả lập</title>
+    <title>MoMo - Đang xử lý thanh toán</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .momo-gradient {
             background: linear-gradient(135deg, #a50064 0%, #d82d8b 100%);
         }
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
         .scan-line {
-            animation: scan 2s linear infinite;
+            animation: scan 1.5s ease-in-out infinite;
         }
         @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
+            0%, 100% { top: 10%; opacity: 0.5; }
+            50% { top: 80%; opacity: 1; }
+        }
+        .pulse {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .checkmark {
+            animation: checkmark 0.5s ease-out forwards;
+        }
+        @keyframes checkmark {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -31,90 +45,83 @@
         <div class="text-center mb-6">
             <img src="https://developers.momo.vn/v3/vi/assets/images/icon-52bd5808cecdb1970e1aeec3c31a3ee1.png" 
                  alt="MoMo" class="w-16 h-16 mx-auto mb-2">
-            <h1 class="text-white text-2xl font-bold">MoMo Sandbox</h1>
-            <p class="text-pink-200 text-sm">Môi trường thanh toán giả lập</p>
+            <h1 class="text-white text-2xl font-bold">MoMo Payment</h1>
+            <p class="text-pink-200 text-sm">Thanh toán an toàn & nhanh chóng</p>
         </div>
 
         <!-- Main Card -->
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
             <!-- Order Info -->
-            <div class="p-6 border-b">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-gray-500">Đơn hàng:</span>
+            <div class="p-6 border-b bg-gray-50">
+                <div class="flex justify-between items-center mb-2"></div>
+                    <div cllass="text-gray-500">Đơn hàng:</span>
                     <span id="orderId" class="font-bold text-lg">#---</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-gray-500">Số tiền:</span>
                     <span id="amount" class="font-bold text-2xl text-pink-600">0 ₫</span>
                 </div>
-                <p id="orderInfo" class="text-gray-400 text-sm mt-2"></p>
             </div>
 
-            <!-- QR Code Section -->
-            <div id="qrSection" class="p-6 text-center">
-                <div class="relative inline-block">
-                    <!-- Fake QR Code -->
-                    <div class="w-48 h-48 bg-gray-100 rounded-lg mx-auto relative overflow-hidden border-4 border-pink-500">
-                        <div class="absolute inset-4 grid grid-cols-8 gap-1">
-                            <!-- Generate random QR pattern -->
+            <!-- QR Scanning Section -->
+            <div id="scanningSection" class="p-8 text-center">
+                <!-- QR Code with scanning effect -->
+                <div class="relative inline-block mb-6">
+                    <div class="w-52 h-52 bg-white rounded-xl border-4 border-pink-500 p-3 relative overflow-hidden">
+                        <!-- QR Pattern -->
+                        <div class="w-full h-full grid grid-cols-10 gap-0.5">
                             <script>
-                                for(let i = 0; i < 64; i++) {
-                                    document.write(`<div class="bg-${Math.random() > 0.5 ? 'black' : 'white'} rounded-sm"></div>`);
+                                for(let i = 0; i < 100; i++) {
+                                    const isBlack = Math.random() > 0.5;
+                                    document.write(`<div class="bg-${isBlack ? 'gray-800' : 'white'}"></div>`);
                                 }
                             </script>
                         </div>
-                        <!-- Scan line animation -->
-                        <div class="scan-line absolute left-0 right-0 h-1 bg-pink-500 opacity-50" style="top: 0;"></div>
-                        <!-- MoMo logo in center -->
+                        <!-- Center MoMo logo -->
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow">
-                                <span class="text-pink-600 font-bold text-lg">M</span>
+                            <div class="w-14 h-14 bg-white rounded-lg shadow-lg flex items-center justify-center">
+                                <img src="https://developers.momo.vn/v3/vi/assets/images/icon-52bd5808cecdb1970e1aeec3c31a3ee1.png" 
+                                     alt="MoMo" class="w-10 h-10">
                             </div>
                         </div>
+                        <!-- Scanning line -->
+                        <div class="scan-line absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent"></div>
                     </div>
+                    <!-- Corner decorations -->
+                    <div class="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-pink-600 rounded-tl-lg"></div>
+                    <div class="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-pink-600 rounded-tr-lg"></div>
+                    <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-pink-600 rounded-bl-lg"></div>
+                    <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-pink-600 rounded-br-lg"></div>
                 </div>
-                
-                <p class="text-gray-500 mt-4 mb-2">Quét mã QR bằng ứng dụng MoMo</p>
-                <p class="text-gray-400 text-sm">(Đây là môi trường test - nhấn nút bên dưới để giả lập)</p>
+
+                <div class="pulse">
+                    <p class="text-gray-700 font-semibold text-lg">Đang quét mã QR...</p>
+                    <p id="statusText" class="text-gray-500 mt-2">Vui lòng chờ trong giây lát</p>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="mt-6 bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div id="progressBar" class="bg-pink-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p id="countdown" class="text-pink-600 font-semibold mt-2">3 giây</p>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="p-6 bg-gray-50 space-y-3">
-                <button id="btnSuccess" onclick="simulatePayment('success')" 
-                        class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl transition transform hover:scale-105 flex items-center justify-center gap-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            <!-- Success Section (hidden initially) -->
+            <div id="successSection" class="p-8 text-center hidden">
+                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-14 h-14 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path class="checkmark" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" 
+                              d="M5 13l4 4L19 7" stroke-dasharray="100" stroke-dashoffset="100"></path>
                     </svg>
-                    Giả lập thanh toán THÀNH CÔNG
-                </button>
-                
-                <button id="btnFailed" onclick="simulatePayment('failed')" 
-                        class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-xl transition transform hover:scale-105 flex items-center justify-center gap-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                    Giả lập thanh toán THẤT BẠI
-                </button>
-                
-                <button onclick="window.history.back()" 
-                        class="w-full bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 rounded-xl transition">
-                    Hủy và quay lại
-                </button>
-            </div>
-        </div>
-
-        <!-- Processing Modal -->
-        <div id="processingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-2xl p-8 text-center max-w-sm mx-4">
-                <div class="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p class="text-lg font-semibold text-gray-700">Đang xử lý thanh toán...</p>
-                <p class="text-gray-500 text-sm mt-2">Vui lòng chờ trong giây lát</p>
+                </div>
+                <h2 class="text-2xl font-bold text-green-600 mb-2">Thanh toán thành công!</h2>
+                <p class="text-gray-500">Đang chuyển hướng...</p>
             </div>
         </div>
 
         <!-- Footer -->
         <p class="text-center text-pink-200 text-sm mt-6">
-            🔒 Môi trường sandbox an toàn - Không có giao dịch thật
+            🔒 Giao dịch được bảo mật bởi MoMo
         </p>
     </div>
 
@@ -137,7 +144,9 @@
             const originalOrderId = orderData.orderId.split('_')[0].replace('YNT', '');
             document.getElementById('orderId').textContent = '#' + originalOrderId;
             document.getElementById('amount').textContent = formatCurrency(parseInt(orderData.amount));
-            document.getElementById('orderInfo').textContent = decodeURIComponent(orderData.orderInfo);
+
+            // Bắt đầu quá trình quét tự động
+            startAutoScan();
         });
 
         function formatCurrency(amount) {
@@ -147,13 +156,48 @@
             }).format(amount);
         }
 
-        async function simulatePayment(result) {
-            const modal = document.getElementById('processingModal');
-            modal.classList.remove('hidden');
+        function startAutoScan() {
+            const progressBar = document.getElementById('progressBar');
+            const countdown = document.getElementById('countdown');
+            const statusText = document.getElementById('statusText');
+            
+            let timeLeft = 3;
+            let progress = 0;
 
-            // Disable buttons
-            document.getElementById('btnSuccess').disabled = true;
-            document.getElementById('btnFailed').disabled = true;
+            const statusMessages = [
+                'Đang kết nối đến MoMo...',
+                'Đang xác thực giao dịch...',
+                'Đang xử lý thanh toán...'
+            ];
+
+            // Update progress every 100ms
+            const progressInterval = setInterval(() => {
+                progress += 3.33;
+                progressBar.style.width = Math.min(progress, 100) + '%';
+            }, 100);
+
+            // Update countdown every second
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
+                countdown.textContent = timeLeft + ' giây';
+                statusText.textContent = statusMessages[2 - timeLeft] || statusMessages[2];
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    clearInterval(progressInterval);
+                    progressBar.style.width = '100%';
+                    
+                    // Hiển thị thành công và xử lý thanh toán
+                    showSuccessAndProcess();
+                }
+            }, 1000);
+        }
+
+        async function showSuccessAndProcess() {
+            // Ẩn phần scanning, hiện phần success
+            document.getElementById('scanningSection').classList.add('hidden');
+            document.getElementById('successSection').classList.remove('hidden');
+            document.getElementById('successSection').classList.add('fade-in');
 
             try {
                 // Gọi API để cập nhật trạng thái thanh toán
@@ -164,35 +208,25 @@
                     },
                     body: JSON.stringify({
                         orderId: orderData.orderId,
-                        result: result, // 'success' hoặc 'failed'
+                        result: 'success',
                         amount: orderData.amount
                     })
                 });
 
                 const data = await response.json();
+                console.log('Payment result:', data);
 
-                // Chờ 1.5s để tạo hiệu ứng xử lý
+                // Chờ 1.5s để user thấy thông báo thành công
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
-                // Lấy orderId gốc
+                // Lấy orderId gốc và redirect
                 const originalOrderId = orderData.orderId.split('_')[0].replace('YNT', '');
-
-                if (result === 'success') {
-                    // Redirect đến trang kết quả thành công
-                    window.location.href = `payment-result.html?status=success&orderId=${originalOrderId}&transId=SANDBOX_${Date.now()}`;
-                } else {
-                    // Redirect đến trang kết quả thất bại
-                    window.location.href = `payment-result.html?status=failed&orderId=${originalOrderId}&message=${encodeURIComponent('Người dùng hủy giao dịch')}`;
-                }
+                window.location.href = `payment-result.html?status=success&orderId=${originalOrderId}&transId=MOMO_${Date.now()}`;
 
             } catch (error) {
                 console.error('Error:', error);
-                modal.classList.add('hidden');
                 alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                
-                // Re-enable buttons
-                document.getElementById('btnSuccess').disabled = false;
-                document.getElementById('btnFailed').disabled = false;
+                window.location.href = 'checkout.html';
             }
         }
     </script>
