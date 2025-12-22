@@ -42,6 +42,9 @@ app.use(passport.session());
 // Static files
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/pages', express.static(path.join(__dirname, '../frontend/pages')));
+app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
+app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
 
 // Test route
 app.get('/', (req, res) => {
@@ -79,6 +82,7 @@ app.use('/api/news', require('./routes/news'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/chatbot', require('./routes/chatbot'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/payment', require('./routes/payment'));
 // app.use('/api/cart', require('./routes/cart'));
 // app.use('/api/orders', require('./routes/orders'));
 

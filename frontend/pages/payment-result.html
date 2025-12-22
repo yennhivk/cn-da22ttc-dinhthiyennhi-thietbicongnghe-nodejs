@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả thanh toán - Yến Nhi Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full mx-4">
+        <div id="resultContainer" class="bg-white rounded-2xl shadow-xl p-8 text-center">
+            <!-- Content will be loaded by JavaScript -->
+            <div class="animate-pulse">
+                <div class="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-4"></div>
+                <div class="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            const orderId = urlParams.get('orderId');
+            const transId = urlParams.get('transId');
+            const message = urlParams.get('message');
+
+            const container = document.getElementById('resultContainer');
+
+            if (status === 'success') {
+                container.innerHTML = `
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-green-600 mb-2">Thanh toán thành công!</h1>
+                    <p class="text-gray-600 mb-4">Cảm ơn bạn đã mua hàng tại Yến Nhi Tech</p>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-500">Mã đơn hàng:</span>
+                            <span class="font-semibold">#${orderId}</span>
+                        </div>
+                        ${transId ? `
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Mã giao dịch:</span>
+                            <span class="font-mono text-sm">${transId}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <a href="order-history.html" class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
+                            Xem đơn hàng
+                        </a>
+                        <a href="products.html" class="block w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg transition">
+                            Tiếp tục mua sắm
+                        </a>
+                    </div>
+                `;
+
+                // Xóa dữ liệu checkout và promo
+                clearCheckoutData();
+
+            } else if (status === 'failed') {
+                container.innerHTML = `
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-red-600 mb-2">Thanh toán thất bại</h1>
+                    <p class="text-gray-600 mb-4">${message || 'Giao dịch không thành công. Vui lòng thử lại.'}</p>
+                    
+                    ${orderId ? `
+                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Mã đơn hàng:</span>
+                            <span class="font-semibold">#${orderId}</span>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="space-y-3">
+                        <a href="checkout.html" class="block w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition">
+                            Thử lại
+                        </a>
+                        <a href="cart.html" class="block w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg transition">
+                            Quay lại giỏ hàng
+                        </a>
+                    </div>
+                `;
+
+            } else {
+                container.innerHTML = `
+                    <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-yellow-600 mb-2">Có lỗi xảy ra</h1>
+                    <p class="text-gray-600 mb-6">${message || 'Không thể xác định trạng thái thanh toán.'}</p>
+                    
+                    <div class="space-y-3">
+                        <a href="order-history.html" class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                            Kiểm tra đơn hàng
+                        </a>
+                        <a href="../index.html" class="block w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg transition">
+                            Về trang chủ
+                        </a>
+                    </div>
+                `;
+            }
+        });
+
+        function clearCheckoutData() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (user) {
+                    const checkoutKey = `checkout_${user.ma_tai_khoan}`;
+                    const selectedKey = `selected_${user.ma_tai_khoan}`;
+                    const promoKey = `promo_data_${user.ma_tai_khoan}`;
+                    const appliedPromoKey = `applied_promo_${user.ma_tai_khoan}`;
+                    
+                    localStorage.removeItem(checkoutKey);
+                    localStorage.removeItem(selectedKey);
+                    localStorage.removeItem(promoKey);
+                    localStorage.removeItem(appliedPromoKey);
+                }
+            } catch (e) {
+                console.error('Error clearing checkout data:', e);
+            }
+        }
+    </script>
+</body>
+</html>

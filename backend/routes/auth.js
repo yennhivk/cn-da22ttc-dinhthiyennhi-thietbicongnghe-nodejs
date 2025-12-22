@@ -1119,7 +1119,7 @@ router.post('/create-sample-orders', authenticateToken, async (req, res) => {
 router.post('/orders', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.ma_tai_khoan;
-        const { items, dia_chi_giao_hang, so_dien_thoai, ghi_chu, phuong_thuc_thanh_toan } = req.body;
+        const { items, dia_chi_giao_hang, so_dien_thoai, ghi_chu, phuong_thuc_thanh_toan, promo_code, discount_percent } = req.body;
 
         if (!items || items.length === 0) {
             return res.status(400).json({ success: false, message: 'Giỏ hàng trống' });
@@ -1129,13 +1129,25 @@ router.post('/orders', authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Vui lòng nhập địa chỉ giao hàng' });
         }
 
-        // Tính tổng tiền
-        let tongTien = 0;
+        // Tính tổng tiền trước giảm giá
+        let subtotal = 0;
         for (const item of items) {
             const gia = parseFloat(item.gia_ban) || parseFloat(item.gia) || 0;
             const soLuong = parseInt(item.so_luong) || 1;
-            tongTien += gia * soLuong;
+            subtotal += gia * soLuong;
         }
+
+        // Tính giảm giá
+        let discountAmount = 0;
+        if (promo_code && discount_percent > 0) {
+            discountAmount = Math.round(subtotal * discount_percent / 100);
+        }
+
+        // Tính phí ship
+        const shippingFee = subtotal > 500000 ? 0 : (subtotal > 0 ? 30000 : 0);
+
+        // Tổng tiền sau giảm giá
+        const tongTien = subtotal - discountAmount + shippingFee;
 
         // Tạo đơn hàng
         const [orderResult] = await db.query(`

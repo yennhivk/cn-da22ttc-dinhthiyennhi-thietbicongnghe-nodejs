@@ -1003,6 +1003,90 @@ router.get('/public/promotions', async (req, res) => {
 });
 
 // ==========================================
+// API KIỂM TRA VÀ ÁP DỤNG MÃ GIẢM GIÁ (PUBLIC)
+// ==========================================
+router.post('/public/apply-promo', async (req, res) => {
+    try {
+        const { code, subtotal } = req.body;
+        
+        if (!code) {
+            return res.status(400).json({ success: false, message: 'Vui lòng nhập mã giảm giá' });
+        }
+        
+        // Tìm mã giảm giá trong database
+        const [promos] = await db.query(`
+            SELECT * FROM khuyen_mai 
+            WHERE ma_giam_gia = ? AND trang_thai = 1 AND ngay_ket_thuc >= NOW()
+        `, [code.toUpperCase()]);
+        
+        if (promos.length === 0) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Mã giảm giá không hợp lệ hoặc đã hết hạn' 
+            });
+        }
+        
+        const promo = promos[0];
+        let discountAmount = 0;
+        let discountPercent = 0;
+        let message = '';
+        
+        // Phân tích mô tả để lấy % giảm giá
+        // Ví dụ: "Giảm 20% cho tất cả đơn hàng trên 5 triệu"
+        const percentMatch = promo.mo_ta.match(/(\d+)%/);
+        if (percentMatch) {
+            discountPercent = parseInt(percentMatch[1]);
+        }
+        
+        // Kiểm tra điều kiện áp dụng
+        const conditionMatch = promo.dieu_kien_ap_dung ? promo.dieu_kien_ap_dung.match(/>=?\s*([\d.,]+)/) : null;
+        let minOrderValue = 0;
+        
+        if (conditionMatch) {
+            // Chuyển đổi giá trị (ví dụ: "5.000.000" -> 5000000)
+            minOrderValue = parseInt(conditionMatch[1].replace(/[.,]/g, ''));
+        }
+        
+        // Kiểm tra đơn hàng có đủ điều kiện không
+        if (minOrderValue > 0 && subtotal < minOrderValue) {
+            return res.status(400).json({
+                success: false,
+                message: `Đơn hàng phải từ ${new Intl.NumberFormat('vi-VN').format(minOrderValue)}đ để áp dụng mã này`,
+                minOrderValue: minOrderValue
+            });
+        }
+        
+        // Tính số tiền giảm
+        if (discountPercent > 0) {
+            discountAmount = Math.round(subtotal * discountPercent / 100);
+            message = `Giảm ${discountPercent}% (${new Intl.NumberFormat('vi-VN').format(discountAmount)}đ)`;
+        } else {
+            // Nếu không có %, giả sử giảm cố định (có thể mở rộng logic sau)
+            discountAmount = 0;
+            message = promo.mo_ta;
+        }
+        
+        res.json({
+            success: true,
+            data: {
+                code: promo.ma_giam_gia,
+                name: promo.ten_khuyen_mai,
+                description: promo.mo_ta,
+                discountPercent: discountPercent,
+                discountAmount: discountAmount,
+                minOrderValue: minOrderValue,
+                message: message,
+                validUntil: promo.ngay_ket_thuc
+            }
+        });
+        
+    } catch (error) {
+        console.error('Apply promo error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi kiểm tra mã giảm giá' });
+    }
+});
+
+// ==========================================
 // QUẢN LÝ THÔNG BÁO (ADMIN)
 // ==========================================
 

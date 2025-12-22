@@ -408,17 +408,26 @@
                         <div class="bg-white rounded-xl shadow-lg p-6">
                             <h2 class="text-2xl font-bold mb-6">Phương thức thanh toán</h2>
                             <div class="space-y-3">
-                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
                                     <input type="radio" name="payment" value="cod" checked class="w-5 h-5 text-blue-600">
-                                    <span class="ml-3 font-semibold">Thanh toán khi nhận hàng (COD)</span>
+                                    <span class="ml-3 flex items-center gap-2">
+                                        <span class="text-2xl">💵</span>
+                                        <span class="font-semibold">Thanh toán khi nhận hàng (COD)</span>
+                                    </span>
                                 </label>
-                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
                                     <input type="radio" name="payment" value="bank" class="w-5 h-5 text-blue-600">
-                                    <span class="ml-3 font-semibold">Chuyển khoản ngân hàng</span>
+                                    <span class="ml-3 flex items-center gap-2">
+                                        <span class="text-2xl">🏦</span>
+                                        <span class="font-semibold">Chuyển khoản ngân hàng</span>
+                                    </span>
                                 </label>
-                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition">
-                                    <input type="radio" name="payment" value="momo" class="w-5 h-5 text-blue-600">
-                                    <span class="ml-3 font-semibold">Ví MoMo</span>
+                                <label class="flex items-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-pink-500 transition has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50">
+                                    <input type="radio" name="payment" value="momo" class="w-5 h-5 text-pink-600">
+                                    <span class="ml-3 flex items-center gap-2">
+                                        <img src="https://developers.momo.vn/v3/vi/assets/images/icon-52bd5808cecdb1970e1aeec3c31a3ee1.png" alt="MoMo" class="w-8 h-8">
+                                        <span class="font-semibold text-pink-600">Ví MoMo</span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -440,9 +449,17 @@
                                 <span class="text-gray-600">Tạm tính:</span>
                                 <span id="subtotal" class="font-semibold">0đ</span>
                             </div>
+                            <!-- Mã giảm giá -->
+                            <div id="promoRow" class="hidden flex justify-between">
+                                <span class="text-gray-600 flex items-center gap-1">
+                                    🎫 Mã giảm giá
+                                    <span id="promoCode" class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded font-mono"></span>
+                                </span>
+                                <span id="promoDiscount" class="font-semibold text-green-600">-0đ</span>
+                            </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Phí vận chuyển:</span>
-                                <span class="font-semibold text-green-600">Miễn phí</span>
+                                <span id="shippingFee" class="font-semibold text-green-600">Miễn phí</span>
                             </div>
                             <div class="border-t pt-3">
                                 <div class="flex justify-between">
@@ -598,6 +615,17 @@
     <script src="../js/main.js"></script>
     <script>
         const API_URL = 'http://localhost:3300/api';
+
+        // Lấy thông tin promo từ localStorage
+        function getPromoData() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const key = user ? `promo_data_${user.ma_tai_khoan}` : 'promo_data_guest';
+            try {
+                return JSON.parse(localStorage.getItem(key));
+            } catch {
+                return null;
+            }
+        }
 
         // Tự động điền thông tin từ tài khoản đã đăng nhập
         async function loadUserInfo() {
@@ -866,7 +894,44 @@
                 }).join('');
 
                 document.getElementById('subtotal').textContent = formatCurrency(subtotal);
-                document.getElementById('total').textContent = formatCurrency(subtotal);
+                
+                // Tính giảm giá từ promo data
+                const promoData = getPromoData();
+                let discountAmount = 0;
+                const shipping = subtotal > 500000 ? 0 : (subtotal > 0 ? 30000 : 0);
+                
+                if (promoData && promoData.discountPercent > 0) {
+                    if (!promoData.minOrderValue || subtotal >= promoData.minOrderValue) {
+                        discountAmount = Math.round(subtotal * promoData.discountPercent / 100);
+                    }
+                }
+                
+                // Hiển thị mã giảm giá
+                const promoRow = document.getElementById('promoRow');
+                const promoCodeEl = document.getElementById('promoCode');
+                const promoDiscountEl = document.getElementById('promoDiscount');
+                
+                if (promoRow && promoCodeEl && promoDiscountEl) {
+                    if (discountAmount > 0) {
+                        promoCodeEl.textContent = promoData.code;
+                        promoDiscountEl.textContent = `-${formatCurrency(discountAmount)}`;
+                        promoRow.classList.remove('hidden');
+                        promoRow.classList.add('flex');
+                    } else {
+                        promoRow.classList.add('hidden');
+                        promoRow.classList.remove('flex');
+                    }
+                }
+                
+                // Hiển thị phí ship
+                const shippingEl = document.getElementById('shippingFee');
+                if (shippingEl) {
+                    shippingEl.textContent = shipping === 0 ? 'Miễn phí' : formatCurrency(shipping);
+                }
+                
+                // Tính tổng cộng
+                const total = subtotal - discountAmount + shipping;
+                document.getElementById('total').textContent = formatCurrency(total);
             } catch (error) {
                 console.error('Error loading order summary:', error);
                 // Fallback: hiển thị từ localStorage
@@ -891,7 +956,38 @@
                 }).join('');
 
                 document.getElementById('subtotal').textContent = formatCurrency(subtotal);
-                document.getElementById('total').textContent = formatCurrency(subtotal);
+                
+                // Tính giảm giá từ promo data (fallback)
+                const promoDataFallback = getPromoData();
+                let discountAmountFallback = 0;
+                const shippingFallback = subtotal > 500000 ? 0 : (subtotal > 0 ? 30000 : 0);
+                
+                if (promoDataFallback && promoDataFallback.discountPercent > 0) {
+                    if (!promoDataFallback.minOrderValue || subtotal >= promoDataFallback.minOrderValue) {
+                        discountAmountFallback = Math.round(subtotal * promoDataFallback.discountPercent / 100);
+                    }
+                }
+                
+                // Hiển thị mã giảm giá
+                const promoRowFb = document.getElementById('promoRow');
+                const promoCodeFb = document.getElementById('promoCode');
+                const promoDiscountFb = document.getElementById('promoDiscount');
+                
+                if (promoRowFb && promoCodeFb && promoDiscountFb && discountAmountFallback > 0) {
+                    promoCodeFb.textContent = promoDataFallback.code;
+                    promoDiscountFb.textContent = `-${formatCurrency(discountAmountFallback)}`;
+                    promoRowFb.classList.remove('hidden');
+                    promoRowFb.classList.add('flex');
+                }
+                
+                // Hiển thị phí ship
+                const shippingElFb = document.getElementById('shippingFee');
+                if (shippingElFb) {
+                    shippingElFb.textContent = shippingFallback === 0 ? 'Miễn phí' : formatCurrency(shippingFallback);
+                }
+                
+                const totalFallback = subtotal - discountAmountFallback + shippingFallback;
+                document.getElementById('total').textContent = formatCurrency(totalFallback);
             }
         }
 
@@ -967,6 +1063,9 @@
             submitBtn.textContent = 'Đang xử lý...';
             
             try {
+                // Lấy thông tin promo nếu có
+                const promoData = getPromoData();
+                
                 const response = await fetch(`${API_URL}/auth/orders`, {
                     method: 'POST',
                     headers: {
@@ -978,25 +1077,71 @@
                         dia_chi_giao_hang: fullAddress,
                         so_dien_thoai: soDienThoai,
                         ghi_chu: ghiChu,
-                        phuong_thuc_thanh_toan: paymentMethod
+                        phuong_thuc_thanh_toan: paymentMethod,
+                        promo_code: promoData ? promoData.code : null,
+                        discount_percent: promoData ? promoData.discountPercent : 0
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
+                    const orderId = result.data.ma_don_hang;
+                    const totalAmount = result.data.tong_tien;
+                    
                     // Xóa sản phẩm đã checkout khỏi giỏ hàng
                     const checkoutProductIds = checkoutItems.map(item => item.ma_san_pham);
                     const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
                     const updatedCart = cart.filter(item => !checkoutProductIds.includes(item.ma_san_pham));
                     localStorage.setItem(cartKey, JSON.stringify(updatedCart));
                     
-                    // Xóa checkout data và selected items
-                    localStorage.removeItem(checkoutKey);
-                    localStorage.removeItem(selectedKey);
-                    
-                    alert(`🎉 ${result.message}\nMã đơn hàng: #${result.data.ma_don_hang}`);
-                    window.location.href = 'order-history.html';
+                    // Nếu chọn thanh toán MoMo
+                    if (paymentMethod === 'momo') {
+                        submitBtn.textContent = 'Đang chuyển đến MoMo...';
+                        
+                        try {
+                            const momoResponse = await fetch(`${API_URL}/payment/momo/create`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    orderId: orderId,
+                                    amount: totalAmount,
+                                    orderInfo: `Thanh toán đơn hàng #${orderId} - Yến Nhi Tech`
+                                })
+                            });
+                            
+                            const momoResult = await momoResponse.json();
+                            
+                            if (momoResult.success && momoResult.data.payUrl) {
+                                // Chuyển hướng đến trang thanh toán MoMo
+                                window.location.href = momoResult.data.payUrl;
+                            } else {
+                                alert('Không thể tạo thanh toán MoMo: ' + (momoResult.message || 'Lỗi không xác định'));
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = 'Đặt hàng';
+                            }
+                        } catch (momoError) {
+                            console.error('MoMo error:', momoError);
+                            alert('Lỗi kết nối MoMo. Đơn hàng đã được tạo, vui lòng thanh toán sau.');
+                            window.location.href = 'order-history.html';
+                        }
+                    } else {
+                        // COD hoặc chuyển khoản - xử lý bình thường
+                        // Xóa checkout data và selected items
+                        localStorage.removeItem(checkoutKey);
+                        localStorage.removeItem(selectedKey);
+                        
+                        // Xóa promo data sau khi đặt hàng thành công
+                        const promoKey = user ? `promo_data_${user.ma_tai_khoan}` : 'promo_data_guest';
+                        const appliedPromoKey = user ? `applied_promo_${user.ma_tai_khoan}` : 'applied_promo_guest';
+                        localStorage.removeItem(promoKey);
+                        localStorage.removeItem(appliedPromoKey);
+                        
+                        alert(`🎉 ${result.message}\nMã đơn hàng: #${orderId}`);
+                        window.location.href = 'order-history.html';
+                    }
                 } else {
                     alert(result.message || 'Đặt hàng thất bại');
                     submitBtn.disabled = false;
