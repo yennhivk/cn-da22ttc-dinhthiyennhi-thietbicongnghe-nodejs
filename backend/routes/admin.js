@@ -934,6 +934,16 @@ router.post('/promotions', authenticateToken, requireAdmin, async (req, res) => 
             VALUES (?, ?, ?, ?, ?, ?, ?)
         `, [ten_khuyen_mai, ma_giam_gia, mo_ta, ngay_bat_dau, ngay_ket_thuc, dieu_kien_ap_dung, trang_thai || 1]);
 
+        // Tự động tạo thông báo cho tất cả người dùng về khuyến mãi mới
+        try {
+            await db.query(`
+                INSERT INTO thong_bao (ma_tai_khoan, loai_thong_bao, tieu_de, noi_dung, duong_dan)
+                VALUES (NULL, 'promotion', ?, ?, 'promotions.html')
+            `, [`🎁 ${ten_khuyen_mai}`, `${mo_ta} - Mã: ${ma_giam_gia}`]);
+        } catch (notifError) {
+            console.log('Could not create notification:', notifError.message);
+        }
+
         res.json({ success: true, message: 'Thêm khuyến mãi thành công', data: { id: result.insertId } });
     } catch (error) {
         console.error('Create promotion error:', error);
@@ -989,6 +999,60 @@ router.get('/public/promotions', async (req, res) => {
     } catch (error) {
         console.error('Get public promotions error:', error);
         res.status(500).json({ success: false, message: 'Lỗi lấy danh sách khuyến mãi' });
+    }
+});
+
+// ==========================================
+// QUẢN LÝ THÔNG BÁO (ADMIN)
+// ==========================================
+
+// Lấy tất cả thông báo
+router.get('/notifications', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const [notifications] = await db.query(`
+            SELECT tb.*, tk.ten_dang_nhap
+            FROM thong_bao tb
+            LEFT JOIN tai_khoan tk ON tb.ma_tai_khoan = tk.ma_tai_khoan
+            ORDER BY tb.ngay_tao DESC
+            LIMIT 100
+        `);
+        res.json({ success: true, data: notifications });
+    } catch (error) {
+        console.error('Get notifications error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi lấy danh sách thông báo' });
+    }
+});
+
+// Tạo thông báo mới (gửi cho tất cả hoặc 1 user cụ thể)
+router.post('/notifications', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { ma_tai_khoan, loai_thong_bao, tieu_de, noi_dung, duong_dan } = req.body;
+
+        if (!tieu_de) {
+            return res.status(400).json({ success: false, message: 'Tiêu đề là bắt buộc' });
+        }
+
+        const [result] = await db.query(`
+            INSERT INTO thong_bao (ma_tai_khoan, loai_thong_bao, tieu_de, noi_dung, duong_dan)
+            VALUES (?, ?, ?, ?, ?)
+        `, [ma_tai_khoan || null, loai_thong_bao || 'system', tieu_de, noi_dung, duong_dan]);
+
+        res.json({ success: true, message: 'Tạo thông báo thành công', data: { id: result.insertId } });
+    } catch (error) {
+        console.error('Create notification error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi tạo thông báo: ' + error.message });
+    }
+});
+
+// Xóa thông báo
+router.delete('/notifications/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await db.query('DELETE FROM thong_bao_da_doc WHERE ma_thong_bao = ?', [req.params.id]);
+        await db.query('DELETE FROM thong_bao WHERE ma_thong_bao = ?', [req.params.id]);
+        res.json({ success: true, message: 'Xóa thông báo thành công' });
+    } catch (error) {
+        console.error('Delete notification error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi xóa thông báo' });
     }
 });
 

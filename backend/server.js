@@ -78,6 +78,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/news', require('./routes/news'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/chatbot', require('./routes/chatbot'));
+app.use('/api/notifications', require('./routes/notifications'));
 // app.use('/api/cart', require('./routes/cart'));
 // app.use('/api/orders', require('./routes/orders'));
 

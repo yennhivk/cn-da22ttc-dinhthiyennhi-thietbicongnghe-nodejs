@@ -64,7 +64,7 @@
                     </a>
 
                     <!-- User Account -->
-                    <div id="userAccountContainer"></div>
+                    <div class="user-account-container"></div>
                 </div>
             </div>
         </div>
@@ -211,65 +211,162 @@
     </footer>
 
     <script>
+        const API_URL = 'http://localhost:3000/api';
         let currentTab = 'all';
         let allNotifications = [];
-
-        const sampleNotifications = [
-            { id: 1, type: 'order', title: 'Đơn hàng đã được xác nhận', message: 'Đơn hàng #3 của bạn đã được xác nhận và đang được chuẩn bị.', time: new Date(Date.now() - 1000 * 60 * 30), read: false, icon: 'fa-box', iconColor: 'text-blue-500', link: 'order-history.html' },
-            { id: 2, type: 'promotion', title: 'Khuyến mãi đặc biệt!', message: 'Giảm 20% cho tất cả sản phẩm Apple trong tuần này. Nhanh tay đặt hàng!', time: new Date(Date.now() - 1000 * 60 * 60 * 2), read: false, icon: 'fa-tag', iconColor: 'text-red-500', link: 'promotions.html' },
-            { id: 3, type: 'order', title: 'Đơn hàng đang được giao', message: 'Đơn hàng #2 của bạn đang trên đường giao đến bạn.', time: new Date(Date.now() - 1000 * 60 * 60 * 24), read: true, icon: 'fa-truck', iconColor: 'text-green-500', link: 'order-history.html' },
-            { id: 4, type: 'system', title: 'Chào mừng bạn đến với Yến Nhi Tech!', message: 'Cảm ơn bạn đã đăng ký tài khoản. Khám phá ngay các sản phẩm công nghệ hàng đầu.', time: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), read: true, icon: 'fa-bell', iconColor: 'text-yellow-500', link: null }
-        ];
+        let isLoggedIn = false;
 
         function formatTimeAgo(date) {
-            const diff = new Date() - date;
+            const d = new Date(date);
+            const diff = new Date() - d;
             const minutes = Math.floor(diff / (1000 * 60));
             const hours = Math.floor(diff / (1000 * 60 * 60));
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (minutes < 1) return 'Vừa xong';
             if (minutes < 60) return `${minutes} phút trước`;
             if (hours < 24) return `${hours} giờ trước`;
             if (days < 7) return `${days} ngày trước`;
-            return date.toLocaleDateString('vi-VN');
+            return d.toLocaleDateString('vi-VN');
+        }
+
+        function getIconForType(type, title) {
+            if (type === 'order') {
+                if (title.includes('đang được giao') || title.includes('🚚')) return { icon: 'fa-truck', color: 'text-green-500' };
+                if (title.includes('hoàn thành') || title.includes('✅')) return { icon: 'fa-check-circle', color: 'text-green-600' };
+                if (title.includes('hủy') || title.includes('❌')) return { icon: 'fa-times-circle', color: 'text-red-500' };
+                return { icon: 'fa-box', color: 'text-blue-500' };
+            }
+            if (type === 'promotion') return { icon: 'fa-tag', color: 'text-red-500' };
+            if (type === 'news') return { icon: 'fa-newspaper', color: 'text-blue-500' };
+            return { icon: 'fa-bell', color: 'text-yellow-500' };
         }
 
         function renderNotifications(notifications) {
             const container = document.getElementById('notificationsList');
             const emptyState = document.getElementById('emptyState');
+            
             if (notifications.length === 0) {
                 container.innerHTML = '';
                 emptyState.classList.remove('hidden');
                 return;
             }
+            
             emptyState.classList.add('hidden');
-            container.innerHTML = notifications.map(notif => `
-                <div class="notification-item ${notif.read ? '' : 'notification-unread'} bg-white rounded-lg shadow p-4 cursor-pointer transition" onclick="handleNotificationClick(${notif.id}, '${notif.link || ''}')">
+            container.innerHTML = notifications.map(notif => {
+                const iconInfo = notif.icon ? { icon: notif.icon, color: notif.iconColor } : getIconForType(notif.type, notif.title);
+                const isRead = notif.read || notif.da_doc;
+                return `
+                <div class="notification-item ${isRead ? '' : 'notification-unread'} bg-white rounded-lg shadow p-4 cursor-pointer transition" 
+                     onclick="handleNotificationClick('${notif.id || notif.ma_thong_bao}', '${notif.link || notif.duong_dan || ''}')">
                     <div class="flex items-start gap-4">
                         <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                            <i class="fas ${notif.icon} ${notif.iconColor}"></i>
+                            <i class="fas ${iconInfo.icon} ${iconInfo.color}"></i>
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between mb-1">
-                                <h3 class="font-semibold text-gray-900">${notif.title}</h3>
-                                ${notif.read ? '' : '<span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></span>'}
+                                <h3 class="font-semibold text-gray-900">${notif.title || notif.tieu_de}</h3>
+                                ${isRead ? '' : '<span class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></span>'}
                             </div>
-                            <p class="text-gray-600 text-sm mb-2">${notif.message}</p>
-                            <span class="text-xs text-gray-400">${formatTimeAgo(notif.time)}</span>
+                            <p class="text-gray-600 text-sm mb-2">${notif.message || notif.noi_dung || ''}</p>
+                            <span class="text-xs text-gray-400">${formatTimeAgo(notif.time || notif.ngay_tao)}</span>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
-        function handleNotificationClick(id, link) {
-            const notif = allNotifications.find(n => n.id === id);
-            if (notif) notif.read = true;
+        async function handleNotificationClick(id, link) {
+            // Đánh dấu đã đọc
+            const notif = allNotifications.find(n => (n.id || n.ma_thong_bao) == id);
+            if (notif) {
+                notif.read = true;
+                notif.da_doc = 1;
+            }
+            
+            // Gọi API đánh dấu đã đọc nếu đã đăng nhập
+            if (isLoggedIn && id && !String(id).startsWith('promo_') && !String(id).startsWith('news_')) {
+                try {
+                    const token = localStorage.getItem('token');
+                    await fetch(`${API_URL}/notifications/${id}/read`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                } catch (e) { console.log('Mark read error:', e); }
+            }
+            
             filterNotifications();
             if (link) window.location.href = link;
         }
 
         function filterNotifications() {
-            let filtered = currentTab === 'all' ? allNotifications : allNotifications.filter(n => n.type === currentTab);
+            let filtered = currentTab === 'all' 
+                ? allNotifications 
+                : allNotifications.filter(n => (n.type || n.loai_thong_bao) === currentTab);
             renderNotifications(filtered);
+        }
+
+        async function loadNotifications() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const token = localStorage.getItem('token');
+                isLoggedIn = !!(user && token);
+
+                if (isLoggedIn) {
+                    // Lấy thông báo từ API (đã đăng nhập)
+                    const response = await fetch(`${API_URL}/notifications`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        allNotifications = result.data.map(n => ({
+                            ...n,
+                            id: n.ma_thong_bao || n.id,
+                            type: n.loai_thong_bao || n.type,
+                            title: n.tieu_de || n.title,
+                            message: n.noi_dung || n.message,
+                            link: n.duong_dan || n.link,
+                            time: n.ngay_tao || n.time,
+                            read: n.da_doc == 1
+                        }));
+                    }
+                } else {
+                    // Lấy thông báo công khai (chưa đăng nhập)
+                    const response = await fetch(`${API_URL}/notifications/public`);
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        allNotifications = result.data.map(n => ({
+                            ...n,
+                            read: false
+                        }));
+                    }
+                }
+
+                filterNotifications();
+            } catch (error) {
+                console.error('Load notifications error:', error);
+                // Fallback: hiển thị thông báo mặc định
+                allNotifications = [
+                    { id: 1, type: 'system', title: 'Chào mừng bạn đến với Yến Nhi Tech!', message: 'Khám phá ngay các sản phẩm công nghệ hàng đầu.', time: new Date(), read: false, icon: 'fa-bell', iconColor: 'text-yellow-500' }
+                ];
+                filterNotifications();
+            }
+        }
+
+        async function markAllRead() {
+            allNotifications.forEach(n => { n.read = true; n.da_doc = 1; });
+            filterNotifications();
+
+            if (isLoggedIn) {
+                try {
+                    const token = localStorage.getItem('token');
+                    await fetch(`${API_URL}/notifications/read-all`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                } catch (e) { console.log('Mark all read error:', e); }
+            }
         }
 
         document.querySelectorAll('.notification-tab').forEach(tab => {
@@ -285,14 +382,27 @@
             });
         });
 
-        document.getElementById('markAllRead').addEventListener('click', function() {
-            allNotifications.forEach(n => n.read = true);
-            filterNotifications();
-        });
+        document.getElementById('markAllRead').addEventListener('click', markAllRead);
+
+        // Cập nhật số lượng giỏ hàng
+        function updateCartBadge() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const cartKey = user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
+                const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+                const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.so_luong) || 0), 0);
+                const badges = document.querySelectorAll('.cart-badge');
+                badges.forEach(badge => {
+                    badge.textContent = totalItems || 0;
+                });
+            } catch (error) {
+                console.error('Error updating cart badge:', error);
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
-            allNotifications = sampleNotifications;
-            filterNotifications();
+            loadNotifications();
+            updateCartBadge();
         });
     </script>
 

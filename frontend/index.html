@@ -181,11 +181,12 @@
                                         </svg>
                                         <span class="text-gray-700 font-medium">Đơn hàng của tôi</span>
                                     </a>
-                                    <a href="pages/notifications.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition">
+                                    <a href="pages/notifications.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition relative"></a>
                                         <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                                         </svg>
                                         <span class="text-gray-700 font-medium">Thông báo</span>
+                                        <span id="notificationBadgeIndex" class="notification-badge absolute right-4 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1 hidden">0</span>
                                     </a>
                                     <button onclick="handleLogout()" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition w-full text-left">
                                         <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1917,11 +1918,39 @@
                             defaultIcon.classList.add('hidden');
                         };
                     }
+                    
+                    // Cập nhật badge thông báo
+                    updateNotificationBadgeIndex();
                 }
             } else {
                 // Chưa đăng nhập - hiện nút login, ẩn dropdown
                 if (loginBtn) loginBtn.classList.remove('hidden');
                 if (userDropdown) userDropdown.classList.add('hidden');
+            }
+        }
+        
+        // Hàm cập nhật badge số thông báo chưa đọc cho index.html
+        function updateNotificationBadgeIndex() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) return;
+            
+            const storageKey = 'yennhi_notifications_' + (user.ma_tai_khoan || user.ma_khach_hang || 'guest');
+            let notifications = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            
+            // Nếu chưa có thông báo, dùng mẫu mặc định (2 thông báo chưa đọc)
+            if (notifications.length === 0) {
+                notifications = [{ id: 1, read: false }, { id: 2, read: false }];
+            }
+            
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationBadgeIndex');
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
             }
         }
 

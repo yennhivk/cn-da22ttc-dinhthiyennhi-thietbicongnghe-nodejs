@@ -65,11 +65,12 @@ function initAuthUI() {
                             </svg>
                             <span class="text-gray-700 font-medium">Đơn hàng của tôi</span>
                         </a>
-                        <a href="${getBasePath()}notifications.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition">
+                        <a href="${getBasePath()}notifications.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition relative">
                             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                             </svg>
                             <span class="text-gray-700 font-medium">Thông báo</span>
+                            <span id="notificationBadge" class="notification-badge hidden absolute right-4 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">0</span>
                         </a>
                         <button onclick="handleLogoutGlobal()" class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition w-full text-left">
                             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,6 +82,9 @@ function initAuthUI() {
                 </div>
             </div>
         `;
+        
+        // Cập nhật badge thông báo
+        updateNotificationBadge();
     } else {
         // Chưa đăng nhập - hiển thị nút đăng nhập
         userAccountContainer.innerHTML = `
@@ -112,4 +116,36 @@ function handleLogoutGlobal() {
     alert('Đăng xuất thành công!');
     const path = window.location.pathname;
     window.location.href = path.includes('/pages/') ? '../index.html' : 'index.html';
+}
+
+// Hàm cập nhật badge số thông báo chưa đọc
+function updateNotificationBadge() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) return;
+    
+    // Lấy thông báo từ localStorage (dùng chung key với trang notifications)
+    const storageKey = 'yennhi_notifications_' + (user.ma_tai_khoan || user.ma_khach_hang || 'guest');
+    let notifications = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    
+    // Nếu chưa có thông báo trong storage, dùng mẫu mặc định
+    if (notifications.length === 0) {
+        notifications = [
+            { id: 1, read: false },
+            { id: 2, read: false }
+        ];
+    }
+    
+    // Đếm số thông báo chưa đọc
+    const unreadCount = notifications.filter(n => !n.read).length;
+    
+    // Cập nhật badge
+    const badge = document.getElementById('notificationBadge');
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
 }
