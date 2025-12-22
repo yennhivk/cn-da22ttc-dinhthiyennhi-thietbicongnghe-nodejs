@@ -4,20 +4,20 @@
 const crypto = require('crypto');
 
 const momoConfig = {
-    // Thông tin test từ MoMo Developer
-    partnerCode: process.env.MOMO_PARTNER_CODE || 'MOMO',
-    accessKey: process.env.MOMO_ACCESS_KEY || 'F8BBA842ECF85',
-    secretKey: process.env.MOMO_SECRET_KEY || 'K951B6PE1waDMi640xX08PD3vg6EkVlz',
+    // Thông tin test chính thức từ MoMo Developer Portal
+    partnerCode: process.env.MOMO_PARTNER_CODE || 'MOMOBKUN20180529',
+    accessKey: process.env.MOMO_ACCESS_KEY || 'klm05TvNBzhg7h7j',
+    secretKey: process.env.MOMO_SECRET_KEY || 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa',
     
     // Endpoints
     endpoint: process.env.MOMO_ENDPOINT || 'https://test-payment.momo.vn/v2/gateway/api/create',
     
-    // URLs callback
-    redirectUrl: process.env.MOMO_REDIRECT_URL || 'http://localhost:3300/api/payment/momo/callback',
+    // URLs callback - sử dụng frontend URL
+    redirectUrl: process.env.MOMO_REDIRECT_URL || 'http://127.0.0.1:5509/frontend/pages/payment-result.html',
     ipnUrl: process.env.MOMO_IPN_URL || 'http://localhost:3300/api/payment/momo/ipn',
     
     // Request type
-    requestType: 'payWithMethod'
+    requestType: 'captureWallet'
 };
 
 // Tạo chữ ký HMAC SHA256

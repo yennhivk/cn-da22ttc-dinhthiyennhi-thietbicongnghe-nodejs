@@ -22,10 +22,27 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const status = urlParams.get('status');
-            const orderId = urlParams.get('orderId');
+            
+            // Kiểm tra nếu là callback từ MoMo
+            const resultCode = urlParams.get('resultCode');
+            const momoOrderId = urlParams.get('orderId');
             const transId = urlParams.get('transId');
-            const message = urlParams.get('message');
+            const momoMessage = urlParams.get('message');
+            
+            let status, orderId, message;
+            
+            if (resultCode !== null) {
+                // Callback từ MoMo
+                status = resultCode === '0' ? 'success' : 'failed';
+                // Lấy orderId gốc từ momoOrderId (format: YNT{orderId}_{timestamp})
+                orderId = momoOrderId ? momoOrderId.split('_')[0].replace('YNT', '') : '';
+                message = momoMessage;
+            } else {
+                // Redirect từ backend
+                status = urlParams.get('status');
+                orderId = urlParams.get('orderId');
+                message = urlParams.get('message');
+            }
 
             const container = document.getElementById('resultContainer');
 
