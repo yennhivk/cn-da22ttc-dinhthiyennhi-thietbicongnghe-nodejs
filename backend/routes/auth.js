@@ -485,6 +485,14 @@ const authenticateToken = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
         if (err) {
+            console.log('❌ Token verification failed:', err.name, err.message);
+            if (err.name === 'TokenExpiredError') {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Token đã hết hạn, vui lòng đăng nhập lại',
+                    expired: true
+                });
+            }
             return res.status(403).json({
                 success: false,
                 message: 'Token không hợp lệ hoặc đã hết hạn'
@@ -1169,10 +1177,19 @@ router.post('/orders', authenticateToken, async (req, res) => {
         }
 
         // Thêm thông tin thanh toán
+        // Map giá trị từ frontend sang enum trong database
+        const paymentMethodMap = {
+            'cod': 'COD',
+            'bank': 'Ngan_Hang',
+            'momo': 'Momo',
+            'zalopay': 'ZaloPay'
+        };
+        const dbPaymentMethod = paymentMethodMap[phuong_thuc_thanh_toan] || 'COD';
+        
         await db.query(`
             INSERT INTO thanh_toan (ma_don_hang, phuong_thuc, so_tien, ma_giao_dich)
             VALUES (?, ?, ?, ?)
-        `, [orderId, phuong_thuc_thanh_toan || 'COD', tongTien, `GD${Date.now()}`]);
+        `, [orderId, dbPaymentMethod, tongTien, `GD${Date.now()}`]);
 
         res.json({
             success: true,

@@ -21,27 +21,27 @@ router.post('/momo/create', async (req, res) => {
         const requestId = generateRequestId();
         const momoOrderId = generateOrderId(orderId);
         const orderInfoText = orderInfo || `Thanh toán đơn hàng #${orderId} - Yến Nhi Tech`;
+        const extraData = ''; // Base64 encoded JSON nếu cần
 
-        // Tạo raw signature theo format MoMo yêu cầu
-        const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${amount}&extraData=&ipnUrl=${momoConfig.ipnUrl}&orderId=${momoOrderId}&orderInfo=${orderInfoText}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${requestId}&requestType=${momoConfig.requestType}`;
+        // Tạo raw signature theo format MoMo yêu cầu (theo thứ tự alphabet)
+        const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${momoConfig.ipnUrl}&orderId=${momoOrderId}&orderInfo=${orderInfoText}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.redirectUrl}&requestId=${requestId}&requestType=${momoConfig.requestType}`;
 
+        console.log('🔵 Raw Signature:', rawSignature);
+        
         const signature = createSignature(rawSignature);
 
-        // Request body gửi đến MoMo
+        // Request body gửi đến MoMo (API v2)
         const requestBody = {
             partnerCode: momoConfig.partnerCode,
-            partnerName: 'Yến Nhi Tech',
-            storeId: 'YenNhiTechStore',
             requestId: requestId,
-            amount: amount,
+            amount: parseInt(amount), // Đảm bảo là số nguyên
             orderId: momoOrderId,
             orderInfo: orderInfoText,
             redirectUrl: momoConfig.redirectUrl,
             ipnUrl: momoConfig.ipnUrl,
-            lang: 'vi',
             requestType: momoConfig.requestType,
-            autoCapture: true,
-            extraData: '',
+            extraData: extraData,
+            lang: 'vi',
             signature: signature
         };
 
@@ -57,12 +57,16 @@ router.post('/momo/create', async (req, res) => {
         console.log('🟢 MoMo Response:', JSON.stringify(response.data, null, 2));
 
         if (response.data.resultCode === 0) {
-            // Lưu thông tin giao dịch vào database
-            await db.query(`
-                UPDATE thanh_toan 
-                SET ma_giao_dich = ?, trang_thai = 'cho_thanh_toan'
-                WHERE ma_don_hang = ?
-            `, [momoOrderId, orderId]);
+            // Lưu thông tin giao dịch vào database (nếu có bản ghi thanh_toan)
+            try {
+                await db.query(`
+                    UPDATE thanh_toan 
+                    SET ma_giao_dich = ?, trang_thai = 'cho_thanh_toan'
+                    WHERE ma_don_hang = ?
+                `, [momoOrderId, orderId]);
+            } catch (dbErr) {
+                console.log('⚠️ Không tìm thấy bản ghi thanh_toan để cập nhật (có thể chưa được tạo)');
+            }
 
             res.json({
                 success: true,
@@ -128,7 +132,7 @@ router.get('/momo/callback', async (req, res) => {
 
             await db.query(`
                 UPDATE thanh_toan 
-                SET trang_thai = 'thanh_cong', ma_giao_dich = ?
+                SET trang_thai = 'da_thanh_toan', ma_giao_dich = ?
                 WHERE ma_don_hang = ?
             `, [transId, originalOrderId]);
 
@@ -140,7 +144,7 @@ router.get('/momo/callback', async (req, res) => {
             // Thanh toán thất bại
             await db.query(`
                 UPDATE thanh_toan 
-                SET trang_thai = 'that_bai'
+                SET trang_thai = 'da_huy'
                 WHERE ma_don_hang = ?
             `, [originalOrderId]);
 
@@ -191,7 +195,7 @@ router.post('/momo/ipn', async (req, res) => {
 
             await db.query(`
                 UPDATE thanh_toan 
-                SET trang_thai = 'thanh_cong', ma_giao_dich = ?
+                SET trang_thai = 'da_thanh_toan', ma_giao_dich = ?
                 WHERE ma_don_hang = ?
             `, [transId, originalOrderId]);
 
@@ -236,6 +240,82 @@ router.get('/momo/status/:orderId', async (req, res) => {
     } catch (error) {
         console.error('Check payment status error:', error);
         res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// ==========================================
+// THANH TOÁN GIẢ LẬP (SANDBOX)
+// ==========================================
+router.post('/momo/simulate', async (req, res) => {
+    try {
+        const { orderId, result, amount } = req.body;
+
+        if (!orderId || !result) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Thiếu thông tin' 
+            });
+        }
+
+        // Lấy orderId gốc từ momoOrderId (format: YNT{orderId}_{timestamp})
+        const originalOrderId = orderId.split('_')[0].replace('YNT', '');
+        const transId = `SANDBOX_${Date.now()}`;
+
+        console.log(`🎮 Sandbox Payment - Order: ${originalOrderId}, Result: ${result}`);
+
+        if (result === 'success') {
+            // Cập nhật đơn hàng - thanh toán thành công
+            await db.query(`
+                UPDATE don_hang 
+                SET trang_thai_thanh_toan = 'da_thanh_toan'
+                WHERE ma_don_hang = ?
+            `, [originalOrderId]);
+
+            // Cập nhật bảng thanh_toan
+            await db.query(`
+                UPDATE thanh_toan 
+                SET trang_thai = 'da_thanh_toan', ma_giao_dich = ?
+                WHERE ma_don_hang = ?
+            `, [transId, originalOrderId]);
+
+            console.log('✅ Sandbox: Payment SUCCESS for order:', originalOrderId);
+
+            res.json({
+                success: true,
+                message: 'Thanh toán giả lập thành công',
+                data: {
+                    orderId: originalOrderId,
+                    transId: transId,
+                    status: 'success'
+                }
+            });
+        } else {
+            // Cập nhật thanh toán thất bại
+            await db.query(`
+                UPDATE thanh_toan 
+                SET trang_thai = 'da_huy'
+                WHERE ma_don_hang = ?
+            `, [originalOrderId]);
+
+            console.log('❌ Sandbox: Payment FAILED for order:', originalOrderId);
+
+            res.json({
+                success: true,
+                message: 'Thanh toán giả lập thất bại',
+                data: {
+                    orderId: originalOrderId,
+                    status: 'failed'
+                }
+            });
+        }
+
+    } catch (error) {
+        console.error('❌ Sandbox Payment Error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Lỗi xử lý thanh toán giả lập',
+            error: error.message
+        });
     }
 });
 

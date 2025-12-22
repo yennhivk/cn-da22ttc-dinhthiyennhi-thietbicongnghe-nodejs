@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoMo Sandbox - Thanh toán giả lập</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .momo-gradient {
+            background: linear-gradient(135deg, #a50064 0%, #d82d8b 100%);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .scan-line {
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+    </style>
+</head>
+<body class="momo-gradient min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <img src="https://developers.momo.vn/v3/vi/assets/images/icon-52bd5808cecdb1970e1aeec3c31a3ee1.png" 
+                 alt="MoMo" class="w-16 h-16 mx-auto mb-2">
+            <h1 class="text-white text-2xl font-bold">MoMo Sandbox</h1>
+            <p class="text-pink-200 text-sm">Môi trường thanh toán giả lập</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Order Info -->
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-500">Đơn hàng:</span>
+                    <span id="orderId" class="font-bold text-lg">#---</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-500">Số tiền:</span>
+                    <span id="amount" class="font-bold text-2xl text-pink-600">0 ₫</span>
+                </div>
+                <p id="orderInfo" class="text-gray-400 text-sm mt-2"></p>
+            </div>
+
+            <!-- QR Code Section -->
+            <div id="qrSection" class="p-6 text-center">
+                <div class="relative inline-block">
+                    <!-- Fake QR Code -->
+                    <div class="w-48 h-48 bg-gray-100 rounded-lg mx-auto relative overflow-hidden border-4 border-pink-500">
+                        <div class="absolute inset-4 grid grid-cols-8 gap-1">
+                            <!-- Generate random QR pattern -->
+                            <script>
+                                for(let i = 0; i < 64; i++) {
+                                    document.write(`<div class="bg-${Math.random() > 0.5 ? 'black' : 'white'} rounded-sm"></div>`);
+                                }
+                            </script>
+                        </div>
+                        <!-- Scan line animation -->
+                        <div class="scan-line absolute left-0 right-0 h-1 bg-pink-500 opacity-50" style="top: 0;"></div>
+                        <!-- MoMo logo in center -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow">
+                                <span class="text-pink-600 font-bold text-lg">M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-gray-500 mt-4 mb-2">Quét mã QR bằng ứng dụng MoMo</p>
+                <p class="text-gray-400 text-sm">(Đây là môi trường test - nhấn nút bên dưới để giả lập)</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="p-6 bg-gray-50 space-y-3">
+                <button id="btnSuccess" onclick="simulatePayment('success')" 
+                        class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl transition transform hover:scale-105 flex items-center justify-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Giả lập thanh toán THÀNH CÔNG
+                </button>
+                
+                <button id="btnFailed" onclick="simulatePayment('failed')" 
+                        class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 rounded-xl transition transform hover:scale-105 flex items-center justify-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    Giả lập thanh toán THẤT BẠI
+                </button>
+                
+                <button onclick="window.history.back()" 
+                        class="w-full bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 rounded-xl transition">
+                    Hủy và quay lại
+                </button>
+            </div>
+        </div>
+
+        <!-- Processing Modal -->
+        <div id="processingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-8 text-center max-w-sm mx-4">
+                <div class="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-lg font-semibold text-gray-700">Đang xử lý thanh toán...</p>
+                <p class="text-gray-500 text-sm mt-2">Vui lòng chờ trong giây lát</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-pink-200 text-sm mt-6">
+            🔒 Môi trường sandbox an toàn - Không có giao dịch thật
+        </p>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3300/api';
+        let orderData = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lấy thông tin từ URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            orderData = {
+                orderId: urlParams.get('orderId') || '',
+                amount: urlParams.get('amount') || '0',
+                orderInfo: urlParams.get('orderInfo') || '',
+                requestId: urlParams.get('requestId') || ''
+            };
+
+            // Hiển thị thông tin
+            const originalOrderId = orderData.orderId.split('_')[0].replace('YNT', '');
+            document.getElementById('orderId').textContent = '#' + originalOrderId;
+            document.getElementById('amount').textContent = formatCurrency(parseInt(orderData.amount));
+            document.getElementById('orderInfo').textContent = decodeURIComponent(orderData.orderInfo);
+        });
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { 
+                style: 'currency', 
+                currency: 'VND' 
+            }).format(amount);
+        }
+
+        async function simulatePayment(result) {
+            const modal = document.getElementById('processingModal');
+            modal.classList.remove('hidden');
+
+            // Disable buttons
+            document.getElementById('btnSuccess').disabled = true;
+            document.getElementById('btnFailed').disabled = true;
+
+            try {
+                // Gọi API để cập nhật trạng thái thanh toán
+                const response = await fetch(`${API_URL}/payment/momo/simulate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderId: orderData.orderId,
+                        result: result, // 'success' hoặc 'failed'
+                        amount: orderData.amount
+                    })
+                });
+
+                const data = await response.json();
+
+                // Chờ 1.5s để tạo hiệu ứng xử lý
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Lấy orderId gốc
+                const originalOrderId = orderData.orderId.split('_')[0].replace('YNT', '');
+
+                if (result === 'success') {
+                    // Redirect đến trang kết quả thành công
+                    window.location.href = `payment-result.html?status=success&orderId=${originalOrderId}&transId=SANDBOX_${Date.now()}`;
+                } else {
+                    // Redirect đến trang kết quả thất bại
+                    window.location.href = `payment-result.html?status=failed&orderId=${originalOrderId}&message=${encodeURIComponent('Người dùng hủy giao dịch')}`;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                modal.classList.add('hidden');
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                
+                // Re-enable buttons
+                document.getElementById('btnSuccess').disabled = false;
+                document.getElementById('btnFailed').disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

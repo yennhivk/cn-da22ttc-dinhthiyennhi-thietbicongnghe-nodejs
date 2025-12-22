@@ -1085,6 +1085,15 @@
                 
                 const result = await response.json();
                 
+                // Xử lý lỗi token hết hạn
+                if (response.status === 401 || response.status === 403) {
+                    alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
                 if (result.success) {
                     const orderId = result.data.ma_don_hang;
                     const totalAmount = result.data.tong_tien;
@@ -1115,8 +1124,10 @@
                             const momoResult = await momoResponse.json();
                             
                             if (momoResult.success && momoResult.data.payUrl) {
-                                // Chuyển hướng đến trang thanh toán MoMo
-                                window.location.href = momoResult.data.payUrl;
+                                // Chuyển đến trang sandbox để giả lập thanh toán
+                                // (Trong production, sẽ dùng: window.location.href = momoResult.data.payUrl)
+                                const sandboxUrl = `momo-sandbox.html?orderId=${momoResult.data.orderId}&amount=${totalAmount}&orderInfo=${encodeURIComponent(`Thanh toán đơn hàng #${orderId} - Yến Nhi Tech`)}&requestId=${momoResult.data.requestId}`;
+                                window.location.href = sandboxUrl;
                             } else {
                                 alert('Không thể tạo thanh toán MoMo: ' + (momoResult.message || 'Lỗi không xác định'));
                                 submitBtn.disabled = false;
