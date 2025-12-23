@@ -51,7 +51,7 @@ function updateCategoryCounts() {
         }
     });
     
-    console.log('📊 Category counts:', categoryCounts);
+    // Debug: console.log('📊 Category counts:', categoryCounts);
 }
 
 // Setup event listeners
@@ -265,10 +265,9 @@ async function loadProducts(searchTerm = null) {
 // Display products in grid
 function displayProducts(products) {
     const container = document.getElementById('productGrid');
-    const container2 = document.getElementById('productGrid2');
     
-    if (!container && !container2) {
-        console.error('Không tìm thấy container sản phẩm (#productGrid hoặc #productGrid2)');
+    if (!container) {
+        console.error('Không tìm thấy container sản phẩm (#productGrid)');
         return;
     }
     
@@ -285,8 +284,7 @@ function displayProducts(products) {
         </div>
     ` : productsToShow.map(product => createProductCard(product)).join('');
 
-    if (container) container.innerHTML = html;
-    if (container2) container2.innerHTML = html;
+    container.innerHTML = html;
 
     // Cập nhật trạng thái nút "Xem thêm"
     updateLoadMoreButtons(products.length);
@@ -676,29 +674,46 @@ function toggleMobileMenu() {
 // Switch tab
 function switchTab(tabName) {
     // Hide all content
-    document.getElementById('content-kham-pha').classList.add('hidden');
-    document.getElementById('content-san-pham').classList.add('hidden');
-    document.getElementById('content-bai-viet').classList.add('hidden');
+    const khamPha = document.getElementById('content-kham-pha');
+    const sanPham = document.getElementById('content-san-pham');
+    const baiViet = document.getElementById('content-bai-viet');
+    
+    // Ẩn tất cả bằng style.display
+    if (khamPha) khamPha.style.display = 'none';
+    if (sanPham) sanPham.style.display = 'none';
+    if (baiViet) baiViet.style.display = 'none';
     
     // Show selected content
-    if (tabName === 'kham-pha') {
-        document.getElementById('content-kham-pha').classList.remove('hidden');
-    } else if (tabName === 'san-pham') {
-        document.getElementById('content-san-pham').classList.remove('hidden');
-    } else if (tabName === 'bai-viet') {
-        document.getElementById('content-bai-viet').classList.remove('hidden');
+    if (tabName === 'kham-pha' && khamPha) {
+        khamPha.style.display = 'block';
+    } else if (tabName === 'san-pham' && sanPham) {
+        sanPham.style.display = 'block';
+        // Đổ dữ liệu vào productGrid2 sau khi tab được hiển thị
+        setTimeout(() => {
+            const container2 = document.getElementById('productGrid2');
+            if (container2 && filteredProducts && filteredProducts.length > 0) {
+                const productsToShow = filteredProducts.slice(0, itemsToShow);
+                const html = productsToShow.map(product => createProductCard(product)).join('');
+                container2.innerHTML = html;
+                console.log('✅ Đã đổ', productsToShow.length, 'sản phẩm vào productGrid2');
+            }
+        }, 10);
+    } else if (tabName === 'bai-viet' && baiViet) {
+        baiViet.style.display = 'block';
     }
     
     // Update tab styles
     const tabs = ['kham-pha', 'san-pham', 'bai-viet'];
     tabs.forEach(tab => {
         const tabElement = document.getElementById(`tab-${tab}`);
-        if (tab === tabName) {
-            tabElement.classList.add('text-red-600', 'border-red-600');
-            tabElement.classList.remove('text-gray-600', 'border-transparent');
-        } else {
-            tabElement.classList.remove('text-red-600', 'border-red-600');
-            tabElement.classList.add('text-gray-600', 'border-transparent');
+        if (tabElement) {
+            if (tab === tabName) {
+                tabElement.classList.add('text-red-600', 'border-red-600', 'font-semibold');
+                tabElement.classList.remove('text-gray-600', 'border-transparent');
+            } else {
+                tabElement.classList.remove('text-red-600', 'border-red-600', 'font-semibold');
+                tabElement.classList.add('text-gray-600', 'border-transparent');
+            }
         }
     });
 }
