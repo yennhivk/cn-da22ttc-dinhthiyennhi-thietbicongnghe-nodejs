@@ -384,7 +384,55 @@ function displayReviews(reviews) {
     
     document.getElementById('reviewCount').textContent = `${reviewCount} đánh giá`;
     document.getElementById('tabReviewCount').textContent = reviewCount;
+    document.getElementById('totalReviewsDisplay').textContent = reviewCount;
     
+    // Hiển thị form đánh giá hoặc nút đăng nhập
+    if (isLoggedIn()) {
+        document.getElementById('reviewFormContainer').classList.remove('hidden');
+        document.getElementById('loginToReview').classList.add('hidden');
+        // Mặc định chọn 5 sao
+        selectStar(5);
+    } else {
+        document.getElementById('reviewFormContainer').classList.add('hidden');
+        document.getElementById('loginToReview').classList.remove('hidden');
+    }
+    
+    // Tính điểm trung bình và phân bố sao
+    let avgRating = 0;
+    const ratingCounts = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
+    
+    if (reviewCount > 0) {
+        reviews.forEach(r => {
+            avgRating += r.so_sao;
+            ratingCounts[r.so_sao] = (ratingCounts[r.so_sao] || 0) + 1;
+        });
+        avgRating = avgRating / reviewCount;
+    }
+    
+    // Hiển thị điểm trung bình
+    document.getElementById('avgRatingDisplay').textContent = avgRating.toFixed(1);
+    document.getElementById('ratingText').textContent = avgRating.toFixed(1);
+    
+    // Hiển thị sao trung bình
+    document.getElementById('avgStarsDisplay').innerHTML = generateStars(Math.round(avgRating));
+    
+    // Hiển thị phân bố sao
+    const distributionHTML = [5, 4, 3, 2, 1].map(star => {
+        const count = ratingCounts[star] || 0;
+        const percent = reviewCount > 0 ? (count / reviewCount * 100) : 0;
+        return `
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-medium text-gray-600 w-12">${star} sao</span>
+                <div class="flex-1 bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div class="bg-yellow-400 h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                </div>
+                <span class="text-sm text-gray-500 w-16 text-right">${count} (${percent.toFixed(0)}%)</span>
+            </div>
+        `;
+    }).join('');
+    document.getElementById('ratingDistribution').innerHTML = distributionHTML;
+    
+    // Hiển thị danh sách đánh giá
     if (reviewCount === 0) {
         container.innerHTML = `
             <div class="text-center py-8 text-gray-500">
@@ -398,29 +446,97 @@ function displayReviews(reviews) {
         return;
     }
     
-    // Calculate average rating
-    const avgRating = reviews.reduce((sum, r) => sum + r.so_sao, 0) / reviewCount;
-    document.getElementById('ratingText').textContent = avgRating.toFixed(1);
-    
-    container.innerHTML = reviews.map(review => `
-        <div class="border-b border-gray-100 py-4 last:border-0">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span class="text-gray-600 font-semibold">${(review.ten_dang_nhap || 'U')[0].toUpperCase()}</span>
-                </div>
-                <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="font-semibold text-gray-900">${review.ten_dang_nhap || 'Người dùng'}</span>
-                        <div class="flex text-yellow-400">
-                            ${generateStars(review.so_sao)}
+    container.innerHTML = `
+        <h3 class="font-bold text-lg text-gray-900 mb-4">📝 Tất cả đánh giá (${reviewCount})</h3>
+        <div class="space-y-4">
+            ${reviews.map(review => `
+                <div class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-lg">${(review.ten_dang_nhap || 'U')[0].toUpperCase()}</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <span class="font-semibold text-gray-900">${review.ten_dang_nhap || 'Người dùng'}</span>
+                                    <span class="text-green-600 text-xs ml-2 bg-green-100 px-2 py-0.5 rounded-full">✓ Đã mua hàng</span>
+                                </div>
+                                <span class="text-gray-400 text-sm">${formatDate(review.ngay_tao)}</span>
+                            </div>
+                            <div class="flex text-yellow-400 mb-2">
+                                ${generateStars(review.so_sao)}
+                            </div>
+                            <p class="text-gray-700">${review.noi_dung}</p>
                         </div>
                     </div>
-                    <p class="text-gray-600 text-sm">${review.noi_dung}</p>
-                    <p class="text-gray-400 text-xs mt-2">${formatDate(review.ngay_tao)}</p>
                 </div>
-            </div>
+            `).join('')}
         </div>
-    `).join('');
+    `;
+}
+
+// Chọn số sao khi viết đánh giá
+let selectedStarRating = 5;
+function selectStar(rating) {
+    selectedStarRating = rating;
+    document.getElementById('selectedRating').value = rating;
+    const buttons = document.querySelectorAll('#starSelector .star-btn');
+    buttons.forEach((btn, index) => {
+        if (index < rating) {
+            btn.classList.remove('text-gray-300');
+            btn.classList.add('text-yellow-400');
+        } else {
+            btn.classList.remove('text-yellow-400');
+            btn.classList.add('text-gray-300');
+        }
+    });
+}
+
+// Gửi đánh giá
+async function submitReview(event) {
+    event.preventDefault();
+    
+    if (!isLoggedIn()) {
+        alert('Vui lòng đăng nhập để đánh giá!');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    const content = document.getElementById('reviewContent').value.trim();
+    if (!content) {
+        alert('Vui lòng nhập nội dung đánh giá!');
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/products/${currentProduct.ma_san_pham}/reviews`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                so_sao: selectedStarRating,
+                noi_dung: content
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Đánh giá của bạn đã được gửi thành công!');
+            document.getElementById('reviewContent').value = '';
+            selectStar(5);
+            // Reload product để cập nhật đánh giá
+            loadProductDetail(currentProduct.ma_san_pham);
+        } else {
+            alert(result.message || 'Có lỗi xảy ra khi gửi đánh giá!');
+        }
+    } catch (error) {
+        console.error('Lỗi gửi đánh giá:', error);
+        alert('Không thể kết nối đến server!');
+    }
 }
 
 // Generate star HTML

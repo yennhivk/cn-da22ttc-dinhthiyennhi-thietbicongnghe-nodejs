@@ -79,6 +79,7 @@ console.log('Auth routes loaded:', authRouter.stack.map(r => r.route?.path).filt
 app.use('/api/auth', authRouter);
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/news', require('./routes/news'));
+app.use('/api/articles', require('./routes/articles'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/chatbot', require('./routes/chatbot'));
 app.use('/api/notifications', require('./routes/notifications'));

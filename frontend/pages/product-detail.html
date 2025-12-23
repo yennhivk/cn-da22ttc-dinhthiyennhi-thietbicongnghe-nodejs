@@ -293,8 +293,60 @@
 
                     <!-- Reviews Tab -->
                     <div id="content-reviews" class="tab-content hidden">
+                        <!-- Tổng quan đánh giá -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <!-- Điểm trung bình -->
+                            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 text-center border border-yellow-200">
+                                <div class="text-5xl font-bold text-yellow-600" id="avgRatingDisplay">0</div>
+                                <div class="flex justify-center mt-2" id="avgStarsDisplay">
+                                    <!-- Stars will be rendered here -->
+                                </div>
+                                <p class="text-gray-600 mt-2"><span id="totalReviewsDisplay">0</span> đánh giá</p>
+                            </div>
+                            
+                            <!-- Phân bố sao -->
+                            <div class="md:col-span-2 bg-gray-50 rounded-xl p-6 border border-gray-200">
+                                <div class="space-y-2" id="ratingDistribution">
+                                    <!-- Rating bars will be rendered here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form viết đánh giá -->
+                        <div id="reviewFormContainer" class="bg-blue-50 rounded-xl p-6 mb-6 border border-blue-200 hidden">
+                            <h3 class="font-bold text-lg text-gray-900 mb-4">✍️ Viết đánh giá của bạn</h3>
+                            <form id="reviewForm" onsubmit="submitReview(event)">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Đánh giá sao</label>
+                                    <div class="flex gap-2" id="starSelector">
+                                        <button type="button" onclick="selectStar(1)" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition">★</button>
+                                        <button type="button" onclick="selectStar(2)" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition">★</button>
+                                        <button type="button" onclick="selectStar(3)" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition">★</button>
+                                        <button type="button" onclick="selectStar(4)" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition">★</button>
+                                        <button type="button" onclick="selectStar(5)" class="star-btn text-3xl text-gray-300 hover:text-yellow-400 transition">★</button>
+                                    </div>
+                                    <input type="hidden" id="selectedRating" value="5">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nội dung đánh giá</label>
+                                    <textarea id="reviewContent" rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..." required></textarea>
+                                </div>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                                    Gửi đánh giá
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Nút viết đánh giá (cho người chưa đăng nhập) -->
+                        <div id="loginToReview" class="bg-gray-50 rounded-xl p-6 mb-6 text-center border border-gray-200 hidden">
+                            <p class="text-gray-600 mb-3">Đăng nhập để viết đánh giá sản phẩm</p>
+                            <a href="login.html" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                                Đăng nhập ngay
+                            </a>
+                        </div>
+
+                        <!-- Danh sách đánh giá -->
                         <div id="reviewsContainer">
-                            <!-- Reviews will be loaded here -->
                             <div class="text-center py-8 text-gray-500">
                                 <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                                 <p>Chưa có đánh giá nào cho sản phẩm này</p>

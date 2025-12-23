@@ -170,4 +170,98 @@ router.get('/categories/all', async (req, res) => {
     }
 });
 
+// POST - Gửi đánh giá sản phẩm
+router.post('/:id/reviews', async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const { so_sao, noi_dung } = req.body;
+        
+        // Kiểm tra token
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                success: false,
+                message: 'Vui lòng đăng nhập để đánh giá'
+            });
+        }
+        
+        const token = authHeader.split(' ')[1];
+        const jwt = require('jsonwebtoken');
+        
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key_here_change_in_production');
+        } catch (err) {
+            return res.status(401).json({
+                success: false,
+                message: 'Token không hợp lệ hoặc đã hết hạn'
+            });
+        }
+        
+        const userId = decoded.ma_tai_khoan;
+        
+        // Validate input
+        if (!so_sao || so_sao < 1 || so_sao > 5) {
+            return res.status(400).json({
+                success: false,
+                message: 'Số sao phải từ 1 đến 5'
+            });
+        }
+        
+        if (!noi_dung || noi_dung.trim().length < 10) {
+            return res.status(400).json({
+                success: false,
+                message: 'Nội dung đánh giá phải có ít nhất 10 ký tự'
+            });
+        }
+        
+        // Kiểm tra sản phẩm tồn tại
+        const [products] = await db.query('SELECT ma_san_pham FROM san_pham WHERE ma_san_pham = ?', [productId]);
+        if (products.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy sản phẩm'
+            });
+        }
+        
+        // Kiểm tra xem user đã đánh giá sản phẩm này chưa
+        const [existingReview] = await db.query(
+            'SELECT ma_danh_gia FROM danh_gia WHERE ma_san_pham = ? AND ma_tai_khoan = ?',
+            [productId, userId]
+        );
+        
+        if (existingReview.length > 0) {
+            // Cập nhật đánh giá cũ
+            await db.query(
+                'UPDATE danh_gia SET so_sao = ?, noi_dung = ?, ngay_tao = NOW() WHERE ma_san_pham = ? AND ma_tai_khoan = ?',
+                [so_sao, noi_dung.trim(), productId, userId]
+            );
+            
+            return res.json({
+                success: true,
+                message: 'Đã cập nhật đánh giá của bạn'
+            });
+        }
+        
+        // Thêm đánh giá mới
+        await db.query(
+            'INSERT INTO danh_gia (ma_san_pham, ma_tai_khoan, so_sao, noi_dung, trang_thai) VALUES (?, ?, ?, ?, 1)',
+            [productId, userId, so_sao, noi_dung.trim()]
+        );
+        
+        res.json({
+            success: true,
+            message: 'Đánh giá của bạn đã được gửi thành công'
+        });
+        
+    } catch (error) {
+        console.error('Lỗi gửi đánh giá:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server khi gửi đánh giá',
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;

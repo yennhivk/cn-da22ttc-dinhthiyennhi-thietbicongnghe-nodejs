@@ -445,64 +445,104 @@ router.delete('/categories/:id', authenticateToken, requireAdmin, async (req, re
 // API thống kê đơn hàng chi tiết
 router.get('/orders/stats', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        // Tổng đơn hàng và doanh thu
-        const [totalStats] = await db.query(`
-            SELECT 
-                COUNT(*) as total_orders,
-                COALESCE(SUM(tong_tien), 0) as total_revenue,
-                COALESCE(SUM(CASE WHEN trang_thai_don_hang = 'hoan_thanh' THEN tong_tien ELSE 0 END), 0) as completed_revenue
-            FROM don_hang
-        `);
+        console.log('📊 Loading order stats...');
+        
+        // Khởi tạo giá trị mặc định
+        let totalOrders = 0;
+        let totalRevenue = 0;
+        let completedRevenue = 0;
+        let statusStats = [];
+        let monthlyRevenue = [];
+        let paymentStats = [];
+        let recentOrders = [];
 
-        // Đơn hàng theo trạng thái
-        const [statusStats] = await db.query(`
-            SELECT 
-                trang_thai_don_hang as trang_thai,
-                COUNT(*) as count,
-                COALESCE(SUM(tong_tien), 0) as revenue
-            FROM don_hang
-            GROUP BY trang_thai_don_hang
-        `);
+        // 1. Tổng đơn hàng và doanh thu
+        try {
+            const [rows] = await db.query(`
+                SELECT 
+                    COUNT(*) as total_orders,
+                    COALESCE(SUM(tong_tien), 0) as total_revenue,
+                    COALESCE(SUM(CASE WHEN trang_thai_don_hang = 'hoan_thanh' THEN tong_tien ELSE 0 END), 0) as completed_revenue
+                FROM don_hang
+            `);
+            if (rows && rows[0]) {
+                totalOrders = rows[0].total_orders || 0;
+                totalRevenue = rows[0].total_revenue || 0;
+                completedRevenue = rows[0].completed_revenue || 0;
+            }
+            console.log('✅ Total stats:', { totalOrders, totalRevenue, completedRevenue });
+        } catch (e) {
+            console.log('⚠️ Lỗi query tổng:', e.message);
+        }
 
-        // Doanh thu theo tháng (12 tháng gần nhất)
-        const [monthlyRevenue] = await db.query(`
-            SELECT 
-                DATE_FORMAT(ngay_tao, '%Y-%m') as month,
-                DATE_FORMAT(ngay_tao, '%m/%Y') as month_label,
-                COUNT(*) as order_count,
-                COALESCE(SUM(tong_tien), 0) as revenue
-            FROM don_hang
-            WHERE ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
-            GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m')
-            ORDER BY month ASC
-        `);
+        // 2. Đơn hàng theo trạng thái
+        try {
+            const [rows] = await db.query(`
+                SELECT trang_thai_don_hang as trang_thai, COUNT(*) as count, COALESCE(SUM(tong_tien), 0) as revenue
+                FROM don_hang GROUP BY trang_thai_don_hang
+            `);
+            if (rows) statusStats = rows;
+            console.log('✅ Status stats:', statusStats);
+        } catch (e) {
+            console.log('⚠️ Lỗi query trạng thái:', e.message);
+        }
 
-        // Doanh thu theo phương thức thanh toán
-        const [paymentStats] = await db.query(`
-            SELECT 
-                tt.phuong_thuc,
-                COUNT(*) as count,
-                COALESCE(SUM(tt.so_tien), 0) as revenue
-            FROM thanh_toan tt
-            GROUP BY tt.phuong_thuc
-        `);
+        // 3. Doanh thu theo tháng
+        try {
+            const [rows] = await db.query(`
+                SELECT DATE_FORMAT(ngay_tao, '%Y-%m') as month, DATE_FORMAT(ngay_tao, '%m/%Y') as month_label,
+                       COUNT(*) as order_count, COALESCE(SUM(tong_tien), 0) as revenue
+                FROM don_hang WHERE ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m') ORDER BY month ASC
+            `);
+            if (rows) monthlyRevenue = rows;
+            console.log('✅ Monthly revenue:', monthlyRevenue.length, 'months');
+        } catch (e) {
+            console.log('⚠️ Lỗi query tháng:', e.message);
+        }
 
-        // Đơn hàng gần đây
-        const [recentOrders] = await db.query(`
-            SELECT dh.ma_don_hang, dh.tong_tien, dh.trang_thai_don_hang as trang_thai, 
-                   dh.ngay_tao, tk.ten_dang_nhap
-            FROM don_hang dh
-            LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
-            ORDER BY dh.ngay_tao DESC
-            LIMIT 5
-        `);
+        // 4. Phương thức thanh toán - lấy từ bảng thanh_toan
+        try {
+            const [rows] = await db.query(`
+                SELECT tt.phuong_thuc, COUNT(DISTINCT tt.ma_don_hang) as count, 
+                       COALESCE(SUM(dh.tong_tien), 0) as revenue
+                FROM thanh_toan tt
+                LEFT JOIN don_hang dh ON tt.ma_don_hang = dh.ma_don_hang
+                GROUP BY tt.phuong_thuc
+            `);
+            if (rows && rows.length > 0) {
+                paymentStats = rows;
+            } else {
+                // Nếu không có dữ liệu trong bảng thanh_toan, mặc định COD
+                paymentStats = [{ phuong_thuc: 'COD', count: totalOrders, revenue: totalRevenue }];
+            }
+            console.log('✅ Payment stats:', paymentStats);
+        } catch (e) {
+            console.log('⚠️ Lỗi query thanh toán:', e.message);
+            paymentStats = [{ phuong_thuc: 'COD', count: totalOrders, revenue: totalRevenue }];
+        }
 
+        // 5. Đơn hàng gần đây
+        try {
+            const [rows] = await db.query(`
+                SELECT dh.ma_don_hang, dh.tong_tien, dh.trang_thai_don_hang as trang_thai, dh.ngay_tao, tk.ten_dang_nhap
+                FROM don_hang dh LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
+                ORDER BY dh.ngay_tao DESC LIMIT 5
+            `);
+            if (rows) recentOrders = rows;
+            console.log('✅ Recent orders:', recentOrders.length);
+        } catch (e) {
+            console.log('⚠️ Lỗi query recent:', e.message);
+        }
+
+        console.log('📊 Sending response...');
         res.json({
             success: true,
             data: {
-                total_orders: totalStats[0].total_orders,
-                total_revenue: totalStats[0].total_revenue,
-                completed_revenue: totalStats[0].completed_revenue,
+                total_orders: totalOrders,
+                total_revenue: totalRevenue,
+                completed_revenue: completedRevenue,
+                avg_order_value: totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0,
                 status_stats: statusStats,
                 monthly_revenue: monthlyRevenue,
                 payment_stats: paymentStats,
@@ -510,8 +550,8 @@ router.get('/orders/stats', authenticateToken, requireAdmin, async (req, res) =>
             }
         });
     } catch (error) {
-        console.error('Order stats error:', error);
-        res.status(500).json({ success: false, message: 'Lỗi server' });
+        console.error('❌ Order stats error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi: ' + error.message });
     }
 });
 

@@ -73,6 +73,7 @@
                 <p class="px-4 text-xs text-blue-400 uppercase mt-6 mb-2">Quản lý</p>
                 <a href="#" onclick="showSection('users')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="users">👥 Khách hàng</a>
                 <a href="#" onclick="showSection('news')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="news">📰 Tin tức</a>
+                <a href="#" onclick="showSection('articles')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="articles">📝 Bài viết</a>
                 <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">⭐ Đánh giá</a>
                 <a href="#" onclick="showSection('promotions')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="promotions">🎁 Khuyến mãi</a>
             </nav>
@@ -430,21 +431,6 @@
                         </div>
                     </div>
 
-                    <!-- Biểu đồ thống kê đơn hàng - Row 2 -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                        <!-- Biểu đồ Line - Doanh thu theo tháng -->
-                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-purple-500">
-                            <h3 class="font-bold text-gray-700 mb-3 text-base text-center">📈 DOANH THU THEO THÁNG</h3>
-                            <canvas id="orderRevenueLineChart" height="120"></canvas>
-                        </div>
-                        
-                        <!-- Biểu đồ Bar - Số đơn hàng theo tháng -->
-                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-orange-500">
-                            <h3 class="font-bold text-gray-700 mb-3 text-base text-center">📦 ĐƠN HÀNG THEO THÁNG</h3>
-                            <canvas id="orderCountBarChart" height="120"></canvas>
-                        </div>
-                    </div>
-
                     <!-- Đơn hàng gần đây -->
                     <div class="bg-white rounded-xl shadow p-4 border-l-4 border-purple-500 mb-6">
                         <h3 class="font-bold text-gray-700 mb-3 text-sm flex items-center gap-2">📋 ĐƠN HÀNG GẦN ĐÂY</h3>
@@ -623,6 +609,86 @@
                                 </tr>
                             </thead>
                             <tbody id="news-table"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Articles Section - Quản lý bài viết -->
+                <section id="section-articles" class="content-section">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl p-5 shadow-lg text-white">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">📝</div>
+                                <div>
+                                    <p class="text-indigo-100 text-sm">Tổng bài viết</p>
+                                    <p id="articles-total" class="text-2xl font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl p-5 shadow-lg text-white">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">✅</div>
+                                <div>
+                                    <p class="text-green-100 text-sm">Đã xuất bản</p>
+                                    <p id="articles-published" class="text-2xl font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl p-5 shadow-lg text-white">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">📋</div>
+                                <div>
+                                    <p class="text-amber-100 text-sm">Bản nháp</p>
+                                    <p id="articles-draft" class="text-2xl font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-5 shadow-lg text-white">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">👁️</div>
+                                <div>
+                                    <p class="text-purple-100 text-sm">Tổng lượt xem</p>
+                                    <p id="articles-views" class="text-2xl font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mb-4">
+                        <button onclick="openArticleModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-lg">+ Thêm bài viết</button>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-5">
+                        <div class="flex gap-4 mb-4">
+                            <input type="text" id="article-search" placeholder="🔍 Tìm kiếm bài viết..." class="flex-1 border-2 border-gray-200 rounded-lg px-4 py-2 focus:border-indigo-500 focus:outline-none" onkeyup="searchArticles()">
+                            <select id="article-category-filter" class="border-2 border-gray-200 rounded-lg px-4 py-2 focus:border-indigo-500 focus:outline-none" onchange="loadArticles()">
+                                <option value="">Tất cả danh mục</option>
+                                <option value="huong_dan">Hướng dẫn</option>
+                                <option value="danh_gia">Đánh giá</option>
+                                <option value="meo_vat">Mẹo vặt</option>
+                                <option value="so_sanh">So sánh</option>
+                            </select>
+                            <select id="article-status-filter" class="border-2 border-gray-200 rounded-lg px-4 py-2 focus:border-indigo-500 focus:outline-none" onchange="loadArticles()">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="xuat_ban">Đã xuất bản</option>
+                                <option value="nhap">Bản nháp</option>
+                                <option value="an">Ẩn</option>
+                            </select>
+                        </div>
+                        <table class="w-full">
+                            <thead class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white text-left">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-tl-lg">Ảnh</th>
+                                    <th class="px-4 py-3">Tiêu đề</th>
+                                    <th class="px-4 py-3">Danh mục</th>
+                                    <th class="px-4 py-3">Tác giả</th>
+                                    <th class="px-4 py-3 text-center">Lượt xem</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center">Ngày tạo</th>
+                                    <th class="px-4 py-3 text-center rounded-tr-lg">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="articles-table"></tbody>
                         </table>
                     </div>
                 </section>
@@ -927,6 +993,68 @@
         </div>
     </div>
 
+    <!-- Article Modal -->
+    <div id="article-modal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+            <div class="p-5 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
+                <h3 id="article-modal-title" class="text-lg font-bold">Thêm bài viết</h3>
+                <button onclick="closeArticleModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form id="article-form" class="p-5 space-y-4">
+                <input type="hidden" id="article-id">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Tiêu đề *</label>
+                    <input type="text" id="article-title" required class="w-full border rounded-lg px-4 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Mô tả ngắn</label>
+                    <textarea id="article-short-desc" rows="2" class="w-full border rounded-lg px-4 py-2" placeholder="Mô tả ngắn gọn về bài viết..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nội dung *</label>
+                    <textarea id="article-content" rows="8" class="w-full border rounded-lg px-4 py-2" placeholder="Nội dung chi tiết bài viết..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Link hình ảnh</label>
+                    <input type="text" id="article-image" class="w-full border rounded-lg px-4 py-2" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Danh mục</label>
+                        <select id="article-category" class="w-full border rounded-lg px-4 py-2">
+                            <option value="huong_dan">Hướng dẫn</option>
+                            <option value="danh_gia">Đánh giá</option>
+                            <option value="meo_vat">Mẹo vặt</option>
+                            <option value="so_sanh">So sánh</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Tác giả</label>
+                        <input type="text" id="article-author" class="w-full border rounded-lg px-4 py-2" placeholder="Tên tác giả">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Tags</label>
+                        <input type="text" id="article-tags" class="w-full border rounded-lg px-4 py-2" placeholder="tag1, tag2, tag3...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Trạng thái</label>
+                        <select id="article-status" class="w-full border rounded-lg px-4 py-2">
+                            <option value="xuat_ban">Đã xuất bản</option>
+                            <option value="nhap">Bản nháp</option>
+                            <option value="an">Ẩn</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium">Lưu</button>
+                    <button type="button" onclick="closeArticleModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 py-2.5 rounded-lg font-medium">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'http://localhost:3300/api';
         let adminToken = '';
@@ -1042,7 +1170,7 @@
             document.getElementById('section-' + section).classList.add('active');
             document.querySelector(`[data-section="${section}"]`).classList.add('active');
 
-            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', news: 'Quản lý tin tức', reviews: 'Quản lý đánh giá', promotions: 'Quản lý khuyến mãi' };
+            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', news: 'Quản lý tin tức', articles: 'Quản lý bài viết', reviews: 'Quản lý đánh giá', promotions: 'Quản lý khuyến mãi' };
             document.getElementById('page-title').textContent = titles[section] || section;
 
             if (section === 'dashboard') loadDashboard();
@@ -1051,6 +1179,7 @@
             else if (section === 'orders') loadOrders();
             else if (section === 'users') loadUsers();
             else if (section === 'news') loadNews();
+            else if (section === 'articles') loadArticles();
             else if (section === 'reviews') loadReviews();
             else if (section === 'promotions') loadPromotions();
         }
@@ -1515,39 +1644,53 @@
             // Load thống kê đơn hàng
             try {
                 const statsData = await apiCall('/admin/orders/stats');
-                if (statsData.success) {
+                console.log('📊 Order stats:', statsData);
+                
+                if (statsData.success && statsData.data) {
                     const stats = statsData.data;
                     
                     // Cập nhật stats cards
-                    document.getElementById('order-total').textContent = stats.total_orders;
-                    document.getElementById('order-total-revenue').textContent = formatPrice(stats.completed_revenue);
+                    document.getElementById('order-total').textContent = stats.total_orders || 0;
+                    document.getElementById('order-total-revenue').textContent = formatPrice(stats.completed_revenue || 0);
                     
                     // Đếm theo trạng thái
                     const statusMap = { dang_xu_ly: 0, dang_giao: 0, hoan_thanh: 0, da_huy: 0 };
-                    stats.status_stats?.forEach(s => { statusMap[s.trang_thai] = s.count; });
-                    document.getElementById('order-pending').textContent = statusMap.dang_xu_ly + statusMap.dang_giao;
-                    document.getElementById('order-completed').textContent = statusMap.hoan_thanh;
+                    if (stats.status_stats && Array.isArray(stats.status_stats)) {
+                        stats.status_stats.forEach(s => { 
+                            if (s.trang_thai) statusMap[s.trang_thai] = parseInt(s.count) || 0; 
+                        });
+                    }
+                    document.getElementById('order-pending').textContent = (statusMap.dang_xu_ly || 0) + (statusMap.dang_giao || 0);
+                    document.getElementById('order-completed').textContent = statusMap.hoan_thanh || 0;
                     
                     // Vẽ biểu đồ
                     drawOrderCharts(stats);
                     
                     // Render đơn hàng gần đây (grid 3 cột)
-                    const recentHtml = stats.recent_orders?.map(o => `
-                        <div class="bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold">#${o.ma_don_hang}</span>
-                                ${getStatusBadge(o.trang_thai)}
+                    if (stats.recent_orders && stats.recent_orders.length > 0) {
+                        const recentHtml = stats.recent_orders.map(o => `
+                            <div class="bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold">#${o.ma_don_hang}</span>
+                                    ${getStatusBadge(o.trang_thai)}
+                                </div>
+                                <p class="font-semibold text-gray-800">${o.ten_dang_nhap || 'Khách hàng'}</p>
+                                <p class="text-xs text-gray-500 mb-2">${formatDate(o.ngay_tao)}</p>
+                                <div class="flex items-center justify-between mt-3">
+                                    <p class="text-lg font-bold text-green-600">${formatPrice(o.tong_tien)}</p>
+                                </div>
                             </div>
-                            <p class="font-semibold text-gray-800">${o.ten_dang_nhap || 'Khách hàng'}</p>
-                            <p class="text-xs text-gray-500 mb-2">${formatDate(o.ngay_tao)}</p>
-                            <div class="flex items-center justify-between mt-3">
-                                <p class="text-lg font-bold text-green-600">${formatPrice(o.tong_tien)}</p>
-                            </div>
-                        </div>
-                    `).join('') || '<p class="text-gray-500 text-center py-4 col-span-3">Chưa có đơn hàng</p>';
-                    document.getElementById('order-recent-list').innerHTML = recentHtml;
+                        `).join('');
+                        document.getElementById('order-recent-list').innerHTML = recentHtml;
+                    } else {
+                        document.getElementById('order-recent-list').innerHTML = '<p class="text-gray-500 text-center py-4 col-span-3">Chưa có đơn hàng</p>';
+                    }
+                } else {
+                    console.log('⚠️ No order stats data');
                 }
-            } catch (e) { console.log('Error loading order stats'); }
+            } catch (e) { 
+                console.error('❌ Error loading order stats:', e);
+            }
             
             // Load danh sách đơn hàng
             try {
@@ -1576,209 +1719,177 @@
         }
         
         function drawOrderCharts(stats) {
+            console.log('🎨 Drawing order charts with stats:', stats);
+            
             // Destroy existing charts
-            Object.values(orderCharts).forEach(c => c && c.destroy());
+            Object.values(orderCharts).forEach(c => {
+                try { if (c && c.destroy) c.destroy(); } catch(e) {}
+            });
             orderCharts = {};
             
             // Lấy dữ liệu từ stats
             const statusMap = { dang_xu_ly: 0, dang_giao: 0, hoan_thanh: 0, da_huy: 0 };
-            const revenueMap = { dang_xu_ly: 0, dang_giao: 0, hoan_thanh: 0, da_huy: 0 };
-            stats.status_stats?.forEach(s => { 
-                statusMap[s.trang_thai] = parseInt(s.count) || 0;
-                revenueMap[s.trang_thai] = parseFloat(s.revenue) || 0;
-            });
+            if (stats.status_stats && Array.isArray(stats.status_stats)) {
+                stats.status_stats.forEach(s => { 
+                    if (s.trang_thai) {
+                        statusMap[s.trang_thai] = parseInt(s.count) || 0;
+                    }
+                });
+            }
+            
+            console.log('📊 Status map:', statusMap);
             
             // 1. Biểu đồ Doughnut - Trạng thái đơn hàng
             const statusLabels = ['Đang xử lý', 'Đang giao', 'Hoàn thành', 'Đã hủy'];
             const statusData = [statusMap.dang_xu_ly, statusMap.dang_giao, statusMap.hoan_thanh, statusMap.da_huy];
             const statusColors = ['#f59e0b', '#3b82f6', '#22c55e', '#ef4444'];
+            const hasStatusData = statusData.some(v => v > 0);
             
-            orderCharts.statusPie = new Chart(document.getElementById('orderStatusPieChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: statusLabels,
-                    datasets: [{
-                        data: statusData,
-                        backgroundColor: statusColors,
-                        borderWidth: 3,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: { 
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: { 
-                            callbacks: { 
-                                label: ctx => {
-                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percent = total > 0 ? Math.round(ctx.raw / total * 100) : 0;
-                                    return ctx.label + ': ' + ctx.raw + ' (' + percent + '%)';
+            const statusCtx = document.getElementById('orderStatusPieChart');
+            if (statusCtx) {
+                if (hasStatusData) {
+                    orderCharts.statusPie = new Chart(statusCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: statusLabels,
+                            datasets: [{
+                                data: statusData,
+                                backgroundColor: statusColors,
+                                borderWidth: 3,
+                                borderColor: '#fff'
+                            }]
+                        },
+                        options: { 
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: { 
+                                legend: { display: false },
+                                tooltip: { 
+                                    callbacks: { 
+                                        label: ctx => {
+                                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percent = total > 0 ? Math.round(ctx.raw / total * 100) : 0;
+                                            return ctx.label + ': ' + ctx.raw + ' (' + percent + '%)';
+                                        }
+                                    } 
                                 }
-                            } 
+                            },
+                            cutout: '50%'
                         }
-                    },
-                    cutout: '50%'
+                    });
                 }
-            });
+            }
             
             // Legend cho trạng thái
-            document.getElementById('status-legend').innerHTML = statusLabels.map((label, i) => `
-                <div class="flex items-center justify-between gap-2 p-2 bg-gray-50 rounded">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full" style="background: ${statusColors[i]}"></span>
-                        <span class="font-medium text-xs">${label}</span>
-                    </div>
-                    <span class="font-bold text-sm">${statusData[i]}</span>
-                </div>
-            `).join('');
+            const statusLegendEl = document.getElementById('status-legend');
+            if (statusLegendEl) {
+                if (hasStatusData) {
+                    statusLegendEl.innerHTML = statusLabels.map((label, i) => `
+                        <div class="flex items-center justify-between gap-2 p-2 bg-gray-50 rounded">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full" style="background: ${statusColors[i]}"></span>
+                                <span class="font-medium text-xs">${label}</span>
+                            </div>
+                            <span class="font-bold text-sm">${statusData[i]}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    statusLegendEl.innerHTML = '<p class="text-gray-400 text-center py-4 text-sm">Chưa có đơn hàng</p>';
+                }
+            }
             
             // 2. Biểu đồ Pie - Phương thức thanh toán
-            const paymentLabels = stats.payment_stats?.map(p => {
-                const names = { 'COD': 'COD', 'Ngan_Hang': 'Ngân hàng', 'Momo': 'Momo', 'ZaloPay': 'ZaloPay' };
-                return names[p.phuong_thuc] || p.phuong_thuc;
-            }) || ['COD', 'Ngân hàng'];
-            const paymentData = stats.payment_stats?.map(p => parseInt(p.count) || 0) || [0, 0];
-            const paymentColors = ['#1e3a5f', '#3b82f6', '#60a5fa', '#93c5fd'];
+            let paymentLabels = ['COD'];
+            let paymentData = [stats.total_orders || 0];
             
-            orderCharts.payment = new Chart(document.getElementById('orderPaymentChart'), {
-                type: 'pie',
-                data: {
-                    labels: paymentLabels,
-                    datasets: [{
-                        data: paymentData,
-                        backgroundColor: paymentColors.slice(0, paymentLabels.length),
-                        borderWidth: 3,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: { 
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => {
-                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percent = total > 0 ? Math.round(ctx.raw / total * 100) : 0;
-                                    return ctx.label + ': ' + ctx.raw + ' đơn (' + percent + '%)';
+            if (stats.payment_stats && Array.isArray(stats.payment_stats) && stats.payment_stats.length > 0) {
+                paymentLabels = stats.payment_stats.map(p => {
+                    const names = { 'COD': 'COD', 'Ngan_Hang': 'Ngân hàng', 'Momo': 'Momo', 'ZaloPay': 'ZaloPay', 'momo': 'Momo' };
+                    return names[p.phuong_thuc] || p.phuong_thuc || 'Khác';
+                });
+                paymentData = stats.payment_stats.map(p => parseInt(p.count) || 0);
+            }
+            
+            const paymentColors = ['#1e3a5f', '#3b82f6', '#60a5fa', '#93c5fd'];
+            const hasPaymentData = paymentData.some(v => v > 0);
+            
+            const paymentCtx = document.getElementById('orderPaymentChart');
+            if (paymentCtx && hasPaymentData) {
+                orderCharts.payment = new Chart(paymentCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: paymentLabels,
+                        datasets: [{
+                            data: paymentData,
+                            backgroundColor: paymentColors.slice(0, paymentLabels.length),
+                            borderWidth: 3,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: { 
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => {
+                                        const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percent = total > 0 ? Math.round(ctx.raw / total * 100) : 0;
+                                        return ctx.label + ': ' + ctx.raw + ' đơn (' + percent + '%)';
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
             
             // Legend cho thanh toán
-            document.getElementById('payment-legend').innerHTML = paymentLabels.map((label, i) => `
-                <div class="flex items-center justify-between gap-2 p-2 bg-gray-50 rounded">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full" style="background: ${paymentColors[i]}"></span>
-                        <span class="font-medium text-xs">${label}</span>
-                    </div>
-                    <span class="font-bold text-sm">${paymentData[i]}</span>
-                </div>
-            `).join('');
+            const paymentLegendEl = document.getElementById('payment-legend');
+            if (paymentLegendEl) {
+                if (hasPaymentData) {
+                    paymentLegendEl.innerHTML = paymentLabels.map((label, i) => `
+                        <div class="flex items-center justify-between gap-2 p-2 bg-gray-50 rounded">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full" style="background: ${paymentColors[i] || '#ccc'}"></span>
+                                <span class="font-medium text-xs">${label}</span>
+                            </div>
+                            <span class="font-bold text-sm">${paymentData[i] || 0}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    paymentLegendEl.innerHTML = '<p class="text-gray-400 text-center py-4 text-sm">Chưa có dữ liệu</p>';
+                }
+            }
             
             // 3. Biểu đồ Funnel - Quy trình đơn hàng
-            const funnelData = [
-                { label: 'Tổng đơn', value: stats.total_orders, color: '#ef4444', width: 100 },
-                { label: 'Xử lý', value: statusMap.dang_xu_ly + statusMap.dang_giao + statusMap.hoan_thanh, color: '#f59e0b', width: 80 },
-                { label: 'Đang giao', value: statusMap.dang_giao + statusMap.hoan_thanh, color: '#3b82f6', width: 60 },
-                { label: 'Hoàn thành', value: statusMap.hoan_thanh, color: '#22c55e', width: 40 }
-            ];
-            
-            document.getElementById('funnel-chart').innerHTML = funnelData.map(item => `
-                <div class="relative flex items-center justify-center mb-1" style="width: ${item.width}%">
-                    <div class="w-full py-2 text-center text-white font-bold text-xs rounded-sm shadow-md" style="background: ${item.color};">
-                        ${item.label}: ${item.value}
-                    </div>
-                </div>
-            `).join('') + `
-                <div class="mt-3 text-center">
-                    <span class="text-xs font-medium text-gray-600">Tỷ lệ hoàn thành: </span>
-                    <span class="text-green-600 font-bold text-lg">${stats.total_orders > 0 ? Math.round(statusMap.hoan_thanh / stats.total_orders * 100) : 0}%</span>
-                </div>
-            `;
-            
-            // 4. Biểu đồ Line - Doanh thu theo tháng
-            const months = stats.monthly_revenue?.map(m => m.month_label || 'N/A') || ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'];
-            const monthRevenueData = stats.monthly_revenue?.map(m => parseFloat(m.revenue) || 0) || [0, 0, 0, 0, 0, 0];
-            
-            orderCharts.revenueLine = new Chart(document.getElementById('orderRevenueLineChart'), {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Doanh thu',
-                        data: monthRevenueData,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#3b82f6',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: { 
-                            callbacks: { 
-                                label: ctx => 'Doanh thu: ' + formatPrice(ctx.raw)
-                            } 
-                        }
-                    },
-                    scales: {
-                        y: { 
-                            beginAtZero: true, 
-                            ticks: { callback: v => (v/1000000).toFixed(1) + 'M' }
-                        }
-                    }
+            const totalOrders = stats.total_orders || 0;
+            const funnelEl = document.getElementById('funnel-chart');
+            if (funnelEl) {
+                if (totalOrders > 0) {
+                    const funnelData = [
+                        { label: 'Tổng đơn', value: totalOrders, color: '#ef4444', width: 100 },
+                        { label: 'Xử lý', value: statusMap.dang_xu_ly + statusMap.dang_giao + statusMap.hoan_thanh, color: '#f59e0b', width: 80 },
+                        { label: 'Đang giao', value: statusMap.dang_giao + statusMap.hoan_thanh, color: '#3b82f6', width: 60 },
+                        { label: 'Hoàn thành', value: statusMap.hoan_thanh, color: '#22c55e', width: 40 }
+                    ];
+                    funnelEl.innerHTML = funnelData.map(item => `
+                        <div class="relative flex items-center justify-center mb-1" style="width: ${item.width}%">
+                            <div class="w-full py-2 text-center text-white font-bold text-xs rounded-sm shadow-md" style="background: ${item.color};">
+                                ${item.label}: ${item.value}
+                            </div>
+                        </div>
+                    `).join('') + `
+                        <div class="mt-3 text-center">
+                            <span class="text-xs font-medium text-gray-600">Tỷ lệ hoàn thành: </span>
+                            <span class="text-green-600 font-bold text-lg">${totalOrders > 0 ? Math.round(statusMap.hoan_thanh / totalOrders * 100) : 0}%</span>
+                        </div>
+                    `;
+                } else {
+                    funnelEl.innerHTML = '<p class="text-gray-400 text-center py-8 text-sm">Chưa có đơn hàng</p>';
                 }
-            });
-            
-            // 5. Biểu đồ Bar - Số đơn hàng theo tháng
-            const monthOrderData = stats.monthly_revenue?.map(m => parseInt(m.order_count) || 0) || [0, 0, 0, 0, 0, 0];
-            
-            orderCharts.orderBar = new Chart(document.getElementById('orderCountBarChart'), {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Số đơn hàng',
-                        data: monthOrderData,
-                        backgroundColor: '#f59e0b',
-                        borderRadius: 6,
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: { 
-                            callbacks: { 
-                                label: ctx => 'Số đơn: ' + ctx.raw
-                            } 
-                        }
-                    },
-                    scales: {
-                        y: { 
-                            beginAtZero: true,
-                            ticks: { stepSize: 1 }
-                        }
-                    }
-                }
-            });
+            }
         }
         function searchOrders() { clearTimeout(window.ost); window.ost = setTimeout(loadOrders, 300); }
         async function viewOrder(id) {
@@ -1851,7 +1962,7 @@
                         <tr class="border-b hover:bg-gray-50 transition">
                             <td class="px-4 py-3 text-center">
                                 <div class="w-10 h-10 rounded-full overflow-hidden mx-auto bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center shadow-sm">
-                                    ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-xl\\'>👤</span>'">` : '<span class="text-xl">👤</span>'}
+                                    ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar" class="w-full h-full object-cover" onerror="this.onerror=null;this.parentElement.innerHTML='👤'">` : '<span class="text-xl">👤</span>'}
                                 </div>
                             </td>
                             <td class="px-4 py-3 font-semibold text-gray-800">${u.ten_dang_nhap || 'N/A'}</td>
@@ -2266,6 +2377,200 @@
             } catch (error) {
                 console.error('Save news error:', error);
                 alert('Lỗi khi lưu tin tức');
+            }
+        });
+
+        // ==========================================
+        // ARTICLES MANAGEMENT - Quản lý bài viết
+        // ==========================================
+        let articlesData = [];
+        
+        async function loadArticles() {
+            try {
+                const search = document.getElementById('article-search')?.value || '';
+                const category = document.getElementById('article-category-filter')?.value || '';
+                const status = document.getElementById('article-status-filter')?.value || '';
+                
+                let url = '/articles/admin/all?limit=50';
+                if (category) url += `&category=${category}`;
+                if (status) url += `&status=${status}`;
+                if (search) url += `&search=${encodeURIComponent(search)}`;
+                
+                const data = await apiCall(url);
+                
+                if (data.success && data.data) {
+                    articlesData = data.data;
+                    
+                    // Update stats
+                    document.getElementById('articles-total').textContent = articlesData.length;
+                    document.getElementById('articles-published').textContent = articlesData.filter(a => a.trang_thai === 'xuat_ban').length;
+                    document.getElementById('articles-draft').textContent = articlesData.filter(a => a.trang_thai === 'nhap').length;
+                    document.getElementById('articles-views').textContent = articlesData.reduce((sum, a) => sum + (a.luot_xem || 0), 0);
+                    
+                    renderArticlesTable();
+                } else {
+                    document.getElementById('articles-table').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-gray-500">Không có bài viết</td></tr>';
+                }
+            } catch (error) {
+                console.error('Load articles error:', error);
+                document.getElementById('articles-table').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-red-500">❌ Lỗi tải dữ liệu bài viết</td></tr>';
+            }
+        }
+        
+        function renderArticlesTable() {
+            const html = articlesData.map(a => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-3">
+                        <img src="${a.hinh_anh || 'https://via.placeholder.com/80x60?text=Ảnh'}" alt="${a.tieu_de}" class="w-20 h-14 object-cover rounded-lg shadow">
+                    </td>
+                    <td class="px-4 py-3">
+                        <p class="font-semibold text-gray-800 line-clamp-2">${a.tieu_de}</p>
+                        <p class="text-xs text-gray-500 mt-1 line-clamp-1">${a.mo_ta_ngan || ''}</p>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${getArticleCategoryBadge(a.danh_muc)}">${getArticleCategoryText(a.danh_muc)}</span>
+                    </td>
+                    <td class="px-4 py-3 text-gray-600">${a.tac_gia || 'Admin'}</td>
+                    <td class="px-4 py-3 text-center font-semibold text-gray-700">${a.luot_xem || 0}</td>
+                    <td class="px-4 py-3 text-center">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold ${getArticleStatusBadge(a.trang_thai)}">${getArticleStatusText(a.trang_thai)}</span>
+                    </td>
+                    <td class="px-4 py-3 text-center text-sm text-gray-500">${formatDate(a.ngay_tao)}</td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="editArticle(${a.ma_bai_viet})" class="text-blue-600 hover:text-blue-800 hover:scale-110 transition-transform inline-block mr-2" title="Sửa">
+                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button onclick="deleteArticle(${a.ma_bai_viet})" class="text-red-600 hover:text-red-800 hover:scale-110 transition-transform inline-block" title="Xóa">
+                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            document.getElementById('articles-table').innerHTML = html || '<tr><td colspan="8" class="text-center py-8 text-gray-500">Không có bài viết</td></tr>';
+        }
+        
+        function getArticleCategoryBadge(category) {
+            const badges = {
+                'huong_dan': 'bg-blue-100 text-blue-700',
+                'danh_gia': 'bg-green-100 text-green-700',
+                'meo_vat': 'bg-amber-100 text-amber-700',
+                'so_sanh': 'bg-purple-100 text-purple-700'
+            };
+            return badges[category] || 'bg-gray-100 text-gray-700';
+        }
+        
+        function getArticleCategoryText(category) {
+            const texts = {
+                'huong_dan': '📚 Hướng dẫn',
+                'danh_gia': '⭐ Đánh giá',
+                'meo_vat': '💡 Mẹo vặt',
+                'so_sanh': '⚖️ So sánh'
+            };
+            return texts[category] || category;
+        }
+        
+        function getArticleStatusBadge(status) {
+            const badges = {
+                'xuat_ban': 'bg-green-100 text-green-700',
+                'nhap': 'bg-yellow-100 text-yellow-700',
+                'an': 'bg-red-100 text-red-700'
+            };
+            return badges[status] || 'bg-gray-100 text-gray-700';
+        }
+        
+        function getArticleStatusText(status) {
+            const texts = { 'xuat_ban': '✓ Đã xuất bản', 'nhap': '📝 Bản nháp', 'an': '✗ Ẩn' };
+            return texts[status] || status;
+        }
+        
+        function searchArticles() { clearTimeout(window.ast); window.ast = setTimeout(loadArticles, 300); }
+        
+        function openArticleModal(article = null) {
+            document.getElementById('article-modal').classList.add('active');
+            document.getElementById('article-modal-title').textContent = article ? 'Sửa bài viết' : 'Thêm bài viết';
+            document.getElementById('article-form').reset();
+            document.getElementById('article-id').value = article?.ma_bai_viet || '';
+            
+            if (article) {
+                document.getElementById('article-title').value = article.tieu_de || '';
+                document.getElementById('article-short-desc').value = article.mo_ta_ngan || '';
+                document.getElementById('article-content').value = article.noi_dung || '';
+                document.getElementById('article-image').value = article.hinh_anh || '';
+                document.getElementById('article-category').value = article.danh_muc || 'huong_dan';
+                document.getElementById('article-author').value = article.tac_gia || '';
+                document.getElementById('article-tags').value = article.tags || '';
+                document.getElementById('article-status').value = article.trang_thai || 'xuat_ban';
+            }
+        }
+        
+        function closeArticleModal() { document.getElementById('article-modal').classList.remove('active'); }
+        
+        async function editArticle(id) {
+            try {
+                const data = await apiCall(`/articles/${id}`);
+                if (data.success) {
+                    openArticleModal(data.data);
+                } else {
+                    alert('Không tìm thấy bài viết');
+                }
+            } catch (error) {
+                console.error('Edit article error:', error);
+                alert('Lỗi khi tải bài viết');
+            }
+        }
+        
+        async function deleteArticle(id) {
+            if (!confirm('Bạn có chắc muốn xóa bài viết này?')) return;
+            try {
+                const data = await apiCall(`/articles/${id}`, 'DELETE');
+                if (data.success) {
+                    alert('Đã xóa bài viết!');
+                    loadArticles();
+                } else {
+                    alert(data.message || 'Lỗi xóa bài viết');
+                }
+            } catch (error) {
+                console.error('Delete article error:', error);
+                alert('Lỗi khi xóa bài viết');
+            }
+        }
+        
+        document.getElementById('article-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('article-id').value;
+            const body = {
+                tieu_de: document.getElementById('article-title').value,
+                mo_ta_ngan: document.getElementById('article-short-desc').value,
+                noi_dung: document.getElementById('article-content').value,
+                hinh_anh: document.getElementById('article-image').value,
+                danh_muc: document.getElementById('article-category').value,
+                tac_gia: document.getElementById('article-author').value || 'Admin',
+                tags: document.getElementById('article-tags').value,
+                trang_thai: document.getElementById('article-status').value
+            };
+            
+            if (!body.tieu_de) {
+                alert('Vui lòng nhập tiêu đề');
+                return;
+            }
+            
+            try {
+                const data = await apiCall(`/articles${id ? '/' + id : ''}`, id ? 'PUT' : 'POST', body);
+                if (data.success) {
+                    alert(id ? 'Đã cập nhật bài viết!' : 'Đã thêm bài viết mới!');
+                    closeArticleModal();
+                    loadArticles();
+                } else {
+                    alert(data.message || 'Lỗi lưu bài viết');
+                }
+            } catch (error) {
+                console.error('Save article error:', error);
+                alert('Lỗi khi lưu bài viết');
             }
         });
 
