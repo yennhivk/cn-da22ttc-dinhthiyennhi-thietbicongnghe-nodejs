@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chính Sách Bảo Mật - Yến Nhi Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-yellow-500 to-yellow-400 shadow-lg fixed top-0 left-0 right-0 z-50 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-16 gap-2 sm:gap-3 lg:gap-4">
+                <a href="../index.html" class="flex items-center gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0 hover:scale-105 transition-all duration-300">
+                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 md:w-14 md:h-14 object-cover rounded-full shadow-lg">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-lg md:text-xl font-bold text-red-600 drop-shadow-md">Yến Nhi</span>
+                        <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', cursive;">Tech</span>
+                    </div>
+                </a>
+                <div class="flex flex-1 max-w-xl mx-2 sm:mx-3">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?" class="w-full pl-10 pr-3 py-2 md:py-2.5 rounded-lg border-0 text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <svg class="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="hidden lg:flex items-center gap-6 ml-auto text-black">
+                    <a href="../index.html" class="text-lg font-bold hover:text-red-600 transition">Trang chủ</a>
+                    <a href="products.html" class="text-lg font-bold hover:text-red-600 transition">Sản phẩm</a>
+                    <a href="news.html" class="text-lg font-bold hover:text-red-600 transition">Tin tức</a>
+                    <a href="promotions.html" class="text-lg font-bold hover:text-red-600 transition">Khuyến mãi</a>
+                    <a href="about.html" class="text-lg font-bold hover:text-red-600 transition">Giới thiệu</a>
+                    <a href="contact.html" class="text-lg font-bold hover:text-red-600 transition">Liên hệ</a>
+                </div>
+                <div class="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                    <a href="cart.html" class="relative text-black hover:text-red-600 transition transform hover:scale-110 flex-shrink-0" title="Giỏ hàng">
+                        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-green-500 text-red-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                    <div class="user-account-container hidden lg:flex items-center gap-2">
+                        <a href="login.html" class="flex items-center gap-2 text-black hover:text-red-600 transition">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-lg font-semibold">Đăng nhập</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center text-sm text-gray-600 mb-6">
+                <a href="../index.html" class="hover:text-red-600">Trang chủ</a>
+                <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                <span class="text-red-600 font-medium">Chính sách bảo mật</span>
+            </nav>
+
+            <!-- Policy Content -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900">Chính Sách Bảo Mật</h1>
+                    <p class="text-gray-500 mt-2">Cập nhật lần cuối: Tháng 12/2024</p>
+                </div>
+
+                <div class="space-y-8 text-gray-700">
+                    <!-- Highlight -->
+                    <div class="bg-purple-50 border border-purple-200 rounded-xl p-6">
+                        <h2 class="text-xl font-bold text-purple-700 mb-3">🔒 Cam kết bảo mật</h2>
+                        <p class="text-purple-800">Yến Nhi Tech cam kết bảo vệ thông tin cá nhân của khách hàng theo tiêu chuẩn bảo mật cao nhất. Chúng tôi không bán, trao đổi hoặc chia sẻ thông tin của bạn cho bên thứ ba.</p>
+                    </div>
+
+                    <!-- Section 1 -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
+                            Thông tin chúng tôi thu thập
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>Thông tin cá nhân:</strong> Họ tên, số điện thoại, email, địa chỉ giao hàng</li>
+                            <li><strong>Thông tin tài khoản:</strong> Tên đăng nhập, mật khẩu (được mã hóa)</li>
+                            <li><strong>Thông tin giao dịch:</strong> Lịch sử mua hàng, phương thức thanh toán</li>
+                            <li><strong>Thông tin kỹ thuật:</strong> Địa chỉ IP, loại trình duyệt, thiết bị sử dụng</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 2 -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
+                            Mục đích sử dụng thông tin
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="text-2xl mb-2">📦</div>
+                                <h3 class="font-bold text-gray-900">Xử lý đơn hàng</h3>
+                                <p class="text-sm">Giao hàng, xác nhận đơn hàng, hỗ trợ sau bán hàng</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="text-2xl mb-2">📧</div>
+                                <h3 class="font-bold text-gray-900">Liên lạc</h3>
+                                <p class="text-sm">Gửi thông báo, khuyến mãi, cập nhật đơn hàng</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="text-2xl mb-2">🛡️</div>
+                                <h3 class="font-bold text-gray-900">Bảo mật</h3>
+                                <p class="text-sm">Xác thực tài khoản, ngăn chặn gian lận</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="text-2xl mb-2">📊</div>
+                                <h3 class="font-bold text-gray-900">Cải thiện dịch vụ</h3>
+                                <p class="text-sm">Phân tích hành vi, nâng cao trải nghiệm</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 3 -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span>
+                            Bảo vệ thông tin
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>Mã hóa SSL/TLS cho tất cả giao dịch</li>
+                            <li>Mật khẩu được mã hóa bằng thuật toán bcrypt</li>
+                            <li>Hệ thống tường lửa và giám sát 24/7</li>
+                            <li>Giới hạn quyền truy cập dữ liệu cho nhân viên</li>
+                            <li>Sao lưu dữ liệu định kỳ</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 4 -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span>
+                            Quyền của khách hàng
+                        </h2>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>Quyền truy cập:</strong> Xem thông tin cá nhân đã cung cấp</li>
+                            <li><strong>Quyền chỉnh sửa:</strong> Cập nhật, sửa đổi thông tin</li>
+                            <li><strong>Quyền xóa:</strong> Yêu cầu xóa tài khoản và dữ liệu</li>
+                            <li><strong>Quyền từ chối:</strong> Hủy đăng ký nhận email marketing</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 5 -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span>
+                            Cookie và công nghệ theo dõi
+                        </h2>
+                        <p class="mb-4">Chúng tôi sử dụng cookie để:</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>Ghi nhớ thông tin đăng nhập</li>
+                            <li>Lưu giỏ hàng của bạn</li>
+                            <li>Phân tích lưu lượng truy cập</li>
+                            <li>Cá nhân hóa trải nghiệm mua sắm</li>
+                        </ul>
+                        <p class="mt-4 text-sm text-gray-500">Bạn có thể tắt cookie trong cài đặt trình duyệt, tuy nhiên một số tính năng có thể không hoạt động đúng.</p>
+                    </section>
+
+                    <!-- Contact -->
+                    <section class="bg-yellow-50 rounded-xl p-6 border border-yellow-200">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">📞 Liên hệ về bảo mật</h2>
+                        <p class="mb-4">Nếu bạn có câu hỏi về chính sách bảo mật hoặc muốn thực hiện quyền của mình, vui lòng liên hệ:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-medium">Hotline:</p>
+                                <p class="text-red-600 font-bold text-xl">1900.5301</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Email:</p>
+                                <p class="text-blue-600">privacy@yennhitech.vn</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-yellow-100 text-gray-900 pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">VỀ YẾN NHI TECH</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="about.html" class="hover:text-gray-900 hover:font-semibold transition">Giới thiệu công ty</a></li>
+                        <li><a href="contact.html#map-section" class="hover:text-gray-900 hover:font-semibold transition">Hệ thống cửa hàng</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">CHÍNH SÁCH</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="policy-warranty.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo hành</a></li>
+                        <li><a href="policy-return.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách đổi trả</a></li>
+                        <li><a href="policy-privacy.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">THÔNG TIN</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="payment-guide.html" class="hover:text-gray-900 hover:font-semibold transition">Hướng dẫn thanh toán</a></li>
+                        <li><a href="order-history.html" class="hover:text-gray-900 hover:font-semibold transition">Tra cứu đơn hàng</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">TỔNG ĐÀI HỖ TRỢ</h3>
+                    <div class="space-y-2 text-sm">
+                        <p class="text-gray-900 font-semibold">Mua hàng: 1900.5301</p>
+                        <p class="text-gray-900 font-semibold">Bảo hành: 1900.5325</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-yellow-200 pt-6 text-center text-sm text-gray-600">
+                <p>© 2024 Yến Nhi Tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+</body>
+</html>

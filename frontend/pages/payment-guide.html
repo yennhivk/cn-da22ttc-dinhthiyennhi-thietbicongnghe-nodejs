@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Thanh Toán - Yến Nhi Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-yellow-500 to-yellow-400 shadow-lg fixed top-0 left-0 right-0 z-50 w-full">
+        <div class="px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center h-16 gap-2 sm:gap-3 lg:gap-4">
+                <a href="../index.html" class="flex items-center gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0 hover:scale-105 transition-all duration-300">
+                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 md:w-14 md:h-14 object-cover rounded-full shadow-lg">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-lg md:text-xl font-bold text-red-600 drop-shadow-md">Yến Nhi</span>
+                        <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', cursive;">Tech</span>
+                    </div>
+                </a>
+                <div class="flex flex-1 max-w-xl mx-2 sm:mx-3">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?" class="w-full pl-10 pr-3 py-2 md:py-2.5 rounded-lg border-0 text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <svg class="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="hidden lg:flex items-center gap-6 ml-auto text-black">
+                    <a href="../index.html" class="text-lg font-bold hover:text-red-600 transition">Trang chủ</a>
+                    <a href="products.html" class="text-lg font-bold hover:text-red-600 transition">Sản phẩm</a>
+                    <a href="news.html" class="text-lg font-bold hover:text-red-600 transition">Tin tức</a>
+                    <a href="promotions.html" class="text-lg font-bold hover:text-red-600 transition">Khuyến mãi</a>
+                    <a href="about.html" class="text-lg font-bold hover:text-red-600 transition">Giới thiệu</a>
+                    <a href="contact.html" class="text-lg font-bold hover:text-red-600 transition">Liên hệ</a>
+                </div>
+                <div class="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                    <a href="cart.html" class="relative text-black hover:text-red-600 transition transform hover:scale-110 flex-shrink-0" title="Giỏ hàng">
+                        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="cart-badge absolute -top-2 -right-2 bg-green-500 text-red-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </a>
+                    <div class="user-account-container hidden lg:flex items-center gap-2">
+                        <a href="login.html" class="flex items-center gap-2 text-black hover:text-red-600 transition">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-lg font-semibold">Đăng nhập</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center text-sm text-gray-600 mb-6">
+                <a href="../index.html" class="hover:text-red-600">Trang chủ</a>
+                <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                <span class="text-red-600 font-medium">Hướng dẫn thanh toán</span>
+            </nav>
+
+            <!-- Content -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900">Hướng Dẫn Thanh Toán</h1>
+                    <p class="text-gray-500 mt-2">Các phương thức thanh toán tại Yến Nhi Tech</p>
+                </div>
+
+                <div class="space-y-8 text-gray-700">
+                    <!-- Payment Methods Overview -->
+                    <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200">
+                        <h2 class="text-xl font-bold text-green-700 mb-4">💳 Yến Nhi Tech hỗ trợ các phương thức thanh toán</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                                <div class="text-3xl mb-2">💵</div>
+                                <p class="font-semibold text-sm">COD</p>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                                <div class="text-3xl mb-2">🏦</div>
+                                <p class="font-semibold text-sm">Chuyển khoản</p>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                                <div class="text-3xl mb-2">📱</div>
+                                <p class="font-semibold text-sm">Ví MoMo</p>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 text-center shadow-sm">
+                                <div class="text-3xl mb-2">💳</div>
+                                <p class="font-semibold text-sm">Thẻ ATM/Visa</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Method 1: COD -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
+                            Thanh toán khi nhận hàng (COD)
+                        </h2>
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <p class="mb-4">Thanh toán trực tiếp bằng tiền mặt cho nhân viên giao hàng khi nhận được sản phẩm.</p>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-1">✓</span>
+                                    <p>Kiểm tra sản phẩm trước khi thanh toán</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-1">✓</span>
+                                    <p>Không cần tài khoản ngân hàng</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-1">✓</span>
+                                    <p>An toàn, tiện lợi</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                                <p class="text-sm text-yellow-800"><strong>Lưu ý:</strong> Phí COD có thể được áp dụng tùy theo khu vực giao hàng.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Method 2: Bank Transfer -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
+                            Chuyển khoản ngân hàng
+                        </h2>
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <p class="mb-4">Chuyển khoản trực tiếp vào tài khoản ngân hàng của Yến Nhi Tech.</p>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-gray-200 mb-4">
+                                <h3 class="font-bold text-gray-900 mb-3">Thông tin tài khoản:</h3>
+                                <div class="space-y-2 text-sm">
+                                    <p><strong>Ngân hàng:</strong> Vietcombank</p>
+                                    <p><strong>Số tài khoản:</strong> 1234567890</p>
+                                    <p><strong>Chủ tài khoản:</strong> CÔNG TY TNHH YẾN NHI TECH</p>
+                                    <p><strong>Chi nhánh:</strong> TP. Hồ Chí Minh</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-blue-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl mb-2">1️⃣</div>
+                                    <p class="text-sm font-medium">Đặt hàng & chọn chuyển khoản</p>
+                                </div>
+                                <div class="bg-blue-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl mb-2">2️⃣</div>
+                                    <p class="text-sm font-medium">Chuyển khoản theo thông tin</p>
+                                </div>
+                                <div class="bg-blue-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl mb-2">3️⃣</div>
+                                    <p class="text-sm font-medium">Xác nhận & giao hàng</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                                <p class="text-sm text-green-800"><strong>Nội dung chuyển khoản:</strong> [Mã đơn hàng] - [Số điện thoại]</p>
+                                <p class="text-sm text-green-800 mt-1">Ví dụ: DH123456 - 0901234567</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Method 3: MoMo -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span>
+                            Thanh toán qua ví MoMo
+                        </h2>
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-16 h-16 bg-pink-500 rounded-xl flex items-center justify-center">
+                                    <span class="text-white font-bold text-xl">M</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-gray-900">Ví điện tử MoMo</p>
+                                    <p class="text-sm text-gray-600">Thanh toán nhanh chóng, an toàn</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="bg-pink-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl mb-2">📱</div>
+                                    <p class="text-sm font-medium">Chọn thanh toán MoMo</p>
+                                </div>
+                                <div class="bg-pink-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl mb-2">📷</div>
+                                    <p class="text-sm font-medium">Quét mã QR</p>
+                                </div>
+                                <div class="bg-pink-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl mb-2">🔐</div>
+                                    <p class="text-sm font-medium">Xác nhận thanh toán</p>
+                                </div>
+                                <div class="bg-pink-50 rounded-lg p-4 text-center">
+                                    <div class="text-2xl mb-2">✅</div>
+                                    <p class="text-sm font-medium">Hoàn tất</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 space-y-2">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-pink-500 mt-1">✓</span>
+                                    <p>Thanh toán tức thì, không cần chờ xác nhận</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-pink-500 mt-1">✓</span>
+                                    <p>Tích điểm MoMo khi thanh toán</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-pink-500 mt-1">✓</span>
+                                    <p>Nhiều ưu đãi từ MoMo</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Method 4: Card -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span>
+                            Thanh toán bằng thẻ ATM/Visa/Mastercard
+                        </h2>
+                        <div class="bg-gray-50 rounded-xl p-6">
+                            <p class="mb-4">Thanh toán trực tuyến an toàn với thẻ ngân hàng nội địa hoặc thẻ quốc tế.</p>
+                            
+                            <div class="flex flex-wrap gap-4 mb-4">
+                                <div class="bg-white rounded-lg px-4 py-2 border border-gray-200">
+                                    <span class="font-bold text-blue-600">VISA</span>
+                                </div>
+                                <div class="bg-white rounded-lg px-4 py-2 border border-gray-200">
+                                    <span class="font-bold text-red-600">Mastercard</span>
+                                </div>
+                                <div class="bg-white rounded-lg px-4 py-2 border border-gray-200">
+                                    <span class="font-bold text-blue-800">JCB</span>
+                                </div>
+                                <div class="bg-white rounded-lg px-4 py-2 border border-gray-200">
+                                    <span class="font-bold text-green-600">Napas</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-1">✓</span>
+                                    <p>Bảo mật theo tiêu chuẩn PCI DSS</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-1">✓</span>
+                                    <p>Xác thực 3D Secure</p>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-1">✓</span>
+                                    <p>Hỗ trợ trả góp 0% qua thẻ tín dụng</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- FAQ -->
+                    <section>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">❓ Câu hỏi thường gặp</h2>
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h3 class="font-bold text-gray-900 mb-2">Tôi có thể thay đổi phương thức thanh toán sau khi đặt hàng không?</h3>
+                                <p class="text-gray-600 text-sm">Bạn có thể liên hệ hotline 1900.5301 để được hỗ trợ thay đổi phương thức thanh toán trước khi đơn hàng được xử lý.</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h3 class="font-bold text-gray-900 mb-2">Thanh toán online có an toàn không?</h3>
+                                <p class="text-gray-600 text-sm">Yến Nhi Tech sử dụng cổng thanh toán được mã hóa SSL và tuân thủ tiêu chuẩn bảo mật PCI DSS, đảm bảo an toàn tuyệt đối cho giao dịch của bạn.</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h3 class="font-bold text-gray-900 mb-2">Tôi chuyển khoản nhưng chưa nhận được xác nhận?</h3>
+                                <p class="text-gray-600 text-sm">Vui lòng chờ 5-15 phút để hệ thống xác nhận. Nếu quá thời gian trên, hãy liên hệ hotline kèm theo ảnh chụp biên lai chuyển khoản.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Contact -->
+                    <section class="bg-yellow-50 rounded-xl p-6 border border-yellow-200">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">📞 Hỗ trợ thanh toán</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-medium">Hotline:</p>
+                                <p class="text-red-600 font-bold text-xl">1900.5301</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Email:</p>
+                                <p class="text-blue-600">thanhtoan@yennhitech.vn</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-yellow-100 text-gray-900 pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">VỀ YẾN NHI TECH</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="about.html" class="hover:text-gray-900 hover:font-semibold transition">Giới thiệu công ty</a></li>
+                        <li><a href="contact.html#map-section" class="hover:text-gray-900 hover:font-semibold transition">Hệ thống cửa hàng</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">CHÍNH SÁCH</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="policy-warranty.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo hành</a></li>
+                        <li><a href="policy-return.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách đổi trả</a></li>
+                        <li><a href="policy-privacy.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">THÔNG TIN</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li><a href="payment-guide.html" class="hover:text-gray-900 hover:font-semibold transition">Hướng dẫn thanh toán</a></li>
+                        <li><a href="order-history.html" class="hover:text-gray-900 hover:font-semibold transition">Tra cứu đơn hàng</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">TỔNG ĐÀI HỖ TRỢ</h3>
+                    <div class="space-y-2 text-sm">
+                        <p class="text-gray-900 font-semibold">Mua hàng: 1900.5301</p>
+                        <p class="text-gray-900 font-semibold">Bảo hành: 1900.5325</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-yellow-200 pt-6 text-center text-sm text-gray-600">
+                <p>© 2024 Yến Nhi Tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+</body>
+</html>
