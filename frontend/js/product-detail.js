@@ -386,8 +386,31 @@ function displayReviews(reviews) {
     document.getElementById('tabReviewCount').textContent = reviewCount;
     document.getElementById('totalReviewsDisplay').textContent = reviewCount;
     
+    // Kiểm tra token còn hợp lệ không
+    const token = localStorage.getItem('token');
+    let isValidLogin = false;
+    
+    if (token) {
+        try {
+            // Decode JWT để kiểm tra expiry
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const expiry = payload.exp * 1000; // Convert to milliseconds
+            isValidLogin = Date.now() < expiry;
+            
+            if (!isValidLogin) {
+                // Token hết hạn, xóa đi
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+            }
+        } catch (e) {
+            // Token không hợp lệ
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        }
+    }
+    
     // Hiển thị form đánh giá hoặc nút đăng nhập
-    if (isLoggedIn()) {
+    if (isValidLogin) {
         document.getElementById('reviewFormContainer').classList.remove('hidden');
         document.getElementById('loginToReview').classList.add('hidden');
         // Mặc định chọn 5 sao
@@ -496,8 +519,11 @@ function selectStar(rating) {
 async function submitReview(event) {
     event.preventDefault();
     
-    if (!isLoggedIn()) {
-        alert('Vui lòng đăng nhập để đánh giá!');
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         window.location.href = 'login.html';
         return;
     }
@@ -508,8 +534,12 @@ async function submitReview(event) {
         return;
     }
     
+    if (content.length < 10) {
+        alert('Nội dung đánh giá phải có ít nhất 10 ký tự!');
+        return;
+    }
+    
     try {
-        const token = localStorage.getItem('token');
         const response = await fetch(`${API_URL}/products/${currentProduct.ma_san_pham}/reviews`, {
             method: 'POST',
             headers: {
@@ -523,6 +553,15 @@ async function submitReview(event) {
         });
         
         const result = await response.json();
+        
+        if (response.status === 401) {
+            // Token hết hạn hoặc không hợp lệ
+            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+            return;
+        }
         
         if (result.success) {
             alert('Đánh giá của bạn đã được gửi thành công!');
