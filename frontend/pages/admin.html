@@ -1015,8 +1015,15 @@
                     <textarea id="article-content" rows="8" class="w-full border rounded-lg px-4 py-2" placeholder="Nội dung chi tiết bài viết..."></textarea>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Link hình ảnh</label>
-                    <input type="text" id="article-image" class="w-full border rounded-lg px-4 py-2" placeholder="https://example.com/image.jpg">
+                    <label class="block text-sm font-medium mb-1">Hình ảnh</label>
+                    <div class="space-y-2">
+                        <input type="file" id="article-image-file" accept="image/*" class="w-full border rounded-lg px-4 py-2" onchange="previewArticleImage(this)">
+                        <input type="hidden" id="article-image">
+                        <div id="article-image-preview" class="hidden">
+                            <img id="article-preview-img" src="" alt="Preview" class="w-32 h-32 object-cover rounded-lg border">
+                            <button type="button" onclick="removeArticleImage()" class="text-red-500 text-sm mt-1 hover:underline">Xóa ảnh</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -2494,6 +2501,7 @@
             document.getElementById('article-modal-title').textContent = article ? 'Sửa bài viết' : 'Thêm bài viết';
             document.getElementById('article-form').reset();
             document.getElementById('article-id').value = article?.ma_bai_viet || '';
+            document.getElementById('article-image-file').value = '';
             
             if (article) {
                 document.getElementById('article-title').value = article.tieu_de || '';
@@ -2504,6 +2512,64 @@
                 document.getElementById('article-author').value = article.tac_gia || '';
                 document.getElementById('article-tags').value = article.tags || '';
                 document.getElementById('article-status').value = article.trang_thai || 'xuat_ban';
+                
+                // Hiển thị ảnh hiện tại nếu có
+                if (article.hinh_anh) {
+                    const imgUrl = article.hinh_anh.startsWith('http') ? article.hinh_anh : API_URL.replace('/api', '') + article.hinh_anh;
+                    document.getElementById('article-preview-img').src = imgUrl;
+                    document.getElementById('article-image-preview').classList.remove('hidden');
+                } else {
+                    document.getElementById('article-image-preview').classList.add('hidden');
+                }
+            } else {
+                document.getElementById('article-image-preview').classList.add('hidden');
+            }
+        }
+        
+        function previewArticleImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('article-preview-img').src = e.target.result;
+                    document.getElementById('article-image-preview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function removeArticleImage() {
+            document.getElementById('article-image-file').value = '';
+            document.getElementById('article-image').value = '';
+            document.getElementById('article-image-preview').classList.add('hidden');
+        }
+        
+        async function uploadArticleImage() {
+            const fileInput = document.getElementById('article-image-file');
+            if (!fileInput.files || !fileInput.files[0]) {
+                return document.getElementById('article-image').value; // Trả về URL cũ nếu không có file mới
+            }
+            
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            
+            try {
+                const response = await fetch(`${API_URL}/articles/upload-image`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    return data.data.url;
+                } else {
+                    throw new Error(data.message || 'Lỗi upload ảnh');
+                }
+            } catch (error) {
+                console.error('Upload image error:', error);
+                throw error;
             }
         }
         
@@ -2543,23 +2609,36 @@
             e.preventDefault();
             
             const id = document.getElementById('article-id').value;
-            const body = {
-                tieu_de: document.getElementById('article-title').value,
-                mo_ta_ngan: document.getElementById('article-short-desc').value,
-                noi_dung: document.getElementById('article-content').value,
-                hinh_anh: document.getElementById('article-image').value,
-                danh_muc: document.getElementById('article-category').value,
-                tac_gia: document.getElementById('article-author').value || 'Admin',
-                tags: document.getElementById('article-tags').value,
-                trang_thai: document.getElementById('article-status').value
-            };
-            
-            if (!body.tieu_de) {
-                alert('Vui lòng nhập tiêu đề');
-                return;
-            }
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
             
             try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Đang xử lý...';
+                
+                // Upload ảnh nếu có file mới
+                let imageUrl = document.getElementById('article-image').value;
+                const fileInput = document.getElementById('article-image-file');
+                if (fileInput.files && fileInput.files[0]) {
+                    imageUrl = await uploadArticleImage();
+                }
+                
+                const body = {
+                    tieu_de: document.getElementById('article-title').value,
+                    mo_ta_ngan: document.getElementById('article-short-desc').value,
+                    noi_dung: document.getElementById('article-content').value,
+                    hinh_anh: imageUrl,
+                    danh_muc: document.getElementById('article-category').value,
+                    tac_gia: document.getElementById('article-author').value || 'Admin',
+                    tags: document.getElementById('article-tags').value,
+                    trang_thai: document.getElementById('article-status').value
+                };
+                
+                if (!body.tieu_de) {
+                    alert('Vui lòng nhập tiêu đề');
+                    return;
+                }
+                
                 const data = await apiCall(`/articles${id ? '/' + id : ''}`, id ? 'PUT' : 'POST', body);
                 if (data.success) {
                     alert(id ? 'Đã cập nhật bài viết!' : 'Đã thêm bài viết mới!');
@@ -2570,7 +2649,10 @@
                 }
             } catch (error) {
                 console.error('Save article error:', error);
-                alert('Lỗi khi lưu bài viết');
+                alert('Lỗi khi lưu bài viết: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
         });
 

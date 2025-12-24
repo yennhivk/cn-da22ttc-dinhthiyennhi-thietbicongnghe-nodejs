@@ -2,6 +2,38 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const { authenticateToken, requireAdmin } = require('./auth');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Cấu hình multer upload ảnh bài viết
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, '../uploads/articles');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'article-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+    fileFilter: function (req, file, cb) {
+        const allowedTypes = /jpeg|jpg|png|gif|webp/;
+        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = allowedTypes.test(file.mimetype);
+        if (extname && mimetype) {
+            return cb(null, true);
+        }
+        cb(new Error('Chỉ cho phép upload file ảnh (jpg, png, gif, webp)'));
+    }
+});
 
 // ==========================================
 // PUBLIC API - Lấy bài viết cho frontend
@@ -90,39 +122,29 @@ router.get('/latest', async (req, res) => {
     }
 });
 
-// Lấy chi tiết bài viết
-router.get('/:id', async (req, res) => {
+// ==========================================
+// ADMIN API - Quản lý bài viết (ĐẶT TRƯỚC route /:id)
+// ==========================================
+
+// Upload hình ảnh bài viết
+router.post('/upload-image', authenticateToken, requireAdmin, upload.single('image'), async (req, res) => {
     try {
-        // Tăng lượt xem
-        await db.query(`UPDATE bai_viet SET luot_xem = luot_xem + 1 WHERE ma_bai_viet = ?`, [req.params.id]);
-
-        const [articles] = await db.query(`
-            SELECT * FROM bai_viet WHERE ma_bai_viet = ?
-        `, [req.params.id]);
-
-        if (articles.length === 0) {
-            return res.status(404).json({ success: false, message: 'Không tìm thấy bài viết' });
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'Không có file được upload' });
         }
 
-        // Lấy bài viết liên quan
-        const [related] = await db.query(`
-            SELECT ma_bai_viet, tieu_de, hinh_anh, danh_muc, ngay_tao
-            FROM bai_viet
-            WHERE trang_thai = 'xuat_ban' AND ma_bai_viet != ? AND danh_muc = ?
-            ORDER BY ngay_tao DESC
-            LIMIT 4
-        `, [req.params.id, articles[0].danh_muc]);
-
-        res.json({ success: true, data: { ...articles[0], related } });
+        const imagePath = '/uploads/articles/' + req.file.filename;
+        
+        res.json({
+            success: true,
+            message: 'Upload hình ảnh thành công',
+            data: { url: imagePath }
+        });
     } catch (error) {
-        console.error('Get article detail error:', error);
-        res.status(500).json({ success: false, message: 'Lỗi server' });
+        console.error('Upload article image error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi upload hình ảnh' });
     }
 });
-
-// ==========================================
-// ADMIN API - Quản lý bài viết
-// ==========================================
 
 // Lấy tất cả bài viết (admin)
 router.get('/admin/all', authenticateToken, requireAdmin, async (req, res) => {
@@ -166,6 +188,36 @@ router.get('/admin/all', authenticateToken, requireAdmin, async (req, res) => {
         });
     } catch (error) {
         console.error('Admin get articles error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// Lấy chi tiết bài viết (ĐẶT SAU các route cụ thể)
+router.get('/:id', async (req, res) => {
+    try {
+        // Tăng lượt xem
+        await db.query(`UPDATE bai_viet SET luot_xem = luot_xem + 1 WHERE ma_bai_viet = ?`, [req.params.id]);
+
+        const [articles] = await db.query(`
+            SELECT * FROM bai_viet WHERE ma_bai_viet = ?
+        `, [req.params.id]);
+
+        if (articles.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy bài viết' });
+        }
+
+        // Lấy bài viết liên quan
+        const [related] = await db.query(`
+            SELECT ma_bai_viet, tieu_de, hinh_anh, danh_muc, ngay_tao
+            FROM bai_viet
+            WHERE trang_thai = 'xuat_ban' AND ma_bai_viet != ? AND danh_muc = ?
+            ORDER BY ngay_tao DESC
+            LIMIT 4
+        `, [req.params.id, articles[0].danh_muc]);
+
+        res.json({ success: true, data: { ...articles[0], related } });
+    } catch (error) {
+        console.error('Get article detail error:', error);
         res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
