@@ -675,17 +675,17 @@
                                 <option value="an">Ẩn</option>
                             </select>
                         </div>
-                        <table class="w-full">
+                        <table class="w-full table-fixed">
                             <thead class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white text-left">
                                 <tr>
-                                    <th class="px-4 py-3 rounded-tl-lg">Ảnh</th>
-                                    <th class="px-4 py-3">Tiêu đề</th>
-                                    <th class="px-4 py-3">Danh mục</th>
-                                    <th class="px-4 py-3">Tác giả</th>
-                                    <th class="px-4 py-3 text-center">Lượt xem</th>
-                                    <th class="px-4 py-3 text-center">Trạng thái</th>
-                                    <th class="px-4 py-3 text-center">Ngày tạo</th>
-                                    <th class="px-4 py-3 text-center rounded-tr-lg">Thao tác</th>
+                                    <th class="px-4 py-3 rounded-tl-lg" style="width: 70px;">Ảnh</th>
+                                    <th class="px-4 py-3" style="width: 30%;">Tiêu đề</th>
+                                    <th class="px-4 py-3" style="width: 120px;">Danh mục</th>
+                                    <th class="px-4 py-3" style="width: 100px;">Tác giả</th>
+                                    <th class="px-4 py-3 text-center" style="width: 80px;">Lượt xem</th>
+                                    <th class="px-4 py-3 text-center" style="width: 120px;">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center" style="width: 110px;">Ngày tạo</th>
+                                    <th class="px-4 py-3 text-center rounded-tr-lg" style="width: 90px;">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="articles-table"></tbody>
@@ -695,16 +695,99 @@
 
                 <!-- Reviews Section -->
                 <section id="section-reviews" class="content-section">
+                    <!-- Stats Cards cho đánh giá -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+                        <div class="bg-gradient-to-r from-yellow-500 to-amber-500 rounded-lg p-3 shadow text-white">
+                            <div class="flex items-center gap-2">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-xl">⭐</div>
+                                <div>
+                                    <p class="text-yellow-100 text-xs">Tổng đánh giá</p>
+                                    <p id="reviews-total" class="text-xl font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg p-3 shadow text-white">
+                            <div class="flex items-center gap-2">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-xl">📊</div>
+                                <div>
+                                    <p class="text-green-100 text-xs">Điểm trung bình</p>
+                                    <p id="reviews-avg" class="text-xl font-bold">0.0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg p-3 shadow text-white">
+                            <div class="flex items-center gap-2">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-xl">👍</div>
+                                <div>
+                                    <p class="text-blue-100 text-xs">Đánh giá 5 sao</p>
+                                    <p id="reviews-5star" class="text-xl font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-3 shadow text-white">
+                            <div class="flex items-center gap-2">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-xl">✅</div>
+                                <div>
+                                    <p class="text-purple-100 text-xs">Đang hiển thị</p>
+                                    <p id="reviews-visible" class="text-xl font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chi tiết đánh giá theo sao -->
+                    <div class="bg-white rounded-lg shadow p-3 border-t-4 border-green-500 mb-4">
+                        <h3 class="font-bold text-gray-700 mb-2 text-sm flex items-center gap-2">📈 Chi tiết đánh giá theo sao</h3>
+                        <div id="review-stars-detail" class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-12 text-xs font-medium">5 sao</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                    <div id="bar-5star" class="bg-green-500 h-3 rounded-full transition-all" style="width: 0%"></div>
+                                </div>
+                                <span id="count-5star" class="w-8 text-xs text-right">0</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-12 text-xs font-medium">4 sao</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                    <div id="bar-4star" class="bg-blue-500 h-3 rounded-full transition-all" style="width: 0%"></div>
+                                </div>
+                                <span id="count-4star" class="w-8 text-xs text-right">0</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-12 text-xs font-medium">3 sao</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                    <div id="bar-3star" class="bg-yellow-500 h-3 rounded-full transition-all" style="width: 0%"></div>
+                                </div>
+                                <span id="count-3star" class="w-8 text-xs text-right">0</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-12 text-xs font-medium">2 sao</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                    <div id="bar-2star" class="bg-orange-500 h-3 rounded-full transition-all" style="width: 0%"></div>
+                                </div>
+                                <span id="count-2star" class="w-8 text-xs text-right">0</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-12 text-xs font-medium">1 sao</span>
+                                <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                    <div id="bar-1star" class="bg-red-500 h-3 rounded-full transition-all" style="width: 0%"></div>
+                                </div>
+                                <span id="count-1star" class="w-8 text-xs text-right">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bảng đánh giá -->
                     <div class="bg-white rounded-xl shadow p-5">
                         <table class="w-full">
-                            <thead class="bg-gray-50 text-left">
+                            <thead class="bg-gradient-to-r from-yellow-500 to-amber-500 text-white text-left">
                                 <tr>
-                                    <th class="px-4 py-3">Sản phẩm</th>
+                                    <th class="px-4 py-3 rounded-tl-lg">Sản phẩm</th>
                                     <th class="px-4 py-3">Người đánh giá</th>
                                     <th class="px-4 py-3 text-center">Điểm</th>
                                     <th class="px-4 py-3">Nội dung</th>
                                     <th class="px-4 py-3 text-center">Trạng thái</th>
-                                    <th class="px-4 py-3 text-center">Thao tác</th>
+                                    <th class="px-4 py-3 text-center rounded-tr-lg">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="reviews-table"></tbody>
@@ -2660,7 +2743,39 @@
         async function loadReviews() {
             const data = await apiCall('/admin/reviews');
             if (data.success) {
-                const html = data.data.map(r => `
+                const reviews = data.data;
+                
+                // Tính thống kê
+                const total = reviews.length;
+                const visible = reviews.filter(r => r.trang_thai === 1).length;
+                const starCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+                let totalStars = 0;
+                
+                reviews.forEach(r => {
+                    const stars = r.so_sao || 0;
+                    if (stars >= 1 && stars <= 5) {
+                        starCounts[stars]++;
+                        totalStars += stars;
+                    }
+                });
+                
+                const avgRating = total > 0 ? (totalStars / total).toFixed(1) : '0.0';
+                
+                // Cập nhật stats cards
+                document.getElementById('reviews-total').textContent = total;
+                document.getElementById('reviews-avg').textContent = avgRating;
+                document.getElementById('reviews-5star').textContent = starCounts[5];
+                document.getElementById('reviews-visible').textContent = visible;
+                
+                // Cập nhật progress bars
+                for (let i = 1; i <= 5; i++) {
+                    const percent = total > 0 ? (starCounts[i] / total * 100) : 0;
+                    document.getElementById(`bar-${i}star`).style.width = `${percent}%`;
+                    document.getElementById(`count-${i}star`).textContent = starCounts[i];
+                }
+                
+                // Render bảng
+                const html = reviews.map(r => `
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-4 py-3">${r.ten_san_pham || '-'}</td>
                         <td class="px-4 py-3">${r.ten_dang_nhap || 'Ẩn danh'}</td>
@@ -2678,6 +2793,7 @@
                 document.getElementById('reviews-table').innerHTML = html || '<tr><td colspan="6" class="text-center py-8 text-gray-500">Không có đánh giá</td></tr>';
             }
         }
+        
         async function toggleReviewStatus(id) { const d = await apiCall(`/admin/reviews/${id}/toggle-status`, 'PUT'); if (d.success) loadReviews(); }
         async function deleteReview(id) { if (!confirm('Xóa đánh giá này?')) return; const d = await apiCall(`/admin/reviews/${id}`, 'DELETE'); if (d.success) { alert('Đã xóa!'); loadReviews(); } }
 
