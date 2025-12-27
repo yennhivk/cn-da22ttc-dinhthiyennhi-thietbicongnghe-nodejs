@@ -419,7 +419,11 @@ yennhi-tech/
 
 <h3>3.3.2. Sơ đồ tuần tự (Sequence Diagram)</h3>
 
+<p><strong>Mô tả:</strong> Sơ đồ tuần tự (Sequence Diagram) thể hiện luồng tương tác giữa các thành phần trong hệ thống theo trình tự thời gian. Các sơ đồ dưới đây minh họa chi tiết cách các đối tượng (Khách hàng, Frontend, Backend, Database, Mailer, MoMo API) giao tiếp với nhau thông qua các thông điệp (messages) để hoàn thành một nghiệp vụ cụ thể.</p>
+
 <p class="figure">Hình 3.5: Sơ đồ tuần tự - Quy trình đăng ký tài khoản</p>
+
+<p><strong>Mô tả:</strong> Sơ đồ thể hiện quy trình đăng ký tài khoản với xác thực OTP qua email. Khách hàng nhập thông tin đăng ký, hệ thống kiểm tra email trong Database, nếu chưa tồn tại sẽ gửi mã OTP qua Mailer. Sau khi khách hàng xác thực OTP thành công, tài khoản được tạo trong Database và chuyển đến trang đăng nhập.</p>
 
 <pre>
 ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
@@ -450,6 +454,8 @@ yennhi-tech/
 
 <p class="figure">Hình 3.6: Sơ đồ tuần tự - Quy trình đăng nhập</p>
 
+<p><strong>Mô tả:</strong> Sơ đồ thể hiện quy trình đăng nhập với xác thực JWT. Khách hàng nhập email và mật khẩu, Backend truy vấn Database để lấy thông tin user, sau đó sử dụng bcrypt để xác thực mật khẩu. Nếu hợp lệ, hệ thống tạo JWT token và trả về cho Frontend lưu trữ, cho phép người dùng truy cập các chức năng yêu cầu đăng nhập.</p>
+
 <pre>
 ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
 │Khách hàng│     │ Frontend │     │ Backend  │     │ Database │
@@ -477,6 +483,8 @@ yennhi-tech/
 </pre>
 
 <p class="figure">Hình 3.7: Sơ đồ tuần tự - Quy trình đặt hàng</p>
+
+<p><strong>Mô tả:</strong> Sơ đồ thể hiện quy trình đặt hàng với hai phương thức thanh toán COD và MoMo. Khách hàng thêm sản phẩm vào giỏ (lưu localStorage), khi thanh toán Backend tạo đơn hàng trong Database. Nếu chọn MoMo, hệ thống gọi MoMo API để tạo link thanh toán và redirect khách hàng đến cổng thanh toán MoMo.</p>
 
 <pre>
 ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
@@ -510,151 +518,110 @@ yennhi-tech/
 
 <h2>3.4. MÔ HÌNH HOẠT ĐỘNG CỦA HỆ THỐNG</h2>
 
+<p><strong>Mô tả:</strong> Sơ đồ hoạt động (Activity Diagram) mô tả luồng xử lý nghiệp vụ của hệ thống, thể hiện các bước thực hiện, điều kiện rẽ nhánh và kết quả của từng quy trình. Các ký hiệu sử dụng: [Hành động] - hoạt động cần thực hiện, &lt;Điều kiện&gt; - điểm quyết định rẽ nhánh, ──► - hướng luồng xử lý.</p>
+
 <h3>3.4.1. Quy trình đăng ký tài khoản</h3>
 
 <p class="figure">Hình 3.8: Quy trình đăng ký tài khoản</p>
 
+<p><strong>Mô tả:</strong> Quy trình đăng ký tài khoản bắt đầu khi khách hàng nhập thông tin (họ tên, email, mật khẩu). Hệ thống kiểm tra email đã tồn tại hay chưa - nếu có sẽ báo lỗi, nếu chưa sẽ gửi mã OTP 6 số qua email. Khách hàng nhập OTP để xác thực - nếu đúng, tài khoản được tạo và chuyển đến trang đăng nhập; nếu sai sẽ báo lỗi và yêu cầu nhập lại.</p>
+
 <pre>
-[Bắt đầu]
-    ↓
-[Khách hàng truy cập trang đăng ký]
-    ↓
-[Nhập thông tin: Tên, Email, Mật khẩu]
-    ↓
-[Hệ thống kiểm tra email đã tồn tại?]
-    ↓ Không
-[Gửi mã OTP đến email]
-    ↓
-[Khách hàng nhập mã OTP]
-    ↓
-[OTP đúng và còn hạn?]
-    ↓ Đúng
-[Tạo tài khoản mới]
-    ↓
-[Gửi email chào mừng]
-    ↓
-[Chuyển đến trang đăng nhập]
-    ↓
-[Kết thúc]
+     [Bắt đầu]──►[Nhập info]──►&lt;Email tồn tại?&gt;
+                                    │
+                    Có◄─────────────┴─────────────►Không
+                    │                              │
+                    ▼                              ▼
+               [Báo lỗi]                      [Gửi OTP]
+                                                   │
+                                                   ▼
+                                             [Nhập OTP]
+                                                   │
+                                                   ▼
+                                            &lt;OTP đúng?&gt;
+                                                   │
+                                  Sai◄─────────────┴─────────────►Đúng
+                                   │                              │
+                                   ▼                              ▼
+                              [Báo lỗi]                      [Tạo TK]
+                                                                  │
+                                                                  ▼
+                                                          [Chuyển login]
+                                                                  │
+                                                                  ▼
+                                                            [Kết thúc]
 </pre>
 
 <h3>3.4.2. Quy trình đặt hàng</h3>
 
 <p class="figure">Hình 3.9: Quy trình đặt hàng</p>
 
+<p><strong>Mô tả:</strong> Quy trình đặt hàng bắt đầu khi khách hàng duyệt sản phẩm và thêm vào giỏ hàng. Hệ thống kiểm tra trạng thái đăng nhập - nếu chưa đăng nhập sẽ yêu cầu login. Sau khi đăng nhập, khách hàng nhập địa chỉ giao hàng và chọn phương thức thanh toán: COD (thanh toán khi nhận hàng) hoặc MoMo (thanh toán trực tuyến). Đơn hàng được tạo và hiển thị kết quả cho khách hàng.</p>
+
 <pre>
-[Bắt đầu]
-    ↓
-[Khách hàng duyệt sản phẩm]
-    ↓
-[Thêm sản phẩm vào giỏ hàng]
-    ↓
-[Xem giỏ hàng]
-    ↓
-[Điều chỉnh số lượng (nếu cần)]
-    ↓
-[Tiến hành thanh toán]
-    ↓
-[Đã đăng nhập?]
-    ↓ Có
-[Nhập thông tin giao hàng]
-    ↓
-[Chọn phương thức thanh toán]
-    ├── COD (Thanh toán khi nhận hàng)
-    │       ↓
-    │   [Tạo đơn hàng]
-    │       ↓
-    │   [Hiển thị xác nhận đơn hàng]
-    │
-    └── MoMo
-            ↓
-        [Tạo đơn hàng]
-            ↓
-        [Chuyển đến trang thanh toán MoMo]
-            ↓
-        [Khách hàng thanh toán]
-            ↓
-        [MoMo callback]
-            ↓
-        [Cập nhật trạng thái thanh toán]
-            ↓
-        [Hiển thị kết quả]
-    ↓
-[Kết thúc]
+     [Bắt đầu]──►[Duyệt SP]──►[Thêm giỏ]──►&lt;Đã login?&gt;
+                                               │
+                              Chưa◄────────────┴────────────►Rồi
+                               │                             │
+                               ▼                             ▼
+                           [Login]                    [Nhập địa chỉ]
+                                                             │
+                                                             ▼
+                                                       &lt;Chọn TT&gt;
+                                                             │
+                                          COD◄───────────────┴───────────────►MoMo
+                                           │                                  │
+                                           ▼                                  ▼
+                                      [Tạo đơn]                          [Tạo đơn]
+                                           │                                  │
+                                           │                                  ▼
+                                           │                            [TT MoMo]
+                                           │                                  │
+                                           └──────────────┬───────────────────┘
+                                                          ▼
+                                                    [Hiển thị KQ]──►[Kết thúc]
 </pre>
 
 <h3>3.4.3. Quy trình quản lý đơn hàng (Admin)</h3>
 
 <p class="figure">Hình 3.10: Quy trình quản lý đơn hàng</p>
 
+<p><strong>Mô tả:</strong> Quy trình quản lý đơn hàng dành cho Admin. Sau khi đăng nhập vào hệ thống quản trị, Admin xem danh sách đơn hàng, chọn đơn cần xử lý và cập nhật trạng thái. Có 3 trạng thái có thể chuyển đổi: "Đang giao" (đơn hàng đang được vận chuyển), "Hoàn thành" (đã giao thành công), "Hủy đơn" (hủy bỏ đơn hàng). Thay đổi được lưu vào Database.</p>
+
 <pre>
-[Bắt đầu]
-    ↓
-[Admin đăng nhập]
-    ↓
-[Truy cập Dashboard]
-    ↓
-[Xem danh sách đơn hàng]
-    ↓
-[Lọc theo trạng thái/tìm kiếm]
-    ↓
-[Chọn đơn hàng cần xử lý]
-    ↓
-[Xem chi tiết đơn hàng]
-    ↓
-[Cập nhật trạng thái]
-    ├── Đang xử lý → Đang giao
-    ├── Đang giao → Hoàn thành
-    └── Hủy đơn
-    ↓
-[Lưu thay đổi]
-    ↓
-[Kết thúc]
+     [Bắt đầu]──►[Admin login]──►[Xem DS đơn]──►[Chọn đơn]──►[Cập nhật TT]
+                                                                  │
+                                    ┌─────────────────────────────┼─────────────────────────────┐
+                                    ▼                             ▼                             ▼
+                              [Đang giao]                   [Hoàn thành]                    [Hủy đơn]
+                                    │                             │                             │
+                                    └─────────────────────────────┼─────────────────────────────┘
+                                                                  ▼
+                                                            [Lưu thay đổi]──►[Kết thúc]
 </pre>
 
 <h3>3.4.4. Quy trình quản lý sản phẩm (Admin)</h3>
 
 <p class="figure">Hình 3.11: Quy trình quản lý sản phẩm</p>
 
+<p><strong>Mô tả:</strong> Quy trình quản lý sản phẩm cho phép Admin thực hiện 3 thao tác chính: (1) Thêm mới - nhập thông tin sản phẩm (tên, giá, mô tả, danh mục) và upload hình ảnh; (2) Sửa/Xóa - chọn sản phẩm cần chỉnh sửa hoặc xóa khỏi hệ thống; (3) Ẩn/Hiện - thay đổi trạng thái hiển thị sản phẩm trên website mà không cần xóa. Tất cả thay đổi được lưu vào Database.</p>
+
 <pre>
-[Bắt đầu]
-    ↓
-[Admin truy cập quản lý sản phẩm]
-    ↓
-[Chọn thao tác]
-    ├── Thêm mới
-    │       ↓
-    │   [Nhập thông tin sản phẩm]
-    │       ↓
-    │   [Upload hình ảnh]
-    │       ↓
-    │   [Chọn danh mục]
-    │       ↓
-    │   [Lưu sản phẩm]
-    │
-    ├── Chỉnh sửa
-    │       ↓
-    │   [Chọn sản phẩm]
-    │       ↓
-    │   [Cập nhật thông tin]
-    │       ↓
-    │   [Lưu thay đổi]
-    │
-    ├── Xóa
-    │       ↓
-    │   [Chọn sản phẩm]
-    │       ↓
-    │   [Xác nhận xóa]
-    │       ↓
-    │   [Xóa sản phẩm và ảnh liên quan]
-    │
-    └── Ẩn/Hiện
-            ↓
-        [Chọn sản phẩm]
-            ↓
-        [Thay đổi trạng thái hiển thị]
-    ↓
-[Kết thúc]
+     [Bắt đầu]──►[Truy cập QL SP]──►[Chọn thao tác]
+                                          │
+                    ┌─────────────────────┼─────────────────────┐
+                    ▼                     ▼                     ▼
+              [Thêm mới]             [Sửa/Xóa]              [Ẩn/Hiện]
+                    │                     │                     │
+                    ▼                     ▼                     ▼
+              [Nhập info]            [Chọn SP]              [Chọn SP]
+                    │                     │                     │
+                    ▼                     │                     │
+              [Upload ảnh]                │                     │
+                    │                     │                     │
+                    └─────────────────────┼─────────────────────┘
+                                          ▼
+                                    [Lưu thay đổi]──►[Kết thúc]
 </pre>
 
 <h2>3.5. CƠ CHẾ BẢO MẬT</h2>

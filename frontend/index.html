@@ -88,7 +88,9 @@
     <div id="promotionPopup" class="popup-modal">
         <div class="popup-content">
             <div class="popup-close" onclick="closePopup()">&times;</div>
-            <img src="images/Screenshot_2025-11-21_151151-removebg-preview (1).png" alt="Khuyến mãi đặc biệt" onclick="closePopup()">
+            <a href="pages/products.html">
+                <img src="images/Screenshot_2025-11-21_151151-removebg-preview (1).png" alt="Khuyến mãi đặc biệt" class="cursor-pointer hover:opacity-90 transition">
+            </a>
         </div>
     </div>
 
@@ -399,17 +401,17 @@
                 </div>
 
                 <!-- Other Navigation Items -->
-                <a href="#" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
+                <a href="pages/products.html?category=laptop" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
                     <span class="lightning-blink text-yellow-400">⚡</span>
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                     Laptop
                 </a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> PC Gaming</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Màn hình</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> CPU, VGA</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Case, Nguồn</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Chuột, Bàn phím</a>
-                <a href="#" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Tai nghe</a>
+                <a href="pages/products.html?category=pc-gaming" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> PC Gaming</a>
+                <a href="pages/products.html?category=monitor" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Màn hình</a>
+                <a href="pages/products.html?category=cpu-vga" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> CPU, VGA</a>
+                <a href="pages/products.html?category=case-nguon" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Case, Nguồn</a>
+                <a href="pages/products.html?category=chuot-ban-phim" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Chuột, Bàn phím</a>
+                <a href="pages/products.html?category=tai-nghe" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Tai nghe</a>
             </div>
         </div>
     </div>
@@ -860,7 +862,7 @@
                 <!-- Countdown Timer -->
                 <div class="bg-white/95 rounded-xl px-4 py-3 shadow-2xl">
                     <div class="flex items-center gap-3">
-                        <span class="text-gray-700 font-bold text-sm md:text-base">Bắt đầu sau:</span>
+                        <span class="countdown-label text-gray-700 font-bold text-sm md:text-base">Bắt đầu sau:</span>
                         <div class="flex gap-2">
                             <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-lg px-3 py-2 text-center min-w-[45px] shadow-lg">
                                 <div id="hours" class="text-xl md:text-2xl font-black text-white">00</div>
@@ -1523,12 +1525,39 @@
         // Auto-play carousel
         setInterval(nextSlide, 5000);
 
+        // Flash Sale / Golden Hour Configuration
+        const GOLDEN_HOUR_START = 19; // 19:00
+        const GOLDEN_HOUR_END = 21;   // 21:00
+
+        // Check if current time is within golden hour
+        function isGoldenHourActive() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            return currentHour >= GOLDEN_HOUR_START && currentHour < GOLDEN_HOUR_END;
+        }
+
         // Flash Sale Countdown Timer
         function updateCountdown() {
-            // Set end time to 23:59:59 today
             const now = new Date();
-            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-            const timeDiff = endOfDay - now;
+            const currentHour = now.getHours();
+            let targetTime;
+            let countdownLabel = document.querySelector('.countdown-label');
+            
+            if (currentHour < GOLDEN_HOUR_START) {
+                // Before golden hour - countdown to start
+                targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), GOLDEN_HOUR_START, 0, 0);
+                if (countdownLabel) countdownLabel.textContent = 'Bắt đầu sau:';
+            } else if (currentHour >= GOLDEN_HOUR_START && currentHour < GOLDEN_HOUR_END) {
+                // During golden hour - countdown to end
+                targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), GOLDEN_HOUR_END, 0, 0);
+                if (countdownLabel) countdownLabel.textContent = 'Kết thúc sau:';
+            } else {
+                // After golden hour - countdown to next day's start
+                targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, GOLDEN_HOUR_START, 0, 0);
+                if (countdownLabel) countdownLabel.textContent = 'Bắt đầu sau:';
+            }
+
+            const timeDiff = targetTime - now;
 
             if (timeDiff > 0) {
                 const hours = Math.floor(timeDiff / (1000 * 60 * 60));
@@ -1539,13 +1568,35 @@
                 document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
                 document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
             }
+            
+            // Update button states based on golden hour
+            updateFlashSaleButtons();
+        }
+
+        // Update flash sale buttons based on golden hour status
+        function updateFlashSaleButtons() {
+            const isActive = isGoldenHourActive();
+            const buttons = document.querySelectorAll('.flash-sale-btn');
+            
+            buttons.forEach(btn => {
+                if (isActive) {
+                    btn.textContent = 'Mua ngay';
+                    btn.classList.remove('bg-white', 'border-red-500', 'text-red-600', 'hover:bg-red-50');
+                    btn.classList.add('bg-red-600', 'text-white', 'hover:bg-red-700', 'border-red-600');
+                    btn.disabled = false;
+                } else {
+                    btn.textContent = 'Sắp diễn ra';
+                    btn.classList.add('bg-white', 'border-red-500', 'text-red-600', 'hover:bg-red-50');
+                    btn.classList.remove('bg-red-600', 'text-white', 'hover:bg-red-700', 'border-red-600');
+                }
+            });
         }
 
         // Update countdown every second
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // Flash Sale Products
+        // Flash Sale Products - Sản phẩm ít lượt bán, cần đẩy mạnh
         const flashSaleProducts = [
             { 
                 id: 1, 
@@ -1556,6 +1607,7 @@
                 image: 'https://images.unsplash.com/photo-1627123424574-724f6fae3702?w=400&h=400&fit=crop', 
                 stock: 10,
                 totalStock: 10,
+                soldCount: 2, // Ít lượt bán
                 features: ['⚡ Công nghệ MagSafe', '🛡️ Da cao cấp', '⭐ Gọn nhẹ và tiện lợi']
             },
             { 
@@ -1567,6 +1619,7 @@
                 image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop', 
                 stock: 5,
                 totalStock: 5,
+                soldCount: 3, // Ít lượt bán
                 features: ['⚡ Lực hút 10000 Pa', '🔋 Thời gian hoạt động 320\'', '💧 Giặt khăn bằng nước nóng 60°C']
             },
             { 
@@ -1578,6 +1631,7 @@
                 image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', 
                 stock: 5,
                 totalStock: 5,
+                soldCount: 3, // Ít lượt bán
                 features: ['🔋 21 ngày', '📍 Định vị GPS', '💧 Kháng nước 10 ATM']
             },
             { 
@@ -1589,6 +1643,7 @@
                 image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop', 
                 stock: 10,
                 totalStock: 10,
+                soldCount: 0, // Chưa bán được
                 features: ['💻 Vỏ nhôm cao cấp', '🎵 Âm thanh B&O Play', '📺 Viền mỏng hiệu mỏng']
             },
             { 
@@ -1600,21 +1655,36 @@
                 image: 'https://images.unsplash.com/photo-1461773518188-b3e86f98242f?w=400&h=400&fit=crop', 
                 stock: 10,
                 totalStock: 10,
+                soldCount: 0, // Chưa bán được
                 features: ['📷 Nút gạt tắt camera', '🔇 Lọc tạp âm AI', '📱 Viền màn hình siêu mỏng']
             }
         ];
 
+        // Format price to Vietnamese currency
+        function formatPriceVN(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+        }
+
         function loadFlashSaleProducts() {
             const container = document.getElementById('flashSaleProducts');
             if (!container) return;
-            container.innerHTML = flashSaleProducts.map(product => `
+            const isActive = isGoldenHourActive();
+            
+            container.innerHTML = flashSaleProducts.map(product => {
+                const savingAmount = product.oldPrice - product.price;
+                const buttonClass = isActive 
+                    ? 'bg-red-600 text-white hover:bg-red-700 border-red-600' 
+                    : 'bg-white border-red-500 text-red-600 hover:bg-red-50';
+                const buttonText = isActive ? 'Mua ngay' : 'Sắp diễn ra';
+                
+                return `
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition group border border-gray-100">
-                    <!-- Product Image -->
-                    <div class="relative bg-gray-50 p-4">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-contain group-hover:scale-105 transition duration-300">
+                    <!-- Product Image - Clickable -->
+                    <div class="relative bg-gray-50 p-4 cursor-pointer" onclick="viewFlashSaleProduct(${product.id})">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-40 md:h-48 object-contain group-hover:scale-105 transition duration-300">
                         <!-- Stock Badge -->
-                        <div class="absolute top-3 left-3">
-                            <div class="bg-gradient-to-r from-red-600 to-red-500 text-white px-3 py-2 rounded-md text-sm md:text-base font-bold shadow-lg flex items-center gap-1">
+                        <div class="absolute top-2 left-2">
+                            <div class="bg-gradient-to-r from-red-600 to-red-500 text-white px-2 py-1 rounded-md text-xs md:text-sm font-bold shadow-lg flex items-center gap-1">
                                 <span>🔥</span>
                                 <span>Còn ${product.stock}/${product.totalStock} suất</span>
                             </div>
@@ -1622,39 +1692,75 @@
                     </div>
                     
                     <!-- Product Info -->
-                    <div class="p-4">
+                    <div class="p-3 md:p-4">
                         <!-- Features Icons -->
-                        <div class="mb-3 space-y-1.5">
+                        <div class="mb-2 space-y-1">
                             ${product.features.map(feature => `
-                                <div class="flex items-center gap-2 text-sm md:text-base text-gray-600">
+                                <div class="flex items-center gap-1 text-xs md:text-sm text-gray-600 truncate">
                                     <span>${feature}</span>
                                 </div>
                             `).join('')}
                         </div>
                         
                         <!-- Price Section -->
-                        <div class="bg-gradient-to-r from-red-600 to-yellow-400 rounded-lg p-3 mb-3 relative overflow-hidden">
-                            <div class="flex items-end justify-between relative z-10">
-                                <div>
-                                    <div class="text-2xl md:text-3xl font-black text-white">${product.price.toLocaleString('vi-VN')}đ</div>
-                                    <div class="text-sm md:text-base text-white/80 line-through">${product.oldPrice.toLocaleString('vi-VN')}đ</div>
+                        <div class="bg-gradient-to-r from-red-600 to-yellow-400 rounded-lg p-2 md:p-3 mb-2 relative overflow-hidden">
+                            <div class="relative z-10">
+                                <div class="flex items-center justify-between mb-1">
+                                    <div class="text-lg md:text-2xl font-black text-white">${formatPriceVN(product.price)}</div>
+                                    <div class="bg-yellow-300 text-red-600 px-1.5 py-0.5 rounded text-sm md:text-base font-black">
+                                        -${product.discount}%
+                                    </div>
                                 </div>
-                                <div class="bg-yellow-300 text-red-600 px-2 py-1 rounded text-base md:text-lg font-black">
-                                    -${product.discount}%
+                                <div class="flex items-center justify-between">
+                                    <div class="text-xs md:text-sm text-white/80 line-through">${formatPriceVN(product.oldPrice)}</div>
+                                    <div class="text-xs md:text-sm text-yellow-200 font-semibold">Tiết kiệm ${formatPriceVN(savingAmount)}</div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Product Name -->
-                        <h3 class="font-semibold text-base md:text-lg text-gray-800 mb-3 line-clamp-2 h-12">${product.name}</h3>
+                        <!-- Product Name - Clickable -->
+                        <h3 class="font-semibold text-sm md:text-base text-gray-800 mb-2 line-clamp-2 h-10 md:h-12 cursor-pointer hover:text-red-600 transition" onclick="viewFlashSaleProduct(${product.id})">${product.name}</h3>
                         
                         <!-- Buy Button -->
-                        <button onclick="addToCart(${product.id})" class="w-full bg-white border-2 border-red-500 hover:bg-red-50 text-red-600 font-bold py-2.5 rounded-lg transition text-base md:text-lg">
-                            Sắp diễn ra
+                        <button onclick="${isActive ? `addToCartFlashSale(${product.id})` : 'showGoldenHourNotice()'}" 
+                                class="flash-sale-btn w-full border-2 ${buttonClass} font-bold py-2 rounded-lg transition text-sm md:text-base">
+                            ${buttonText}
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
+        }
+
+        // View flash sale product detail
+        function viewFlashSaleProduct(productId) {
+            window.location.href = `pages/product-detail.html?id=${productId}`;
+        }
+
+        // Show notice when clicking button outside golden hour
+        function showGoldenHourNotice() {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-20 right-4 bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">⏰</span>
+                    <span>Chương trình Giờ Vàng diễn ra từ 19h - 21h hàng ngày!</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Add to cart for flash sale products
+        function addToCartFlashSale(productId) {
+            const product = flashSaleProducts.find(p => p.id === productId);
+            if (product && isGoldenHourActive()) {
+                // Use existing addToCart function if available
+                if (typeof addToCart === 'function') {
+                    addToCart(product);
+                } else {
+                    showNotification('Đã thêm sản phẩm vào giỏ hàng!');
+                }
+            }
         }
 
         // Load flash sale products on page load

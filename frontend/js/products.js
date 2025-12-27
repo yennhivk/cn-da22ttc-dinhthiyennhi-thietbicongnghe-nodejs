@@ -4,6 +4,23 @@ const API_URL = 'http://localhost:3300/api';
 // Default placeholder image
 const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKhông có ảnh%3C/text%3E%3C/svg%3E';
 
+// Category mapping - map URL slug to database category name
+const CATEGORY_MAP = {
+    'laptop': 'Laptop',
+    'pc-gaming': 'PC Gaming',
+    'monitor': 'Màn hình',
+    'cpu-vga': 'CPU',
+    'case-nguon': 'Case',
+    'chuot-ban-phim': 'Chuột',
+    'tai-nghe': 'Tai nghe',
+    'phone': 'Điện thoại',
+    'appliances': 'Điện máy',
+    'accessories': 'Phụ kiện',
+    'apple': 'Apple',
+    'samsung': 'Samsung',
+    'xiaomi': 'Xiaomi'
+};
+
 // State management
 let allProducts = [];
 let filteredProducts = [];
@@ -22,12 +39,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const brand = urlParams.get('brand');
     const search = urlParams.get('search');
     
-    if (category) currentCategory = category;
+    // Map category slug to actual category name
+    if (category) {
+        currentCategory = CATEGORY_MAP[category] || category;
+        // Update page title based on category
+        updatePageTitle(currentCategory);
+    }
     if (brand) currentBrand = brand;
     
     loadProducts(search);
     setupEventListeners();
 });
+
+// Update page title based on selected category
+function updatePageTitle(categoryName) {
+    const titleElement = document.querySelector('h1.text-2xl, h2.text-2xl');
+    if (titleElement) {
+        titleElement.textContent = `Sản phẩm: ${categoryName}`;
+    }
+    // Update document title
+    document.title = `${categoryName} - Yến Nhi Tech`;
+}
 
 // Cập nhật số lượng sản phẩm theo danh mục
 function updateCategoryCounts() {
