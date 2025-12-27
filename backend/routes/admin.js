@@ -43,30 +43,52 @@ const upload = multer({
 // ==========================================
 router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        // Tổng doanh thu
+        const { startDate, endDate } = req.query;
+        
+        // Xây dựng điều kiện lọc theo khoảng ngày
+        let dateFilter = '';
+        let dateFilterOrders = '';
+        
+        if (startDate && endDate) {
+            dateFilter = `AND DATE(ngay_tao) BETWEEN '${startDate}' AND '${endDate}'`;
+            dateFilterOrders = `WHERE DATE(ngay_tao) BETWEEN '${startDate}' AND '${endDate}'`;
+        } else if (startDate) {
+            dateFilter = `AND DATE(ngay_tao) >= '${startDate}'`;
+            dateFilterOrders = `WHERE DATE(ngay_tao) >= '${startDate}'`;
+        } else if (endDate) {
+            dateFilter = `AND DATE(ngay_tao) <= '${endDate}'`;
+            dateFilterOrders = `WHERE DATE(ngay_tao) <= '${endDate}'`;
+        }
+
+        // Tổng doanh thu (theo filter)
         const [revenue] = await db.query(`
             SELECT COALESCE(SUM(tong_tien), 0) as total_revenue 
             FROM don_hang 
-            WHERE trang_thai_don_hang = 'hoan_thanh'
+            WHERE trang_thai_don_hang = 'hoan_thanh' ${dateFilter}
         `);
 
-        // Tổng đơn hàng
-        const [orders] = await db.query(`SELECT COUNT(*) as total_orders FROM don_hang`);
+        // Tổng đơn hàng (theo filter)
+        const [orders] = await db.query(`
+            SELECT COUNT(*) as total_orders FROM don_hang ${dateFilterOrders}
+        `);
 
         // Tổng sản phẩm
         const [products] = await db.query(`SELECT COUNT(*) as total_products FROM san_pham`);
 
-        // Tổng khách hàng
-        const [customers] = await db.query(`
-            SELECT COUNT(*) as total_customers FROM tai_khoan WHERE vai_tro = 'khach_hang'
-        `);
+        // Tổng khách hàng (theo filter - khách hàng đăng ký trong khoảng thời gian)
+        let customerQuery = `SELECT COUNT(*) as total_customers FROM tai_khoan WHERE vai_tro = 'khach_hang'`;
+        if (startDate || endDate) {
+            customerQuery = `SELECT COUNT(*) as total_customers FROM tai_khoan WHERE vai_tro = 'khach_hang' ${dateFilter}`;
+        }
+        const [customers] = await db.query(customerQuery);
 
-        // Đơn hàng theo trạng thái
-        const [ordersByStatus] = await db.query(`
-            SELECT trang_thai_don_hang as trang_thai, COUNT(*) as count 
-            FROM don_hang 
-            GROUP BY trang_thai_don_hang
-        `);
+        // Đơn hàng theo trạng thái (theo filter)
+        let statusQuery = `SELECT trang_thai_don_hang as trang_thai, COUNT(*) as count FROM don_hang`;
+        if (startDate || endDate) {
+            statusQuery += ` ${dateFilterOrders}`;
+        }
+        statusQuery += ` GROUP BY trang_thai_don_hang`;
+        const [ordersByStatus] = await db.query(statusQuery);
 
         // Đơn hàng gần đây
         const [recentOrders] = await db.query(`
@@ -88,6 +110,22 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
             GROUP BY sp.ma_san_pham
             ORDER BY total_sold DESC
             LIMIT 5
+        `);
+
+        // Top 10 khách hàng mua nhiều nhất
+        const [topCustomers] = await db.query(`
+            SELECT 
+                tk.ma_tai_khoan,
+                tk.ho_ten,
+                tk.email,
+                COUNT(dh.ma_don_hang) as total_orders,
+                COALESCE(SUM(dh.tong_tien), 0) as total_spent
+            FROM tai_khoan tk
+            JOIN don_hang dh ON tk.ma_tai_khoan = dh.ma_tai_khoan
+            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilter}
+            GROUP BY tk.ma_tai_khoan
+            ORDER BY total_spent DESC
+            LIMIT 10
         `);
 
         // Doanh thu theo tháng (12 tháng gần nhất)
@@ -127,12 +165,12 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
             ORDER BY doanh_thu DESC
         `);
 
-        // Tổng số lượng sản phẩm đã bán
+        // Tổng số lượng sản phẩm đã bán (theo filter)
         const [totalSold] = await db.query(`
             SELECT COALESCE(SUM(ctdh.so_luong), 0) as total_sold
             FROM chi_tiet_don_hang ctdh
             JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang
-            WHERE dh.trang_thai_don_hang = 'hoan_thanh'
+            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilter}
         `);
 
         res.json({
@@ -148,6 +186,7 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
                 orders_by_status: ordersByStatus,
                 recent_orders: recentOrders,
                 top_products: topProducts,
+                top_customers: topCustomers,
                 monthly_revenue: monthlyRevenue,
                 category_stats: categoryStats,
                 category_revenue: categoryRevenue
