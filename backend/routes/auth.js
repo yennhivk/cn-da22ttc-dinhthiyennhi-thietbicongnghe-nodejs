@@ -1226,7 +1226,7 @@ router.get('/my-orders', authenticateToken, async (req, res) => {
 
         let query = `
             SELECT dh.*, dh.trang_thai_don_hang as trang_thai,
-                   (SELECT tt.phuong_thuc FROM thanh_toan tt WHERE tt.ma_don_hang = dh.ma_don_hang LIMIT 1) as phuong_thuc_thanh_toan
+                   COALESCE((SELECT tt.phuong_thuc FROM thanh_toan tt WHERE tt.ma_don_hang = dh.ma_don_hang LIMIT 1), 'COD') as phuong_thuc_thanh_toan
             FROM don_hang dh
             WHERE dh.ma_tai_khoan = ?
         `;

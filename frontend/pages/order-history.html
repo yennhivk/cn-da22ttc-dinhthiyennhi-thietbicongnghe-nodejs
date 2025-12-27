@@ -394,6 +394,8 @@
                     
                     allOrders = result.data.map(order => {
                         const status = statusMap[order.trang_thai] || { key: 'pending', text: 'ĐANG XỬ LÝ', color: 'text-yellow-600' };
+                        const paymentMethod = order.phuong_thuc_thanh_toan || 'COD';
+                        console.log('Order payment method:', order.ma_don_hang, paymentMethod);
                         return {
                             id: order.ma_don_hang,
                             shopName: 'Yến Nhi Tech',
@@ -402,7 +404,7 @@
                             statusColor: status.color,
                             deliverySuccess: status.success || false,
                             backendStatus: order.trang_thai,
-                            paymentMethod: order.phuong_thuc_thanh_toan || 'COD',
+                            paymentMethod: paymentMethod,
                             products: (order.items || []).map(item => {
                                 // Xử lý đường dẫn ảnh giống products.js
                                 let imageUrl = '../images/placeholder.png';
@@ -524,7 +526,7 @@
                                     <span class="text-2xl font-semibold text-orange-500 ml-2">${Number(order.total).toLocaleString('vi-VN')}đ</span>
                                 </div>
                                 <div class="flex gap-2 flex-wrap">
-                                    ${order.status === 'pending' && !['Momo', 'Ngan_Hang'].includes(order.paymentMethod) ? `
+                                    ${(order.status === 'pending' || order.status === 'shipping') && !['Momo', 'Ngan_Hang', 'momo', 'bank'].includes(order.paymentMethod) ? `
                                         <button onclick="cancelOrder(${order.id})" class="px-4 py-2 border border-red-300 text-red-500 rounded hover:bg-red-50 transition">Hủy đơn</button>
                                     ` : ''}
                                     ${order.status === 'completed' || order.status === 'cancelled' ? `
@@ -620,7 +622,7 @@
                                 </div>
                             </div>
                             <div class="p-6 border-t bg-gray-50 flex justify-end gap-3">
-                                ${order.status === 'pending' && !['Momo', 'Ngan_Hang'].includes(order.paymentMethod) ? `
+                                ${(order.status === 'pending' || order.status === 'shipping') && !['Momo', 'Ngan_Hang', 'momo', 'bank'].includes(order.paymentMethod) ? `
                                     <button onclick="closeOrderModal(); cancelOrder(${order.id})" class="px-4 py-2 border border-red-300 text-red-500 rounded hover:bg-red-50 transition">Hủy đơn</button>
                                 ` : ''}
                                 <button onclick="closeOrderModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">Đóng</button>
