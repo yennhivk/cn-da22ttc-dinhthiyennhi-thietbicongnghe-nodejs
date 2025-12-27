@@ -1160,11 +1160,18 @@ router.post('/orders', authenticateToken, async (req, res) => {
         // Tổng tiền sau giảm giá
         const tongTien = subtotal - discountAmount + shippingFee;
 
+        // Xác định trạng thái đơn hàng dựa trên phương thức thanh toán
+        // MoMo và chuyển khoản ngân hàng → đang giao (không cho hủy)
+        // COD → đang xử lý (cho phép hủy)
+        const trangThaiDonHang = (phuong_thuc_thanh_toan === 'momo' || phuong_thuc_thanh_toan === 'bank') 
+            ? 'dang_giao' 
+            : 'dang_xu_ly';
+
         // Tạo đơn hàng
         const [orderResult] = await db.query(`
             INSERT INTO don_hang (ma_tai_khoan, tong_tien, trang_thai_thanh_toan, trang_thai_don_hang, dia_chi_giao_hang, ngay_tao)
-            VALUES (?, ?, ?, 'dang_xu_ly', ?, NOW())
-        `, [userId, tongTien, phuong_thuc_thanh_toan === 'COD' ? 'cho_xu_ly' : 'da_thanh_toan', dia_chi_giao_hang]);
+            VALUES (?, ?, ?, ?, ?, NOW())
+        `, [userId, tongTien, phuong_thuc_thanh_toan === 'cod' ? 'cho_xu_ly' : 'da_thanh_toan', trangThaiDonHang, dia_chi_giao_hang]);
 
         const orderId = orderResult.insertId;
 
@@ -1218,7 +1225,8 @@ router.get('/my-orders', authenticateToken, async (req, res) => {
         const offset = (page - 1) * limit;
 
         let query = `
-            SELECT dh.*, dh.trang_thai_don_hang as trang_thai
+            SELECT dh.*, dh.trang_thai_don_hang as trang_thai,
+                   (SELECT tt.phuong_thuc FROM thanh_toan tt WHERE tt.ma_don_hang = dh.ma_don_hang LIMIT 1) as phuong_thuc_thanh_toan
             FROM don_hang dh
             WHERE dh.ma_tai_khoan = ?
         `;

@@ -264,4 +264,40 @@ router.post('/:id/reviews', async (req, res) => {
     }
 });
 
+// GET - Lấy danh sách khuyến mãi sắp diễn ra và đang diễn ra (public)
+router.get('/promotions/upcoming', async (req, res) => {
+    try {
+        const [promotions] = await db.query(`
+            SELECT 
+                ma_khuyen_mai,
+                ten_khuyen_mai,
+                ma_giam_gia,
+                mo_ta,
+                ngay_bat_dau,
+                ngay_ket_thuc,
+                dieu_kien_ap_dung,
+                CASE 
+                    WHEN ngay_bat_dau > NOW() THEN 'upcoming'
+                    WHEN ngay_bat_dau <= NOW() AND ngay_ket_thuc >= NOW() THEN 'active'
+                    ELSE 'expired'
+                END as trang_thai_hien_thi
+            FROM khuyen_mai 
+            WHERE trang_thai = 1 AND ngay_ket_thuc >= NOW()
+            ORDER BY ngay_bat_dau ASC
+            LIMIT 10
+        `);
+        
+        res.json({
+            success: true,
+            data: promotions
+        });
+    } catch (error) {
+        console.error('Lỗi lấy khuyến mãi:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Lỗi server khi lấy khuyến mãi'
+        });
+    }
+});
+
 module.exports = router;

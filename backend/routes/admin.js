@@ -263,6 +263,25 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         }
         console.log('✅ TopRatedProducts done');
 
+        console.log('1️⃣6️⃣ Query customerGrowth...');
+        // Tỷ lệ tăng trưởng khách hàng theo tháng (12 tháng gần nhất)
+        let customerGrowth = [];
+        try {
+            const [growth] = await db.query(`
+                SELECT 
+                    DATE_FORMAT(ngay_tao, '%Y-%m') as thang,
+                    COUNT(*) as so_khach_moi
+                FROM tai_khoan
+                WHERE vai_tro = 'khach_hang' AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m')
+                ORDER BY thang ASC
+            `);
+            customerGrowth = growth;
+        } catch (e) {
+            console.log('⚠️ Customer growth error:', e.message);
+        }
+        console.log('✅ CustomerGrowth done');
+
         console.log('✅ All queries done, sending response...');
         res.json({
             success: true,
@@ -283,7 +302,8 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
                 category_revenue: categoryRevenue,
                 news_stats: newsStats,
                 news_monthly_stats: newsMonthlyStats,
-                top_rated_products: topRatedProducts
+                top_rated_products: topRatedProducts,
+                customer_growth: customerGrowth
             }
         });
     } catch (error) {
