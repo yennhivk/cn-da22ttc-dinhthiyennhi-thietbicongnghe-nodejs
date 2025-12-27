@@ -43,45 +43,60 @@ const upload = multer({
 // ==========================================
 router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
     try {
+        console.log('📊 Dashboard request received');
         const { startDate, endDate } = req.query;
+        console.log('📅 Date filters:', { startDate, endDate });
         
         // Xây dựng điều kiện lọc theo khoảng ngày
         let dateFilter = '';
         let dateFilterOrders = '';
+        let dateFilterDH = ''; // Cho bảng don_hang với alias dh
         
         if (startDate && endDate) {
             dateFilter = `AND DATE(ngay_tao) BETWEEN '${startDate}' AND '${endDate}'`;
             dateFilterOrders = `WHERE DATE(ngay_tao) BETWEEN '${startDate}' AND '${endDate}'`;
+            dateFilterDH = `AND DATE(dh.ngay_tao) BETWEEN '${startDate}' AND '${endDate}'`;
         } else if (startDate) {
             dateFilter = `AND DATE(ngay_tao) >= '${startDate}'`;
             dateFilterOrders = `WHERE DATE(ngay_tao) >= '${startDate}'`;
+            dateFilterDH = `AND DATE(dh.ngay_tao) >= '${startDate}'`;
         } else if (endDate) {
             dateFilter = `AND DATE(ngay_tao) <= '${endDate}'`;
             dateFilterOrders = `WHERE DATE(ngay_tao) <= '${endDate}'`;
+            dateFilterDH = `AND DATE(dh.ngay_tao) <= '${endDate}'`;
         }
 
+        console.log('1️⃣ Query revenue...');
         // Tổng doanh thu (theo filter)
         const [revenue] = await db.query(`
             SELECT COALESCE(SUM(tong_tien), 0) as total_revenue 
             FROM don_hang 
             WHERE trang_thai_don_hang = 'hoan_thanh' ${dateFilter}
         `);
+        console.log('✅ Revenue done');
 
+        console.log('2️⃣ Query orders...');
         // Tổng đơn hàng (theo filter)
         const [orders] = await db.query(`
             SELECT COUNT(*) as total_orders FROM don_hang ${dateFilterOrders}
         `);
+        console.log('✅ Orders done');
 
+        console.log('3️⃣ Query products...');
         // Tổng sản phẩm
         const [products] = await db.query(`SELECT COUNT(*) as total_products FROM san_pham`);
+        console.log('✅ Products done');
 
+        console.log('4️⃣ Query customers...');
         // Tổng khách hàng (theo filter - khách hàng đăng ký trong khoảng thời gian)
         let customerQuery = `SELECT COUNT(*) as total_customers FROM tai_khoan WHERE vai_tro = 'khach_hang'`;
         if (startDate || endDate) {
             customerQuery = `SELECT COUNT(*) as total_customers FROM tai_khoan WHERE vai_tro = 'khach_hang' ${dateFilter}`;
         }
         const [customers] = await db.query(customerQuery);
+        console.log('✅ Customers done');
 
+        console.log('5️⃣ Query ordersByStatus...');
         // Đơn hàng theo trạng thái (theo filter)
         let statusQuery = `SELECT trang_thai_don_hang as trang_thai, COUNT(*) as count FROM don_hang`;
         if (startDate || endDate) {
@@ -89,7 +104,9 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         }
         statusQuery += ` GROUP BY trang_thai_don_hang`;
         const [ordersByStatus] = await db.query(statusQuery);
+        console.log('✅ OrdersByStatus done');
 
+        console.log('6️⃣ Query recentOrders...');
         // Đơn hàng gần đây
         const [recentOrders] = await db.query(`
             SELECT dh.*, dh.trang_thai_don_hang as trang_thai, tk.ten_dang_nhap, tk.email
@@ -98,7 +115,9 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
             ORDER BY dh.ngay_tao DESC
             LIMIT 10
         `);
+        console.log('✅ RecentOrders done');
 
+        console.log('7️⃣ Query topProducts...');
         // Sản phẩm bán chạy
         const [topProducts] = await db.query(`
             SELECT sp.ma_san_pham, sp.ten_san_pham, sp.gia,
@@ -107,38 +126,44 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
             FROM san_pham sp
             LEFT JOIN chi_tiet_don_hang ctdh ON sp.ma_san_pham = ctdh.ma_san_pham
             LEFT JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang AND dh.trang_thai_don_hang = 'hoan_thanh'
-            GROUP BY sp.ma_san_pham
+            GROUP BY sp.ma_san_pham, sp.ten_san_pham, sp.gia
             ORDER BY total_sold DESC
             LIMIT 5
         `);
+        console.log('✅ TopProducts done');
 
+        console.log('8️⃣ Query topCustomers...');
         // Top 10 khách hàng mua nhiều nhất
         const [topCustomers] = await db.query(`
             SELECT 
                 tk.ma_tai_khoan,
-                tk.ho_ten,
+                tk.ten_dang_nhap as ho_ten,
                 tk.email,
                 COUNT(dh.ma_don_hang) as total_orders,
                 COALESCE(SUM(dh.tong_tien), 0) as total_spent
             FROM tai_khoan tk
             JOIN don_hang dh ON tk.ma_tai_khoan = dh.ma_tai_khoan
-            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilter}
-            GROUP BY tk.ma_tai_khoan
+            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilterDH}
+            GROUP BY tk.ma_tai_khoan, tk.ten_dang_nhap, tk.email
             ORDER BY total_spent DESC
             LIMIT 10
         `);
+        console.log('✅ TopCustomers done');
 
-        // Doanh thu theo tháng (12 tháng gần nhất)
+        console.log('9️⃣ Query monthlyRevenue...');
+        // Doanh thu theo tháng (12 tháng gần nhất - KHÔNG bị filter)
         const [monthlyRevenue] = await db.query(`
             SELECT 
                 DATE_FORMAT(ngay_tao, '%Y-%m') as month,
-                SUM(tong_tien) as revenue
+                COALESCE(SUM(tong_tien), 0) as revenue
             FROM don_hang
             WHERE trang_thai_don_hang = 'hoan_thanh' AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
             GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m')
-            ORDER BY month DESC
+            ORDER BY month ASC
         `);
+        console.log('✅ MonthlyRevenue done:', monthlyRevenue.length, 'months');
 
+        console.log('🔟 Query categoryStats...');
         // Thống kê sản phẩm theo danh mục (DỮ LIỆU THỰC)
         const [categoryStats] = await db.query(`
             SELECT 
@@ -151,7 +176,9 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
             GROUP BY dm.ma_danh_muc, dm.ten_danh_muc
             ORDER BY dm.ten_danh_muc
         `);
+        console.log('✅ CategoryStats done');
 
+        console.log('1️⃣1️⃣ Query categoryRevenue...');
         // Doanh thu theo danh mục (DỮ LIỆU THỰC)
         const [categoryRevenue] = await db.query(`
             SELECT 
@@ -164,15 +191,79 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
             GROUP BY dm.ma_danh_muc, dm.ten_danh_muc
             ORDER BY doanh_thu DESC
         `);
+        console.log('✅ CategoryRevenue done');
 
+        console.log('1️⃣2️⃣ Query totalSold...');
         // Tổng số lượng sản phẩm đã bán (theo filter)
         const [totalSold] = await db.query(`
             SELECT COALESCE(SUM(ctdh.so_luong), 0) as total_sold
             FROM chi_tiet_don_hang ctdh
             JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang
-            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilter}
+            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilterDH}
         `);
+        console.log('✅ TotalSold done');
 
+        console.log('1️⃣3️⃣ Query newsStats...');
+        // Thống kê tin tức theo danh mục
+        let newsStats = [];
+        try {
+            const [news] = await db.query(`
+                SELECT danh_muc, COUNT(*) as so_bai, SUM(luot_xem) as tong_luot_xem
+                FROM tin_tuc
+                WHERE trang_thai = 'hien_thi'
+                GROUP BY danh_muc
+                ORDER BY so_bai DESC
+            `);
+            newsStats = news;
+        } catch (e) {
+            console.log('⚠️ News stats error:', e.message);
+        }
+        console.log('✅ NewsStats done');
+
+        console.log('1️⃣4️⃣ Query newsMonthlyStats...');
+        // Thống kê bài viết theo tháng và danh mục (12 tháng gần nhất)
+        let newsMonthlyStats = [];
+        try {
+            const [newsMonthly] = await db.query(`
+                SELECT 
+                    DATE_FORMAT(ngay_tao, '%Y-%m') as thang,
+                    danh_muc,
+                    COUNT(*) as so_bai
+                FROM tin_tuc
+                WHERE trang_thai = 'hien_thi' AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m'), danh_muc
+                ORDER BY thang ASC, danh_muc
+            `);
+            newsMonthlyStats = newsMonthly;
+        } catch (e) {
+            console.log('⚠️ News monthly stats error:', e.message);
+        }
+        console.log('✅ NewsMonthlyStats done');
+
+        console.log('1️⃣5️⃣ Query topRatedProducts...');
+        // Top sản phẩm được đánh giá cao nhất (theo điểm trung bình)
+        let topRatedProducts = [];
+        try {
+            const [rated] = await db.query(`
+                SELECT 
+                    sp.ma_san_pham,
+                    sp.ten_san_pham,
+                    COUNT(dg.ma_danh_gia) as so_danh_gia,
+                    ROUND(AVG(dg.so_sao), 1) as diem_trung_binh
+                FROM san_pham sp
+                JOIN danh_gia dg ON sp.ma_san_pham = dg.ma_san_pham
+                GROUP BY sp.ma_san_pham, sp.ten_san_pham
+                HAVING COUNT(dg.ma_danh_gia) >= 1
+                ORDER BY diem_trung_binh DESC, so_danh_gia DESC
+                LIMIT 10
+            `);
+            topRatedProducts = rated;
+        } catch (e) {
+            console.log('⚠️ Top rated products error:', e.message);
+        }
+        console.log('✅ TopRatedProducts done');
+
+        console.log('✅ All queries done, sending response...');
         res.json({
             success: true,
             data: {
@@ -189,12 +280,16 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
                 top_customers: topCustomers,
                 monthly_revenue: monthlyRevenue,
                 category_stats: categoryStats,
-                category_revenue: categoryRevenue
+                category_revenue: categoryRevenue,
+                news_stats: newsStats,
+                news_monthly_stats: newsMonthlyStats,
+                top_rated_products: topRatedProducts
             }
         });
     } catch (error) {
-        console.error('Dashboard error:', error);
-        res.status(500).json({ success: false, message: 'Lỗi server' });
+        console.error('Dashboard error:', error.message);
+        console.error('Dashboard error stack:', error.stack);
+        res.status(500).json({ success: false, message: 'Lỗi server: ' + error.message });
     }
 });
 

@@ -473,10 +473,12 @@ router.get('/me', async (req, res) => {
 // MIDDLEWARE XÁC THỰC
 // ==========================================
 const authenticateToken = (req, res, next) => {
+    console.log('🔐 [Auth] Checking token for:', req.path);
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
+        console.log('❌ [Auth] No token found');
         return res.status(401).json({
             success: false,
             message: 'Không tìm thấy token xác thực'
@@ -498,6 +500,7 @@ const authenticateToken = (req, res, next) => {
                 message: 'Token không hợp lệ hoặc đã hết hạn'
             });
         }
+        console.log('✅ [Auth] Token valid for user:', user.ma_tai_khoan, user.vai_tro);
         req.user = user;
         next();
     });

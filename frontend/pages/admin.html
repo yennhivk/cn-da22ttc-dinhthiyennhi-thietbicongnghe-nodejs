@@ -91,70 +91,89 @@
 
         <!-- Main Content -->
         <main class="flex-1 ml-64">
-            <header class="bg-white shadow-sm px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-                <div>
-                    <h2 id="page-title" class="text-xl font-bold text-gray-800">Báo cáo bán hàng</h2>
-                    <p class="text-sm text-gray-500">Tổng quan hoạt động kinh doanh</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <!-- Bộ lọc theo ngày -->
-                    <div class="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2">
-                        <label class="text-sm font-medium text-gray-600">Từ:</label>
-                        <input type="date" id="filter-start-date" class="px-2 py-1 rounded border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="filterByDateRange()">
-                        <label class="text-sm font-medium text-gray-600">Đến:</label>
-                        <input type="date" id="filter-end-date" class="px-2 py-1 rounded border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="filterByDateRange()">
-                        <button onclick="resetDateFilter()" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm font-medium text-gray-600 transition">Xóa lọc</button>
+            <header class="bg-white shadow-sm px-6 py-3 sticky top-0 z-30">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 id="page-title" class="text-xl font-bold text-gray-800">Báo cáo bán hàng</h2>
+                        <p class="text-sm text-gray-500">Tổng quan hoạt động kinh doanh</p>
                     </div>
                     <button onclick="loadDashboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">🔄 Làm mới</button>
                 </div>
             </header>
 
-            <div class="p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+            <div class="p-4 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
                 <!-- Dashboard Section -->
                 <section id="section-dashboard" class="content-section active">
-                    <!-- Row 1: Stats Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-                        <div class="stat-card bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 shadow-xl text-white">
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 bg-white/25 rounded-2xl flex items-center justify-center">
-                                    <span class="text-4xl">💰</span>
-                                </div>
-                                <div>
-                                    <p class="stat-label text-blue-100">Tổng doanh thu</p>
-                                    <p id="stat-revenue" class="stat-number">0đ</p>
-                                </div>
+                    <!-- Filter + Stats Row -->
+                    <div class="flex gap-4 mb-4">
+                        <!-- Compact Filter Panel -->
+                        <div class="bg-white rounded-xl shadow p-3 border-l-4 border-blue-500 w-48 flex-shrink-0">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-bold text-gray-800 text-sm">BỘ LỌC</h3>
+                                <button onclick="resetAllFilters()" class="text-blue-500 hover:text-blue-700 text-xs">🔄 Reset</button>
+                            </div>
+                            <!-- Năm -->
+                            <p class="text-xs font-semibold text-gray-600 mb-1">NĂM</p>
+                            <div class="flex flex-wrap gap-1 mb-2">
+                                <button onclick="setYearFilter(2023)" class="year-filter-btn px-2 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-year="2023">2023</button>
+                                <button onclick="setYearFilter(2024)" class="year-filter-btn px-2 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-year="2024">2024</button>
+                                <button onclick="setYearFilter(2025)" class="year-filter-btn px-2 py-1 text-xs rounded border bg-blue-500 text-white" data-year="2025">2025</button>
+                            </div>
+                            <!-- Tháng -->
+                            <p class="text-xs font-semibold text-gray-600 mb-1">THÁNG</p>
+                            <div class="grid grid-cols-4 gap-1">
+                                <button onclick="setMonthFilter('all')" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white bg-blue-500 text-white" data-month="all">All</button>
+                                <button onclick="setMonthFilter(1)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="1">1</button>
+                                <button onclick="setMonthFilter(2)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="2">2</button>
+                                <button onclick="setMonthFilter(3)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="3">3</button>
+                                <button onclick="setMonthFilter(4)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="4">4</button>
+                                <button onclick="setMonthFilter(5)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="5">5</button>
+                                <button onclick="setMonthFilter(6)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="6">6</button>
+                                <button onclick="setMonthFilter(7)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="7">7</button>
+                                <button onclick="setMonthFilter(8)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="8">8</button>
+                                <button onclick="setMonthFilter(9)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="9">9</button>
+                                <button onclick="setMonthFilter(10)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="10">10</button>
+                                <button onclick="setMonthFilter(11)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="11">11</button>
+                                <button onclick="setMonthFilter(12)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="12">12</button>
                             </div>
                         </div>
-                        <div class="stat-card bg-gradient-to-r from-cyan-500 to-teal-500 rounded-2xl p-6 shadow-xl text-white">
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 bg-white/25 rounded-2xl flex items-center justify-center">
-                                    <span class="text-4xl">🛒</span>
-                                </div>
-                                <div>
-                                    <p class="stat-label text-cyan-100">Số đơn đặt hàng</p>
-                                    <p id="stat-orders" class="stat-number">0</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="stat-card bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-6 shadow-xl text-white">
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 bg-white/25 rounded-2xl flex items-center justify-center">
-                                    <span class="text-4xl">👥</span>
-                                </div>
-                                <div>
-                                    <p class="stat-label text-amber-100">Số khách hàng</p>
-                                    <p id="stat-customers" class="stat-number">0</p>
+                        
+                        <!-- Stats Cards -->
+                        <div class="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-3">
+                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-blue-500 h-28">
+                                <div class="flex flex-col items-center justify-center text-center h-full">
+                                    <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+                                        <span class="text-lg">💰</span>
+                                    </div>
+                                    <p class="text-gray-600 text-sm font-semibold">Tổng doanh thu</p>
+                                    <p id="stat-revenue" class="text-xl font-bold text-gray-800">0đ</p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="stat-card bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 shadow-xl text-white">
-                            <div class="flex items-center gap-4">
-                                <div class="w-16 h-16 bg-white/25 rounded-2xl flex items-center justify-center">
-                                    <span class="text-4xl">📦</span>
+                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-cyan-500 h-28">
+                                <div class="flex flex-col items-center justify-center text-center h-full">
+                                    <div class="w-8 h-8 bg-cyan-100 rounded flex items-center justify-center">
+                                        <span class="text-lg">🛒</span>
+                                    </div>
+                                    <p class="text-gray-600 text-sm font-semibold">Số đơn đặt hàng</p>
+                                    <p id="stat-orders" class="text-xl font-bold text-gray-800">0</p>
                                 </div>
-                                <div>
-                                    <p class="stat-label text-purple-100">Số lượng bán</p>
-                                    <p id="stat-products-sold" class="stat-number">0</p>
+                            </div>
+                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-amber-500 h-28">
+                                <div class="flex flex-col items-center justify-center text-center h-full">
+                                    <div class="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
+                                        <span class="text-lg">👥</span>
+                                    </div>
+                                    <p class="text-gray-600 text-sm font-semibold">Số khách hàng</p>
+                                    <p id="stat-customers" class="text-xl font-bold text-gray-800">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-purple-500 h-28">
+                                <div class="flex flex-col items-center justify-center text-center h-full">
+                                    <div class="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
+                                        <span class="text-lg">📦</span>
+                                    </div>
+                                    <p class="text-gray-600 text-sm font-semibold">Số lượng bán</p>
+                                    <p id="stat-products-sold" class="text-xl font-bold text-gray-800">0</p>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +189,7 @@
                             <p id="kpi-percent" class="text-center text-xl font-bold text-orange-500">0%</p>
                         </div>
                         <div class="bg-white rounded-lg shadow p-3 lg:col-span-3 border-t-3 border-blue-400">
-                            <h3 class="font-bold text-gray-700 mb-1 text-xs">📊 Doanh thu thực tế vs kế hoạch</h3>
+                            <h3 class="font-bold text-gray-700 mb-1 text-xs">📊 Doanh thu 12 tháng gần nhất</h3>
                             <canvas id="revenueChart" height="80"></canvas>
                         </div>
                     </div>
@@ -191,7 +210,30 @@
                         </div>
                     </div>
 
-                    <!-- Row 4: Recent Orders + Order Status + Top Customers -->
+                    <!-- Row 4: News Stats -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
+                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-pink-400">
+                            <h3 class="font-bold text-gray-700 mb-1 text-xs">📰 Tin tức theo danh mục</h3>
+                            <canvas id="newsChart" height="90"></canvas>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-indigo-400 lg:col-span-2">
+                            <h3 class="font-bold text-gray-700 mb-1 text-xs">�️ Số lượng bài viết theo tháng</h3>
+                            <canvas id="newsViewsChart" height="90"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Top Rated Products -->
+                    <div class="grid grid-cols-1 gap-2 mb-4">
+                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-yellow-400">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-bold text-gray-700 text-xs">⭐ Top sản phẩm được đánh giá cao</h3>
+                                <span class="text-xs text-gray-500">Điểm TB / Số đánh giá</span>
+                            </div>
+                            <div id="top-rated-products" class="space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Row 6: Recent Orders + Order Status + Top Customers -->
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
                         <div class="bg-white rounded-lg shadow p-3 border-t-3 border-indigo-400">
                             <h3 class="font-bold text-gray-700 mb-1 text-xs">📋 Đơn hàng gần đây</h3>
@@ -205,8 +247,10 @@
                             <div id="order-status-legend" class="mt-1 grid grid-cols-2 gap-1 text-xs"></div>
                         </div>
                         <div class="bg-white rounded-lg shadow p-3 border-t-3 border-amber-400">
-                            <h3 class="font-bold text-gray-700 mb-2 text-xs">👑 Top 10 khách hàng</h3>
-                            <div id="top-customers-list" class="space-y-2 max-h-48 overflow-y-auto text-xs"></div>
+                            <h3 class="font-bold text-gray-700 mb-1 text-xs text-center">👑 Top 10 khách hàng mua nhiều nhất</h3>
+                            <div style="height: 200px;">
+                                <canvas id="topCustomersChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -320,24 +364,6 @@
                                     <p id="category-total-value" class="text-xl font-bold">0đ</p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Biểu đồ thống kê danh mục -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-4">
-                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-blue-500">
-                            <h3 class="font-bold text-gray-700 mb-2 text-xs flex items-center gap-1">📊 Phân bố sản phẩm</h3>
-                            <div class="flex justify-center">
-                                <canvas id="categoryDistributionChart" width="30" height="30"></canvas>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-green-500">
-                            <h3 class="font-bold text-gray-700 mb-2 text-xs flex items-center gap-1">📈 Tồn kho theo danh mục</h3>
-                            <canvas id="categoryStockChart" height="120"></canvas>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-purple-500">
-                            <h3 class="font-bold text-gray-700 mb-2 text-xs flex items-center gap-1">💵 Giá trị tồn kho</h3>
-                            <canvas id="categoryValueChart" height="120"></canvas>
                         </div>
                     </div>
 
@@ -1324,40 +1350,59 @@
 
         // Dashboard
         let charts = {};
-        let startDate = ''; // Ngày bắt đầu lọc
-        let endDate = '';   // Ngày kết thúc lọc
+        let currentYear = new Date().getFullYear();
+        let currentMonth = 'all';
 
-        // Hàm lọc dashboard theo khoảng ngày
-        function filterByDateRange() {
-            startDate = document.getElementById('filter-start-date').value;
-            endDate = document.getElementById('filter-end-date').value;
+        // Year filter
+        function setYearFilter(year) {
+            currentYear = year;
+            document.querySelectorAll('.year-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
+            document.querySelector(`.year-filter-btn[data-year="${year}"]`).classList.add('bg-blue-500', 'text-white');
             loadDashboard();
         }
 
-        // Hàm xóa bộ lọc ngày
-        function resetDateFilter() {
-            startDate = '';
-            endDate = '';
-            document.getElementById('filter-start-date').value = '';
-            document.getElementById('filter-end-date').value = '';
+        // Month filter
+        function setMonthFilter(month) {
+            currentMonth = month;
+            document.querySelectorAll('.month-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
+            document.querySelector(`.month-filter-btn[data-month="${month}"]`).classList.add('bg-blue-500', 'text-white');
+            loadDashboard();
+        }
+
+        // Reset all filters
+        function resetAllFilters() {
+            currentYear = new Date().getFullYear();
+            currentMonth = 'all';
+            document.querySelectorAll('.year-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
+            document.querySelector(`.year-filter-btn[data-year="${currentYear}"]`)?.classList.add('bg-blue-500', 'text-white');
+            document.querySelectorAll('.month-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
+            document.querySelector('.month-filter-btn[data-month="all"]').classList.add('bg-blue-500', 'text-white');
             loadDashboard();
         }
 
         async function loadDashboard() {
             try {
-                let url = '/admin/dashboard';
-                const params = [];
-                if (startDate) params.push(`startDate=${startDate}`);
-                if (endDate) params.push(`endDate=${endDate}`);
-                if (params.length > 0) url += '?' + params.join('&');
-
-                const data = await apiCall(url);
+                let startDate = '', endDate = '';
+                if (currentMonth === 'all') {
+                    startDate = `${currentYear}-01-01`;
+                    endDate = `${currentYear}-12-31`;
+                } else {
+                    const month = String(currentMonth).padStart(2, '0');
+                    startDate = `${currentYear}-${month}-01`;
+                    endDate = `${currentYear}-${month}-${new Date(currentYear, currentMonth, 0).getDate()}`;
+                }
+                
+                let queryParams = [];
+                if (startDate) queryParams.push(`startDate=${startDate}`);
+                if (endDate) queryParams.push(`endDate=${endDate}`);
+                const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+                
+                const data = await apiCall('/admin/dashboard' + queryString);
                 if (!data.success) return;
                 const s = data.data.stats;
                 document.getElementById('stat-revenue').textContent = formatPrice(s.total_revenue);
                 document.getElementById('stat-orders').textContent = s.total_orders;
                 document.getElementById('stat-customers').textContent = s.total_customers;
-                // Hiển thị số lượng sản phẩm đã bán thực tế
                 document.getElementById('stat-products-sold').textContent = s.total_sold || 0;
 
                 // Recent orders
@@ -1379,10 +1424,10 @@
                 const maxSold = Math.max(...data.data.top_products.map(p => p.total_sold), 1);
                 const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899'];
                 const productsHtml = data.data.top_products.map((p, i) => `
-                    <div class="flex items-center gap-2 text-sm">
-                        <span class="w-16 truncate font-medium">${p.ten_san_pham.substring(0,8)}...</span>
+                    <div class="flex items-center gap-2 text-sm mb-2">
+                        <span class="w-32 truncate font-medium text-gray-700" title="${p.ten_san_pham}">${p.ten_san_pham}</span>
                         <div class="flex-1 bg-gray-200 rounded-full h-5 relative">
-                            <div class="h-5 rounded-full flex items-center justify-end pr-2 text-white text-xs font-bold" style="width: ${Math.max((p.total_sold/maxSold)*100, 10)}%; background: ${colors[i]}">
+                            <div class="h-5 rounded-full flex items-center justify-end pr-2 text-white text-xs font-bold" style="width: ${Math.max((p.total_sold/maxSold)*100, 15)}%; background: ${colors[i]}">
                                 ${p.total_sold}
                             </div>
                         </div>
@@ -1396,6 +1441,7 @@
         }
 
         function drawCharts(data) {
+            console.log('drawCharts called with data:', data);
             // Kiểm tra data hợp lệ
             if (!data || !data.stats) {
                 console.error('Invalid data for charts');
@@ -1421,18 +1467,30 @@
                 options: { circumference: 180, rotation: -90, cutout: '75%', plugins: { legend: { display: false }, tooltip: { enabled: false } } }
             });
 
-            // 2. Revenue Chart (Bar) - Dữ liệu thực từ database
-            const months = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
+            // 2. Revenue Chart (Bar) - Dữ liệu thực từ database (12 tháng gần nhất)
+            // Tạo labels cho 12 tháng gần nhất
+            const now = new Date();
+            const last12Months = [];
+            const last12MonthsLabels = [];
+            for (let i = 11; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                last12Months.push(monthKey);
+                last12MonthsLabels.push(`T${d.getMonth() + 1}/${d.getFullYear().toString().slice(-2)}`);
+            }
+            
             const revenueData = new Array(12).fill(0);
             const planData = new Array(12).fill(50000000);
             data.monthly_revenue?.forEach(m => {
-                const monthIndex = parseInt(m.month.split('-')[1]) - 1;
-                revenueData[monthIndex] = parseFloat(m.revenue) || 0;
+                const idx = last12Months.indexOf(m.month);
+                if (idx !== -1) {
+                    revenueData[idx] = parseFloat(m.revenue) || 0;
+                }
             });
             charts.revenue = new Chart(document.getElementById('revenueChart'), {
                 type: 'bar',
                 data: {
-                    labels: months,
+                    labels: last12MonthsLabels,
                     datasets: [
                         { label: 'Thực tế', data: revenueData, backgroundColor: '#3b82f6' },
                         { label: 'Kế hoạch', data: planData, backgroundColor: '#94a3b8' }
@@ -1442,6 +1500,7 @@
             });
 
             // 3. Growth Chart (Line) - Tính tăng trưởng khách hàng theo tháng
+            const months = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
             const growthData = new Array(12).fill(0);
             // Tính % tăng trưởng dựa trên số khách hàng hiện tại
             const baseCustomers = Math.max(data.stats.total_customers - 5, 1);
@@ -1511,41 +1570,203 @@
                 <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500"></span>Đã hủy: ${statusData.da_huy}</div>
             `;
 
-            // 6. Top 10 Customers List (dạng danh sách với mini chart)
+            // 6. Top 10 Customers Chart (Horizontal Bar) - Gradient colors like the reference image
             const topCustomers = data.top_customers || [];
-            const maxSpent = Math.max(...topCustomers.map(c => c.total_spent || 0), 1);
+            const customerLabels = topCustomers.map(c => c.ho_ten || c.email || 'Khách hàng');
+            const customerSpent = topCustomers.map(c => parseFloat(c.total_spent) || 0);
             
-            const topCustomersHtml = topCustomers.slice(0, 10).map((customer, index) => {
-                const percent = ((customer.total_spent || 0) / maxSpent * 100).toFixed(0);
-                const isUp = Math.random() > 0.3; // Giả lập xu hướng tăng/giảm
-                const changePercent = (Math.random() * 5).toFixed(2);
-                const colors = ['#f59e0b', '#3b82f6', '#10b981', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#6366f1'];
-                const color = colors[index % colors.length];
-                
-                return `
-                    <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition">
-                        <div class="flex items-center gap-2 flex-1 min-w-0">
-                            <span class="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background: ${color}">${index + 1}</span>
-                            <div class="min-w-0 flex-1">
-                                <p class="font-semibold text-gray-800 truncate">${customer.ho_ten || 'Khách hàng'}</p>
-                                <p class="text-gray-400 text-xs truncate">${customer.total_orders || 0} đơn hàng</p>
+            // Gradient colors from green to orange/brown like the reference image
+            const gradientColors = [
+                '#22c55e', // Green (highest)
+                '#4ade80', 
+                '#86efac',
+                '#a3e635',
+                '#bef264',
+                '#d9f99d',
+                '#fde047',
+                '#fdba74',
+                '#fb923c',
+                '#c2410c'  // Brown/Orange (lowest)
+            ];
+            
+            charts.topCustomers = new Chart(document.getElementById('topCustomersChart'), {
+                type: 'bar',
+                data: {
+                    labels: customerLabels,
+                    datasets: [{
+                        label: 'Tổng chi tiêu',
+                        data: customerSpent,
+                        backgroundColor: gradientColors.slice(0, customerLabels.length),
+                        borderRadius: 0,
+                        barThickness: 18
+                    }]
+                },
+                options: { 
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatPrice(context.raw);
+                                }
+                            }
+                        },
+                        // Plugin để hiển thị giá trị ở cuối thanh
+                        datalabels: {
+                            display: false
+                        }
+                    },
+                    scales: { 
+                        x: { 
+                            display: false,
+                            grid: { display: false }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 10, weight: 'bold' },
+                                color: '#374151'
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'customLabels',
+                    afterDatasetsDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        chart.data.datasets.forEach((dataset, i) => {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach((bar, index) => {
+                                const value = dataset.data[index];
+                                const displayValue = (value / 1000000).toFixed(2);
+                                ctx.fillStyle = '#374151';
+                                ctx.font = 'bold 10px Arial';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText(displayValue, bar.x + 5, bar.y);
+                            });
+                        });
+                    }
+                }]
+            });
+
+            // 7. News Stats Chart (Doughnut) - Tin tức theo danh mục
+            const newsStats = data.news_stats || [];
+            const newsLabels = newsStats.map(n => n.danh_muc || 'Khác');
+            const newsData = newsStats.map(n => parseInt(n.so_bai) || 0);
+            const newsColors = ['#ec4899', '#8b5cf6', '#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4'];
+            
+            if (document.getElementById('newsChart')) {
+                charts.news = new Chart(document.getElementById('newsChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: newsLabels,
+                        datasets: [{
+                            data: newsData,
+                            backgroundColor: newsColors.slice(0, newsLabels.length)
+                        }]
+                    },
+                    options: { 
+                        responsive: true,
+                        plugins: { 
+                            legend: { position: 'right', labels: { font: { size: 10 } } }
+                        }
+                    }
+                });
+            }
+
+            // 8. News Monthly Chart (Stacked Bar) - Số lượng bài viết theo tháng và danh mục
+            const newsMonthlyStats = data.news_monthly_stats || [];
+            
+            // Lấy danh sách tháng và danh mục unique
+            const uniqueMonths = [...new Set(newsMonthlyStats.map(n => n.thang))].sort();
+            const uniqueCategories = [...new Set(newsMonthlyStats.map(n => n.danh_muc || 'Khác'))];
+            
+            // Tạo labels cho tháng (T1/25 format)
+            const monthLabels = uniqueMonths.map(m => {
+                const [year, month] = m.split('-');
+                return `T${parseInt(month)}/${year.slice(2)}`;
+            });
+            
+            // Màu cho từng danh mục tin tức
+            const newsCategoryColors = {
+                'Công nghệ': '#3b82f6',
+                'Điện thoại': '#f59e0b', 
+                'Laptop': '#6b7280',
+                'Phụ kiện': '#22c55e',
+                'Khuyến mãi': '#ec4899',
+                'Tin tức': '#8b5cf6',
+                'Khác': '#06b6d4'
+            };
+            
+            // Tạo datasets cho từng danh mục
+            const datasets = uniqueCategories.map((category, idx) => {
+                const dataByMonth = uniqueMonths.map(month => {
+                    const found = newsMonthlyStats.find(n => n.thang === month && (n.danh_muc || 'Khác') === category);
+                    return found ? found.so_bai : 0;
+                });
+                return {
+                    label: category,
+                    data: dataByMonth,
+                    backgroundColor: newsCategoryColors[category] || newsColors[idx % newsColors.length]
+                };
+            });
+            
+            if (document.getElementById('newsViewsChart')) {
+                charts.newsViews = new Chart(document.getElementById('newsViewsChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: monthLabels,
+                        datasets: datasets
+                    },
+                    options: { 
+                        responsive: true,
+                        plugins: { 
+                            legend: { 
+                                display: true,
+                                position: 'top',
+                                labels: { font: { size: 10 } }
+                            }
+                        },
+                        scales: { 
+                            x: { stacked: true },
+                            y: { stacked: true, beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // 9. Top Rated Products - Render như hình mẫu với progress bar
+            const topRatedProducts = data.top_rated_products || [];
+            console.log('Top rated products:', topRatedProducts);
+            const topRatedContainer = document.getElementById('top-rated-products');
+            if (topRatedContainer && topRatedProducts.length > 0) {
+                const maxRating = 5;
+                topRatedContainer.innerHTML = topRatedProducts.map((p, idx) => {
+                    const rating = parseFloat(p.diem_trung_binh) || 0;
+                    const percent = (rating / maxRating) * 100;
+                    return `
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-white font-bold text-sm">${idx + 1}</div>
+                            <div class="flex-1">
+                                <div class="font-semibold text-gray-800 text-sm truncate" title="${p.ten_san_pham}">${p.ten_san_pham}</div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 h-3 rounded-full" style="width: ${percent}%"></div>
+                                    </div>
+                                    <span class="text-yellow-500 font-bold text-sm">⭐ ${rating}</span>
+                                    <span class="text-gray-500 text-xs">(${p.so_danh_gia})</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <svg class="w-12 h-6" viewBox="0 0 50 20">
-                                <polyline fill="none" stroke="${isUp ? '#10b981' : '#ef4444'}" stroke-width="2" 
-                                    points="${isUp ? '0,18 10,14 20,16 30,10 40,12 50,4' : '0,4 10,8 20,6 30,12 40,10 50,18'}"/>
-                            </svg>
-                            <div class="text-right min-w-[70px]">
-                                <p class="${isUp ? 'text-green-500' : 'text-red-500'} text-xs font-semibold">${isUp ? '+' : '-'}${changePercent}%</p>
-                                <p class="text-gray-700 font-bold text-xs">${formatPrice(customer.total_spent || 0)}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            document.getElementById('top-customers-list').innerHTML = topCustomersHtml || '<p class="text-gray-400 text-center py-4">Chưa có dữ liệu</p>';
+                    `;
+                }).join('');
+            } else if (topRatedContainer) {
+                topRatedContainer.innerHTML = '<p class="text-gray-500 text-center text-sm">Chưa có đánh giá</p>';
+            }
         }
 
         // Products
@@ -1740,43 +1961,10 @@
             Object.values(categoryCharts).forEach(c => c && c.destroy());
             
             const labels = categories.map(c => c.ten_danh_muc);
-            const productCounts = categories.map(c => parseInt(c.so_san_pham) || 0);
-            const stockCounts = categories.map(c => c.tong_ton_kho);
-            const stockValues = categories.map(c => c.gia_tri_ton_kho);
             const revenues = categories.map(c => c.doanh_thu);
             const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
             
-            // 1. Biểu đồ tròn - Phân bố sản phẩm
-            categoryCharts.distribution = new Chart(document.getElementById('categoryDistributionChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{ data: productCounts, backgroundColor: colors.slice(0, labels.length), borderWidth: 3, borderColor: '#fff' }]
-                },
-                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 10 } } } }
-            });
-            
-            // 2. Biểu đồ cột - Tồn kho theo danh mục
-            categoryCharts.stock = new Chart(document.getElementById('categoryStockChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ label: 'Số lượng tồn kho', data: stockCounts, backgroundColor: colors.slice(0, labels.length), borderRadius: 8 }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-            });
-            
-            // 3. Biểu đồ cột ngang - Giá trị tồn kho
-            categoryCharts.value = new Chart(document.getElementById('categoryValueChart'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{ label: 'Giá trị (VNĐ)', data: stockValues, backgroundColor: colors.slice(0, labels.length), borderRadius: 8 }]
-                },
-                options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { callback: v => (v/1000000).toFixed(0) + 'M' } } } }
-            });
-            
-            // 4. Biểu đồ cột - Doanh thu theo danh mục
+            // Biểu đồ cột - Doanh thu theo danh mục
             categoryCharts.revenue = new Chart(document.getElementById('categoryRevenueBarChart'), {
                 type: 'bar',
                 data: {
@@ -2987,3 +3175,5 @@
     </script>
 </body>
 </html>
+
+
