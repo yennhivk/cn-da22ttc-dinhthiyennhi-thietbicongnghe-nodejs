@@ -7,6 +7,7 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://accounts.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http://localhost:3300; frame-src 'self' https://accounts.google.com;"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/seasonal-effects.css">
     <style>
         @keyframes blink {
             0%, 100% { opacity: 1; }
@@ -86,11 +87,17 @@
 <body class="bg-gray-50">
     <!-- Promotion Popup Modal -->
     <div id="promotionPopup" class="popup-modal">
-        <div class="popup-content">
-            <div class="popup-close" onclick="closePopup()">&times;</div>
-            <a href="pages/products.html">
-                <img src="images/Screenshot_2025-11-21_151151-removebg-preview (1).png" alt="Khuyến mãi đặc biệt" class="cursor-pointer hover:opacity-90 transition">
-            </a>
+        <div class="popup-content" style="display: flex; align-items: center; gap: 10px;">
+            <!-- Cành mai bên trái -->
+            <img src="images/y-nghia-cua-hoa-mai-1-removebg-preview.png" alt="Hoa mai" class="mai-decoration-left" style="height: 180px; width: auto; object-fit: contain;">
+            <div style="position: relative;">
+                <div class="popup-close" onclick="closePopup()" style="top: -10px; right: -10px;">&times;</div>
+                <a href="pages/products.html">
+                    <img src="images/Screenshot_2025-11-21_151151-removebg-preview (1).png" alt="Khuyến mãi đặc biệt" class="cursor-pointer hover:opacity-90 transition" style="max-height: 80vh;">
+                </a>
+            </div>
+            <!-- Cành mai bên phải -->
+            <img src="images/y-nghia-cua-hoa-mai-1-removebg-preview.png" alt="Hoa mai" class="mai-decoration-right" style="height: 180px; width: auto; object-fit: contain; transform: scaleX(-1);">
         </div>
     </div>
 
@@ -1006,11 +1013,11 @@
             
             <!-- Brand Filter -->
             <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button class="px-4 py-2 bg-red-600 text-white rounded-full font-semibold whitespace-nowrap">Tất cả</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">ASUS ROG</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">MSI</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">Gigabyte</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">Custom Build</button>
+                <a href="pages/products.html?category=pc" class="px-4 py-2 bg-red-600 text-white rounded-full font-semibold whitespace-nowrap hover:bg-red-700 transition">Tất cả</a>
+                <a href="pages/products.html?category=pc&brand=asus" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">ASUS ROG</a>
+                <a href="pages/products.html?category=pc&brand=msi" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">MSI</a>
+                <a href="pages/products.html?category=pc&brand=gigabyte" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">Gigabyte</a>
+                <a href="pages/products.html?category=pc&brand=custom" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">Custom Build</a>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="pcGamingProducts"></div>
@@ -1027,11 +1034,11 @@
             
             <!-- Brand Filter -->
             <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button class="px-4 py-2 bg-red-600 text-white rounded-full font-semibold whitespace-nowrap">Tất cả</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">ASUS</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">MSI</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">Acer Predator</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">Lenovo Legion</button>
+                <a href="pages/products.html?category=laptop" class="px-4 py-2 bg-red-600 text-white rounded-full font-semibold whitespace-nowrap hover:bg-red-700 transition">Tất cả</a>
+                <a href="pages/products.html?category=laptop&brand=asus" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">ASUS</a>
+                <a href="pages/products.html?category=laptop&brand=msi" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">MSI</a>
+                <a href="pages/products.html?category=laptop&brand=acer" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">Acer Predator</a>
+                <a href="pages/products.html?category=laptop&brand=lenovo" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">Lenovo Legion</a>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="laptopGamingProducts"></div>
@@ -1048,11 +1055,11 @@
             
             <!-- Brand Filter -->
             <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button class="px-4 py-2 bg-red-600 text-white rounded-full font-semibold whitespace-nowrap">Tất cả</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">Logitech</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">Razer</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">SteelSeries</button>
-                <button class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-blue-400 whitespace-nowrap">Corsair</button>
+                <a href="pages/products.html?category=mouse" class="px-4 py-2 bg-red-600 text-white rounded-full font-semibold whitespace-nowrap hover:bg-red-700 transition">Tất cả</a>
+                <a href="pages/products.html?category=mouse&brand=logitech" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">Logitech</a>
+                <a href="pages/products.html?category=mouse&brand=razer" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">Razer</a>
+                <a href="pages/products.html?category=mouse&brand=steelseries" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">SteelSeries</a>
+                <a href="pages/products.html?category=mouse&brand=corsair" class="px-4 py-2 bg-yellow-400 text-gray-700 rounded-full font-semibold hover:bg-yellow-500 whitespace-nowrap transition">Corsair</a>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4" id="gamingMouseProducts"></div>
@@ -2173,6 +2180,9 @@
     <!-- Chatbot Widget -->
     <link rel="stylesheet" href="css/chatbot.css">
     <script src="js/chatbot.js"></script>
+    
+    <!-- Seasonal Effects - Hoa Mai & Tuyết Rơi -->
+    <script src="js/seasonal-effects.js"></script>
 </body>
 </html>
 
