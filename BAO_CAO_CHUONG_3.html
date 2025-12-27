@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Báo cáo Chương 3 - Yến Nhi Tech</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13pt;
+            line-height: 1.5;
+            margin: 2.5cm 2cm 2cm 3cm;
+            text-align: justify;
+        }
+        h1 {
+            font-size: 16pt;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+        }
+        h2 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 18pt;
+            margin-bottom: 6pt;
+        }
+        h3 {
+            font-size: 13pt;
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 12pt;
+            margin-bottom: 6pt;
+        }
+        h4 {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-top: 12pt;
+            margin-bottom: 6pt;
+        }
+        p {
+            text-indent: 1.27cm;
+            margin: 6pt 0;
+        }
+        p.no-indent {
+            text-indent: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12pt 0;
+            font-size: 12pt;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 6pt 8pt;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .center {
+            text-align: center;
+        }
+        .figure {
+            text-align: center;
+            font-style: italic;
+            margin: 12pt 0;
+        }
+        ul, ol {
+            margin-left: 1cm;
+        }
+        li {
+            margin: 3pt 0;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 11pt;
+            background-color: #f5f5f5;
+            padding: 2pt 4pt;
+        }
+        pre {
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            background-color: #f5f5f5;
+            padding: 10pt;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>CHƯƠNG 3: PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG</h1>
+
+<h2>3.1. MÔ TẢ HỆ THỐNG</h2>
+
+<h3>3.1.1. Tổng quan hệ thống</h3>
+
+<p>Website Yến Nhi Tech là hệ thống web fullstack được xây dựng theo kiến trúc Client-Server, bao gồm:</p>
+
+<p class="no-indent"><span class="bold">Phía Client (Frontend):</span></p>
+<ul>
+    <li><span class="bold">Giao diện người dùng (Customer Interface):</span> Trang chủ, danh sách sản phẩm, chi tiết sản phẩm, giỏ hàng, thanh toán, đăng ký/đăng nhập, tin tức, liên hệ</li>
+    <li><span class="bold">Giao diện quản trị (Admin Interface):</span> Dashboard thống kê, quản lý sản phẩm, quản lý đơn hàng, quản lý khách hàng, quản lý tin tức, quản lý danh mục</li>
+</ul>
+
+<p class="no-indent"><span class="bold">Phía Server (Backend):</span></p>
+<ul>
+    <li><span class="bold">RESTful API Server:</span> Xử lý nghiệp vụ, xác thực JWT, truy vấn dữ liệu, tích hợp thanh toán MoMo</li>
+    <li><span class="bold">Database Server:</span> Lưu trữ dữ liệu MySQL với 19 bảng quan hệ</li>
+</ul>
+
+<h3>3.1.2. Kiến trúc hệ thống</h3>
+
+<p class="figure">Hình 3.2: Kiến trúc hệ thống</p>
+
+<pre>
+┌─────────────────────────────────────────────┐
+│              CLIENT LAYER                   │
+│ ┌──────────┐ ┌──────────┐ ┌──────────┐     │
+│ │ Customer │ │  Admin   │ │  Mobile  │     │
+│ │ Website  │ │Dashboard │ │ Browser  │     │
+│ └──────────┘ └──────────┘ └──────────┘     │
+│      HTML5 / CSS3 / JS / TailwindCSS       │
+└─────────────────────────────────────────────┘
+                      │
+                      ▼ HTTP/REST API
+┌─────────────────────────────────────────────┐
+│     SERVER LAYER (Node.js + Express.js)     │
+│ ┌─────────────────────────────────────────┐ │
+│ │ Middleware: CORS|Session|JWT|Multer     │ │
+│ ├─────────────────────────────────────────┤ │
+│ │ API: /auth|/products|/admin|/payment    │ │
+│ ├─────────────────────────────────────────┤ │
+│ │ Services: Nodemailer|MoMo|Google OAuth  │ │
+│ └─────────────────────────────────────────┘ │
+└─────────────────────────────────────────────┘
+                      │
+                      ▼ MySQL Protocol
+┌─────────────────────────────────────────────┐
+│            DATA LAYER (MySQL)               │
+│ ┌─────────────────────────────────────────┐ │
+│ │ tai_khoan|san_pham|don_hang|thanh_toan  │ │
+│ │ danh_muc|gio_hang|danh_gia|tin_tuc...   │ │
+│ └─────────────────────────────────────────┘ │
+│            19 bảng - UTF8MB4                │
+└─────────────────────────────────────────────┘
+</pre>
+
+<h4>1. Client Layer (Lớp giao diện người dùng)</h4>
+
+<p>Đây là lớp tương tác trực tiếp với người sử dụng, bao gồm:</p>
+
+<p><span class="bold">Customer Website:</span> Website dành cho khách hàng, được xây dựng bằng HTML, CSS, JavaScript và TailwindCSS để tạo giao diện trực quan, hiện đại. Các trang chính bao gồm: Trang chủ (index.html), Danh sách sản phẩm (products.html), Chi tiết sản phẩm (product-detail.html), Giỏ hàng (cart.html), Thanh toán (checkout.html), Đăng nhập/Đăng ký (login.html, register.html), Tin tức (news.html, articles.html), Liên hệ (contact.html).</p>
+
+<p><span class="bold">Admin Dashboard:</span> Giao diện quản trị cho nhân viên và quản lý cửa hàng (admin.html), cho phép: Xem thống kê doanh thu, đơn hàng; Quản lý sản phẩm và danh mục; Quản lý đơn hàng và trạng thái; Quản lý tài khoản khách hàng; Quản lý tin tức và bài viết.</p>
+
+<p><span class="bold">Mobile Browser (Responsive):</span> Giao diện tương thích trên thiết bị di động nhờ TailwindCSS, đảm bảo trải nghiệm người dùng thống nhất trên nhiều kích thước màn hình.</p>
+
+<p>Các thành phần ở lớp này giao tiếp với server thông qua HTTP/REST API.</p>
+
+<h4>2. Server Layer (Node.js + Express.js)</h4>
+
+<p>Lớp server là trung tâm xử lý nghiệp vụ và điều phối dữ liệu của toàn bộ hệ thống, được xây dựng trên nền tảng Node.js kết hợp với Express.js nhằm triển khai các RESTful API một cách linh hoạt và hiệu quả.</p>
+
+<p class="no-indent"><span class="bold">Các thành phần hỗ trợ quan trọng:</span></p>
+<ul>
+    <li><span class="bold">CORS:</span> Cho phép frontend truy cập API từ các domain khác nhau</li>
+    <li><span class="bold">Session (express-session):</span> Quản lý phiên làm việc của người dùng</li>
+    <li><span class="bold">JWT Authentication (jsonwebtoken):</span> Xác thực và phân quyền người dùng thông qua cơ chế token</li>
+    <li><span class="bold">Multer:</span> Upload hình ảnh cho sản phẩm và avatar người dùng</li>
+    <li><span class="bold">Bcrypt:</span> Mã hóa mật khẩu người dùng</li>
+    <li><span class="bold">Nodemailer:</span> Gửi email xác thực OTP và thông báo</li>
+    <li><span class="bold">Passport.js:</span> Hỗ trợ đăng nhập qua Google OAuth 2.0</li>
+    <li><span class="bold">Axios:</span> Tích hợp thanh toán MoMo</li>
+</ul>
+
+<p class="no-indent"><span class="bold">Các module API chính:</span></p>
+<ul>
+    <li><code>/api/auth</code> - Xác thực người dùng</li>
+    <li><code>/api/products</code> - Quản lý sản phẩm</li>
+    <li><code>/api/admin</code> - Chức năng quản trị</li>
+    <li><code>/api/payment</code> - Thanh toán MoMo</li>
+    <li><code>/api/news</code> - Tin tức</li>
+    <li><code>/api/articles</code> - Bài viết</li>
+    <li><code>/api/contact</code> - Liên hệ</li>
+    <li><code>/api/chatbot</code> - Chatbot hỗ trợ</li>
+    <li><code>/api/notifications</code> - Thông báo</li>
+</ul>
+
+<h4>3. Data Layer (MySQL)</h4>
+
+<p>Đây là lớp lưu trữ dữ liệu của hệ thống, sử dụng hệ quản trị cơ sở dữ liệu MySQL với character set utf8mb4 hỗ trợ tiếng Việt.</p>
+
+<p class="no-indent"><span class="bold">Các bảng chính:</span></p>
+
+<table>
+    <tr>
+        <th>STT</th>
+        <th>Tên bảng</th>
+        <th>Mô tả</th>
+    </tr>
+    <tr><td>1</td><td>tai_khoan</td><td>Lưu thông tin tài khoản người dùng</td></tr>
+    <tr><td>2</td><td>danh_muc_san_pham</td><td>Phân loại danh mục sản phẩm</td></tr>
+    <tr><td>3</td><td>san_pham</td><td>Lưu thông tin sản phẩm</td></tr>
+    <tr><td>4</td><td>anh_san_pham</td><td>Hình ảnh sản phẩm</td></tr>
+    <tr><td>5</td><td>don_hang</td><td>Quản lý đơn hàng</td></tr>
+    <tr><td>6</td><td>chi_tiet_don_hang</td><td>Chi tiết từng đơn hàng</td></tr>
+    <tr><td>7</td><td>thanh_toan</td><td>Thông tin thanh toán</td></tr>
+    <tr><td>8</td><td>danh_gia</td><td>Đánh giá sản phẩm</td></tr>
+    <tr><td>9</td><td>lich_su_chatbot</td><td>Lịch sử trò chuyện chatbot</td></tr>
+    <tr><td>10</td><td>gio_hang</td><td>Giỏ hàng người dùng</td></tr>
+    <tr><td>11</td><td>chi_tiet_gio_hang</td><td>Chi tiết giỏ hàng</td></tr>
+    <tr><td>12</td><td>reset_password</td><td>Quản lý đặt lại mật khẩu</td></tr>
+    <tr><td>13</td><td>lien_he</td><td>Thông tin liên hệ</td></tr>
+    <tr><td>14</td><td>quang_cao</td><td>Quản lý quảng cáo</td></tr>
+    <tr><td>15</td><td>tin_tuc</td><td>Nội dung tin tức</td></tr>
+    <tr><td>16</td><td>du_lieu_tim_kiem</td><td>Lịch sử tìm kiếm</td></tr>
+    <tr><td>17</td><td>khuyen_mai</td><td>Chương trình khuyến mãi</td></tr>
+    <tr><td>18</td><td>hoa_don</td><td>Hóa đơn</td></tr>
+    <tr><td>19</td><td>chi_tiet_hoa_don</td><td>Chi tiết hóa đơn</td></tr>
+</table>
+
+<p>Server giao tiếp với MySQL thông qua thư viện mysql2 để thực hiện các thao tác CRUD.</p>
+
+<h3>3.1.3. Cấu trúc dự án</h3>
+
+<p class="figure">Hình 3.3: Cấu trúc dự án</p>
+
+<pre>
+yennhi-tech/
+├── backend/
+│   ├── config/
+│   │   ├── database.js      # Cấu hình kết nối MySQL
+│   │   ├── mailer.js        # Cấu hình gửi email OTP
+│   │   ├── momo.js          # Cấu hình thanh toán MoMo
+│   │   └── passport.js      # Cấu hình Google OAuth
+│   ├── routes/
+│   │   ├── auth.js          # API xác thực
+│   │   ├── products.js      # API sản phẩm
+│   │   ├── admin.js         # API quản trị
+│   │   ├── payment.js       # API thanh toán
+│   │   ├── news.js          # API tin tức
+│   │   ├── articles.js      # API bài viết
+│   │   ├── contact.js       # API liên hệ
+│   │   ├── chatbot.js       # API chatbot
+│   │   └── notifications.js # API thông báo
+│   ├── images/              # Hình ảnh sản phẩm
+│   ├── uploads/             # Upload avatar, bài viết
+│   ├── scripts/             # Scripts hỗ trợ
+│   ├── server.js            # Entry point
+│   ├── package.json         # Dependencies
+│   └── .env                 # Biến môi trường
+├── frontend/
+│   ├── css/
+│   │   ├── style.css        # CSS chính
+│   │   └── chatbot.css      # CSS chatbot
+│   ├── js/
+│   │   ├── main.js          # JavaScript chính
+│   │   ├── auth.js          # Xử lý xác thực
+│   │   ├── products.js      # Xử lý sản phẩm
+│   │   ├── cart.js          # Giỏ hàng
+│   │   └── ...              # Các file JS khác
+│   ├── pages/
+│   │   ├── admin.html       # Trang quản trị
+│   │   ├── products.html    # Danh sách sản phẩm
+│   │   ├── cart.html        # Giỏ hàng
+│   │   ├── checkout.html    # Thanh toán
+│   │   ├── login.html       # Đăng nhập
+│   │   └── ...              # Các trang khác
+│   ├── includes/            # Components tái sử dụng
+│   ├── images/              # Hình ảnh giao diện
+│   └── index.html           # Trang chủ
+├── CSDL_DoAnCN.sql          # Script khởi tạo database
+└── README.md                # Mô tả dự án
+</pre>
+
+<p><span class="bold">Mô tả:</span> Cấu trúc thư mục của dự án Yến Nhi Tech được tổ chức theo hướng tách biệt rõ ràng giữa frontend và backend, giúp hệ thống dễ phát triển, bảo trì và mở rộng.</p>
+
+<p>Thư mục <span class="bold">backend</span> đảm nhiệm toàn bộ xử lý nghiệp vụ và dữ liệu, trong đó thư mục config chứa các cấu hình quan trọng như kết nối cơ sở dữ liệu, gửi email OTP, tích hợp thanh toán MoMo và xác thực Google OAuth. Thư mục routes định nghĩa các API theo từng nghiệp vụ cụ thể như xác thực, quản lý sản phẩm, giỏ hàng, đơn hàng, thanh toán và tin tức.</p>
+
+<p>Thư mục <span class="bold">frontend</span> chịu trách nhiệm hiển thị giao diện người dùng, bao gồm khu vực admin dành cho quản trị với dashboard, quản lý sản phẩm, đơn hàng và khách hàng, cùng các trang giao diện phía người dùng như trang chủ, sản phẩm, giỏ hàng, thanh toán, đăng nhập và đăng ký.</p>
+
+<h2>3.2. XÁC ĐỊNH CÁC YÊU CẦU CHỨC NĂNG CỦA HỆ THỐNG</h2>
+
+<h3>3.2.1. Sơ đồ Usecase</h3>
+
+<p class="figure">Hình 3.4: Sơ đồ UseCase</p>
+
+<p><span class="bold">Mô tả:</span> Sơ đồ mô tả ba nhóm người dùng chính: Khách vãng lai, Thành viên, và Admin, mỗi nhóm có quyền truy cập các chức năng khác nhau trong hệ thống.</p>
+
+<h4>Khách vãng lai (Guest)</h4>
+<p class="no-indent">Có thể xem các nội dung công khai như:</p>
+<ul>
+    <li>Xem trang chủ</li>
+    <li>Xem danh sách sản phẩm</li>
+    <li>Xem chi tiết sản phẩm</li>
+    <li>Tìm kiếm sản phẩm</li>
+    <li>Xem tin tức, bài viết</li>
+    <li>Xem thông tin liên hệ</li>
+    <li>Đăng ký tài khoản</li>
+</ul>
+
+<h4>Thành viên (Member)</h4>
+<p class="no-indent">Người dùng đã đăng ký được sử dụng thêm các chức năng nâng cao như:</p>
+<ul>
+    <li>Đăng nhập (Email/Password hoặc Google OAuth)</li>
+    <li>Quản lý giỏ hàng (thêm, sửa, xóa sản phẩm)</li>
+    <li>Đặt hàng và thanh toán (COD, MoMo)</li>
+    <li>Xem lịch sử đơn hàng</li>
+    <li>Đánh giá sản phẩm</li>
+    <li>Quản lý thông tin cá nhân</li>
+    <li>Đổi mật khẩu</li>
+    <li>Nhận thông báo</li>
+    <li>Sử dụng chatbot hỗ trợ</li>
+</ul>
+
+<h4>Admin (Quản trị viên)</h4>
+<p class="no-indent">Có quyền quản trị hệ thống, bao gồm:</p>
+<ul>
+    <li>Đăng nhập riêng qua trang admin-login</li>
+    <li>Xem Dashboard thống kê (doanh thu, đơn hàng, sản phẩm, khách hàng)</li>
+    <li>Quản lý sản phẩm (CRUD, upload ảnh, ẩn/hiện)</li>
+    <li>Quản lý danh mục sản phẩm</li>
+    <li>Quản lý đơn hàng (xem, cập nhật trạng thái)</li>
+    <li>Quản lý tài khoản khách hàng (xem, khóa/mở khóa)</li>
+    <li>Quản lý tin tức và bài viết</li>
+    <li>Xem báo cáo thống kê theo tháng, theo danh mục</li>
+</ul>
+
+<h2>3.3. THIẾT KẾ XỬ LÝ HỆ THỐNG</h2>
+
+<h3>3.3.1. Thiết kế API RESTful</h3>
+
+<h4>A. API Xác thực (Authentication) - /api/auth</h4>
+
+<table>
+    <tr>
+        <th>Method</th>
+        <th>Endpoint</th>
+        <th>Mô tả</th>
+    </tr>
+    <tr><td>POST</td><td>/send-register-otp</td><td>Gửi mã OTP xác thực email đăng ký</td></tr>
+    <tr><td>POST</td><td>/verify-register-otp</td><td>Xác thực OTP và tạo tài khoản</td></tr>
+    <tr><td>POST</td><td>/register</td><td>Đăng ký tài khoản (legacy)</td></tr>
+    <tr><td>POST</td><td>/login</td><td>Đăng nhập lấy JWT token</td></tr>
+    <tr><td>POST</td><td>/logout</td><td>Đăng xuất, hủy session</td></tr>
+    <tr><td>GET</td><td>/me</td><td>Lấy thông tin người dùng đang đăng nhập</td></tr>
+    <tr><td>GET</td><td>/verify</td><td>Xác thực JWT token</td></tr>
+    <tr><td>PUT</td><td>/update-profile</td><td>Cập nhật thông tin cá nhân</td></tr>
+    <tr><td>POST</td><td>/upload-avatar</td><td>Upload ảnh đại diện</td></tr>
+    <tr><td>PUT</td><td>/change-password</td><td>Đổi mật khẩu</td></tr>
+    <tr><td>GET</td><td>/google</td><td>Bắt đầu đăng nhập Google OAuth</td></tr>
+    <tr><td>GET</td><td>/google/callback</td><td>Callback từ Google</td></tr>
+    <tr><td>POST</td><td>/admin-login</td><td>Đăng nhập riêng cho Admin</td></tr>
+</table>
+
+<h4>B. API Sản phẩm (Products) - /api/products</h4>
+
+<table>
+    <tr>
+        <th>Method</th>
+        <th>Endpoint</th>
+        <th>Mô tả</th>
+    </tr>
+    <tr><td>GET</td><td>/</td><td>Lấy danh sách sản phẩm (hỗ trợ filter, search, sort)</td></tr>
+    <tr><td>GET</td><td>/:id</td><td>Xem chi tiết sản phẩm</td></tr>
+    <tr><td>GET</td><td>/categories/all</td><td>Lấy tất cả danh mục</td></tr>
+    <tr><td>POST</td><td>/:id/reviews</td><td>Gửi đánh giá sản phẩm (yêu cầu đăng nhập)</td></tr>
+</table>
+
+<h4>C. API Quản trị (Admin) - /api/admin</h4>
+
+<table>
+    <tr>
+        <th>Method</th>
+        <th>Endpoint</th>
+        <th>Mô tả</th>
+    </tr>
+    <tr><td>GET</td><td>/dashboard</td><td>Lấy dữ liệu thống kê Dashboard</td></tr>
+    <tr><td>GET</td><td>/products</td><td>Lấy tất cả sản phẩm (bao gồm ẩn)</td></tr>
+    <tr><td>GET</td><td>/products/:id</td><td>Chi tiết sản phẩm</td></tr>
+    <tr><td>POST</td><td>/products</td><td>Thêm sản phẩm mới</td></tr>
+    <tr><td>PUT</td><td>/products/:id</td><td>Cập nhật sản phẩm</td></tr>
+    <tr><td>DELETE</td><td>/products/:id</td><td>Xóa sản phẩm</td></tr>
+    <tr><td>POST</td><td>/products/:id/images</td><td>Upload ảnh sản phẩm</td></tr>
+    <tr><td>GET</td><td>/categories</td><td>Lấy danh mục</td></tr>
+    <tr><td>POST</td><td>/categories</td><td>Thêm danh mục</td></tr>
+    <tr><td>PUT</td><td>/categories/:id</td><td>Cập nhật danh mục</td></tr>
+    <tr><td>DELETE</td><td>/categories/:id</td><td>Xóa danh mục</td></tr>
+    <tr><td>GET</td><td>/orders</td><td>Danh sách đơn hàng</td></tr>
+    <tr><td>GET</td><td>/orders/stats</td><td>Thống kê đơn hàng</td></tr>
+    <tr><td>GET</td><td>/orders/:id</td><td>Chi tiết đơn hàng</td></tr>
+    <tr><td>PUT</td><td>/orders/:id/status</td><td>Cập nhật trạng thái đơn hàng</td></tr>
+    <tr><td>GET</td><td>/users</td><td>Danh sách tài khoản</td></tr>
+    <tr><td>GET</td><td>/users/:id</td><td>Chi tiết tài khoản</td></tr>
+</table>
+
+<h4>D. API Thanh toán (Payment) - /api/payment</h4>
+
+<table>
+    <tr>
+        <th>Method</th>
+        <th>Endpoint</th>
+        <th>Mô tả</th>
+    </tr>
+    <tr><td>POST</td><td>/momo/create</td><td>Tạo thanh toán MoMo</td></tr>
+    <tr><td>GET</td><td>/momo/callback</td><td>Callback từ MoMo (redirect)</td></tr>
+    <tr><td>POST</td><td>/momo/ipn</td><td>IPN từ MoMo (server-to-server)</td></tr>
+    <tr><td>GET</td><td>/momo/status/:orderId</td><td>Kiểm tra trạng thái thanh toán</td></tr>
+    <tr><td>POST</td><td>/momo/simulate</td><td>Thanh toán giả lập (sandbox)</td></tr>
+</table>
+
+
+<h3>3.3.2. Sơ đồ tuần tự (Sequence Diagram)</h3>
+
+<p class="figure">Hình 3.5: Sơ đồ tuần tự - Quy trình đăng ký tài khoản</p>
+
+<pre>
+┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+│Khách hàng│     │ Frontend │     │ Backend  │     │ Database │     │  Mailer  │
+└────┬─────┘     └────┬─────┘     └────┬─────┘     └────┬─────┘     └────┬─────┘
+     │                │                │                │                │
+     │ 1.Nhập thông tin               │                │                │
+     │───────────────>│                │                │                │
+     │                │ 2.POST /send-otp               │                │
+     │                │───────────────>│                │                │
+     │                │                │ 3.Check email  │                │
+     │                │                │───────────────>│                │
+     │                │                │<───────────────│                │
+     │                │                │ 4.Gửi OTP      │                │
+     │                │                │───────────────────────────────>│
+     │<─────────────────────────────────────────────────────────────────│
+     │                │<───────────────│ 5.Đã gửi OTP   │                │
+     │ 6.Nhập OTP     │                │                │                │
+     │───────────────>│                │                │                │
+     │                │ 7.POST /verify │                │                │
+     │                │───────────────>│                │                │
+     │                │                │ 8.INSERT user  │                │
+     │                │                │───────────────>│                │
+     │                │<───────────────│ 9.Thành công   │                │
+     │<───────────────│10.Chuyển login │                │                │
+     │                │                │                │                │
+</pre>
+
+<p class="figure">Hình 3.6: Sơ đồ tuần tự - Quy trình đăng nhập</p>
+
+<pre>
+┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+│Khách hàng│     │ Frontend │     │ Backend  │     │ Database │
+└────┬─────┘     └────┬─────┘     └────┬─────┘     └────┬─────┘
+     │                │                │                │
+     │ 1.Nhập email/pass              │                │
+     │───────────────>│                │                │
+     │                │ 2.POST /login  │                │
+     │                │───────────────>│                │
+     │                │                │ 3.SELECT user  │
+     │                │                │───────────────>│
+     │                │                │<───────────────│
+     │                │                │ 4.Verify bcrypt│
+     │                │                │────┐           │
+     │                │                │<───┘           │
+     │                │                │ 5.Tạo JWT      │
+     │                │                │────┐           │
+     │                │                │<───┘           │
+     │                │<───────────────│ 6.Token + User │
+     │                │ 7.Lưu token    │                │
+     │                │────┐           │                │
+     │                │<───┘           │                │
+     │<───────────────│ 8.Thành công   │                │
+     │                │                │                │
+</pre>
+
+<p class="figure">Hình 3.7: Sơ đồ tuần tự - Quy trình đặt hàng</p>
+
+<pre>
+┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐
+│Khách hàng│   │ Frontend │   │ Backend  │   │ Database │   │ MoMo API │
+└────┬─────┘   └────┬─────┘   └────┬─────┘   └────┬─────┘   └────┬─────┘
+     │              │              │              │              │
+     │ 1.Thêm giỏ   │              │              │              │
+     │─────────────>│              │              │              │
+     │              │ 2.Lưu local  │              │              │
+     │              │────┐         │              │              │
+     │              │<───┘         │              │              │
+     │ 3.Thanh toán │              │              │              │
+     │─────────────>│              │              │              │
+     │              │ 4.POST order │              │              │
+     │              │─────────────>│              │              │
+     │              │              │ 5.INSERT     │              │
+     │              │              │─────────────>│              │
+     │              │              │<─────────────│              │
+     │              │<─────────────│ 6.Order ID   │              │
+     │              │              │              │              │
+     │              │ [Nếu MoMo]   │              │              │
+     │              │ 7.POST momo  │              │              │
+     │              │─────────────>│              │              │
+     │              │              │ 8.Create pay │              │
+     │              │              │─────────────────────────────>│
+     │              │              │<─────────────────────────────│
+     │              │<─────────────│ 9.Pay URL    │              │
+     │<─────────────│10.Redirect   │              │              │
+     │              │              │              │              │
+</pre>
+
+<h2>3.4. MÔ HÌNH HOẠT ĐỘNG CỦA HỆ THỐNG</h2>
+
+<h3>3.4.1. Quy trình đăng ký tài khoản</h3>
+
+<p class="figure">Hình 3.8: Quy trình đăng ký tài khoản</p>
+
+<pre>
+[Bắt đầu]
+    ↓
+[Khách hàng truy cập trang đăng ký]
+    ↓
+[Nhập thông tin: Tên, Email, Mật khẩu]
+    ↓
+[Hệ thống kiểm tra email đã tồn tại?]
+    ↓ Không
+[Gửi mã OTP đến email]
+    ↓
+[Khách hàng nhập mã OTP]
+    ↓
+[OTP đúng và còn hạn?]
+    ↓ Đúng
+[Tạo tài khoản mới]
+    ↓
+[Gửi email chào mừng]
+    ↓
+[Chuyển đến trang đăng nhập]
+    ↓
+[Kết thúc]
+</pre>
+
+<h3>3.4.2. Quy trình đặt hàng</h3>
+
+<p class="figure">Hình 3.9: Quy trình đặt hàng</p>
+
+<pre>
+[Bắt đầu]
+    ↓
+[Khách hàng duyệt sản phẩm]
+    ↓
+[Thêm sản phẩm vào giỏ hàng]
+    ↓
+[Xem giỏ hàng]
+    ↓
+[Điều chỉnh số lượng (nếu cần)]
+    ↓
+[Tiến hành thanh toán]
+    ↓
+[Đã đăng nhập?]
+    ↓ Có
+[Nhập thông tin giao hàng]
+    ↓
+[Chọn phương thức thanh toán]
+    ├── COD (Thanh toán khi nhận hàng)
+    │       ↓
+    │   [Tạo đơn hàng]
+    │       ↓
+    │   [Hiển thị xác nhận đơn hàng]
+    │
+    └── MoMo
+            ↓
+        [Tạo đơn hàng]
+            ↓
+        [Chuyển đến trang thanh toán MoMo]
+            ↓
+        [Khách hàng thanh toán]
+            ↓
+        [MoMo callback]
+            ↓
+        [Cập nhật trạng thái thanh toán]
+            ↓
+        [Hiển thị kết quả]
+    ↓
+[Kết thúc]
+</pre>
+
+<h3>3.4.3. Quy trình quản lý đơn hàng (Admin)</h3>
+
+<p class="figure">Hình 3.10: Quy trình quản lý đơn hàng</p>
+
+<pre>
+[Bắt đầu]
+    ↓
+[Admin đăng nhập]
+    ↓
+[Truy cập Dashboard]
+    ↓
+[Xem danh sách đơn hàng]
+    ↓
+[Lọc theo trạng thái/tìm kiếm]
+    ↓
+[Chọn đơn hàng cần xử lý]
+    ↓
+[Xem chi tiết đơn hàng]
+    ↓
+[Cập nhật trạng thái]
+    ├── Đang xử lý → Đang giao
+    ├── Đang giao → Hoàn thành
+    └── Hủy đơn
+    ↓
+[Lưu thay đổi]
+    ↓
+[Kết thúc]
+</pre>
+
+<h3>3.4.4. Quy trình quản lý sản phẩm (Admin)</h3>
+
+<p class="figure">Hình 3.11: Quy trình quản lý sản phẩm</p>
+
+<pre>
+[Bắt đầu]
+    ↓
+[Admin truy cập quản lý sản phẩm]
+    ↓
+[Chọn thao tác]
+    ├── Thêm mới
+    │       ↓
+    │   [Nhập thông tin sản phẩm]
+    │       ↓
+    │   [Upload hình ảnh]
+    │       ↓
+    │   [Chọn danh mục]
+    │       ↓
+    │   [Lưu sản phẩm]
+    │
+    ├── Chỉnh sửa
+    │       ↓
+    │   [Chọn sản phẩm]
+    │       ↓
+    │   [Cập nhật thông tin]
+    │       ↓
+    │   [Lưu thay đổi]
+    │
+    ├── Xóa
+    │       ↓
+    │   [Chọn sản phẩm]
+    │       ↓
+    │   [Xác nhận xóa]
+    │       ↓
+    │   [Xóa sản phẩm và ảnh liên quan]
+    │
+    └── Ẩn/Hiện
+            ↓
+        [Chọn sản phẩm]
+            ↓
+        [Thay đổi trạng thái hiển thị]
+    ↓
+[Kết thúc]
+</pre>
+
+<h2>3.5. CƠ CHẾ BẢO MẬT</h2>
+
+<h3>3.5.1. Xác thực người dùng (Authentication)</h3>
+
+<p>Hệ thống sử dụng JWT (JSON Web Token) để xác thực người dùng:</p>
+
+<pre>
+// Tạo JWT token khi đăng nhập
+const token = jwt.sign(
+    {
+        ma_tai_khoan: user.ma_tai_khoan,
+        ten_dang_nhap: user.ten_dang_nhap,
+        vai_tro: user.vai_tro
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' }
+);
+</pre>
+
+<h3>3.5.2. Mã hóa mật khẩu</h3>
+
+<p>Mật khẩu được mã hóa bằng bcrypt với salt rounds = 10:</p>
+
+<pre>
+// Mã hóa mật khẩu
+const hashedPassword = await bcrypt.hash(mat_khau, 10);
+
+// So sánh mật khẩu
+const isValid = await bcrypt.compare(mat_khau, user.mat_khau);
+</pre>
+
+<h3>3.5.3. Phân quyền (Authorization)</h3>
+
+<p>Middleware kiểm tra quyền Admin:</p>
+
+<pre>
+const requireAdmin = (req, res, next) => {
+    if (req.user.vai_tro !== 'admin') {
+        return res.status(403).json({
+            success: false,
+            message: 'Bạn không có quyền truy cập'
+        });
+    }
+    next();
+};
+</pre>
+
+<h3>3.5.4. Xác thực OTP qua Email</h3>
+
+<ul>
+    <li>OTP 6 số được tạo ngẫu nhiên</li>
+    <li>Thời hạn: 5 phút</li>
+    <li>Gửi qua Nodemailer với Gmail SMTP</li>
+</ul>
+
+<h2>KẾT LUẬN CHƯƠNG 3</h2>
+
+<p>Chương này đã trình bày một cách chi tiết quá trình hiện thực hóa hệ thống website Yến Nhi Tech, từ tổng quan kiến trúc đến các khía cạnh thiết kế và triển khai cốt lõi.</p>
+
+<p class="no-indent"><span class="bold">Nội dung chương bao gồm:</span></p>
+
+<ol>
+    <li><span class="bold">Mô tả tổng thể hệ thống</span> với kiến trúc Client–Server 3 lớp (Client Layer, Server Layer, Data Layer) và cấu trúc thư mục dự án rõ ràng, giúp đảm bảo tính tổ chức và khả năng bảo trì.</li>
+    
+    <li><span class="bold">Các yêu cầu chức năng</span> của hệ thống được xác định thông qua biểu đồ Use Case dành cho 3 nhóm người dùng: Khách vãng lai, Thành viên và Quản trị viên.</li>
+    
+    <li><span class="bold">Thiết kế dữ liệu</span> tập trung vào cơ sở dữ liệu MySQL với 19 bảng dữ liệu quan hệ, phản ánh đầy đủ các nghiệp vụ của cửa hàng công nghệ.</li>
+    
+    <li><span class="bold">Thiết kế xử lý</span> dựa trên API RESTful với các module: Authentication, Products, Admin, Payment, News, Contact, Chatbot, Notifications.</li>
+    
+    <li><span class="bold">Cơ chế bảo mật</span> bao gồm:
+        <ul>
+            <li>Xác thực JWT (JSON Web Token)</li>
+            <li>Mã hóa mật khẩu bcrypt</li>
+            <li>Xác thực OTP qua email</li>
+            <li>Phân quyền Admin/User</li>
+            <li>Hỗ trợ đăng nhập Google OAuth 2.0</li>
+        </ul>
+    </li>
+    
+    <li><span class="bold">Mô hình hoạt động</span> của hệ thống được minh họa thông qua các sơ đồ tuần tự và sơ đồ hoạt động, giúp làm rõ luồng xử lý của các nghiệp vụ chính: đăng ký, đăng nhập, đặt hàng, thanh toán MoMo, quản lý sản phẩm và đơn hàng.</li>
+</ol>
+
+<p class="no-indent"><span class="bold">Hệ thống được xây dựng với các công nghệ hiện đại:</span></p>
+<ul>
+    <li><span class="bold">Frontend:</span> HTML5, CSS3, TailwindCSS, JavaScript</li>
+    <li><span class="bold">Backend:</span> Node.js, Express.js</li>
+    <li><span class="bold">Database:</span> MySQL</li>
+    <li><span class="bold">Authentication:</span> JWT, Passport.js (Google OAuth)</li>
+    <li><span class="bold">Payment:</span> MoMo API</li>
+    <li><span class="bold">Email:</span> Nodemailer</li>
+</ul>
+
+<p>Kiến trúc này đảm bảo tính mở rộng, bảo trì dễ dàng và phù hợp cho một hệ thống website thương mại điện tử hoàn chỉnh.</p>
+
+</body>
+</html>
