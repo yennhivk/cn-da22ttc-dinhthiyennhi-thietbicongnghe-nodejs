@@ -16,10 +16,10 @@ router.post('/', async (req, res) => {
             });
         }
 
-        if (noi_dung.length < 10) {
+        if (noi_dung.length < 50) {
             return res.status(400).json({
                 success: false,
-                message: 'Nội dung tin nhắn phải có ít nhất 10 ký tự!'
+                message: 'Nội dung tin nhắn phải có ít nhất 50 ký tự!'
             });
         }
 

@@ -504,10 +504,10 @@
                         <label for="contact_message" class="block text-sm font-bold text-gray-700 mb-2">
                             <span class="text-red-500">*</span> Nội dung tin nhắn
                         </label>
-                        <textarea id="contact_message" name="message" rows="8" required minlength="1000"
+                        <textarea id="contact_message" name="message" rows="8" required minlength="50"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition resize-none"
                             placeholder="Nhập nội dung tin nhắn của bạn..."></textarea>
-                        <p class="text-xs text-gray-500 mt-1">Tối thiểu 1000 ký tự</p>
+                        <p class="text-xs text-gray-500 mt-1">Tối thiểu 50 ký tự</p>
                     </div>
 
                     <!-- Nút gửi -->
@@ -741,8 +741,8 @@
                 return;
             }
 
-            if (message.length < 1000) {
-                alert('Nội dung tin nhắn phải có ít nhất 1000 ký tự!');
+            if (message.length < 50) {
+                alert('Nội dung tin nhắn phải có ít nhất 50 ký tự!');
                 return;
             }
 
