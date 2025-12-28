@@ -684,15 +684,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-5 shadow-lg text-white">
-                            <div class="flex items-center gap-3">
-                                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl">👁️</div>
-                                <div>
-                                    <p class="text-purple-100 text-sm">Tổng lượt xem</p>
-                                    <p id="articles-views" class="text-2xl font-bold">0</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="flex justify-end mb-4">
@@ -719,10 +710,9 @@
                             <thead class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white text-left">
                                 <tr>
                                     <th class="px-4 py-3 rounded-tl-lg" style="width: 70px;">Ảnh</th>
-                                    <th class="px-4 py-3" style="width: 30%;">Tiêu đề</th>
+                                    <th class="px-4 py-3" style="width: 35%;">Tiêu đề</th>
                                     <th class="px-4 py-3" style="width: 120px;">Danh mục</th>
                                     <th class="px-4 py-3" style="width: 100px;">Tác giả</th>
-                                    <th class="px-4 py-3 text-center" style="width: 80px;">Lượt xem</th>
                                     <th class="px-4 py-3 text-center" style="width: 120px;">Trạng thái</th>
                                     <th class="px-4 py-3 text-center" style="width: 110px;">Ngày tạo</th>
                                     <th class="px-4 py-3 text-center rounded-tr-lg" style="width: 90px;">Thao tác</th>
@@ -2936,15 +2926,14 @@
                     document.getElementById('articles-total').textContent = articlesData.length;
                     document.getElementById('articles-published').textContent = articlesData.filter(a => a.trang_thai === 'xuat_ban').length;
                     document.getElementById('articles-draft').textContent = articlesData.filter(a => a.trang_thai === 'nhap').length;
-                    document.getElementById('articles-views').textContent = articlesData.reduce((sum, a) => sum + (a.luot_xem || 0), 0);
                     
                     renderArticlesTable();
                 } else {
-                    document.getElementById('articles-table').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-gray-500">Không có bài viết</td></tr>';
+                    document.getElementById('articles-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500">Không có bài viết</td></tr>';
                 }
             } catch (error) {
                 console.error('Load articles error:', error);
-                document.getElementById('articles-table').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-red-500">❌ Lỗi tải dữ liệu bài viết</td></tr>';
+                document.getElementById('articles-table').innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-500">❌ Lỗi tải dữ liệu bài viết</td></tr>';
             }
         }
         
@@ -2962,7 +2951,6 @@
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${getArticleCategoryBadge(a.danh_muc)}">${getArticleCategoryText(a.danh_muc)}</span>
                     </td>
                     <td class="px-4 py-3 text-gray-600">${a.tac_gia || 'Admin'}</td>
-                    <td class="px-4 py-3 text-center font-semibold text-gray-700">${a.luot_xem || 0}</td>
                     <td class="px-4 py-3 text-center">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${getArticleStatusBadge(a.trang_thai)}">${getArticleStatusText(a.trang_thai)}</span>
                     </td>
@@ -3342,6 +3330,182 @@
                 alert(d.message || 'Có lỗi xảy ra');
             }
         });
+
+        // ==========================================
+        // CONTACTS MANAGEMENT - Quản lý liên hệ
+        // ==========================================
+        let contactsData = [];
+
+        async function loadContacts() {
+            const status = document.getElementById('contact-status-filter')?.value || 'all';
+            const search = document.getElementById('contact-search')?.value || '';
+            
+            const params = new URLSearchParams();
+            if (status !== 'all') params.append('trang_thai', status);
+            if (search) params.append('search', search);
+            
+            const d = await apiCall(`/contact?${params.toString()}`);
+            if (d.success) {
+                contactsData = d.data;
+                renderContactsTable(d.data);
+                
+                // Update stats
+                if (d.stats) {
+                    document.getElementById('contact-total').textContent = d.stats.total || 0;
+                    document.getElementById('contact-unread').textContent = d.stats.chua_doc || 0;
+                    document.getElementById('contact-read').textContent = d.stats.da_doc || 0;
+                    document.getElementById('contact-replied').textContent = d.stats.da_phan_hoi || 0;
+                    
+                    // Update badge
+                    const badge = document.getElementById('contactBadge');
+                    if (badge) {
+                        const unread = d.stats.chua_doc || 0;
+                        if (unread > 0) {
+                            badge.textContent = unread;
+                            badge.classList.remove('hidden');
+                        } else {
+                            badge.classList.add('hidden');
+                        }
+                    }
+                }
+            }
+        }
+
+        function renderContactsTable(contacts) {
+            const tbody = document.getElementById('contacts-table');
+            if (!tbody) return;
+            
+            if (contacts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">Chưa có liên hệ nào</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = contacts.map(c => {
+                const statusColors = {
+                    'chua_doc': 'bg-red-100 text-red-700',
+                    'da_doc': 'bg-yellow-100 text-yellow-700',
+                    'da_phan_hoi': 'bg-green-100 text-green-700'
+                };
+                const statusLabels = {
+                    'chua_doc': '🔴 Chưa đọc',
+                    'da_doc': '🟡 Đã đọc',
+                    'da_phan_hoi': '🟢 Đã phản hồi'
+                };
+                const date = new Date(c.ngay_tao).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                
+                return `
+                    <tr class="border-b hover:bg-gray-50 ${c.trang_thai === 'chua_doc' ? 'bg-red-50' : ''}">
+                        <td class="px-4 py-3">
+                            <div class="font-semibold text-gray-800">${c.ho_ten}</div>
+                            <div class="text-sm text-blue-600">${c.email}</div>
+                            ${c.so_dien_thoai ? `<div class="text-sm text-gray-500">${c.so_dien_thoai}</div>` : ''}
+                        </td>
+                        <td class="px-4 py-3 font-medium">${c.chu_de}</td>
+                        <td class="px-4 py-3 text-gray-600 max-w-xs truncate">${c.noi_dung.substring(0, 80)}${c.noi_dung.length > 80 ? '...' : ''}</td>
+                        <td class="px-4 py-3 text-sm text-gray-500">${date}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-3 py-1 rounded-full text-sm font-medium ${statusColors[c.trang_thai]}">${statusLabels[c.trang_thai]}</span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="viewContact(${c.ma_lien_he})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm mr-1" title="Xem & Phản hồi">👁️ Xem</button>
+                            <button onclick="deleteContact(${c.ma_lien_he})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm" title="Xóa">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function viewContact(id) {
+            const contact = contactsData.find(c => c.ma_lien_he === id);
+            if (!contact) return;
+            
+            document.getElementById('contact-id').value = id;
+            document.getElementById('contact-name').textContent = contact.ho_ten;
+            document.getElementById('contact-email').textContent = contact.email;
+            document.getElementById('contact-phone').textContent = contact.so_dien_thoai || 'Không có';
+            document.getElementById('contact-date').textContent = new Date(contact.ngay_tao).toLocaleString('vi-VN');
+            document.getElementById('contact-subject').textContent = contact.chu_de;
+            document.getElementById('contact-message').textContent = contact.noi_dung;
+            document.getElementById('contact-reply').value = '';
+            
+            // Show previous reply if exists
+            const replySection = document.getElementById('contact-previous-reply-section');
+            if (contact.phan_hoi) {
+                document.getElementById('contact-previous-reply').textContent = contact.phan_hoi;
+                document.getElementById('contact-reply-date').textContent = contact.ngay_phan_hoi ? 
+                    'Phản hồi lúc: ' + new Date(contact.ngay_phan_hoi).toLocaleString('vi-VN') : '';
+                replySection.classList.remove('hidden');
+            } else {
+                replySection.classList.add('hidden');
+            }
+            
+            document.getElementById('contact-modal').classList.add('active');
+            
+            // Mark as read if unread
+            if (contact.trang_thai === 'chua_doc') {
+                await apiCall(`/contact/${id}/status`, 'PUT', { trang_thai: 'da_doc' });
+                loadContacts();
+            }
+        }
+
+        function closeContactModal() {
+            document.getElementById('contact-modal').classList.remove('active');
+        }
+
+        async function sendContactReply() {
+            const id = document.getElementById('contact-id').value;
+            const reply = document.getElementById('contact-reply').value.trim();
+            
+            if (!reply) {
+                alert('Vui lòng nhập nội dung phản hồi!');
+                return;
+            }
+            
+            const d = await apiCall(`/contact/${id}/reply`, 'PUT', { phan_hoi: reply });
+            if (d.success) {
+                alert('Phản hồi thành công! Email đã được gửi đến khách hàng.');
+                closeContactModal();
+                loadContacts();
+            } else {
+                alert(d.message || 'Có lỗi xảy ra');
+            }
+        }
+
+        async function deleteContact(id) {
+            if (!confirm('Bạn có chắc muốn xóa liên hệ này?')) return;
+            
+            const d = await apiCall(`/contact/${id}`, 'DELETE');
+            if (d.success) {
+                alert('Đã xóa liên hệ!');
+                loadContacts();
+            } else {
+                alert(d.message || 'Có lỗi xảy ra');
+            }
+        }
+
+        // Load contacts when section is shown
+        const originalShowSection = showSection;
+        showSection = function(section) {
+            originalShowSection(section);
+            if (section === 'contacts') {
+                loadContacts();
+            }
+        };
+
+        // Load unread count on page load
+        async function loadContactUnreadCount() {
+            try {
+                const d = await apiCall('/contact/unread-count');
+                if (d.success) {
+                    const badge = document.getElementById('contactBadge');
+                    if (badge && d.count > 0) {
+                        badge.textContent = d.count;
+                        badge.classList.remove('hidden');
+                    }
+                }
+            } catch (e) {}
+        }
+        loadContactUnreadCount();
     </script>
 </body>
 </html>
