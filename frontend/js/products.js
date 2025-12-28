@@ -350,15 +350,15 @@ function loadMore() {
 // Create product card HTML
 function createProductCard(product) {
     // Xử lý đường dẫn ảnh - thêm URL backend nếu ảnh từ database
-    let imageUrl = '../images/placeholder.jpg';
+    let imageUrl = PLACEHOLDER_IMAGE;
     if (product.anh_chinh) {
-        // Nếu đường dẫn bắt đầu bằng 'images/' thì thêm URL backend
-        if (product.anh_chinh.startsWith('images/')) {
-            imageUrl = `${API_URL.replace('/api', '')}/${product.anh_chinh}`;
-        } else if (product.anh_chinh.startsWith('http')) {
+        // Nếu đường dẫn bắt đầu bằng http thì dùng trực tiếp
+        if (product.anh_chinh.startsWith('http')) {
             imageUrl = product.anh_chinh;
         } else {
-            imageUrl = `${API_URL.replace('/api', '')}/${product.anh_chinh}`;
+            // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+            const cleanPath = product.anh_chinh.startsWith('/') ? product.anh_chinh : '/' + product.anh_chinh;
+            imageUrl = `${API_URL.replace('/api', '')}${cleanPath}`;
         }
     }
     
@@ -458,12 +458,11 @@ function viewProduct(productId) {
 
 // Helper function to get full image URL
 function getProductImageUrl(imagePath) {
-    if (!imagePath) return '../images/placeholder.jpg';
+    if (!imagePath) return PLACEHOLDER_IMAGE;
     if (imagePath.startsWith('http')) return imagePath;
-    if (imagePath.startsWith('images/')) {
-        return `${API_URL.replace('/api', '')}/${imagePath}`;
-    }
-    return `${API_URL.replace('/api', '')}/${imagePath}`;
+    // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+    const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
+    return `${API_URL.replace('/api', '')}${cleanPath}`;
 }
 
 // Kiểm tra đăng nhập

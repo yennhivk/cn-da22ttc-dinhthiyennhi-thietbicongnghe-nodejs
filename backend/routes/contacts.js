@@ -3,7 +3,11 @@ const router = express.Router();
 const db = require('../config/database');
 const { authenticateToken, requireAdmin } = require('./auth');
 
-// Gửi tin nhắn liên hệ (Public)
+// ==========================================
+// PUBLIC API - Gửi liên hệ từ khách hàng
+// ==========================================
+
+// POST - Gửi liên hệ mới
 router.post('/', async (req, res) => {
     try {
         const { ho_ten, email, so_dien_thoai, chu_de, noi_dung } = req.body;
@@ -12,14 +16,7 @@ router.post('/', async (req, res) => {
         if (!ho_ten || !email || !chu_de || !noi_dung) {
             return res.status(400).json({
                 success: false,
-                message: 'Vui lòng điền đầy đủ thông tin bắt buộc!'
-            });
-        }
-
-        if (noi_dung.length < 10) {
-            return res.status(400).json({
-                success: false,
-                message: 'Nội dung tin nhắn phải có ít nhất 10 ký tự!'
+                message: 'Vui lòng điền đầy đủ thông tin bắt buộc'
             });
         }
 
@@ -28,7 +25,7 @@ router.post('/', async (req, res) => {
         if (!emailRegex.test(email)) {
             return res.status(400).json({
                 success: false,
-                message: 'Email không hợp lệ!'
+                message: 'Email không hợp lệ'
             });
         }
 
@@ -48,53 +45,51 @@ router.post('/', async (req, res) => {
             )
         `);
 
-        // Insert into database
         const [result] = await db.query(`
-            INSERT INTO lien_he (ho_ten, email, so_dien_thoai, chu_de, noi_dung, trang_thai)
-            VALUES (?, ?, ?, ?, ?, 'chua_doc')
+            INSERT INTO lien_he (ho_ten, email, so_dien_thoai, chu_de, noi_dung)
+            VALUES (?, ?, ?, ?, ?)
         `, [ho_ten, email, so_dien_thoai || null, chu_de, noi_dung]);
 
-        res.json({
+        res.status(201).json({
             success: true,
-            message: 'Tin nhắn đã được gửi thành công! Chúng tôi sẽ phản hồi sớm nhất.',
+            message: 'Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất.',
             data: { ma_lien_he: result.insertId }
         });
 
     } catch (error) {
-        console.error('Contact error:', error);
+        console.error('Create contact error:', error);
         res.status(500).json({
             success: false,
-            message: 'Có lỗi xảy ra, vui lòng thử lại!'
+            message: 'Lỗi server khi gửi liên hệ'
         });
     }
 });
 
-// Lấy danh sách tin nhắn liên hệ (cho admin)
-router.get('/', authenticateToken, requireAdmin, async (req, res) => {
+// ==========================================
+// ADMIN API - Quản lý liên hệ
+// ==========================================
+
+// GET - Lấy tất cả liên hệ (admin)
+router.get('/admin/all', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const { trang_thai, page = 1, limit = 20, search } = req.query;
+        const { page = 1, limit = 20, status, search } = req.query;
         const offset = (page - 1) * limit;
 
         let whereClause = '1=1';
         const params = [];
 
-        if (trang_thai && trang_thai !== 'all') {
-            whereClause += ' AND trang_thai = ?';
-            params.push(trang_thai);
+        if (status && status !== 'all') {
+            whereClause += ` AND trang_thai = ?`;
+            params.push(status);
         }
 
         if (search) {
-            whereClause += ' AND (ho_ten LIKE ? OR email LIKE ? OR chu_de LIKE ? OR noi_dung LIKE ?)';
+            whereClause += ` AND (ho_ten LIKE ? OR email LIKE ? OR chu_de LIKE ? OR noi_dung LIKE ?)`;
             params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
         }
 
-        // Đếm tổng
-        const [countResult] = await db.query(`SELECT COUNT(*) as total FROM lien_he WHERE ${whereClause}`, params);
-        const total = countResult[0].total;
-
-        // Lấy danh sách
         const [contacts] = await db.query(`
-            SELECT * FROM lien_he 
+            SELECT * FROM lien_he
             WHERE ${whereClause}
             ORDER BY 
                 CASE trang_thai 
@@ -105,6 +100,8 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
                 ngay_tao DESC
             LIMIT ? OFFSET ?
         `, [...params, parseInt(limit), parseInt(offset)]);
+
+        const [countResult] = await db.query(`SELECT COUNT(*) as total FROM lien_he WHERE ${whereClause}`, params);
 
         // Đếm theo trạng thái
         const [stats] = await db.query(`
@@ -121,72 +118,55 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
             data: contacts,
             stats: stats[0],
             pagination: {
-                total,
                 page: parseInt(page),
                 limit: parseInt(limit),
-                totalPages: Math.ceil(total / limit)
+                total: countResult[0].total,
+                totalPages: Math.ceil(countResult[0].total / limit)
             }
         });
 
     } catch (error) {
         console.error('Get contacts error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Có lỗi xảy ra!'
-        });
+        res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
 
-// Cập nhật trạng thái tin nhắn
-router.put('/:id/status', authenticateToken, requireAdmin, async (req, res) => {
+// GET - Lấy chi tiết liên hệ
+router.get('/admin/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const { id } = req.params;
-        const { trang_thai } = req.body;
+        const [contacts] = await db.query(`SELECT * FROM lien_he WHERE ma_lien_he = ?`, [req.params.id]);
 
-        const validStatus = ['chua_doc', 'da_doc', 'da_phan_hoi'];
-        if (!validStatus.includes(trang_thai)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Trạng thái không hợp lệ!'
-            });
+        if (contacts.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy liên hệ' });
         }
 
-        await db.query('UPDATE lien_he SET trang_thai = ? WHERE ma_lien_he = ?', [trang_thai, id]);
+        // Cập nhật trạng thái thành đã đọc nếu chưa đọc
+        if (contacts[0].trang_thai === 'chua_doc') {
+            await db.query(`UPDATE lien_he SET trang_thai = 'da_doc' WHERE ma_lien_he = ?`, [req.params.id]);
+            contacts[0].trang_thai = 'da_doc';
+        }
 
-        res.json({
-            success: true,
-            message: 'Cập nhật trạng thái thành công!'
-        });
+        res.json({ success: true, data: contacts[0] });
 
     } catch (error) {
-        console.error('Update status error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Có lỗi xảy ra!'
-        });
+        console.error('Get contact detail error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
 
-// Phản hồi liên hệ
-router.put('/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
+// PUT - Phản hồi liên hệ
+router.put('/admin/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const { id } = req.params;
         const { phan_hoi } = req.body;
 
         if (!phan_hoi || phan_hoi.trim() === '') {
-            return res.status(400).json({
-                success: false,
-                message: 'Nội dung phản hồi không được để trống!'
-            });
+            return res.status(400).json({ success: false, message: 'Nội dung phản hồi không được để trống' });
         }
 
         // Kiểm tra liên hệ tồn tại
-        const [contacts] = await db.query('SELECT * FROM lien_he WHERE ma_lien_he = ?', [id]);
+        const [contacts] = await db.query(`SELECT * FROM lien_he WHERE ma_lien_he = ?`, [req.params.id]);
         if (contacts.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'Không tìm thấy liên hệ!'
-            });
+            return res.status(404).json({ success: false, message: 'Không tìm thấy liên hệ' });
         }
 
         // Cập nhật phản hồi
@@ -194,7 +174,7 @@ router.put('/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
             UPDATE lien_he 
             SET phan_hoi = ?, trang_thai = 'da_phan_hoi', ngay_phan_hoi = NOW()
             WHERE ma_lien_he = ?
-        `, [phan_hoi.trim(), id]);
+        `, [phan_hoi.trim(), req.params.id]);
 
         // Gửi email phản hồi (nếu có cấu hình mailer)
         try {
@@ -230,57 +210,42 @@ router.put('/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
             console.log('⚠️ Không thể gửi email phản hồi:', emailError.message);
         }
 
-        res.json({
-            success: true,
-            message: 'Phản hồi thành công!'
-        });
+        res.json({ success: true, message: 'Phản hồi thành công!' });
 
     } catch (error) {
         console.error('Reply contact error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Có lỗi xảy ra!'
-        });
+        res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
 
-// Xóa tin nhắn
-router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
+// PUT - Cập nhật trạng thái
+router.put('/admin/:id/status', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const { id } = req.params;
+        const { trang_thai } = req.body;
+        const validStatuses = ['chua_doc', 'da_doc', 'da_phan_hoi'];
 
-        await db.query('DELETE FROM lien_he WHERE ma_lien_he = ?', [id]);
+        if (!validStatuses.includes(trang_thai)) {
+            return res.status(400).json({ success: false, message: 'Trạng thái không hợp lệ' });
+        }
 
-        res.json({
-            success: true,
-            message: 'Xóa tin nhắn thành công!'
-        });
+        await db.query(`UPDATE lien_he SET trang_thai = ? WHERE ma_lien_he = ?`, [trang_thai, req.params.id]);
+
+        res.json({ success: true, message: 'Cập nhật trạng thái thành công' });
 
     } catch (error) {
-        console.error('Delete message error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Có lỗi xảy ra!'
-        });
+        console.error('Update contact status error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
 
-// Đếm tin nhắn chưa đọc
-router.get('/unread-count', async (req, res) => {
+// DELETE - Xóa liên hệ
+router.delete('/admin/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const [result] = await db.query("SELECT COUNT(*) as count FROM lien_he WHERE trang_thai = 'chua_doc'");
-
-        res.json({
-            success: true,
-            count: result[0].count
-        });
-
+        await db.query(`DELETE FROM lien_he WHERE ma_lien_he = ?`, [req.params.id]);
+        res.json({ success: true, message: 'Xóa liên hệ thành công' });
     } catch (error) {
-        console.error('Count unread error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Có lỗi xảy ra!'
-        });
+        console.error('Delete contact error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
 

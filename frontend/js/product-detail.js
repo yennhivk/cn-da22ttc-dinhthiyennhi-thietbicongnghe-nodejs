@@ -759,10 +759,9 @@ function getProductImageUrl(imagePath) {
     if (!imagePath) return PLACEHOLDER_IMAGE;
     if (imagePath.startsWith('http')) return imagePath;
     if (imagePath.startsWith('data:')) return imagePath;
-    if (imagePath.startsWith('images/')) {
-        return `${API_URL.replace('/api', '')}/${imagePath}`;
-    }
-    return `${API_URL.replace('/api', '')}/${imagePath}`;
+    // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+    const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
+    return `${API_URL.replace('/api', '')}${cleanPath}`;
 }
 
 // Format price

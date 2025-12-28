@@ -80,6 +80,7 @@
                 <a href="#" onclick="showSection('articles')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="articles">📝 Bài viết</a>
                 <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">⭐ Đánh giá</a>
                 <a href="#" onclick="showSection('promotions')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="promotions">🎁 Khuyến mãi</a>
+                <a href="#" onclick="showSection('contacts')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="contacts">📞 Liên hệ <span id="contactBadge" class="hidden bg-red-500 text-white text-xs px-2 py-0.5 rounded-full ml-auto">0</span></a>
             </nav>
             <div class="p-4 border-t border-blue-800">
                 <div class="flex items-center gap-3 mb-3">
@@ -480,9 +481,6 @@
                     </div>
 
                     <!-- Bảng đơn hàng -->
-                    <div class="flex justify-end mb-4">
-                        <button onclick="createSampleOrders()" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-lg text-sm">+ Tạo đơn hàng mẫu</button>
-                    </div>
                     <div class="bg-white rounded-xl shadow-lg p-5">
                         <div class="flex gap-4 mb-4">
                             <input type="text" id="order-search" placeholder="🔍 Tìm kiếm đơn hàng..." class="flex-1 border-2 border-gray-200 rounded-lg px-4 py-2 focus:border-blue-500 focus:outline-none" onkeyup="searchOrders()">
@@ -859,8 +857,125 @@
                         </table>
                     </div>
                 </section>
+
+                <!-- Section Liên hệ -->
+                <section id="section-contacts" class="content-section">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500">
+                            <p class="text-gray-500 text-sm">Tổng liên hệ</p>
+                            <p id="contact-total" class="text-2xl font-bold text-blue-600">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-red-500">
+                            <p class="text-gray-500 text-sm">Chưa đọc</p>
+                            <p id="contact-unread" class="text-2xl font-bold text-red-600">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-yellow-500">
+                            <p class="text-gray-500 text-sm">Đã đọc</p>
+                            <p id="contact-read" class="text-2xl font-bold text-yellow-600">0</p>
+                        </div>
+                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-green-500">
+                            <p class="text-gray-500 text-sm">Đã phản hồi</p>
+                            <p id="contact-replied" class="text-2xl font-bold text-green-600">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Filter & Search -->
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        <select id="contact-status-filter" onchange="loadContacts()" class="border rounded-lg px-4 py-2">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="chua_doc">Chưa đọc</option>
+                            <option value="da_doc">Đã đọc</option>
+                            <option value="da_phan_hoi">Đã phản hồi</option>
+                        </select>
+                        <input type="text" id="contact-search" placeholder="Tìm kiếm..." class="border rounded-lg px-4 py-2 flex-1" onkeyup="if(event.key==='Enter') loadContacts()">
+                        <button onclick="loadContacts()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">🔍 Tìm</button>
+                    </div>
+
+                    <!-- Contacts Table -->
+                    <div class="bg-white rounded-xl shadow p-5">
+                        <table class="w-full">
+                            <thead class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-left">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-tl-lg">Khách hàng</th>
+                                    <th class="px-4 py-3">Chủ đề</th>
+                                    <th class="px-4 py-3">Nội dung</th>
+                                    <th class="px-4 py-3">Ngày gửi</th>
+                                    <th class="px-4 py-3 text-center">Trạng thái</th>
+                                    <th class="px-4 py-3 text-center rounded-tr-lg">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contacts-table"></tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </main>
+    </div>
+
+    <!-- Contact Detail Modal -->
+    <div id="contact-modal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+            <div class="p-5 border-b flex justify-between items-center bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t-xl">
+                <h3 class="text-lg font-bold text-white">📞 Chi tiết liên hệ</h3>
+                <button onclick="closeContactModal()" class="text-white hover:text-gray-200 text-2xl">&times;</button>
+            </div>
+            <div class="p-5">
+                <input type="hidden" id="contact-id">
+                
+                <!-- Customer Info -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Họ tên</label>
+                        <p id="contact-name" class="font-semibold text-gray-800"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Email</label>
+                        <p id="contact-email" class="font-semibold text-blue-600"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Số điện thoại</label>
+                        <p id="contact-phone" class="font-semibold text-gray-800"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500 mb-1">Ngày gửi</label>
+                        <p id="contact-date" class="font-semibold text-gray-800"></p>
+                    </div>
+                </div>
+
+                <!-- Subject -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Chủ đề</label>
+                    <p id="contact-subject" class="font-semibold text-gray-800 bg-gray-50 p-3 rounded-lg"></p>
+                </div>
+
+                <!-- Message -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Nội dung tin nhắn</label>
+                    <div id="contact-message" class="bg-gray-50 p-4 rounded-lg text-gray-700 whitespace-pre-wrap"></div>
+                </div>
+
+                <!-- Previous Reply (if any) -->
+                <div id="contact-previous-reply-section" class="mb-4 hidden">
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Phản hồi trước đó</label>
+                    <div id="contact-previous-reply" class="bg-green-50 p-4 rounded-lg text-green-700 whitespace-pre-wrap border border-green-200"></div>
+                    <p id="contact-reply-date" class="text-xs text-gray-500 mt-1"></p>
+                </div>
+
+                <!-- Reply Form -->
+                <div class="border-t pt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">✍️ Phản hồi khách hàng</label>
+                    <textarea id="contact-reply" rows="4" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Nhập nội dung phản hồi..."></textarea>
+                    <div class="flex gap-3 mt-4">
+                        <button onclick="sendContactReply()" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg font-medium flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            Gửi phản hồi
+                        </button>
+                        <button onclick="closeContactModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 py-2.5 rounded-lg font-medium">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Product Modal -->
@@ -1302,7 +1417,7 @@
             document.getElementById('section-' + section).classList.add('active');
             document.querySelector(`[data-section="${section}"]`).classList.add('active');
 
-            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', news: 'Quản lý tin tức', articles: 'Quản lý bài viết', reviews: 'Quản lý đánh giá', promotions: 'Quản lý khuyến mãi' };
+            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', news: 'Quản lý tin tức', articles: 'Quản lý bài viết', reviews: 'Quản lý đánh giá', promotions: 'Quản lý khuyến mãi', contacts: 'Quản lý liên hệ' };
             document.getElementById('page-title').textContent = titles[section] || section;
 
             if (section === 'dashboard') loadDashboard();
@@ -1627,6 +1742,10 @@
                 '#fb923c',
                 '#c2410c'  // Brown/Orange (lowest)
             ];
+
+            // Tính barThickness động theo số lượng khách hàng
+            const customerCount = customerLabels.length;
+            const dynamicBarThickness = customerCount <= 1 ? 30 : customerCount <= 3 ? 25 : customerCount <= 5 ? 20 : 18;
             
             charts.topCustomers = new Chart(document.getElementById('topCustomersChart'), {
                 type: 'bar',
@@ -1636,14 +1755,19 @@
                         label: 'Tổng chi tiêu',
                         data: customerSpent,
                         backgroundColor: gradientColors.slice(0, customerLabels.length),
-                        borderRadius: 0,
-                        barThickness: 18
+                        borderRadius: 4,
+                        barThickness: dynamicBarThickness
                     }]
                 },
                 options: { 
                     indexAxis: 'y', 
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            right: 60 // Thêm padding bên phải để hiển thị giá trị
+                        }
+                    },
                     plugins: { 
                         legend: { display: false },
                         tooltip: {
@@ -1660,8 +1784,15 @@
                     },
                     scales: { 
                         x: { 
-                            display: false,
-                            grid: { display: false }
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000).toFixed(0) + 'tr';
+                                },
+                                font: { size: 9 },
+                                color: '#6b7280'
+                            }
                         },
                         y: {
                             grid: { display: false },
@@ -1680,7 +1811,7 @@
                             const meta = chart.getDatasetMeta(i);
                             meta.data.forEach((bar, index) => {
                                 const value = dataset.data[index];
-                                const displayValue = (value / 1000000).toFixed(2);
+                                const displayValue = (value / 1000000).toFixed(1) + 'tr';
                                 ctx.fillStyle = '#374151';
                                 ctx.font = 'bold 10px Arial';
                                 ctx.textAlign = 'left';
