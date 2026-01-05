@@ -135,6 +135,15 @@ async function updateNotificationBadge() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         
+        // Xử lý lỗi 401/403 - token hết hạn hoặc không hợp lệ
+        if (response.status === 401 || response.status === 403) {
+            console.log('Token expired or invalid, clearing auth data');
+            // Không xóa auth data ở đây để tránh logout tự động
+            // Chỉ reset badge về 0
+            updateAllNotificationBadges(0);
+            return;
+        }
+        
         if (response.ok) {
             const result = await response.json();
             if (result.success && result.data) {

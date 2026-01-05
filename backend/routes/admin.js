@@ -452,13 +452,33 @@ router.put('/products/:id', authenticateToken, requireAdmin, async (req, res) =>
 // Xóa sản phẩm
 router.delete('/products/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        await db.query(`DELETE FROM anh_san_pham WHERE ma_san_pham = ?`, [req.params.id]);
-        await db.query(`DELETE FROM san_pham WHERE ma_san_pham = ?`, [req.params.id]);
+        const productId = req.params.id;
+        
+        // Kiểm tra sản phẩm có trong đơn hàng không
+        const [orderCheck] = await db.query(
+            `SELECT COUNT(*) as count FROM chi_tiet_don_hang WHERE ma_san_pham = ?`, 
+            [productId]
+        );
+        
+        if (orderCheck[0].count > 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Không thể xóa sản phẩm này vì đã có trong đơn hàng. Hãy ẩn sản phẩm thay vì xóa.' 
+            });
+        }
+        
+        // Xóa các bản ghi liên quan
+        await db.query(`DELETE FROM anh_san_pham WHERE ma_san_pham = ?`, [productId]);
+        await db.query(`DELETE FROM danh_gia WHERE ma_san_pham = ?`, [productId]);
+        await db.query(`DELETE FROM gio_hang WHERE ma_san_pham = ?`, [productId]);
+        
+        // Xóa sản phẩm
+        await db.query(`DELETE FROM san_pham WHERE ma_san_pham = ?`, [productId]);
 
         res.json({ success: true, message: 'Xóa sản phẩm thành công' });
     } catch (error) {
         console.error('Delete product error:', error);
-        res.status(500).json({ success: false, message: 'Lỗi server' });
+        res.status(500).json({ success: false, message: 'Lỗi khi xóa sản phẩm: ' + error.message });
     }
 });
 

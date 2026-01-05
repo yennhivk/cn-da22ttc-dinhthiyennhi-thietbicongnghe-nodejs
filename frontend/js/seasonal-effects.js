@@ -160,16 +160,7 @@
             container.appendChild(createSnowflake());
         }
 
-        // Tạo nút toggle
-        createToggleButton();
-
-        // Áp dụng trạng thái đã lưu
-        if (isPaused) {
-            container.style.display = 'none';
-            const btn = document.getElementById('effectsToggle');
-            btn.classList.add('paused');
-            btn.innerHTML = '⏸️';
-        }
+        // Không tạo nút toggle - hiệu ứng luôn bật
     }
 
     // Chạy khi DOM ready

@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Animations */
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
@@ -15,58 +14,34 @@
         .lightning-blink {
             animation: blink 1.5s infinite;
         }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        /* Scrollbar for dropdown */
-        .scrollbar-thin::-webkit-scrollbar {
-            width: 6px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #EAB308;
-            border-radius: 10px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-            background: #CA8A04;
-        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+        .scrollbar-thin::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: #EAB308; border-radius: 10px; }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #CA8A04; }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation Bar - Yellow Theme -->
+    <!-- Navigation Bar -->
     <nav class="bg-gradient-to-r from-yellow-500 to-yellow-400 shadow-lg fixed top-0 left-0 right-0 z-50 w-full">
         <div class="px-3 sm:px-4 lg:px-6">
             <div class="flex items-center h-16 gap-2 sm:gap-3 lg:gap-4">
-                <!-- Logo -->
                 <a href="../index.html" class="flex items-center gap-2 cursor-pointer whitespace-nowrap group flex-shrink-0 hover:scale-105 transition-all duration-300">
-                    <!-- Logo Image -->
-                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 md:w-14 md:h-14 object-cover rounded-full shadow-lg group-hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-300">
-                    
-                    <!-- Text Logo -->
+                    <img src="../images/Screenshot 2025-11-10 154306.png" alt="Yến Nhi Tech Logo" class="w-12 h-12 md:w-14 md:h-14 object-cover rounded-full shadow-lg">
                     <div class="flex items-baseline gap-1">
                         <span class="text-lg md:text-xl font-bold text-red-600 drop-shadow-md">Yến Nhi</span>
-                        <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', 'Lucida Calligraphy', cursive;">Tech</span>
+                        <span class="text-xl md:text-2xl font-bold text-blue-500 drop-shadow-lg italic" style="font-family: 'Brush Script MT', cursive;">Tech</span>
                     </div>
                 </a>
-
-                <!-- Search Bar -->
                 <div class="flex flex-1 max-w-xl mx-2 sm:mx-3">
                     <div class="relative w-full">
-                        <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?" class="w-full pl-10 pr-3 py-2 md:py-2.5 rounded-lg border-0 text-base md:text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                        <svg class="w-6 h-6 md:w-6 md:h-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <input type="text" id="searchInput" placeholder="Bạn cần tìm gì?" class="w-full pl-10 pr-3 py-2 md:py-2.5 rounded-lg border-0 text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <svg class="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
                 </div>
-
-                <!-- Desktop Menu -->
                 <div class="hidden lg:flex items-center gap-6 ml-auto text-black">
                     <a href="../index.html" class="text-lg font-bold hover:text-red-600 transition">Trang chủ</a>
                     <a href="products.html" class="text-lg font-bold hover:text-red-600 transition">Sản phẩm</a>
@@ -75,30 +50,22 @@
                     <a href="about.html" class="text-lg font-bold hover:text-red-600 transition">Giới thiệu</a>
                     <a href="contact.html" class="text-lg font-bold text-red-600">Liên hệ</a>
                 </div>
-
-                <!-- Right items -->
                 <div class="flex items-center gap-2 sm:gap-3 lg:gap-4">
-                    <!-- Cart Icon -->
                     <a href="cart.html" class="relative text-black hover:text-red-600 transition transform hover:scale-110 flex-shrink-0" title="Giỏ hàng">
                         <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                         <span class="cart-badge absolute -top-2 -right-2 bg-green-500 text-red-500 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
                     </a>
-
-                    <!-- User Account -->
                     <div class="user-account-container hidden lg:flex items-center gap-2">
                         <a href="login.html" class="flex items-center gap-2 text-black hover:text-red-600 transition">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span class="text-lg font-semibold">Đăng nhập</span>
                         </a>
                     </div>
-
-                    <!-- Mobile Menu Button -->
                     <button id="mobileMenuBtn" class="lg:hidden text-white hover:text-yellow-300 transition flex-shrink-0" onclick="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            <path id="closeIcon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
@@ -106,33 +73,16 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu Dropdown -->
+    <!-- Mobile Menu -->
     <div id="mobileMenu" class="hidden bg-white border-t border-gray-200 shadow-lg lg:hidden fixed top-16 left-0 right-0 z-40">
         <div class="px-4 py-2">
-            <div class="relative mb-3">
-                <input type="text" id="mobileSearchInput" placeholder="Tìm kiếm..." class="w-full px-4 py-2.5 rounded-lg border-2 border-yellow-200 text-sm text-gray-700">
-                <button onclick="handleMobileSearch()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-yellow-500">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </button>
-            </div>
             <div class="flex flex-col space-y-1">
-                <a href="../index.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">🏠 Trang chủ</a>
-                <a href="products.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📱 Sản phẩm</a>
-                <a href="news.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📰 Tin tức</a>
-                <a href="promotions.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">🎉 Khuyến mãi</a>
-                <a href="about.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">ℹ️ Giới thiệu</a>
-                <a href="contact.html" class="block py-3 px-4 text-base font-semibold text-yellow-500 hover:bg-yellow-50 rounded-lg transition">📞 Liên hệ</a>
-                <a href="admin.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">👤 Quản trị</a>
-                <div class="pt-3 pb-2">
-                    <a href="cart.html" class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-200 shadow-md">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        <span>Giỏ hàng (<span class="cart-badge">0</span>)</span>
-                    </a>
-                </div>
+                <a href="../index.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg">🏠 Trang chủ</a>
+                <a href="products.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg">📱 Sản phẩm</a>
+                <a href="news.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg">📰 Tin tức</a>
+                <a href="promotions.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg">🎁 Khuyến mãi</a>
+                <a href="about.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg">ℹ️ Giới thiệu</a>
+                <a href="contact.html" class="block py-3 px-4 text-base font-semibold text-yellow-500 hover:bg-yellow-50 rounded-lg">📞 Liên hệ</a>
             </div>
         </div>
     </div>
@@ -144,13 +94,9 @@
                 <!-- Danh mục Dropdown Button -->
                 <div class="relative group">
                     <button class="flex items-center gap-2 font-bold text-white bg-gradient-to-r from-red-600 to-red-700 px-4 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition shadow-md">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                         <span>Danh mục</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
                     <!-- Mega Dropdown Menu -->
@@ -159,67 +105,52 @@
                             <!-- Left Sidebar Menu -->
                             <div class="col-span-3 bg-gray-50 rounded-l-lg border-r border-gray-200">
                                 <div class="py-4">
-                                    <!-- Điện thoại -->
                                     <a href="#" onclick="event.preventDefault(); showCategoryProducts('phone')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="phone">
-                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600 flex-grow">Điện thoại</span>
-                                        <svg class="w-5 h-5 text-gray-400 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Điện thoại</span>
+                                        <svg class="w-5 h-5 ml-auto text-gray-400 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                     </a>
-
-                                    <!-- Laptop -->
                                     <a href="#" onclick="event.preventDefault(); showCategoryProducts('laptop')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="laptop">
-                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600 flex-grow">Laptop</span>
-                                        <svg class="w-5 h-5 text-gray-400 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Laptop</span>
+                                        <svg class="w-5 h-5 ml-auto text-gray-400 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                     </a>
-
-                                    <!-- Điện máy -->
                                     <a href="#" onclick="event.preventDefault(); showCategoryProducts('appliances')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="appliances">
-                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600 flex-grow">Điện máy</span>
-                                        <svg class="w-5 h-5 text-gray-400 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Điện máy</span>
+                                        <svg class="w-5 h-5 ml-auto text-gray-400 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                     </a>
-
-                                    <!-- Phụ kiện -->
                                     <a href="#" onclick="event.preventDefault(); showCategoryProducts('accessories')" class="category-menu-item group/item flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors border-l-4 border-transparent hover:border-red-600" data-category="accessories">
-                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
-                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600 flex-grow">Phụ kiện</span>
-                                        <svg class="w-5 h-5 text-gray-400 group-hover/item:text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                        <svg class="w-6 h-6 text-gray-600 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                                        <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Phụ kiện</span>
+                                        <svg class="w-5 h-5 ml-auto text-gray-400 group-hover/item:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                     </a>
-
-                                    <!-- Divider -->
                                     <div class="my-2 border-t border-gray-200"></div>
-
-                                    <!-- Thương hiệu -->
                                     <div class="px-4 py-2">
                                         <p class="text-sm font-bold text-gray-500 uppercase mb-2">Thương hiệu</p>
                                     </div>
-                                    
                                     <a href="#" onclick="event.preventDefault(); showCategoryProducts('apple')" class="category-menu-item group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors" data-category="apple">
-                                        <span class="text-xl flex-shrink-0">🍎</span>
+                                        <span class="text-xl">🍎</span>
                                         <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Apple</span>
                                     </a>
                                     <a href="#" onclick="event.preventDefault(); showCategoryProducts('samsung')" class="category-menu-item group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors" data-category="samsung">
-                                        <span class="text-blue-600 font-bold text-sm flex-shrink-0">S</span>
+                                        <span class="text-blue-600 font-bold text-sm">S</span>
                                         <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Samsung</span>
                                     </a>
                                     <a href="#" onclick="event.preventDefault(); showCategoryProducts('xiaomi')" class="category-menu-item group/item flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors" data-category="xiaomi">
-                                        <span class="text-orange-500 font-bold text-sm flex-shrink-0">mi</span>
+                                        <span class="text-orange-500 font-bold text-sm">mi</span>
                                         <span class="text-base font-semibold text-gray-700 group-hover/item:text-red-600">Xiaomi</span>
                                     </a>
                                 </div>
                             </div>
-
-                            <!-- Right Content - Gợi ý sản phẩm động -->
+                            <!-- Right Content - Gợi ý sản phẩm -->
                             <div class="col-span-9 p-6 flex flex-col h-[500px]">
                                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 flex-shrink-0">
                                     <span class="text-xl">🔥</span>
                                     <span id="categoryTitle">Điện thoại - Gợi ý cho bạn</span>
                                 </h3>
-
-                                <!-- Category Content Container with Scroll -->
                                 <div id="categoryContent" class="overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-gray-200">
-                                    <!-- Sản phẩm sẽ được render động bởi JavaScript -->
+                                    <!-- Sản phẩm sẽ được render bởi JavaScript -->
                                 </div>
                             </div>
                         </div>
@@ -227,63 +158,36 @@
                 </div>
 
                 <!-- Other Navigation Items -->
-                <a href="products.html?category=laptop" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
-                    <span class="lightning-blink text-yellow-400">⚡</span>
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    Laptop
-                </a>
+                <a href="products.html?category=laptop" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Laptop</a>
                 <a href="products.html?category=pc-gaming" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> PC Gaming</a>
                 <a href="products.html?category=monitor" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Màn hình</a>
                 <a href="products.html?category=cpu-vga" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> CPU, VGA</a>
-                <a href="products.html?category=case-power" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Case, Nguồn</a>
+                <a href="products.html?category=case-nguon" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Case, Nguồn</a>
                 <a href="products.html?category=mouse-keyboard" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Chuột, Bàn phím</a>
                 <a href="products.html?category=headphone" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Tai nghe</a>
             </div>
         </div>
     </div>
 
-    <!-- Promotional Banner Strip -->
+    <!-- Promotional Banner -->
     <section class="pt-28 bg-red-600">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex items-center justify-between overflow-x-auto gap-4 py-3 text-white scrollbar-hide">
-                <!-- Deal 1 -->
                 <a href="promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
-                    <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">🔥</span>
-                    </div>
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🔥</span></div>
                     <span class="font-bold text-sm md:text-base">Săn Deal Online</span>
                 </a>
-
-                <!-- Deal 2 -->
                 <a href="products.html?brand=samsung" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
-                    <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">📱</span>
-                    </div>
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">📱</span></div>
                     <span class="font-bold text-sm md:text-base">Samsung mua 1 tặng 1</span>
                 </a>
-
-                <!-- Deal 3 -->
                 <a href="promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
-                    <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">🎁</span>
-                    </div>
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🎫</span></div>
                     <span class="font-bold text-sm md:text-base">Voucher tặng bạn mới</span>
                 </a>
-
-                <!-- Deal 4 -->
-                <a href="products.html?category=appliances" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
-                    <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">❄️</span>
-                    </div>
-                    <span class="font-bold text-sm md:text-base">Máy nước nóng từ 2.29 triệu</span>
-                </a>
-
-                <!-- Deal 5 -->
                 <a href="products.html?special=11.11" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
-                    <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse">
-                        <span class="font-black text-red-600 text-sm">11.11</span>
-                    </div>
-                    <span class="font-bold text-sm md:text-base">Trở giá cực đã - Sale 50%</span>
+                    <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse"><span class="font-black text-red-600 text-sm">11.11</span></div>
+                    <span class="font-bold text-sm md:text-base">Trợ giá cực đã - Sale 50%</span>
                 </a>
             </div>
         </div>
@@ -293,13 +197,12 @@
     <section class="py-12 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid lg:grid-cols-2 gap-8">
-                
                 <!-- Left Column - Contact Info -->
                 <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
                     <h2 class="text-2xl md:text-3xl font-black text-blue-900 mb-6">Cửa hàng YẾN NHI TECH</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-                        <!-- Address -->
+                        <!-- Địa chỉ -->
                         <div class="flex items-start gap-3">
                             <div class="w-10 h-10 border-2 border-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
                                 <svg class="w-5 h-5 text-blue-900" fill="currentColor" viewBox="0 0 24 24">
@@ -313,7 +216,7 @@
                             </div>
                         </div>
 
-                        <!-- Working Hours -->
+                        <!-- Thời gian làm việc -->
                         <div class="flex items-start gap-3">
                             <div class="w-10 h-10 border-2 border-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
                                 <svg class="w-5 h-5 text-blue-900" fill="currentColor" viewBox="0 0 24 24">
@@ -419,13 +322,8 @@
                         <iframe 
                             id="contact-map"
                             src="https://maps.google.com/maps?q=74-76%20L%C3%AA%20L%E1%BB%A3i,%20kh%C3%B3m%203,%20Tr%C3%A0%20Vinh&t=k&z=17&ie=UTF8&iwloc=&output=embed"
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade"
-                            class="rounded-lg">
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade" class="rounded-lg">
                         </iframe>
                     </div>
                     <div class="mt-6 text-center">
@@ -437,7 +335,6 @@
                         </a>
                     </div>
                 </div>
-
             </div>
 
             <!-- Contact Form Section -->
@@ -504,7 +401,7 @@
                         <label for="contact_message" class="block text-sm font-bold text-gray-700 mb-2">
                             <span class="text-red-500">*</span> Nội dung tin nhắn
                         </label>
-                        <textarea id="contact_message" name="message" rows="8" required minlength="50"
+                        <textarea id="contact_message" name="message" rows="6" required minlength="50"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition resize-none"
                             placeholder="Nhập nội dung tin nhắn của bạn..."></textarea>
                         <p class="text-xs text-gray-500 mt-1">Tối thiểu 50 ký tự</p>
@@ -522,7 +419,7 @@
                     </div>
                 </form>
 
-                <!-- Success Message (hidden by default) -->
+                <!-- Success Message -->
                 <div id="contactSuccess" class="hidden text-center py-8">
                     <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -542,9 +439,7 @@
     <!-- Footer -->
     <footer class="bg-yellow-100 text-gray-900 pt-12 pb-6">
         <div class="max-w-7xl mx-auto px-4">
-            <!-- Main Footer Content -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-                <!-- About Column -->
                 <div class="lg:col-span-1">
                     <h3 class="text-lg font-bold mb-4 text-red-600">VỀ YẾN NHI TECH</h3>
                     <ul class="space-y-2 text-sm text-gray-700">
@@ -552,8 +447,6 @@
                         <li><a href="contact.html#map-section" class="hover:text-gray-900 hover:font-semibold transition">Hệ thống cửa hàng</a></li>
                     </ul>
                 </div>
-
-                <!-- Policy Column -->
                 <div class="lg:col-span-1">
                     <h3 class="text-lg font-bold mb-4 text-red-600">CHÍNH SÁCH</h3>
                     <ul class="space-y-2 text-sm text-gray-700">
@@ -562,8 +455,6 @@
                         <li><a href="policy-privacy.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo mật</a></li>
                     </ul>
                 </div>
-
-                <!-- Info Column -->
                 <div class="lg:col-span-1">
                     <h3 class="text-lg font-bold mb-4 text-red-600">THÔNG TIN</h3>
                     <ul class="space-y-2 text-sm text-gray-700">
@@ -571,8 +462,6 @@
                         <li><a href="order-history.html" class="hover:text-gray-900 hover:font-semibold transition">Tra cứu đơn hàng</a></li>
                     </ul>
                 </div>
-
-                <!-- Contact Column -->
                 <div class="lg:col-span-2">
                     <h3 class="text-lg font-bold mb-4 text-red-600">TỔNG ĐÀI HỖ TRỢ</h3>
                     <div class="space-y-3 text-sm">
@@ -595,18 +484,6 @@
                             </div>
                         </div>
                         <div class="flex items-start gap-2">
-                            <svg class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
-                                <circle cx="8" cy="10" r="1.5"/>
-                                <circle cx="12" cy="10" r="1.5"/>
-                                <circle cx="16" cy="10" r="1.5"/>
-                            </svg>
-                            <div>
-                                <p class="text-gray-900 font-semibold">Khiếu nại: 1900.5310</p>
-                                <p class="text-gray-700">8:00 - 21:30</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-2">
                             <svg class="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                             </svg>
@@ -617,37 +494,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Payment & Shipping Methods -->
-            <div class="border-t border-gray-600 pt-8 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Shipping -->
-                    <div>
-                        <h4 class="text-sm font-bold mb-4 text-gray-900">ĐƠN VỊ VẬN CHUYỂN</h4>
-                        <div class="flex flex-wrap gap-4">
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 GHTK</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📦 Viettel Post</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚛 J&T Express</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📮 VNPost</div>
-                        </div>
-                    </div>
-
-                    <!-- Payment -->
-                    <div>
-                        <h4 class="text-sm font-bold mb-4 text-gray-900">PHƯƠNG THỨC THANH TOÁN</h4>
-                        <div class="flex flex-wrap gap-4">
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💳 Visa/Master</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏦 ATM</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💰 Momo</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏧 ZaloPay</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💵 COD</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Social & Copyright -->
-            <div class="border-t border-gray-600 pt-6">
+            <div class="border-t border-gray-300 pt-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="text-sm text-gray-900">
                         <p>&copy; 2024 Yến Nhi Tech. All rights reserved.</p>
@@ -655,13 +502,10 @@
                     </div>
                     <div class="flex gap-4">
                         <a href="#" class="bg-blue-600 hover:bg-blue-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                         </a>
                         <a href="#" class="bg-red-600 hover:bg-red-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                        </a>
-                        <a href="#" class="bg-pink-600 hover:bg-pink-700 p-2 rounded-full transition">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                         </a>
                     </div>
                 </div>
@@ -679,52 +523,36 @@
     <script src="../js/auth-ui.js"></script>
     <script src="../js/main.js"></script>
     <script>
-        // Tự động cập nhật bản đồ với vị trí người dùng (chấm xanh) khi tải trang
-        window.addEventListener('DOMContentLoaded', () => {
-            const destination = "74-76 Lê Lợi, khóm 3, Trà Vinh";
-            const mapIframe = document.getElementById('contact-map');
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        // Sử dụng tham số layer=c và saddr để kích hoạt hiển thị vị trí người dùng rõ hơn
-                        mapIframe.src = `https://maps.google.com/maps?saddr=${lat},${lng}&daddr=${encodeURIComponent(destination)}&t=k&z=16&output=embed&dg=oo`;
-                    },
-                    (error) => {
-                        console.warn("Không thể lấy vị trí người dùng:", error);
-                    }
-                );
-            }
-        });
-
+        // Get directions
         function getDirections(event) {
             event.preventDefault();
             const destination = "74-76 Lê Lợi, khóm 3, Trà Vinh";
-            
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
-                        const url = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${encodeURIComponent(destination)}`;
-                        window.open(url, '_blank');
+                        window.open(`https://www.google.com/maps/dir/?api=1&origin=${lat},${lng}&destination=${encodeURIComponent(destination)}`, '_blank');
                     },
-                    (error) => {
-                        console.error("Error getting location:", error);
-                        const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
-                        window.open(url, '_blank');
+                    () => {
+                        window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`, '_blank');
                     }
                 );
             } else {
-                const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
-                window.open(url, '_blank');
+                window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`, '_blank');
             }
         }
 
         // Contact Form Handler
-        const API_URL = 'http://localhost:3300/api';
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3300/api' 
+            : '/api';
 
         document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -735,18 +563,16 @@
             const subject = document.getElementById('contact_subject').value;
             const message = document.getElementById('contact_message').value.trim();
 
-            // Validation
             if (!name || !email || !subject || !message) {
                 alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
                 return;
             }
 
             if (message.length < 50) {
-                alert('Nội dung tin nhắn phải có ít nhất 50 ký tự!');
+                alert(`Nội dung tin nhắn phải có ít nhất 50 ký tự! (Hiện tại: ${message.length} ký tự)`);
                 return;
             }
 
-            // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 alert('Email không hợp lệ!');
@@ -761,9 +587,7 @@
             try {
                 const response = await fetch(`${API_URL}/contact`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         ho_ten: name,
                         email: email,
@@ -776,7 +600,6 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    // Show success message
                     document.getElementById('contactForm').classList.add('hidden');
                     document.getElementById('contactSuccess').classList.remove('hidden');
                 } else {
@@ -800,97 +623,127 @@
 
     <!-- Category Products Script -->
     <script>
+        // Category Product Suggestions Data
         const categoryProducts = {
-            phone: [
-                { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/i/p/iphone-15-pro-max_3.png' },
-                { name: 'iPhone 15 Pro', price: '28.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/i/p/iphone-15-pro_3.png' },
-                { name: 'iPhone 15', price: '22.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/i/p/iphone-15_2.png' },
-                { name: 'Samsung Galaxy S24 Ultra', price: '33.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-s24-ultra.png' },
-                { name: 'Samsung Galaxy Z Fold5', price: '41.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-z-fold-5-xanh.png' },
-                { name: 'Xiaomi 14 Ultra', price: '29.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/x/i/xiaomi-14-ultra-white.png' }
-            ],
-            laptop: [
-                { name: 'MacBook Pro 14 M3 Pro', price: '49.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/m/a/macbook-pro-14-inch-m3-pro-2023.png' },
-                { name: 'MacBook Air 15 M3', price: '32.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/m/a/macbook-air-15-m3-2024.png' },
-                { name: 'Dell XPS 15', price: '45.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/t/e/text_ng_n_12__1_52.png' },
-                { name: 'ASUS ROG Strix G16', price: '35.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/t/e/text_ng_n_5__5_32.png' },
-                { name: 'Lenovo Legion 5 Pro', price: '32.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/t/e/text_ng_n_5__5_18.png' },
-                { name: 'HP Victus 16', price: '25.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/t/e/text_ng_n_5__5_21.png' }
-            ],
-            appliances: [
-                { name: 'Tủ lạnh Samsung Inverter', price: '15.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/t/u/tu-lanh-samsung-inverter-406-lit-rt42cb6784c3sv.png' },
-                { name: 'Máy giặt LG AI DD', price: '12.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/m/a/may-giat-lg-ai-dd-inverter-10-kg-fv1410s4p.png' },
-                { name: 'Điều hòa Daikin Inverter', price: '11.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/d/i/dieu-hoa-daikin-inverter-1-hp-ftkz25vvmv.png' },
-                { name: 'Máy lọc không khí Xiaomi', price: '3.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/m/a/may-loc-khong-khi-xiaomi-smart-air-purifier-4-pro.png' },
-                { name: 'Robot hút bụi Ecovacs', price: '8.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/r/o/robot-hut-bui-lau-nha-ecovacs-deebot-t20-omni.png' },
-                { name: 'Nồi chiên không dầu Philips', price: '2.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/n/o/noi-chien-khong-dau-philips-hd9252-90.png' }
-            ],
-            accessories: [
-                { name: 'AirPods Pro 2', price: '5.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/a/i/airpods-pro-2-2024.png' },
-                { name: 'Apple Watch Series 9', price: '10.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/a/p/apple-watch-series-9-gps-41mm.png' },
-                { name: 'Samsung Galaxy Buds2 Pro', price: '3.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-buds-2-pro.png' },
-                { name: 'Sạc nhanh Apple 20W', price: '490.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/a/d/adapter-sac-apple-20w-usb-c-mhje3.png' },
-                { name: 'Cáp USB-C to Lightning', price: '490.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/c/a/cap-sac-apple-usb-c-to-lightning-1m.png' },
-                { name: 'Ốp lưng iPhone 15 Pro Max', price: '390.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/o/p/op-lung-iphone-15-pro-max-silicone-case-with-magsafe.png' }
-            ],
-            apple: [
-                { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/i/p/iphone-15-pro-max_3.png' },
-                { name: 'MacBook Pro 14 M3', price: '49.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/m/a/macbook-pro-14-inch-m3-pro-2023.png' },
-                { name: 'iPad Pro M4', price: '28.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/i/p/ipad-pro-m4-11-inch-wifi.png' },
-                { name: 'Apple Watch Ultra 2', price: '21.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/a/p/apple-watch-ultra-2-49mm-gps-cellular-vien-titanium-day-ocean-band.png' },
-                { name: 'AirPods Pro 2', price: '5.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/a/i/airpods-pro-2-2024.png' },
-                { name: 'iMac 24 M3', price: '35.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/i/m/imac-24-m3-2023.png' }
-            ],
-            samsung: [
-                { name: 'Samsung Galaxy S24 Ultra', price: '33.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-s24-ultra.png' },
-                { name: 'Samsung Galaxy Z Fold5', price: '41.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-z-fold-5-xanh.png' },
-                { name: 'Samsung Galaxy Z Flip5', price: '25.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-z-flip-5-xanh.png' },
-                { name: 'Samsung Galaxy Tab S9 Ultra', price: '27.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-tab-s9-ultra.png' },
-                { name: 'Samsung Galaxy Watch6 Classic', price: '9.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-watch-6-classic-43mm.png' },
-                { name: 'Samsung Galaxy Buds2 Pro', price: '3.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/s/a/samsung-galaxy-buds-2-pro.png' }
-            ],
-            xiaomi: [
-                { name: 'Xiaomi 14 Ultra', price: '29.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/x/i/xiaomi-14-ultra-white.png' },
-                { name: 'Xiaomi 14', price: '18.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/x/i/xiaomi-14.png' },
-                { name: 'Xiaomi Pad 6', price: '8.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/x/i/xiaomi-pad-6.png' },
-                { name: 'Xiaomi Watch S3', price: '3.490.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/x/i/xiaomi-watch-s3.png' },
-                { name: 'Xiaomi Buds 4 Pro', price: '2.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/x/i/xiaomi-buds-4-pro.png' },
-                { name: 'Xiaomi Robot Vacuum X10+', price: '12.990.000đ', image: 'https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/r/o/robot-hut-bui-lau-nha-xiaomi-robot-vacuum-x10.png' }
-            ]
+            phone: {
+                title: 'Điện thoại - Gợi ý cho bạn',
+                products: [
+                    { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Samsung S24 Ultra', price: '25.990.000đ', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Xiaomi 14 Pro', price: '19.990.000đ', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=200&h=200&fit=crop', tag: '-15%' },
+                    { name: 'OPPO Find X7', price: '22.990.000đ', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'iPhone 14 Pro', price: '27.990.000đ', image: 'https://images.unsplash.com/photo-1678911820864-e2c567c655d7?w=200&h=200&fit=crop', tag: '-10%' },
+                    { name: 'Samsung S23 FE', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=200&h=200&fit=crop', tag: 'SALE' }
+                ]
+            },
+            laptop: {
+                title: 'Laptop - Gợi ý cho bạn',
+                products: [
+                    { name: 'MacBook Pro M3', price: '54.990.000đ', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Dell XPS 15', price: '42.990.000đ', image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200&h=200&fit=crop', tag: '-10%' },
+                    { name: 'Asus ROG Zephyrus', price: '52.990.000đ', image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=200&h=200&fit=crop', tag: 'GAMING' },
+                    { name: 'HP Spectre x360', price: '38.990.000đ', image: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=200&h=200&fit=crop', tag: '-12%' },
+                    { name: 'Lenovo ThinkPad X1', price: '45.990.000đ', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'MSI Creator Z16', price: '49.990.000đ', image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=200&fit=crop', tag: 'HOT' }
+                ]
+            },
+            appliances: {
+                title: 'Điện máy - Gợi ý cho bạn',
+                products: [
+                    { name: 'Tủ lạnh Samsung Inverter', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400&h=400&fit=crop', tag: '-20%' },
+                    { name: 'Máy giặt LG AI', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Tivi Sony 4K 55"', price: '18.990.000đ', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Điều hòa Daikin Inverter', price: '9.990.000đ', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: '-15%' },
+                    { name: 'Máy lọc không khí Sharp', price: '5.990.000đ', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: 'SALE' },
+                    { name: 'Nồi cơm điện Toshiba', price: '2.490.000đ', image: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=400&fit=crop', tag: '-10%' }
+                ]
+            },
+            accessories: {
+                title: 'Phụ kiện - Gợi ý cho bạn',
+                products: [
+                    { name: 'AirPods Pro 2', price: '6.990.000đ', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Apple Watch Series 9', price: '10.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Bàn phím Logitech MX Keys', price: '2.990.000đ', image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&h=400&fit=crop', tag: '-10%' },
+                    { name: 'Chuột Logitech MX Master 3', price: '2.490.000đ', image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Tai nghe Sony WH-1000XM5', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1545127398-14699f92334b?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Webcam Logitech C920', price: '1.990.000đ', image: 'https://m.media-amazon.com/images/I/71iNwni9TsL._AC_SL1500_.jpg', tag: 'SALE' }
+                ]
+            },
+            apple: {
+                title: 'Apple - Sản phẩm nổi bật',
+                products: [
+                    { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'MacBook Pro M3', price: '54.990.000đ', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'iPad Pro 2024', price: '28.990.000đ', image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop', tag: '-17%' },
+                    { name: 'AirPods Pro 2', price: '6.990.000đ', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Apple Watch Series 9', price: '10.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'iMac 24" M3', price: '38.990.000đ', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=400&fit=crop', tag: '-10%' }
+                ]
+            },
+            samsung: {
+                title: 'Samsung - Sản phẩm nổi bật',
+                products: [
+                    { name: 'Samsung S24 Ultra', price: '25.990.000đ', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Galaxy Z Fold 5', price: '42.990.000đ', image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Galaxy Tab S9', price: '18.990.000đ', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=200&h=200&fit=crop', tag: '-15%' },
+                    { name: 'Galaxy Buds Pro', price: '4.990.000đ', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Galaxy Watch 6', price: '7.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Tủ lạnh Samsung Inverter', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=200&h=200&fit=crop', tag: '-20%' }
+                ]
+            },
+            xiaomi: {
+                title: 'Xiaomi - Sản phẩm nổi bật',
+                products: [
+                    { name: 'Xiaomi 14 Pro', price: '19.990.000đ', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Redmi Note 13 Pro', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=400&h=400&fit=crop', tag: '-10%' },
+                    { name: 'Xiaomi Pad 6', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Mi Band 8', price: '990.000đ', image: 'https://images.unsplash.com/photo-1557438159-51eec7a6c9e8?w=400&h=400&fit=crop', tag: 'SALE' },
+                    { name: 'Redmi Buds 4 Pro', price: '1.990.000đ', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop', tag: '-15%' },
+                    { name: 'Xiaomi Smart TV 55"', price: '9.990.000đ', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'HOT' }
+                ]
+            }
         };
 
-        const categoryTitles = {
-            phone: 'Điện thoại - Gợi ý cho bạn',
-            laptop: 'Laptop - Gợi ý cho bạn',
-            appliances: 'Điện máy - Gợi ý cho bạn',
-            accessories: 'Phụ kiện - Gợi ý cho bạn',
-            apple: 'Apple - Sản phẩm nổi bật',
-            samsung: 'Samsung - Sản phẩm nổi bật',
-            xiaomi: 'Xiaomi - Sản phẩm nổi bật'
-        };
-
+        // Function to show category products
         function showCategoryProducts(category) {
-            const products = categoryProducts[category] || [];
-            const title = categoryTitles[category] || 'Gợi ý cho bạn';
+            const titleEl = document.getElementById('categoryTitle');
+            const contentEl = document.getElementById('categoryContent');
             
-            document.getElementById('categoryTitle').textContent = title;
+            const data = categoryProducts[category];
+            if (!data) return;
             
-            const container = document.getElementById('categoryContent');
-            container.innerHTML = `
+            titleEl.textContent = data.title;
+            
+            // Update active menu item
+            document.querySelectorAll('.category-menu-item').forEach(item => {
+                item.classList.remove('bg-red-50', 'border-red-600');
+                if (item.dataset.category === category) {
+                    item.classList.add('bg-red-50', 'border-red-600');
+                }
+            });
+            
+            contentEl.innerHTML = `
                 <div class="grid grid-cols-3 gap-4">
-                    ${products.map(product => `
-                        <a href="products.html?search=${encodeURIComponent(product.name)}" class="group bg-white border border-gray-200 rounded-xl p-4 hover:shadow-lg hover:border-red-300 transition-all duration-300">
-                            <div class="aspect-square mb-3 overflow-hidden rounded-lg bg-gray-50">
-                                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
+                    ${data.products.map(product => `
+                        <div class="group bg-white rounded-lg border border-gray-200 hover:border-red-500 hover:shadow-xl transition overflow-hidden">
+                            <div class="relative">
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">${product.tag}</span>
                             </div>
-                            <h4 class="text-sm font-semibold text-gray-800 group-hover:text-red-600 transition line-clamp-2 mb-2">${product.name}</h4>
-                            <p class="text-red-600 font-bold text-base">${product.price}</p>
-                        </a>
+                            <div class="p-4">
+                                <h4 class="text-base font-semibold text-gray-800 mb-2 line-clamp-2 h-12">${product.name}</h4>
+                                <a href="products.html?search=${encodeURIComponent(product.name)}" class="block w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg transition text-sm mb-3 text-center">
+                                    Mua ngay
+                                </a>
+                                <p class="text-lg font-black text-red-600">${product.price}</p>
+                            </div>
+                        </div>
                     `).join('')}
                 </div>
             `;
         }
 
+        // Initialize with phone category on page load
         document.addEventListener('DOMContentLoaded', function() {
             showCategoryProducts('phone');
         });
