@@ -16,7 +16,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors({
     origin: '*',
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(bodyParser.json());
@@ -77,7 +79,12 @@ app.use('/api/products', require('./routes/products'));
 const authRouter = require('./routes/auth');
 console.log('Auth routes loaded:', authRouter.stack.map(r => r.route?.path).filter(Boolean));
 app.use('/api/auth', authRouter);
-app.use('/api/admin', require('./routes/admin'));
+
+// Log all admin routes
+const adminRouter = require('./routes/admin');
+console.log('Admin routes loaded:', adminRouter.stack.filter(r => r.route).map(r => ({path: r.route.path, methods: Object.keys(r.route.methods)})));
+app.use('/api/admin', adminRouter);
+
 app.use('/api/news', require('./routes/news'));
 app.use('/api/articles', require('./routes/articles'));
 app.use('/api/contact', require('./routes/contact'));

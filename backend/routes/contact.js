@@ -5,11 +5,15 @@ const { authenticateToken, requireAdmin } = require('./auth');
 
 // Gửi tin nhắn liên hệ (Public)
 router.post('/', async (req, res) => {
+    console.log('📩 Contact POST request received');
+    console.log('📦 Request body:', req.body);
+    
     try {
         const { ho_ten, email, so_dien_thoai, chu_de, noi_dung } = req.body;
 
         // Validation
-        if (!ho_ten || !email || !chu_de || !noi_dung) {
+        if (!ho_ten || !email || !noi_dung) {
+            console.log('❌ Validation failed: missing fields');
             return res.status(400).json({
                 success: false,
                 message: 'Vui lòng điền đầy đủ thông tin bắt buộc!'
@@ -17,6 +21,7 @@ router.post('/', async (req, res) => {
         }
 
         if (noi_dung.length < 50) {
+            console.log('❌ Validation failed: message too short');
             return res.status(400).json({
                 success: false,
                 message: 'Nội dung tin nhắn phải có ít nhất 50 ký tự!'
@@ -26,33 +31,22 @@ router.post('/', async (req, res) => {
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
+            console.log('❌ Validation failed: invalid email');
             return res.status(400).json({
                 success: false,
                 message: 'Email không hợp lệ!'
             });
         }
 
-        // Tạo bảng nếu chưa có
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS lien_he (
-                ma_lien_he INT AUTO_INCREMENT PRIMARY KEY,
-                ho_ten VARCHAR(100) NOT NULL,
-                email VARCHAR(100) NOT NULL,
-                so_dien_thoai VARCHAR(20),
-                chu_de VARCHAR(200) NOT NULL,
-                noi_dung TEXT NOT NULL,
-                trang_thai ENUM('chua_doc', 'da_doc', 'da_phan_hoi') DEFAULT 'chua_doc',
-                phan_hoi TEXT,
-                ngay_phan_hoi TIMESTAMP NULL,
-                ngay_tao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `);
+        console.log('✅ Validation passed, inserting data...');
 
         // Insert into database
         const [result] = await db.query(`
             INSERT INTO lien_he (ho_ten, email, so_dien_thoai, chu_de, noi_dung, trang_thai)
-            VALUES (?, ?, ?, ?, ?, 'chua_doc')
-        `, [ho_ten, email, so_dien_thoai || null, chu_de, noi_dung]);
+            VALUES (?, ?, ?, ?, ?, 'chua_phan_hoi')
+        `, [ho_ten, email, so_dien_thoai || null, chu_de || '', noi_dung]);
+
+        console.log('✅ Insert successful, ID:', result.insertId);
 
         res.json({
             success: true,
@@ -61,10 +55,11 @@ router.post('/', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Contact error:', error);
+        console.error('❌ Contact error:', error);
+        console.error('❌ Error stack:', error.stack);
         res.status(500).json({
             success: false,
-            message: 'Có lỗi xảy ra, vui lòng thử lại!'
+            message: 'Có lỗi xảy ra, vui lòng thử lại: ' + error.message
         });
     }
 });
@@ -84,7 +79,7 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
         }
 
         if (search) {
-            whereClause += ' AND (ho_ten LIKE ? OR email LIKE ? OR chu_de LIKE ? OR noi_dung LIKE ?)';
+            whereClause += ' AND (COALESCE(ho_ten, ten_nguoi_gui, "") LIKE ? OR email LIKE ? OR COALESCE(chu_de, "") LIKE ? OR noi_dung LIKE ?)';
             params.push(`%${search}%`, `%${search}%`, `%${search}%`, `%${search}%`);
         }
 
@@ -92,17 +87,26 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
         const [countResult] = await db.query(`SELECT COUNT(*) as total FROM lien_he WHERE ${whereClause}`, params);
         const total = countResult[0].total;
 
-        // Lấy danh sách
+        // Lấy danh sách - sử dụng COALESCE để hỗ trợ cả cột cũ và mới
         const [contacts] = await db.query(`
-            SELECT * FROM lien_he 
+            SELECT 
+                ma_lien_he,
+                COALESCE(ho_ten, ten_nguoi_gui) as ho_ten,
+                email,
+                so_dien_thoai,
+                COALESCE(chu_de, '') as chu_de,
+                noi_dung,
+                trang_thai,
+                COALESCE(ngay_gui, NOW()) as ngay_tao
+            FROM lien_he 
             WHERE ${whereClause}
             ORDER BY 
                 CASE trang_thai 
-                    WHEN 'chua_doc' THEN 1 
-                    WHEN 'da_doc' THEN 2 
+                    WHEN 'chua_phan_hoi' THEN 1 
+                    WHEN 'da_phan_hoi' THEN 2 
                     ELSE 3 
                 END,
-                ngay_tao DESC
+                ngay_gui DESC
             LIMIT ? OFFSET ?
         `, [...params, parseInt(limit), parseInt(offset)]);
 
@@ -110,8 +114,7 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
         const [stats] = await db.query(`
             SELECT 
                 COUNT(*) as total,
-                SUM(CASE WHEN trang_thai = 'chua_doc' THEN 1 ELSE 0 END) as chua_doc,
-                SUM(CASE WHEN trang_thai = 'da_doc' THEN 1 ELSE 0 END) as da_doc,
+                SUM(CASE WHEN trang_thai = 'chua_phan_hoi' THEN 1 ELSE 0 END) as chua_phan_hoi,
                 SUM(CASE WHEN trang_thai = 'da_phan_hoi' THEN 1 ELSE 0 END) as da_phan_hoi
             FROM lien_he
         `);
@@ -132,7 +135,7 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
         console.error('Get contacts error:', error);
         res.status(500).json({
             success: false,
-            message: 'Có lỗi xảy ra!'
+            message: 'Có lỗi xảy ra: ' + error.message
         });
     }
 });
@@ -143,7 +146,7 @@ router.put('/:id/status', authenticateToken, requireAdmin, async (req, res) => {
         const { id } = req.params;
         const { trang_thai } = req.body;
 
-        const validStatus = ['chua_doc', 'da_doc', 'da_phan_hoi'];
+        const validStatus = ['chua_phan_hoi', 'da_phan_hoi'];
         if (!validStatus.includes(trang_thai)) {
             return res.status(400).json({
                 success: false,
@@ -181,13 +184,15 @@ router.put('/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
         }
 
         // Kiểm tra liên hệ tồn tại
-        const [contacts] = await db.query('SELECT * FROM lien_he WHERE ma_lien_he = ?', [id]);
+        const [contacts] = await db.query('SELECT *, COALESCE(ho_ten, ten_nguoi_gui) as ten FROM lien_he WHERE ma_lien_he = ?', [id]);
         if (contacts.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Không tìm thấy liên hệ!'
             });
         }
+
+        const contact = contacts[0];
 
         // Cập nhật phản hồi
         await db.query(`
@@ -196,17 +201,40 @@ router.put('/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
             WHERE ma_lien_he = ?
         `, [phan_hoi.trim(), id]);
 
+        // Tìm tài khoản người dùng dựa trên email để gửi thông báo
+        try {
+            const [users] = await db.query('SELECT ma_tai_khoan FROM tai_khoan WHERE email = ?', [contact.email]);
+            
+            if (users.length > 0) {
+                // Tạo thông báo cho người dùng
+                await db.query(`
+                    INSERT INTO thong_bao (ma_tai_khoan, loai_thong_bao, tieu_de, noi_dung, duong_dan, da_doc)
+                    VALUES (?, 'system', ?, ?, ?, 0)
+                `, [
+                    users[0].ma_tai_khoan,
+                    `Phản hồi liên hệ: ${contact.chu_de || 'Tin nhắn của bạn'}`,
+                    phan_hoi.trim(),
+                    'notifications.html'
+                ]);
+                console.log('✅ Đã tạo thông báo cho người dùng:', contact.email);
+            } else {
+                console.log('⚠️ Không tìm thấy tài khoản với email:', contact.email);
+            }
+        } catch (notifyError) {
+            console.log('⚠️ Không thể tạo thông báo:', notifyError.message);
+        }
+
         // Gửi email phản hồi (nếu có cấu hình mailer)
         try {
             const mailer = require('../config/mailer');
             if (mailer && mailer.sendMail) {
                 await mailer.sendMail({
-                    to: contacts[0].email,
-                    subject: `Re: ${contacts[0].chu_de} - Yến Nhi Tech`,
+                    to: contact.email,
+                    subject: `Re: ${contact.chu_de || 'Liên hệ'} - Yến Nhi Tech`,
                     html: `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                             <h2 style="color: #1e40af;">Phản hồi từ Yến Nhi Tech</h2>
-                            <p>Xin chào <strong>${contacts[0].ho_ten}</strong>,</p>
+                            <p>Xin chào <strong>${contact.ten || 'Quý khách'}</strong>,</p>
                             <p>Cảm ơn bạn đã liên hệ với chúng tôi. Dưới đây là phản hồi cho câu hỏi của bạn:</p>
                             <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 15px 0;">
                                 <p style="color: #374151; margin: 0;">${phan_hoi}</p>
@@ -214,7 +242,7 @@ router.put('/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
                             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
                             <p style="color: #6b7280; font-size: 14px;">
                                 <strong>Tin nhắn gốc của bạn:</strong><br>
-                                ${contacts[0].noi_dung}
+                                ${contact.noi_dung}
                             </p>
                             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
                             <p style="color: #6b7280; font-size: 12px;">
@@ -224,7 +252,7 @@ router.put('/:id/reply', authenticateToken, requireAdmin, async (req, res) => {
                         </div>
                     `
                 });
-                console.log('✅ Email phản hồi đã được gửi đến:', contacts[0].email);
+                console.log('✅ Email phản hồi đã được gửi đến:', contact.email);
             }
         } catch (emailError) {
             console.log('⚠️ Không thể gửi email phản hồi:', emailError.message);

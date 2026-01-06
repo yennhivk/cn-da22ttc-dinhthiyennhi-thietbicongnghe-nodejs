@@ -70,17 +70,29 @@ router.get('/', authenticateToken, async (req, res) => {
         }
     }
 
-    // 3. Thêm thông báo hệ thống mặc định - LUÔN thêm vào
+    // 3. Lấy thông báo từ bảng thong_bao (bao gồm phản hồi liên hệ)
     if (!type || type === 'all' || type === 'system') {
-        allNotifications.push({
-            id: 'system_welcome',
-            type: 'system',
-            title: '🔔 Chào mừng bạn đến với Yến Nhi Tech!',
-            message: 'Cảm ơn bạn đã đăng ký tài khoản. Khám phá ngay các sản phẩm công nghệ hàng đầu.',
-            link: null,
-            time: new Date(),
-            read: 0
-        });
+        try {
+            const [systemNotifs] = await db.query(`
+                SELECT 
+                    CONCAT('notif_', ma_thong_bao) as id,
+                    loai_thong_bao as type,
+                    tieu_de as title,
+                    noi_dung as message,
+                    duong_dan as link,
+                    ngay_tao as time,
+                    da_doc as is_read
+                FROM thong_bao 
+                WHERE ma_tai_khoan = ? OR ma_tai_khoan IS NULL
+                ORDER BY ngay_tao DESC
+                LIMIT 20
+            `, [userId]);
+            console.log('🔔 System notifications found:', systemNotifs.length);
+            const mappedNotifs = systemNotifs.map(n => ({ ...n, read: n.is_read }));
+            allNotifications = [...allNotifications, ...mappedNotifs];
+        } catch (notifError) {
+            console.error('❌ Error fetching system notifications:', notifError.message);
+        }
     }
 
     // Sắp xếp theo thời gian mới nhất

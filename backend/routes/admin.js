@@ -317,6 +317,11 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
 // QUẢN LÝ SẢN PHẨM
 // ==========================================
 
+// Test route để debug
+router.get('/test-image-route/:productId/images/:imageId', (req, res) => {
+    res.json({ success: true, params: req.params, message: 'Route hoạt động!' });
+});
+
 // Lấy tất cả sản phẩm (admin - bao gồm cả ẩn)
 router.get('/products', authenticateToken, requireAdmin, async (req, res) => {
     try {
@@ -449,6 +454,69 @@ router.put('/products/:id', authenticateToken, requireAdmin, async (req, res) =>
     }
 });
 
+// ==========================================
+// QUẢN LÝ ẢNH SẢN PHẨM (đặt trước route xóa sản phẩm)
+// ==========================================
+
+// Xóa ảnh sản phẩm
+router.delete('/products/:productId/images/:imageId', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { productId, imageId } = req.params;
+        
+        console.log('🗑️ Delete image request:', { productId, imageId });
+
+        // Kiểm tra ảnh có tồn tại không
+        const [image] = await db.query('SELECT * FROM anh_san_pham WHERE ma_anh = ? AND ma_san_pham = ?', [imageId, productId]);
+        
+        console.log('🔍 Found image:', image);
+        
+        if (image.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy hình ảnh' });
+        }
+
+        const wasMain = image[0].la_anh_chinh == 1 || image[0].la_anh_chinh === true;
+        console.log('📌 Was main image:', wasMain);
+
+        // Xóa ảnh
+        const [deleteResult] = await db.query(`DELETE FROM anh_san_pham WHERE ma_anh = ?`, [imageId]);
+        console.log('🗑️ Delete result:', deleteResult);
+
+        // Nếu ảnh bị xóa là ảnh chính, đặt ảnh đầu tiên còn lại làm ảnh chính
+        if (wasMain) {
+            const [updateResult] = await db.query(`
+                UPDATE anh_san_pham SET la_anh_chinh = 1 
+                WHERE ma_san_pham = ? 
+                ORDER BY ma_anh ASC 
+                LIMIT 1
+            `, [productId]);
+            console.log('📌 Set new main image:', updateResult);
+        }
+
+        res.json({ success: true, message: 'Đã xóa hình ảnh' });
+    } catch (error) {
+        console.error('❌ Delete image error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi xóa hình ảnh: ' + error.message });
+    }
+});
+
+// Đặt ảnh chính
+router.put('/products/:productId/images/:imageId/main', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { productId, imageId } = req.params;
+
+        // Bỏ flag ảnh chính cũ
+        await db.query(`UPDATE anh_san_pham SET la_anh_chinh = 0 WHERE ma_san_pham = ?`, [productId]);
+        
+        // Đặt ảnh mới làm ảnh chính
+        await db.query(`UPDATE anh_san_pham SET la_anh_chinh = 1 WHERE ma_anh = ? AND ma_san_pham = ?`, [imageId, productId]);
+
+        res.json({ success: true, message: 'Đã đặt làm ảnh chính' });
+    } catch (error) {
+        console.error('Set main image error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi cập nhật: ' + error.message });
+    }
+});
+
 // Xóa sản phẩm
 router.delete('/products/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
@@ -536,6 +604,47 @@ router.post('/products/:id/images', authenticateToken, requireAdmin, upload.arra
         console.error('❌ Upload image error:', error.message);
         console.error('❌ Stack:', error.stack);
         res.status(500).json({ success: false, message: 'Lỗi upload: ' + error.message });
+    }
+});
+
+// Thêm ảnh từ URL
+router.post('/products/:id/images/url', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const { url, is_main } = req.body;
+
+        if (!url) {
+            return res.status(400).json({ success: false, message: 'Vui lòng nhập URL hình ảnh' });
+        }
+
+        // Kiểm tra sản phẩm tồn tại
+        const [product] = await db.query('SELECT ma_san_pham FROM san_pham WHERE ma_san_pham = ?', [productId]);
+        if (product.length === 0) {
+            return res.status(404).json({ success: false, message: 'Sản phẩm không tồn tại' });
+        }
+
+        // Nếu là ảnh chính, bỏ flag ảnh chính cũ
+        if (is_main) {
+            await db.query(`UPDATE anh_san_pham SET la_anh_chinh = 0 WHERE ma_san_pham = ?`, [productId]);
+        }
+
+        // Kiểm tra xem đã có ảnh nào chưa
+        const [existingImages] = await db.query('SELECT COUNT(*) as count FROM anh_san_pham WHERE ma_san_pham = ?', [productId]);
+        const isFirstImage = existingImages[0].count === 0;
+
+        const [result] = await db.query(`
+            INSERT INTO anh_san_pham (ma_san_pham, duong_dan_anh, la_anh_chinh)
+            VALUES (?, ?, ?)
+        `, [productId, url, is_main || isFirstImage ? 1 : 0]);
+
+        res.json({ 
+            success: true, 
+            message: 'Thêm hình ảnh thành công', 
+            data: { ma_anh: result.insertId, duong_dan_anh: url } 
+        });
+    } catch (error) {
+        console.error('Add image URL error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi thêm hình ảnh: ' + error.message });
     }
 });
 
