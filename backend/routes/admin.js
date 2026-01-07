@@ -133,7 +133,7 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         console.log('✅ TopProducts done');
 
         console.log('8️⃣ Query topCustomers...');
-        // Top 10 khách hàng mua nhiều nhất
+        // Top 10 khách hàng mua nhiều nhất (tính cả đơn đang xử lý và hoàn thành)
         const [topCustomers] = await db.query(`
             SELECT 
                 tk.ma_tai_khoan,
@@ -143,7 +143,7 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
                 COALESCE(SUM(dh.tong_tien), 0) as total_spent
             FROM tai_khoan tk
             JOIN don_hang dh ON tk.ma_tai_khoan = dh.ma_tai_khoan
-            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilterDH}
+            WHERE dh.trang_thai_don_hang IN ('hoan_thanh', 'dang_xu_ly', 'dang_giao') ${dateFilterDH}
             GROUP BY tk.ma_tai_khoan, tk.ten_dang_nhap, tk.email
             ORDER BY total_spent DESC
             LIMIT 10
@@ -264,17 +264,19 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         console.log('✅ TopRatedProducts done');
 
         console.log('1️⃣6️⃣ Query customerGrowth...');
-        // Tỷ lệ tăng trưởng khách hàng theo tháng (12 tháng gần nhất)
+        // Khách hàng mới theo ngày (60 ngày gần nhất, bao gồm cả ngày không có khách mới)
         let customerGrowth = [];
         try {
+            // Lấy dữ liệu khách hàng mới theo ngày
             const [growth] = await db.query(`
                 SELECT 
-                    DATE_FORMAT(ngay_tao, '%Y-%m') as thang,
+                    DATE_FORMAT(ngay_tao, '%d/%m') as ngay,
+                    DATE_FORMAT(ngay_tao, '%Y-%m-%d') as ngay_full,
                     COUNT(*) as so_khach_moi
                 FROM tai_khoan
-                WHERE vai_tro = 'khach_hang' AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
-                GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m')
-                ORDER BY thang ASC
+                WHERE vai_tro = 'khach_hang' AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 60 DAY)
+                GROUP BY DATE_FORMAT(ngay_tao, '%Y-%m-%d'), DATE_FORMAT(ngay_tao, '%d/%m')
+                ORDER BY ngay_full ASC
             `);
             customerGrowth = growth;
         } catch (e) {
