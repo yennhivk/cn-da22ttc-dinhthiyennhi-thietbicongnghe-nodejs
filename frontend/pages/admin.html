@@ -354,20 +354,6 @@
 
                 <!-- Flash Sale Section -->
                 <section id="section-flash-sale" class="content-section">
-                    <!-- Header -->
-                    <div class="bg-gradient-to-r from-red-500 to-orange-500 rounded-xl shadow-lg p-6 mb-6 text-white">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h2 class="text-2xl font-bold mb-2">⚡ Flash Sale - Giờ Vàng Giá Sốc</h2>
-                                <p class="text-sm opacity-90">Quản lý các chương trình khuyến mãi đặc biệt</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-3xl font-bold" id="flash-sale-count">0</p>
-                                <p class="text-sm opacity-90">Sản phẩm đang sale</p>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Tabs -->
                     <div class="bg-white rounded-xl shadow-lg mb-6">
                         <div class="flex border-b">
@@ -4200,8 +4186,11 @@
                     const upcoming = flashSales.filter(fs => new Date(fs.thoi_gian_bat_dau) > now);
                     const ended = flashSales.filter(fs => new Date(fs.thoi_gian_ket_thuc) < now);
                     
-                    // Update count
-                    document.getElementById('flash-sale-count').textContent = active.length;
+                    // Update count (nếu element tồn tại)
+                    const countElement = document.getElementById('flash-sale-count');
+                    if (countElement) {
+                        countElement.textContent = active.length;
+                    }
                     
                     // Render các tab
                     renderFlashSaleCards('active-flash-sales', active);
@@ -4238,7 +4227,10 @@
                 if (el) el.innerHTML = errorHtml;
             });
             
-            document.getElementById('flash-sale-count').textContent = '0';
+            const countElement = document.getElementById('flash-sale-count');
+            if (countElement) {
+                countElement.textContent = '0';
+            }
         }
 
         function renderFlashSaleCards(containerId, flashSales) {
