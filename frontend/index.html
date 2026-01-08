@@ -770,6 +770,33 @@
         </div>
     </section>
 
+    <!-- Flash Sale Section - Giờ Vàng Giá Sốc -->
+    <section id="flash-sale-section" class="py-8 bg-gradient-to-r from-red-50 to-orange-50" style="display: none;">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="bg-gradient-to-r from-red-600 to-orange-500 text-white px-4 py-2 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-bold flex items-center gap-2">
+                            ⚡ FLASH SALE - GIỜ VÀNG GIÁ SỐC
+                        </h2>
+                    </div>
+                    <div class="bg-yellow-400 text-red-600 px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                        🔥 ĐANG DIỄN RA
+                    </div>
+                </div>
+                <a href="pages/products.html" class="text-red-600 hover:text-red-700 font-semibold flex items-center gap-1">
+                    Xem tất cả →
+                </a>
+            </div>
+            
+            <!-- Products Grid -->
+            <div id="flash-sale-products" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
     <!-- Promotional Banners Grid -->
     <section class="py-6 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4">
@@ -1953,7 +1980,7 @@
             if (!user || !token) return;
             
             try {
-                const response = await fetch('http://localhost:3000/api/notifications/unread-count', {
+                const response = await fetch('http://localhost:3300/api/notifications/unread-count', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
@@ -2094,6 +2121,9 @@
     
     <!-- Seasonal Effects - Hoa Mai & Tuyết Rơi -->
     <script src="js/seasonal-effects.js"></script>
+    
+    <!-- Flash Sale -->
+    <script src="js/flash-sale.js"></script>
 </body>
 </html>
 

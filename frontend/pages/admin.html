@@ -358,16 +358,20 @@
                     <div class="bg-white rounded-xl shadow-lg mb-6">
                         <div class="flex border-b">
                             <button onclick="switchFlashSaleTab('active')" class="flash-sale-tab active flex-1 px-6 py-3 font-semibold text-gray-700 border-b-2 border-red-500" data-tab="active">
-                                🔥 Đang diễn ra
+                                <span>🔥 Đang diễn ra</span>
+                                <span id="active-count" class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">0</span>
                             </button>
                             <button onclick="switchFlashSaleTab('upcoming')" class="flash-sale-tab flex-1 px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700" data-tab="upcoming">
-                                ⏰ Sắp diễn ra
+                                <span>⏰ Sắp diễn ra</span>
+                                <span id="upcoming-count" class="ml-2 bg-gray-400 text-white text-xs px-2 py-1 rounded-full">0</span>
                             </button>
                             <button onclick="switchFlashSaleTab('ended')" class="flash-sale-tab flex-1 px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700" data-tab="ended">
-                                ✅ Đã kết thúc
+                                <span>✅ Đã kết thúc</span>
+                                <span id="ended-count" class="ml-2 bg-gray-400 text-white text-xs px-2 py-1 rounded-full">0</span>
                             </button>
                             <button onclick="switchFlashSaleTab('slow-products')" class="flash-sale-tab flex-1 px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700" data-tab="slow-products">
-                                🐌 Sản phẩm bán chậm
+                                <span>🐌 Sản phẩm bán chậm</span>
+                                <span id="slow-products-count" class="ml-2 bg-gray-400 text-white text-xs px-2 py-1 rounded-full">0</span>
                             </button>
                         </div>
                     </div>
@@ -4162,6 +4166,27 @@
         let flashSaleProductData = {};
         let currentFlashSaleTab = 'active';
 
+        // Helper function to update count badges
+        function updateCountBadge(elementId, count) {
+            const badge = document.getElementById(elementId);
+            if (badge) {
+                badge.textContent = count;
+                
+                // Check if this badge's tab is currently active
+                const parentTab = badge.closest('.flash-sale-tab');
+                const isActive = parentTab && parentTab.classList.contains('active');
+                
+                // Update badge color: red if active tab and has count, gray otherwise
+                if (isActive && count > 0) {
+                    badge.classList.remove('bg-gray-400');
+                    badge.classList.add('bg-red-500');
+                } else {
+                    badge.classList.remove('bg-red-500');
+                    badge.classList.add('bg-gray-400');
+                }
+            }
+        }
+
         // Load Flash Sale data
         async function loadFlashSales() {
             try {
@@ -4185,6 +4210,11 @@
                     );
                     const upcoming = flashSales.filter(fs => new Date(fs.thoi_gian_bat_dau) > now);
                     const ended = flashSales.filter(fs => new Date(fs.thoi_gian_ket_thuc) < now);
+                    
+                    // Update count badges
+                    updateCountBadge('active-count', active.length);
+                    updateCountBadge('upcoming-count', upcoming.length);
+                    updateCountBadge('ended-count', ended.length);
                     
                     // Update count (nếu element tồn tại)
                     const countElement = document.getElementById('flash-sale-count');
@@ -4226,6 +4256,12 @@
                 const el = document.getElementById(id);
                 if (el) el.innerHTML = errorHtml;
             });
+            
+            // Reset all count badges
+            updateCountBadge('active-count', 0);
+            updateCountBadge('upcoming-count', 0);
+            updateCountBadge('ended-count', 0);
+            updateCountBadge('slow-products-count', 0);
             
             const countElement = document.getElementById('flash-sale-count');
             if (countElement) {
@@ -4301,6 +4337,7 @@
                 
                 if (data.success) {
                     const slowProducts = data.data.slow_moving_products || [];
+                    updateCountBadge('slow-products-count', slowProducts.length);
                     renderSlowProductsForFlashSale(slowProducts);
                 }
             } catch (error) {
@@ -4370,10 +4407,25 @@
             document.querySelectorAll('.flash-sale-tab').forEach(btn => {
                 btn.classList.remove('active', 'border-red-500', 'text-gray-700');
                 btn.classList.add('text-gray-500', 'border-transparent');
+                
+                // Reset badge colors to gray for inactive tabs
+                const badge = btn.querySelector('span[id$="-count"]');
+                if (badge) {
+                    badge.classList.remove('bg-red-500');
+                    badge.classList.add('bg-gray-400');
+                }
             });
+            
             const activeTab = document.querySelector(`.flash-sale-tab[data-tab="${tab}"]`);
             activeTab.classList.add('active', 'border-red-500', 'text-gray-700');
             activeTab.classList.remove('text-gray-500', 'border-transparent');
+            
+            // Update active tab badge color to red
+            const activeBadge = activeTab.querySelector('span[id$="-count"]');
+            if (activeBadge && parseInt(activeBadge.textContent) > 0) {
+                activeBadge.classList.remove('bg-gray-400');
+                activeBadge.classList.add('bg-red-500');
+            }
             
             // Show/hide content
             document.querySelectorAll('.flash-sale-tab-content').forEach(content => {

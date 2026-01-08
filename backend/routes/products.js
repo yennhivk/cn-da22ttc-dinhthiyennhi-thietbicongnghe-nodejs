@@ -2,6 +2,37 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 
+// ==========================================
+// FLASH SALE - PUBLIC API (phải đặt trước route /:id)
+// ==========================================
+
+// Lấy danh sách sản phẩm Flash Sale đang diễn ra (không cần auth)
+router.get('/flash-sale', async (req, res) => {
+    try {
+        const [flashSales] = await db.query(`
+            SELECT 
+                fs.*,
+                sp.ten_san_pham,
+                sp.mo_ta,
+                sp.thuong_hieu,
+                (SELECT duong_dan_anh FROM anh_san_pham 
+                 WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
+            FROM flash_sale fs
+            JOIN san_pham sp ON fs.ma_san_pham = sp.ma_san_pham
+            WHERE fs.thoi_gian_bat_dau <= NOW() 
+              AND fs.thoi_gian_ket_thuc >= NOW()
+              AND sp.trang_thai = 'hien_thi'
+            ORDER BY fs.phan_tram_giam DESC, fs.ngay_tao DESC
+            LIMIT 20
+        `);
+        
+        res.json({ success: true, data: flashSales });
+    } catch (error) {
+        console.error('Get flash sale error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
 // GET - Lấy tất cả sản phẩm với thông tin ảnh và danh mục
 router.get('/', async (req, res) => {
     try {

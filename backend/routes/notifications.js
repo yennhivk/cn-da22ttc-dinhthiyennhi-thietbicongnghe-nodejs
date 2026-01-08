@@ -158,25 +158,43 @@ router.get('/public', async (req, res) => {
     });
 });
 
-// Đếm số thông báo (khuyến mãi + đơn hàng mới)
-router.get('/unread-count', authenticateToken, async (req, res) => {
+// Đếm số thông báo công khai (không cần đăng nhập)
+router.get('/unread-count', async (req, res) => {
     try {
-        const userId = req.user.ma_tai_khoan;
+        // Kiểm tra xem có token không
+        const authHeader = req.headers.authorization;
+        let userId = null;
+        
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.split(' ')[1];
+            const jwt = require('jsonwebtoken');
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_key_here_change_in_production');
+                userId = decoded.ma_tai_khoan;
+            } catch (err) {
+                // Token không hợp lệ, tiếp tục như guest
+                console.log('Invalid token, continue as guest');
+            }
+        }
 
-        // Đếm khuyến mãi đang hoạt động
+        // Đếm khuyến mãi đang hoạt động (public)
         const [promoCount] = await db.query(`
             SELECT COUNT(*) as count FROM khuyen_mai 
             WHERE trang_thai = 1 AND ngay_ket_thuc >= NOW()
         `);
 
-        // Đếm đơn hàng của user (trong 30 ngày gần đây)
-        const [orderCount] = await db.query(`
-            SELECT COUNT(*) as count FROM don_hang 
-            WHERE ma_tai_khoan = ? AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-        `, [userId]);
+        let orderCount = 0;
+        if (userId) {
+            // Đếm đơn hàng của user (trong 30 ngày gần đây)
+            const [orders] = await db.query(`
+                SELECT COUNT(*) as count FROM don_hang 
+                WHERE ma_tai_khoan = ? AND ngay_tao >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            `, [userId]);
+            orderCount = orders[0]?.count || 0;
+        }
 
         // +1 cho thông báo hệ thống chào mừng
-        const totalCount = (promoCount[0]?.count || 0) + (orderCount[0]?.count || 0) + 1;
+        const totalCount = (promoCount[0]?.count || 0) + orderCount + 1;
 
         res.json({
             success: true,
