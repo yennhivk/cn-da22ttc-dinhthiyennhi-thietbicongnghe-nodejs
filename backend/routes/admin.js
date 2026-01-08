@@ -284,6 +284,35 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         }
         console.log('✅ CustomerGrowth done');
 
+        console.log('1️⃣7️⃣ Query slowMovingProducts...');
+        // Sản phẩm bán chậm (không có lượt bán trong 2 tháng gần nhất)
+        let slowMovingProducts = [];
+        try {
+            const [slowProducts] = await db.query(`
+                SELECT 
+                    sp.ma_san_pham,
+                    sp.ten_san_pham,
+                    sp.gia,
+                    sp.so_luong as ton_kho,
+                    (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh,
+                    COALESCE(MAX(dh.ngay_tao), sp.ngay_tao) as ngay_ban_cuoi
+                FROM san_pham sp
+                LEFT JOIN chi_tiet_don_hang ctdh ON sp.ma_san_pham = ctdh.ma_san_pham
+                LEFT JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang 
+                    AND dh.trang_thai_don_hang = 'hoan_thanh'
+                    AND dh.ngay_tao >= DATE_SUB(NOW(), INTERVAL 2 MONTH)
+                WHERE sp.trang_thai = 'hien_thi'
+                GROUP BY sp.ma_san_pham, sp.ten_san_pham, sp.gia, sp.so_luong, sp.ngay_tao
+                HAVING MAX(dh.ngay_tao) IS NULL OR MAX(dh.ngay_tao) < DATE_SUB(NOW(), INTERVAL 2 MONTH)
+                ORDER BY sp.so_luong DESC, sp.ngay_tao DESC
+                LIMIT 10
+            `);
+            slowMovingProducts = slowProducts;
+        } catch (e) {
+            console.log('⚠️ Slow moving products error:', e.message);
+        }
+        console.log('✅ SlowMovingProducts done');
+
         console.log('✅ All queries done, sending response...');
         res.json({
             success: true,
@@ -305,7 +334,8 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
                 news_stats: newsStats,
                 news_monthly_stats: newsMonthlyStats,
                 top_rated_products: topRatedProducts,
-                customer_growth: customerGrowth
+                customer_growth: customerGrowth,
+                slow_moving_products: slowMovingProducts
             }
         });
     } catch (error) {
@@ -1462,6 +1492,90 @@ router.delete('/notifications/:id', authenticateToken, requireAdmin, async (req,
     } catch (error) {
         console.error('Delete notification error:', error);
         res.status(500).json({ success: false, message: 'Lỗi xóa thông báo' });
+    }
+});
+
+// ==========================================
+// FLASH SALE - GIỜ VÀNG GIÁ SỐC
+// ==========================================
+
+// Thêm sản phẩm vào flash sale
+router.post('/flash-sale', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const { ma_san_pham, gia_sale, phan_tram_giam, so_luong_gioi_han, thoi_gian_bat_dau, thoi_gian_ket_thuc } = req.body;
+        
+        // Lấy giá gốc của sản phẩm
+        const [product] = await db.query('SELECT gia FROM san_pham WHERE ma_san_pham = ?', [ma_san_pham]);
+        if (product.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy sản phẩm' });
+        }
+        
+        const gia_goc = product[0].gia;
+        
+        // Kiểm tra xem sản phẩm đã có trong flash sale đang hoạt động chưa
+        const [existing] = await db.query(
+            `SELECT * FROM flash_sale 
+             WHERE ma_san_pham = ? 
+             AND trang_thai IN ('cho_dien_ra', 'dang_dien_ra')
+             AND thoi_gian_ket_thuc > NOW()`,
+            [ma_san_pham]
+        );
+        
+        if (existing.length > 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Sản phẩm đã có trong flash sale đang hoạt động' 
+            });
+        }
+        
+        // Thêm vào flash sale
+        const [result] = await db.query(
+            `INSERT INTO flash_sale 
+             (ma_san_pham, gia_goc, gia_sale, phan_tram_giam, so_luong_gioi_han, 
+              thoi_gian_bat_dau, thoi_gian_ket_thuc, nguoi_tao) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [ma_san_pham, gia_goc, gia_sale, phan_tram_giam, so_luong_gioi_han, 
+             thoi_gian_bat_dau, thoi_gian_ket_thuc, req.user.ten_dang_nhap]
+        );
+        
+        res.json({ 
+            success: true, 
+            message: 'Đã thêm sản phẩm vào flash sale',
+            ma_flash_sale: result.insertId
+        });
+    } catch (error) {
+        console.error('Add flash sale error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server', error: error.message });
+    }
+});
+
+// Lấy danh sách flash sale
+router.get('/flash-sale', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const [flashSales] = await db.query(
+            `SELECT fs.*, sp.ten_san_pham, sp.so_luong as ton_kho,
+                    (SELECT duong_dan_anh FROM anh_san_pham 
+                     WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
+             FROM flash_sale fs
+             JOIN san_pham sp ON fs.ma_san_pham = sp.ma_san_pham
+             ORDER BY fs.ngay_tao DESC`
+        );
+        
+        res.json({ success: true, data: flashSales });
+    } catch (error) {
+        console.error('Get flash sale error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// Xóa sản phẩm khỏi flash sale
+router.delete('/flash-sale/:id', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        await db.query('DELETE FROM flash_sale WHERE ma_flash_sale = ?', [req.params.id]);
+        res.json({ success: true, message: 'Đã xóa khỏi flash sale' });
+    } catch (error) {
+        console.error('Delete flash sale error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
 

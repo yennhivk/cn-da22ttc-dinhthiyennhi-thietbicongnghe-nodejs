@@ -80,6 +80,7 @@
                 <a href="#" onclick="showSection('articles')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="articles">📝 Bài viết</a>
                 <a href="#" onclick="showSection('reviews')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="reviews">⭐ Đánh giá</a>
                 <a href="#" onclick="showSection('promotions')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="promotions">🎁 Khuyến mãi</a>
+                <a href="#" onclick="showSection('flash-sale')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="flash-sale">⚡ Flash Sale</a>
                 <a href="#" onclick="showSection('contacts')" class="sidebar-item flex items-center gap-3 px-4 py-3" data-section="contacts">📞 Liên hệ <span id="contactBadge" class="hidden bg-red-500 text-white text-xs px-2 py-0.5 rounded-full ml-auto">0</span></a>
             </nav>
             <div class="p-4 border-t border-blue-800">
@@ -210,7 +211,7 @@
                             <canvas id="categoryRevenueChart" height="90"></canvas>
                         </div>
                         <div class="bg-white rounded-lg shadow p-3 border-t-3 border-purple-400">
-                            <h3 class="font-bold text-gray-700 mb-1 text-xs">🏆 Top bán chạy</h3>
+                            <h3 class="font-bold text-gray-700 mb-1 text-xs">🏆 Top sản phẩm bán chạy</h3>
                             <div id="top-products" class="space-y-1 text-xs"></div>
                         </div>
                     </div>
@@ -222,7 +223,7 @@
                             <canvas id="newsChart" height="90"></canvas>
                         </div>
                         <div class="bg-white rounded-lg shadow p-3 border-t-3 border-indigo-400 lg:col-span-2">
-                            <h3 class="font-bold text-gray-700 mb-1 text-xs">�️ Số lượng bài viết theo tháng</h3>
+                            <h3 class="font-bold text-gray-700 mb-1 text-xs">📝 Số lượng bài viết theo tháng</h3>
                             <canvas id="newsViewsChart" height="90"></canvas>
                         </div>
                     </div>
@@ -255,6 +256,27 @@
                             <h3 class="font-bold text-gray-700 mb-1 text-xs text-center">👑 Top 10 khách hàng mua nhiều nhất</h3>
                             <div style="height: 220px;">
                                 <canvas id="topCustomersChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 7: Slow Moving Products Summary Chart -->
+                    <div class="grid grid-cols-1 gap-2 mt-4">
+                        <div class="bg-white rounded-lg shadow p-4 border-t-4 border-orange-500">
+                            <div class="flex items-center justify-between mb-3">
+                                <div>
+                                    <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                                        🐌 Tổng quan sản phẩm bán chậm
+                                        <span class="text-xs font-normal text-gray-500 bg-orange-100 px-2 py-1 rounded">Không bán trong 2 tháng</span>
+                                    </h3>
+                                    <p class="text-xs text-gray-600 mt-1">Biểu đồ thống kê các sản phẩm cần chú ý</p>
+                                </div>
+                                <button onclick="showSection('flash-sale')" class="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                                    ⚡ Quản lý Flash Sale
+                                </button>
+                            </div>
+                            <div style="height: 300px;">
+                                <canvas id="slowProductsChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -327,6 +349,65 @@
                             </thead>
                             <tbody id="products-table"></tbody>
                         </table>
+                    </div>
+                </section>
+
+                <!-- Flash Sale Section -->
+                <section id="section-flash-sale" class="content-section">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-red-500 to-orange-500 rounded-xl shadow-lg p-6 mb-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-2xl font-bold mb-2">⚡ Flash Sale - Giờ Vàng Giá Sốc</h2>
+                                <p class="text-sm opacity-90">Quản lý các chương trình khuyến mãi đặc biệt</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-3xl font-bold" id="flash-sale-count">0</p>
+                                <p class="text-sm opacity-90">Sản phẩm đang sale</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="bg-white rounded-xl shadow-lg mb-6">
+                        <div class="flex border-b">
+                            <button onclick="switchFlashSaleTab('active')" class="flash-sale-tab active flex-1 px-6 py-3 font-semibold text-gray-700 border-b-2 border-red-500" data-tab="active">
+                                🔥 Đang diễn ra
+                            </button>
+                            <button onclick="switchFlashSaleTab('upcoming')" class="flash-sale-tab flex-1 px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700" data-tab="upcoming">
+                                ⏰ Sắp diễn ra
+                            </button>
+                            <button onclick="switchFlashSaleTab('ended')" class="flash-sale-tab flex-1 px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700" data-tab="ended">
+                                ✅ Đã kết thúc
+                            </button>
+                            <button onclick="switchFlashSaleTab('slow-products')" class="flash-sale-tab flex-1 px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-gray-700" data-tab="slow-products">
+                                🐌 Sản phẩm bán chậm
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Active Flash Sales -->
+                    <div id="flash-sale-tab-active" class="flash-sale-tab-content">
+                        <div id="active-flash-sales" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                    </div>
+
+                    <!-- Tab Content: Upcoming Flash Sales -->
+                    <div id="flash-sale-tab-upcoming" class="flash-sale-tab-content hidden">
+                        <div id="upcoming-flash-sales" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                    </div>
+
+                    <!-- Tab Content: Ended Flash Sales -->
+                    <div id="flash-sale-tab-ended" class="flash-sale-tab-content hidden">
+                        <div id="ended-flash-sales" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                    </div>
+
+                    <!-- Tab Content: Slow Moving Products -->
+                    <div id="flash-sale-tab-slow-products" class="flash-sale-tab-content hidden">
+                        <div class="bg-orange-50 border-2 border-orange-200 rounded-lg p-4 mb-4">
+                            <h3 class="font-bold text-gray-800 mb-2">📊 Sản phẩm bán chậm (Không bán trong 2 tháng gần nhất)</h3>
+                            <p class="text-sm text-gray-600">Các sản phẩm dưới đây cần chú ý. Bạn có thể thêm chúng vào Flash Sale để kích thích doanh số.</p>
+                        </div>
+                        <div id="slow-products-list" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
                     </div>
                 </section>
 
@@ -1044,6 +1125,79 @@
         </div>
     </div>
 
+    <!-- Flash Sale Modal -->
+    <div id="flash-sale-modal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center">
+        <div class="bg-white rounded-xl w-full max-w-lg m-4">
+            <div class="p-5 border-b flex justify-between items-center bg-gradient-to-r from-red-500 to-orange-500 rounded-t-xl">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    ⚡ Thêm vào Flash Sale - Giờ Vàng Giá Sốc
+                </h3>
+                <button onclick="closeFlashSaleModal()" class="text-white hover:text-gray-200 text-2xl">&times;</button>
+            </div>
+            <form id="flash-sale-form" class="p-5 space-y-4">
+                <input type="hidden" id="flash-sale-product-id">
+                
+                <!-- Thông tin sản phẩm -->
+                <div class="bg-orange-50 border-2 border-orange-200 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 mb-1">Sản phẩm:</p>
+                    <p id="flash-sale-product-name" class="font-bold text-gray-800"></p>
+                    <p class="text-xs text-gray-600 mt-2">Giá gốc:</p>
+                    <p id="flash-sale-original-price" class="text-lg font-bold text-gray-800"></p>
+                </div>
+
+                <!-- Giá sale -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Giá Flash Sale * <span class="text-red-500">(VNĐ)</span></label>
+                    <input type="number" id="flash-sale-price" required min="0" 
+                           class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-red-500 focus:outline-none"
+                           oninput="calculateDiscount()">
+                    <p id="discount-percent" class="text-sm text-red-600 font-semibold mt-1"></p>
+                </div>
+
+                <!-- Số lượng giới hạn -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Số lượng giới hạn (để trống = không giới hạn)</label>
+                    <input type="number" id="flash-sale-quantity" min="1" 
+                           class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-red-500 focus:outline-none"
+                           placeholder="Ví dụ: 50">
+                </div>
+
+                <!-- Thời gian -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Bắt đầu *</label>
+                        <input type="datetime-local" id="flash-sale-start" required 
+                               class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-red-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Kết thúc *</label>
+                        <input type="datetime-local" id="flash-sale-end" required 
+                               class="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-red-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Gợi ý thời gian -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p class="text-xs text-blue-800 font-semibold mb-2">💡 Gợi ý thời gian Flash Sale:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="setFlashSaleTime(2)" class="text-xs bg-white border border-blue-300 hover:bg-blue-100 px-3 py-1 rounded">2 giờ</button>
+                        <button type="button" onclick="setFlashSaleTime(6)" class="text-xs bg-white border border-blue-300 hover:bg-blue-100 px-3 py-1 rounded">6 giờ</button>
+                        <button type="button" onclick="setFlashSaleTime(12)" class="text-xs bg-white border border-blue-300 hover:bg-blue-100 px-3 py-1 rounded">12 giờ</button>
+                        <button type="button" onclick="setFlashSaleTime(24)" class="text-xs bg-white border border-blue-300 hover:bg-blue-100 px-3 py-1 rounded">1 ngày</button>
+                        <button type="button" onclick="setFlashSaleTime(72)" class="text-xs bg-white border border-blue-300 hover:bg-blue-100 px-3 py-1 rounded">3 ngày</button>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white py-2.5 rounded-lg font-bold">
+                        ⚡ Thêm vào Flash Sale
+                    </button>
+                    <button type="button" onclick="closeFlashSaleModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 py-2.5 rounded-lg font-medium">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Product Modal -->
     <div id="product-modal" class="modal fixed inset-0 bg-black/50 z-50 items-center justify-center">
         <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
@@ -1506,7 +1660,19 @@
             document.getElementById('section-' + section).classList.add('active');
             document.querySelector(`[data-section="${section}"]`).classList.add('active');
 
-            const titles = { dashboard: 'Báo cáo bán hàng', products: 'Quản lý sản phẩm', categories: 'Quản lý danh mục', orders: 'Quản lý đơn hàng', users: 'Quản lý khách hàng', news: 'Quản lý tin tức', articles: 'Quản lý bài viết', reviews: 'Quản lý đánh giá', promotions: 'Quản lý khuyến mãi', contacts: 'Quản lý liên hệ' };
+            const titles = { 
+                dashboard: 'Báo cáo bán hàng', 
+                products: 'Quản lý sản phẩm', 
+                categories: 'Quản lý danh mục', 
+                orders: 'Quản lý đơn hàng', 
+                users: 'Quản lý khách hàng', 
+                news: 'Quản lý tin tức', 
+                articles: 'Quản lý bài viết', 
+                reviews: 'Quản lý đánh giá', 
+                promotions: 'Quản lý khuyến mãi',
+                'flash-sale': 'Flash Sale - Giờ Vàng Giá Sốc',
+                contacts: 'Quản lý liên hệ' 
+            };
             document.getElementById('page-title').textContent = titles[section] || section;
 
             if (section === 'dashboard') loadDashboard();
@@ -1518,6 +1684,7 @@
             else if (section === 'articles') loadArticles();
             else if (section === 'reviews') loadReviews();
             else if (section === 'promotions') loadPromotions();
+            else if (section === 'flash-sale') loadFlashSales();
         }
 
         // Helpers
@@ -1645,6 +1812,81 @@
                 `).join('');
                 document.getElementById('top-products').innerHTML = productsHtml || '<p class="text-gray-500 text-center py-4">Chưa có dữ liệu</p>';
 
+                // Slow moving products - Biểu đồ tổng quan
+                const slowProducts = data.data.slow_moving_products || [];
+                const slowChartElement = document.getElementById('slowProductsChart');
+                const slowChartContainer = slowChartElement ? slowChartElement.parentElement : null;
+                
+                if (slowChartElement && slowChartContainer) {
+                    // Destroy existing chart if any
+                    if (charts.slowProductsChart) {
+                        charts.slowProductsChart.destroy();
+                        charts.slowProductsChart = null;
+                    }
+                    
+                    if (slowProducts.length > 0) {
+                        // Có dữ liệu - vẽ biểu đồ
+                        slowChartContainer.innerHTML = '<canvas id="slowProductsChart"></canvas>';
+                        const newCanvas = document.getElementById('slowProductsChart');
+                        
+                        const labels = slowProducts.slice(0, 10).map(p => p.ten_san_pham.length > 20 ? p.ten_san_pham.substring(0, 20) + '...' : p.ten_san_pham);
+                        const stockData = slowProducts.slice(0, 10).map(p => p.ton_kho);
+                        const colors = ['#f97316', '#fb923c', '#fdba74', '#fed7aa', '#ffedd5', '#f97316', '#fb923c', '#fdba74', '#fed7aa', '#ffedd5'];
+                        
+                        charts.slowProductsChart = new Chart(newCanvas, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Tồn kho',
+                                    data: stockData,
+                                    backgroundColor: colors,
+                                    borderRadius: 8
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                return 'Tồn kho: ' + context.parsed.y + ' sản phẩm';
+                                            }
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { font: { size: 11 } }
+                                    },
+                                    x: {
+                                        ticks: { 
+                                            font: { size: 10 },
+                                            maxRotation: 45,
+                                            minRotation: 45
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        // Không có dữ liệu - hiển thị thông báo
+                        slowChartContainer.innerHTML = `
+                            <div class="flex items-center justify-center h-full">
+                                <div class="text-center">
+                                    <div class="text-6xl mb-4">🎉</div>
+                                    <p class="text-xl font-bold text-gray-800 mb-2">Tuyệt vời!</p>
+                                    <p class="text-gray-600">Không có sản phẩm bán chậm</p>
+                                    <p class="text-sm text-gray-500 mt-2">Tất cả sản phẩm đều có doanh số tốt trong 2 tháng gần đây</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
                 // Draw charts với dữ liệu thực
                 drawCharts(data.data);
             } catch (e) { console.error('Dashboard error:', e); }
@@ -1706,7 +1948,7 @@
                         { label: 'Kế hoạch', data: planData, backgroundColor: '#94a3b8' }
                     ]
                 },
-                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000) + 'M' } } } }
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000) + 'tr' } } } }
             });
 
             // 3. Growth Chart (Line) - Khách hàng mới theo ngày (dữ liệu thực)
@@ -1792,7 +2034,7 @@
                     indexAxis: 'y', 
                     responsive: true, 
                     plugins: { legend: { display: false } },
-                    scales: { x: { ticks: { callback: v => (v/1000000).toFixed(0) + 'M' } } }
+                    scales: { x: { ticks: { callback: v => (v/1000000).toFixed(0) + 'tr' } } }
                 }
             });
 
@@ -2440,7 +2682,7 @@
                     labels: labels,
                     datasets: [{ label: 'Doanh thu (VNĐ)', data: revenues, backgroundColor: colors.slice(0, labels.length), borderRadius: 8 }]
                 },
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(0) + 'M' } } } }
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => (v/1000000).toFixed(0) + 'tr' } } } }
             });
         }
         function openCategoryModal(c = null) {
@@ -3926,6 +4168,360 @@
             } catch (e) {}
         }
         loadContactUnreadCount();
+
+        // ==========================================
+        // FLASH SALE FUNCTIONS
+        // ==========================================
+        
+        let flashSaleProductData = {};
+        let currentFlashSaleTab = 'active';
+
+        // Load Flash Sale data
+        async function loadFlashSales() {
+            try {
+                const response = await fetch('http://localhost:3300/api/admin/flash-sale', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const flashSales = data.data;
+                    const now = new Date();
+                    
+                    // Phân loại flash sales
+                    const active = flashSales.filter(fs => 
+                        new Date(fs.thoi_gian_bat_dau) <= now && new Date(fs.thoi_gian_ket_thuc) >= now
+                    );
+                    const upcoming = flashSales.filter(fs => new Date(fs.thoi_gian_bat_dau) > now);
+                    const ended = flashSales.filter(fs => new Date(fs.thoi_gian_ket_thuc) < now);
+                    
+                    // Update count
+                    document.getElementById('flash-sale-count').textContent = active.length;
+                    
+                    // Render các tab
+                    renderFlashSaleCards('active-flash-sales', active);
+                    renderFlashSaleCards('upcoming-flash-sales', upcoming);
+                    renderFlashSaleCards('ended-flash-sales', ended);
+                    
+                    // Load slow products for flash sale tab
+                    loadSlowProductsForFlashSale();
+                } else {
+                    showFlashSaleError(data.message || 'Không thể tải dữ liệu Flash Sale');
+                }
+            } catch (error) {
+                console.error('Load flash sales error:', error);
+                showFlashSaleError('Chưa khởi tạo bảng Flash Sale. Vui lòng chạy: node backend/scripts/run-create-flash-sale.js');
+            }
+        }
+
+        function showFlashSaleError(message) {
+            const errorHtml = `
+                <div class="col-span-full">
+                    <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-8 text-center">
+                        <div class="text-6xl mb-4">⚠️</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Chưa khởi tạo Flash Sale</h3>
+                        <p class="text-gray-600 mb-4">${message}</p>
+                        <div class="bg-gray-800 text-white p-4 rounded-lg text-left max-w-2xl mx-auto">
+                            <p class="text-sm font-mono">node backend/scripts/run-create-flash-sale.js</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            ['active-flash-sales', 'upcoming-flash-sales', 'ended-flash-sales'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = errorHtml;
+            });
+            
+            document.getElementById('flash-sale-count').textContent = '0';
+        }
+
+        function renderFlashSaleCards(containerId, flashSales) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            if (flashSales.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500"><p>Không có sản phẩm nào</p></div>';
+                return;
+            }
+            
+            const html = flashSales.map(fs => {
+                const discount = fs.phan_tram_giam;
+                const startTime = new Date(fs.thoi_gian_bat_dau).toLocaleString('vi-VN');
+                const endTime = new Date(fs.thoi_gian_ket_thuc).toLocaleString('vi-VN');
+                const remaining = fs.so_luong_gioi_han ? fs.so_luong_gioi_han - fs.so_luong_da_ban : null;
+                const soldPercent = fs.so_luong_gioi_han ? Math.round((fs.so_luong_da_ban / fs.so_luong_gioi_han) * 100) : 0;
+                
+                return `
+                <div class="bg-white rounded-lg border-2 border-red-200 shadow-lg hover:shadow-xl transition-all overflow-hidden">
+                    <div class="relative">
+                        <img src="${fs.anh_chinh || '../images/placeholder.png'}" alt="${fs.ten_san_pham}" 
+                             class="w-full h-48 object-cover">
+                        <div class="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm">
+                            -${discount}%
+                        </div>
+                        ${fs.trang_thai === 'dang_dien_ra' ? '<div class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold animate-pulse">🔥 ĐANG SALE</div>' : ''}
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-800 mb-2 line-clamp-2 h-12" title="${fs.ten_san_pham}">${fs.ten_san_pham}</h4>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-2xl font-bold text-red-600">${formatPrice(fs.gia_sale)}</span>
+                            <span class="text-sm text-gray-500 line-through">${formatPrice(fs.gia_goc)}</span>
+                        </div>
+                        ${fs.so_luong_gioi_han ? `
+                        <div class="mb-3">
+                            <div class="flex justify-between text-xs text-gray-600 mb-1">
+                                <span>Đã bán: ${fs.so_luong_da_ban}/${fs.so_luong_gioi_han}</span>
+                                <span>${soldPercent}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-red-500 h-2 rounded-full" style="width: ${soldPercent}%"></div>
+                            </div>
+                        </div>
+                        ` : ''}
+                        <div class="text-xs text-gray-600 space-y-1 mb-3">
+                            <p>⏰ Bắt đầu: ${startTime}</p>
+                            <p>⏰ Kết thúc: ${endTime}</p>
+                        </div>
+                        <button onclick="deleteFlashSale(${fs.ma_flash_sale})" 
+                                class="w-full bg-red-100 hover:bg-red-200 text-red-600 py-2 rounded-lg text-sm font-semibold">
+                            🗑️ Xóa khỏi Flash Sale
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+
+        async function loadSlowProductsForFlashSale() {
+            try {
+                const response = await fetch('http://localhost:3300/api/admin/dashboard', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const slowProducts = data.data.slow_moving_products || [];
+                    renderSlowProductsForFlashSale(slowProducts);
+                }
+            } catch (error) {
+                console.error('Load slow products error:', error);
+            }
+        }
+
+        function renderSlowProductsForFlashSale(products) {
+            const container = document.getElementById('slow-products-list');
+            if (!container) return;
+            
+            if (products.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-500">🎉 Tuyệt vời! Không có sản phẩm bán chậm</p></div>';
+                return;
+            }
+            
+            const html = products.map(p => {
+                const daysSinceLastSale = p.ngay_ban_cuoi ? 
+                    Math.floor((new Date() - new Date(p.ngay_ban_cuoi)) / (1000 * 60 * 60 * 24)) : 
+                    null;
+                const daysText = daysSinceLastSale ? `${daysSinceLastSale} ngày` : 'Chưa bán';
+                
+                return `
+                <div class="bg-white rounded-lg border-2 border-orange-200 shadow hover:shadow-xl transition-all overflow-hidden">
+                    <div class="flex gap-3 p-3">
+                        <!-- Ảnh sản phẩm -->
+                        <div class="flex-shrink-0">
+                            <img src="${p.anh_chinh || '../images/placeholder.png'}" alt="${p.ten_san_pham}" 
+                                 class="w-24 h-24 object-cover rounded-lg border-2 border-orange-300">
+                        </div>
+                        
+                        <!-- Thông tin sản phẩm -->
+                        <div class="flex-1 flex flex-col justify-between min-w-0">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-base mb-2 line-clamp-2" title="${p.ten_san_pham}">${p.ten_san_pham}</h4>
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <div class="flex items-center gap-1 text-sm">
+                                        <span class="text-gray-600">Tồn:</span>
+                                        <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-bold">${p.ton_kho}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-sm">
+                                        <span class="text-orange-600">⏱</span>
+                                        <span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded font-bold">${daysText} chưa bán</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between gap-3">
+                                <p class="text-xl font-bold text-green-600">${formatPrice(p.gia)}</p>
+                                <button onclick="openFlashSaleModal(${p.ma_san_pham}, '${p.ten_san_pham.replace(/'/g, "\\'")}', ${p.gia})" 
+                                        class="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold whitespace-nowrap flex items-center gap-1 shadow-lg">
+                                    ⚡ Thêm vào Flash Sale
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function switchFlashSaleTab(tab) {
+            currentFlashSaleTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.flash-sale-tab').forEach(btn => {
+                btn.classList.remove('active', 'border-red-500', 'text-gray-700');
+                btn.classList.add('text-gray-500', 'border-transparent');
+            });
+            const activeTab = document.querySelector(`.flash-sale-tab[data-tab="${tab}"]`);
+            activeTab.classList.add('active', 'border-red-500', 'text-gray-700');
+            activeTab.classList.remove('text-gray-500', 'border-transparent');
+            
+            // Show/hide content
+            document.querySelectorAll('.flash-sale-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(`flash-sale-tab-${tab}`).classList.remove('hidden');
+        }
+
+        async function deleteFlashSale(id) {
+            if (!confirm('Bạn có chắc muốn xóa sản phẩm này khỏi Flash Sale?')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:3300/api/admin/flash-sale/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Đã xóa khỏi Flash Sale');
+                    loadFlashSales();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                console.error('Delete flash sale error:', error);
+                alert('❌ Có lỗi xảy ra');
+            }
+        }
+
+        function openFlashSaleModal(productId, productName, originalPrice) {
+            flashSaleProductData = { productId, productName, originalPrice };
+            
+            document.getElementById('flash-sale-product-id').value = productId;
+            document.getElementById('flash-sale-product-name').textContent = productName;
+            document.getElementById('flash-sale-original-price').textContent = formatPrice(originalPrice);
+            
+            // Set default time (start now, end after 24 hours)
+            const now = new Date();
+            const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            document.getElementById('flash-sale-start').value = formatDateTimeLocal(now);
+            document.getElementById('flash-sale-end').value = formatDateTimeLocal(tomorrow);
+            
+            // Clear previous values
+            document.getElementById('flash-sale-price').value = '';
+            document.getElementById('flash-sale-quantity').value = '';
+            document.getElementById('discount-percent').textContent = '';
+            
+            document.getElementById('flash-sale-modal').classList.add('active');
+        }
+
+        function closeFlashSaleModal() {
+            document.getElementById('flash-sale-modal').classList.remove('active');
+            document.getElementById('flash-sale-form').reset();
+        }
+
+        function formatDateTimeLocal(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        function calculateDiscount() {
+            const originalPrice = flashSaleProductData.originalPrice;
+            const salePrice = parseFloat(document.getElementById('flash-sale-price').value);
+            
+            if (salePrice && salePrice < originalPrice) {
+                const discount = Math.round(((originalPrice - salePrice) / originalPrice) * 100);
+                document.getElementById('discount-percent').textContent = `🔥 Giảm ${discount}% (Tiết kiệm ${formatPrice(originalPrice - salePrice)})`;
+            } else if (salePrice >= originalPrice) {
+                document.getElementById('discount-percent').textContent = '⚠️ Giá sale phải thấp hơn giá gốc';
+            } else {
+                document.getElementById('discount-percent').textContent = '';
+            }
+        }
+
+        function setFlashSaleTime(hours) {
+            const now = new Date();
+            const end = new Date(now.getTime() + hours * 60 * 60 * 1000);
+            document.getElementById('flash-sale-start').value = formatDateTimeLocal(now);
+            document.getElementById('flash-sale-end').value = formatDateTimeLocal(end);
+        }
+
+        document.getElementById('flash-sale-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const productId = document.getElementById('flash-sale-product-id').value;
+            const salePrice = parseFloat(document.getElementById('flash-sale-price').value);
+            const originalPrice = flashSaleProductData.originalPrice;
+            const quantity = document.getElementById('flash-sale-quantity').value;
+            const startTime = document.getElementById('flash-sale-start').value;
+            const endTime = document.getElementById('flash-sale-end').value;
+            
+            // Validation
+            if (salePrice >= originalPrice) {
+                alert('⚠️ Giá Flash Sale phải thấp hơn giá gốc!');
+                return;
+            }
+            
+            if (new Date(startTime) >= new Date(endTime)) {
+                alert('⚠️ Thời gian kết thúc phải sau thời gian bắt đầu!');
+                return;
+            }
+            
+            const discount = Math.round(((originalPrice - salePrice) / originalPrice) * 100);
+            
+            try {
+                const response = await fetch('http://localhost:3300/api/admin/flash-sale', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({
+                        ma_san_pham: productId,
+                        gia_sale: salePrice,
+                        phan_tram_giam: discount,
+                        so_luong_gioi_han: quantity || null,
+                        thoi_gian_bat_dau: startTime,
+                        thoi_gian_ket_thuc: endTime
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Đã thêm sản phẩm vào Flash Sale thành công!');
+                    closeFlashSaleModal();
+                    loadFlashSales();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                console.error('Flash sale error:', error);
+                alert('❌ Có lỗi xảy ra khi thêm Flash Sale');
+            }
+        });
     </script>
 </body>
 </html>
