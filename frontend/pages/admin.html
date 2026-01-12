@@ -1204,11 +1204,12 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-1">Giá *</label>
-                        <input type="number" id="product-price" required class="w-full border rounded-lg px-4 py-2">
+                        <input type="number" id="product-price" required min="0" class="w-full border rounded-lg px-4 py-2" oninput="validateProductPrice()">
+                        <p id="product-price-error" class="text-sm text-red-500 mt-1 hidden">Giá sản phẩm không được âm</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Số lượng</label>
-                        <input type="number" id="product-quantity" value="0" class="w-full border rounded-lg px-4 py-2">
+                        <input type="number" id="product-quantity" value="0" min="0" class="w-full border rounded-lg px-4 py-2">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -1775,7 +1776,7 @@
                 // Recent orders
                 const ordersHtml = data.data.recent_orders.slice(0, 5).map(o => `
                     <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg text-sm">
-                        <div>
+                        <13div>
                             <p class="font-semibold">#${o.ma_don_hang} - ${o.ten_dang_nhap || 'Khách'}</p>
                             <p class="text-xs text-gray-500">${formatDate(o.ngay_tao)}</p>
                         </div>
@@ -2665,12 +2666,37 @@
             const d = await apiCall(`/admin/products/${id}`, 'DELETE');
             if (d.success) { alert('Đã xóa!'); loadProducts(); } else alert(d.message);
         }
+        // Hàm validate giá sản phẩm
+        function validateProductPrice() {
+            const priceInput = document.getElementById('product-price');
+            const errorEl = document.getElementById('product-price-error');
+            const price = parseFloat(priceInput.value);
+            
+            if (price < 0) {
+                errorEl.classList.remove('hidden');
+                priceInput.classList.add('border-red-500');
+                return false;
+            } else {
+                errorEl.classList.add('hidden');
+                priceInput.classList.remove('border-red-500');
+                return true;
+            }
+        }
+
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Validate giá không âm
+            const priceValue = parseFloat(document.getElementById('product-price').value);
+            if (priceValue < 0) {
+                alert('⚠️ Giá sản phẩm không được âm!');
+                return;
+            }
+            
             const id = document.getElementById('product-id').value;
             const body = {
                 ten_san_pham: document.getElementById('product-name').value,
-                gia: parseFloat(document.getElementById('product-price').value),
+                gia: priceValue,
                 so_luong: parseInt(document.getElementById('product-quantity').value) || 0,
                 thuong_hieu: document.getElementById('product-brand').value,
                 ma_danh_muc: document.getElementById('product-category').value || null,
@@ -4649,7 +4675,12 @@
             const startTime = document.getElementById('flash-sale-start').value;
             const endTime = document.getElementById('flash-sale-end').value;
             
-            // Validation
+            // Validation - Kiểm tra giá không âm
+            if (salePrice < 0) {
+                alert('⚠️ Giá Flash Sale không được âm!');
+                return;
+            }
+            
             if (salePrice >= originalPrice) {
                 alert('⚠️ Giá Flash Sale phải thấp hơn giá gốc!');
                 return;

@@ -441,8 +441,13 @@ router.post('/products', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const { ten_san_pham, mo_ta, gia, so_luong, thuong_hieu, ma_danh_muc, trang_thai = 'hien_thi' } = req.body;
 
-        if (!ten_san_pham || !gia) {
+        if (!ten_san_pham || gia === undefined || gia === null) {
             return res.status(400).json({ success: false, message: 'Thiếu thông tin bắt buộc' });
+        }
+
+        // Kiểm tra giá không được âm
+        if (parseFloat(gia) < 0) {
+            return res.status(400).json({ success: false, message: 'Giá sản phẩm không được âm' });
         }
 
         const [result] = await db.query(`
@@ -465,6 +470,11 @@ router.post('/products', authenticateToken, requireAdmin, async (req, res) => {
 router.put('/products/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const { ten_san_pham, mo_ta, gia, so_luong, thuong_hieu, ma_danh_muc, trang_thai } = req.body;
+
+        // Kiểm tra giá không được âm
+        if (gia !== undefined && gia !== null && parseFloat(gia) < 0) {
+            return res.status(400).json({ success: false, message: 'Giá sản phẩm không được âm' });
+        }
 
         await db.query(`
             UPDATE san_pham SET
@@ -1503,6 +1513,11 @@ router.delete('/notifications/:id', authenticateToken, requireAdmin, async (req,
 router.post('/flash-sale', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const { ma_san_pham, gia_sale, phan_tram_giam, so_luong_gioi_han, thoi_gian_bat_dau, thoi_gian_ket_thuc } = req.body;
+        
+        // Kiểm tra giá sale không được âm
+        if (gia_sale !== undefined && parseFloat(gia_sale) < 0) {
+            return res.status(400).json({ success: false, message: 'Giá Flash Sale không được âm' });
+        }
         
         // Lấy giá gốc của sản phẩm
         const [product] = await db.query('SELECT gia FROM san_pham WHERE ma_san_pham = ?', [ma_san_pham]);

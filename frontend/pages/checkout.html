@@ -1050,6 +1050,17 @@
             if (districtText && districtText !== 'Chọn quận/huyện') fullAddress += `, ${districtText}`;
             if (cityText && cityText !== 'Chọn tỉnh/thành') fullAddress += `, ${cityText}`;
             
+            // Tính tổng tiền đơn hàng
+            const totalAmountText = document.getElementById('total').textContent;
+            const totalAmount = parseInt(totalAmountText.replace(/[^\d]/g, '')) || 0;
+            
+            // Nếu chọn COD, yêu cầu thanh toán 50% qua QR code
+            if (paymentMethod === 'cod') {
+                const depositAmount = Math.ceil(totalAmount / 2);
+                showCODDepositModal(depositAmount, fullAddress, hoTen, soDienThoai, ghiChu, checkoutItems, user, token, checkoutKey, cartKey, selectedKey);
+                return;
+            }
+            
             // Disable nút submit
             const submitBtn = document.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
@@ -1158,6 +1169,246 @@
                 submitBtn.textContent = 'Đặt hàng';
             }
         });
+
+        // =============== COD 50% DEPOSIT QR PAYMENT ===============
+        // Hiển thị modal thanh toán COD đặt cọc 50%
+        function showCODDepositModal(depositAmount, fullAddress, hoTen, soDienThoai, ghiChu, checkoutItems, user, token, checkoutKey, cartKey, selectedKey) {
+            const existingModal = document.getElementById('codDepositModal');
+            if (existingModal) existingModal.remove();
+            
+            const modal = document.createElement('div');
+            modal.id = 'codDepositModal';
+            modal.className = 'fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4 overflow-y-auto';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl my-8" onclick="event.stopPropagation()">
+                    <div class="text-center">
+                        <!-- Header -->
+                        <div class="flex items-center justify-center gap-3 mb-4">
+                            <img src="https://bidv.com.vn/wps/wcm/connect/7011d16d-0ac1-41e8-9719-cce850fa9e92/icon-bidv.png?MOD=AJPERES&CACHEID=ROOTWORKSPACE-7011d16d-0ac1-41e8-9719-cce850fa9e92-ohQxdKR" alt="BIDV" class="h-8">
+                            <span class="text-gray-400 text-2xl">|</span>
+                            <span class="text-green-600 font-bold text-xl">VietQR</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">💰 Thanh toán đặt cọc COD</h3>
+                        <p class="text-gray-600 mb-4">Vui lòng thanh toán <span class="font-bold text-red-600">50%</span> giá trị đơn hàng để xác nhận đặt hàng COD</p>
+                        
+                        <!-- Deposit Amount -->
+                        <div class="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-400 rounded-xl p-4 mb-4">
+                            <p class="text-sm text-gray-600">Số tiền cần thanh toán:</p>
+                            <p class="text-3xl font-bold text-green-600">${formatCurrency(depositAmount)}</p>
+                            <p class="text-xs text-gray-500 mt-1">(50% tổng đơn hàng)</p>
+                        </div>
+                        
+                        <!-- QR Code -->
+                        <div class="bg-white border-2 border-gray-200 rounded-xl p-4 mb-4 inline-block">
+                            <img src="../images/qr-bidv-yennhi.png" alt="QR Code Thanh Toán" class="w-48 h-48 mx-auto object-contain" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BIDV-7351372081-DINH%20THI%20YEN%20NHI-${depositAmount}'">
+                        </div>
+                        
+                        <!-- Bank Info -->
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4 text-left">
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Chủ tài khoản:</span>
+                                    <span class="font-bold text-gray-800">DINH THI YEN NHI</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Số tài khoản:</span>
+                                    <span class="font-bold text-blue-600">7351372081</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Ngân hàng:</span>
+                                    <span class="font-bold text-gray-800">BIDV</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Nội dung CK:</span>
+                                    <span class="font-bold text-red-600">${soDienThoai} COD</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Processing indicator (hidden by default) -->
+                        <div id="codProcessingIndicator" class="hidden mb-4">
+                            <div class="flex items-center justify-center gap-3 text-blue-600">
+                                <svg class="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span class="font-semibold">Đang xác nhận thanh toán...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3">
+                            <button onclick="closeCODDepositModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-lg transition">
+                                Hủy bỏ
+                            </button>
+                            <button onclick="confirmCODDeposit('${fullAddress.replace(/'/g, "\\'")}', '${hoTen.replace(/'/g, "\\'")}', '${soDienThoai}', '${ghiChu.replace(/'/g, "\\'")}', ${depositAmount})" 
+                                    id="confirmDepositBtn"
+                                    class="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                ✓ Đã thanh toán
+                            </button>
+                        </div>
+                        
+                        <p class="text-xs text-gray-500 mt-4">
+                            💡 Sau khi thanh toán, nhấn "Đã thanh toán" để hoàn tất đơn hàng
+                        </p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Lưu thông tin đơn hàng vào window để sử dụng sau
+            window.pendingCODOrder = {
+                checkoutItems, user, token, checkoutKey, cartKey, selectedKey
+            };
+        }
+        
+        function closeCODDepositModal() {
+            const modal = document.getElementById('codDepositModal');
+            if (modal) modal.remove();
+            window.pendingCODOrder = null;
+        }
+        
+        // Xác nhận thanh toán COD đặt cọc - giả lập thanh toán ảo
+        async function confirmCODDeposit(fullAddress, hoTen, soDienThoai, ghiChu, depositAmount) {
+            const confirmBtn = document.getElementById('confirmDepositBtn');
+            const processingIndicator = document.getElementById('codProcessingIndicator');
+            
+            // Hiển thị trạng thái đang xử lý
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<span class="animate-pulse">Đang xử lý...</span>';
+            processingIndicator.classList.remove('hidden');
+            
+            // Giả lập thời gian xử lý thanh toán (2-3 giây)
+            await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
+            
+            // Lấy thông tin đơn hàng đã lưu
+            const orderData = window.pendingCODOrder;
+            if (!orderData) {
+                alert('Lỗi: Không tìm thấy thông tin đơn hàng!');
+                closeCODDepositModal();
+                return;
+            }
+            
+            const { checkoutItems, user, token, checkoutKey, cartKey, selectedKey } = orderData;
+            
+            try {
+                // Lấy thông tin promo nếu có
+                const promoData = getPromoData();
+                
+                // Gửi đơn hàng lên server
+                const response = await fetch(`${API_URL}/auth/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        items: checkoutItems,
+                        dia_chi_giao_hang: fullAddress,
+                        so_dien_thoai: soDienThoai,
+                        ghi_chu: ghiChu + ` [COD - Đã đặt cọc ${formatCurrency(depositAmount)}]`,
+                        phuong_thuc_thanh_toan: 'cod',
+                        promo_code: promoData ? promoData.code : null,
+                        discount_percent: promoData ? promoData.discountPercent : 0,
+                        deposit_amount: depositAmount,
+                        deposit_paid: true
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.status === 401 || response.status === 403) {
+                    alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                if (result.success) {
+                    const orderId = result.data.ma_don_hang;
+                    
+                    // Xóa sản phẩm đã checkout khỏi giỏ hàng
+                    const checkoutProductIds = checkoutItems.map(item => item.ma_san_pham);
+                    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+                    const updatedCart = cart.filter(item => !checkoutProductIds.includes(item.ma_san_pham));
+                    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+                    
+                    // Xóa checkout data và selected items
+                    localStorage.removeItem(checkoutKey);
+                    localStorage.removeItem(selectedKey);
+                    
+                    // Xóa promo data
+                    const promoKey = user ? `promo_data_${user.ma_tai_khoan}` : 'promo_data_guest';
+                    const appliedPromoKey = user ? `applied_promo_${user.ma_tai_khoan}` : 'applied_promo_guest';
+                    localStorage.removeItem(promoKey);
+                    localStorage.removeItem(appliedPromoKey);
+                    
+                    // Đóng modal và hiển thị thông báo thành công
+                    closeCODDepositModal();
+                    showCODSuccessModal(orderId, depositAmount);
+                } else {
+                    alert(result.message || 'Đặt hàng thất bại');
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = '✓ Đã thanh toán';
+                    processingIndicator.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('COD Order error:', error);
+                alert('Lỗi kết nối server. Vui lòng thử lại.');
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '✓ Đã thanh toán';
+                processingIndicator.classList.add('hidden');
+            }
+        }
+        
+        // Hiển thị modal thanh toán thành công
+        function showCODSuccessModal(orderId, depositAmount) {
+            const modal = document.createElement('div');
+            modal.id = 'codSuccessModal';
+            modal.className = 'fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl text-center">
+                    <!-- Success Animation -->
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-green-600 mb-2">🎉 Thanh toán thành công!</h3>
+                    <p class="text-gray-600 mb-4">Đơn hàng của bạn đã được xác nhận</p>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 mb-4 space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Mã đơn hàng:</span>
+                            <span class="font-bold text-blue-600">#${orderId}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Đã đặt cọc:</span>
+                            <span class="font-bold text-green-600">${formatCurrency(depositAmount)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Thanh toán còn lại:</span>
+                            <span class="font-bold text-orange-600">Khi nhận hàng (COD)</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-sm text-gray-500 mb-4">
+                        📦 Đơn hàng sẽ được giao trong 2-5 ngày làm việc.<br>
+                        Bạn sẽ thanh toán phần còn lại khi nhận hàng.
+                    </p>
+                    
+                    <button onclick="window.location.href='order-history.html'" 
+                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                        Xem đơn hàng của tôi
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        // =============== END COD 50% DEPOSIT ===============
 
         // Gọi cả hai hàm khi trang load
         document.addEventListener('DOMContentLoaded', function() {

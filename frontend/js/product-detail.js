@@ -799,10 +799,63 @@ function changeMainImage(imageUrl, element) {
 function increaseQuantity() {
     const input = document.getElementById('quantity');
     const max = currentProduct?.so_luong || 99;
-    if (parseInt(input.value) < max) {
-        input.value = parseInt(input.value) + 1;
-        currentQuantity = parseInt(input.value);
+    const newValue = parseInt(input.value) + 1;
+    
+    // Kiểm tra số lượng > 5 thì yêu cầu liên hệ hotline
+    if (newValue > 5) {
+        showQuantityLimitModal();
+        return;
     }
+    
+    if (newValue <= max) {
+        input.value = newValue;
+        currentQuantity = newValue;
+    }
+}
+
+// Modal hiển thị khi số lượng > 5
+function showQuantityLimitModal() {
+    const existingModal = document.getElementById('quantityLimitModal');
+    if (existingModal) existingModal.remove();
+    
+    const modal = document.createElement('div');
+    modal.id = 'quantityLimitModal';
+    modal.className = 'fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl" onclick="event.stopPropagation()">
+            <div class="text-center">
+                <svg class="w-16 h-16 mx-auto text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Thông báo đặt hàng số lượng lớn</h3>
+                <p class="text-gray-600 mb-4">Để đặt mua số lượng trên 5 sản phẩm, vui lòng liên hệ trực tiếp với cửa hàng để được hỗ trợ giá tốt nhất!</p>
+                <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4 mb-4">
+                    <p class="text-lg font-bold text-yellow-700">📞 Hotline: 0335162856</p>
+                    <p class="text-sm text-yellow-600 mt-1">Hỗ trợ 8:00 - 21:30 hàng ngày</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="closeQuantityLimitModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-lg transition">
+                        Đóng
+                    </button>
+                    <a href="tel:0335162856" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition text-center inline-flex items-center justify-center gap-2">
+                        <span>📞</span> Gọi ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeQuantityLimitModal();
+        }
+    });
+}
+
+function closeQuantityLimitModal() {
+    const modal = document.getElementById('quantityLimitModal');
+    if (modal) modal.remove();
 }
 
 function decreaseQuantity() {
@@ -901,6 +954,19 @@ function addToCartFromDetail() {
     if (!currentProduct) return;
     
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
+    
+    // Kiểm tra số lượng > 5 thì yêu cầu liên hệ hotline
+    if (quantity > 5) {
+        showQuantityLimitModal();
+        return;
+    }
+    
+    // Kiểm tra giá không âm
+    if (currentProduct.gia < 0) {
+        showNotification('Lỗi: Giá sản phẩm không hợp lệ!');
+        return;
+    }
+    
     const cartKey = getCartKey();
     
     // Get cart from localStorage
@@ -910,12 +976,20 @@ function addToCartFromDetail() {
     const existingItem = cart.find(item => item.ma_san_pham === currentProduct.ma_san_pham);
     
     if (existingItem) {
-        existingItem.so_luong = (parseInt(existingItem.so_luong) || 0) + quantity;
+        const newQuantity = (parseInt(existingItem.so_luong) || 0) + quantity;
+        
+        // Kiểm tra tổng số lượng > 5
+        if (newQuantity > 5) {
+            showQuantityLimitModal();
+            return;
+        }
+        
+        existingItem.so_luong = newQuantity;
     } else {
         cart.push({
             ma_san_pham: currentProduct.ma_san_pham,
             ten_san_pham: currentProduct.ten_san_pham,
-            gia: currentProduct.gia,
+            gia: Math.max(0, currentProduct.gia), // Đảm bảo giá không âm
             anh_chinh: getProductImageUrl(currentProduct.images?.[0]?.duong_dan_anh),
             so_luong: parseInt(quantity) || 1
         });
