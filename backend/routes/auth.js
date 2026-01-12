@@ -1132,12 +1132,52 @@ router.post('/orders', authenticateToken, async (req, res) => {
         const userId = req.user.ma_tai_khoan;
         const { items, dia_chi_giao_hang, so_dien_thoai, ghi_chu, phuong_thuc_thanh_toan, promo_code, discount_percent } = req.body;
 
+        console.log('=== CREATE ORDER REQUEST ===');
+        console.log('User ID:', userId);
+        console.log('Items:', JSON.stringify(items));
+        console.log('Address:', dia_chi_giao_hang);
+        console.log('Payment method:', phuong_thuc_thanh_toan);
+
         if (!items || items.length === 0) {
             return res.status(400).json({ success: false, message: 'Giỏ hàng trống' });
         }
 
         if (!dia_chi_giao_hang) {
             return res.status(400).json({ success: false, message: 'Vui lòng nhập địa chỉ giao hàng' });
+        }
+
+        // Kiểm tra tổng số lượng sản phẩm - nếu >= 5 thì yêu cầu liên hệ hotline
+        const totalQuantity = items.reduce((sum, item) => sum + (parseInt(item.so_luong) || 1), 0);
+        if (totalQuantity >= 5) {
+            console.log('Large order detected:', totalQuantity, 'products');
+            return res.status(400).json({ 
+                success: false, 
+                message: `Đơn hàng có ${totalQuantity} sản phẩm. Vui lòng liên hệ Hotline 0358.022.466 để được hỗ trợ đặt hàng số lượng lớn với ưu đãi đặc biệt!`,
+                code: 'LARGE_ORDER'
+            });
+        }
+
+        // Xác thực từng item trong đơn hàng
+        for (const item of items) {
+            if (!item.ma_san_pham) {
+                console.error('Invalid item - missing ma_san_pham:', item);
+                return res.status(400).json({ success: false, message: 'Sản phẩm không hợp lệ (thiếu mã sản phẩm)' });
+            }
+            
+            // Kiểm tra sản phẩm có tồn tại trong database không
+            const [productCheck] = await db.query('SELECT ma_san_pham, so_luong FROM san_pham WHERE ma_san_pham = ?', [item.ma_san_pham]);
+            if (productCheck.length === 0) {
+                console.error('Product not found in database:', item.ma_san_pham);
+                return res.status(400).json({ success: false, message: `Sản phẩm với mã ${item.ma_san_pham} không tồn tại` });
+            }
+            
+            // Kiểm tra số lượng tồn kho
+            const stockQuantity = productCheck[0].so_luong || 0;
+            const requestedQuantity = parseInt(item.so_luong) || 1;
+            if (stockQuantity < requestedQuantity) {
+                console.error('Insufficient stock:', { product: item.ma_san_pham, stock: stockQuantity, requested: requestedQuantity });
+                return res.status(400).json({ success: false, message: `Sản phẩm "${item.ten_san_pham || item.ma_san_pham}" chỉ còn ${stockQuantity} sản phẩm trong kho` });
+            }
         }
 
         // Tính tổng tiền trước giảm giá
@@ -1167,6 +1207,8 @@ router.post('/orders', authenticateToken, async (req, res) => {
             ? 'dang_giao' 
             : 'dang_xu_ly';
 
+        console.log('Creating order with total:', tongTien);
+
         // Tạo đơn hàng
         const [orderResult] = await db.query(`
             INSERT INTO don_hang (ma_tai_khoan, tong_tien, trang_thai_thanh_toan, trang_thai_don_hang, dia_chi_giao_hang, ngay_tao)
@@ -1174,8 +1216,9 @@ router.post('/orders', authenticateToken, async (req, res) => {
         `, [userId, tongTien, phuong_thuc_thanh_toan === 'cod' ? 'cho_xu_ly' : 'da_thanh_toan', trangThaiDonHang, dia_chi_giao_hang]);
 
         const orderId = orderResult.insertId;
+        console.log('Order created with ID:', orderId);
 
-        // Thêm chi tiết đơn hàng
+        // Thêm chi tiết đơn hàng và cập nhật số lượng tồn kho
         for (const item of items) {
             const gia = parseFloat(item.gia_ban) || parseFloat(item.gia) || 0;
             const soLuong = parseInt(item.so_luong) || 1;
@@ -1184,7 +1227,13 @@ router.post('/orders', authenticateToken, async (req, res) => {
                 INSERT INTO chi_tiet_don_hang (ma_don_hang, ma_san_pham, so_luong, gia_ban)
                 VALUES (?, ?, ?, ?)
             `, [orderId, item.ma_san_pham, soLuong, gia]);
+            
+            // Cập nhật số lượng tồn kho
+            await db.query(`
+                UPDATE san_pham SET so_luong = so_luong - ? WHERE ma_san_pham = ?
+            `, [soLuong, item.ma_san_pham]);
         }
+        console.log('Order details added successfully');
 
         // Thêm thông tin thanh toán
         // Map giá trị từ frontend sang enum trong database
@@ -1200,6 +1249,7 @@ router.post('/orders', authenticateToken, async (req, res) => {
             INSERT INTO thanh_toan (ma_don_hang, phuong_thuc, so_tien, ma_giao_dich)
             VALUES (?, ?, ?, ?)
         `, [orderId, dbPaymentMethod, tongTien, `GD${Date.now()}`]);
+        console.log('Payment record created');
 
         res.json({
             success: true,
@@ -1211,7 +1261,8 @@ router.post('/orders', authenticateToken, async (req, res) => {
         });
     } catch (error) {
         console.error('Create order error:', error);
-        res.status(500).json({ success: false, message: 'Lỗi server khi tạo đơn hàng' });
+        console.error('Error stack:', error.stack);
+        res.status(500).json({ success: false, message: 'Lỗi server khi tạo đơn hàng: ' + error.message });
     }
 });
 

@@ -368,8 +368,14 @@ function createProductCard(product) {
     const discount = 15;
     const discountAmount = formatPrice(oldPriceValue - product.gia);
     
+    // Kiểm tra sản phẩm hết hàng
+    const isOutOfStock = product.so_luong === 0;
+    const outOfStockClass = isOutOfStock ? 'out-of-stock' : '';
+    const outOfStockOverlay = isOutOfStock ? '<div class="out-of-stock-overlay">🚫 Hết hàng</div>' : '';
+    
     return `
-        <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group product-card">
+        <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group product-card ${outOfStockClass}">
+            ${outOfStockOverlay}
             <!-- Freeship Badge -->
             <div class="absolute top-2 left-2 z-10">
                 <div class="bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
@@ -381,7 +387,7 @@ function createProductCard(product) {
             </div>
             
             <!-- Product Image -->
-            <div class="relative p-4 bg-gray-50 cursor-pointer overflow-hidden" onclick="viewProduct(${product.ma_san_pham})">
+            <div class="relative p-4 bg-gray-50 ${isOutOfStock ? 'cursor-not-allowed' : 'cursor-pointer'} overflow-hidden" ${isOutOfStock ? '' : `onclick="viewProduct(${product.ma_san_pham})"`}>
                 <img src="${imageUrl}" 
                      alt="${product.ten_san_pham}" 
                      class="product-image w-full h-48 object-contain group-hover:scale-110 transition-transform duration-500"
@@ -401,7 +407,7 @@ function createProductCard(product) {
                 </div>
                 
                 <!-- Product Name -->
-                <h3 class="font-semibold text-gray-900 text-lg mb-2 line-clamp-2 cursor-pointer hover:text-red-600 h-14" onclick="viewProduct(${product.ma_san_pham})">
+                <h3 class="font-semibold text-gray-900 text-lg mb-2 line-clamp-2 ${isOutOfStock ? 'cursor-not-allowed' : 'cursor-pointer hover:text-red-600'} h-14" ${isOutOfStock ? '' : `onclick="viewProduct(${product.ma_san_pham})"`}>
                     ${product.ten_san_pham}
                 </h3>
                 
@@ -419,19 +425,28 @@ function createProductCard(product) {
                     ` : ''}
                 </div>
                 
+                <!-- Tình trạng tồn kho -->
+                ${isOutOfStock ? `
+                <div class="mb-2">
+                    <span class="inline-block bg-red-100 text-red-700 text-sm px-3 py-1 rounded-full font-semibold">
+                        ⚠️ Hết hàng
+                    </span>
+                </div>
+                ` : ''}
+                
                 <!-- Action Buttons -->
                 <div class="flex gap-2 mt-4">
-                    <button onclick="addToCart(${product.ma_san_pham})" 
-                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-3 rounded-lg transition duration-200 text-base flex items-center justify-center gap-2 ${product.so_luong === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
-                            ${product.so_luong === 0 ? 'disabled' : ''}>
+                    <button onclick="${isOutOfStock ? 'showOutOfStockAlert()' : `addToCart(${product.ma_san_pham})`}" 
+                            class="flex-1 ${isOutOfStock ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} text-white font-bold py-2.5 px-3 rounded-lg transition duration-200 text-base flex items-center justify-center gap-2"
+                            ${isOutOfStock ? 'disabled' : ''}>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        <span>${product.so_luong === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}</span>
+                        <span>${isOutOfStock ? 'Hết hàng' : 'Thêm vào giỏ'}</span>
                     </button>
-                    <button onclick="viewProduct(${product.ma_san_pham})" 
-                            class="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-lg transition duration-200"
-                            title="Xem chi tiết">
+                    <button onclick="${isOutOfStock ? 'showOutOfStockAlert()' : `viewProduct(${product.ma_san_pham})`}" 
+                            class="${isOutOfStock ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white p-2.5 rounded-lg transition duration-200"
+                            title="${isOutOfStock ? 'Sản phẩm hết hàng' : 'Xem chi tiết'}">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -441,6 +456,11 @@ function createProductCard(product) {
             </div>
         </div>
     `;
+}
+
+// Hiển thị thông báo sản phẩm hết hàng
+function showOutOfStockAlert() {
+    alert('🚫 Sản phẩm này hiện đã hết hàng. Vui lòng quay lại sau!');
 }
 
 // Format price to Vietnamese currency

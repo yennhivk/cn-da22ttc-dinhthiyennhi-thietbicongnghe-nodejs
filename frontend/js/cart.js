@@ -52,15 +52,15 @@ function loadSelectedItems() {
 }
 
 // Initialize cart on page load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Kiểm tra đăng nhập
     if (!isLoggedIn()) {
         showLoginRequiredPage();
         return;
     }
     
-    // Clean invalid cart data
-    cleanCartData();
+    // Clean invalid cart data (kiểm tra sản phẩm tồn tại)
+    await cleanCartData();
     // Load selected items
     loadSelectedItems();
     loadCart();
@@ -97,24 +97,50 @@ function showLoginRequiredPage() {
     if (itemCountEl) itemCountEl.textContent = '0 sản phẩm';
 }
 
-// Clean invalid cart data
-function cleanCartData() {
+// Clean invalid cart data - kiểm tra sản phẩm tồn tại trong database
+async function cleanCartData() {
     const cartKey = getCartKey();
     let cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
     
-    // Filter out invalid items
+    // Filter out invalid items (thiếu ma_san_pham hoặc ten_san_pham)
     cart = cart.filter(item => {
         return item && item.ma_san_pham && item.ten_san_pham;
     });
     
-    // Ensure so_luong and gia are valid numbers, price must be non-negative
-    cart = cart.map(item => ({
-        ...item,
-        so_luong: Math.max(1, parseInt(item.so_luong) || 1),
-        gia: Math.max(0, parseFloat(item.gia) || 0) // Ràng buộc giá không âm
-    }));
+    // Kiểm tra sản phẩm còn tồn tại trong database không
+    const validCart = [];
+    for (const item of cart) {
+        try {
+            const response = await fetch(`${API_URL}/products/${item.ma_san_pham}`);
+            if (response.ok) {
+                // Sản phẩm tồn tại, giữ lại trong giỏ
+                validCart.push({
+                    ...item,
+                    so_luong: Math.max(1, parseInt(item.so_luong) || 1),
+                    gia: Math.max(0, parseFloat(item.gia) || 0)
+                });
+            } else {
+                // Sản phẩm không tồn tại, bỏ qua và log
+                console.warn(`Sản phẩm ID ${item.ma_san_pham} không còn tồn tại, đã xóa khỏi giỏ hàng`);
+            }
+        } catch (error) {
+            // Lỗi network, giữ lại sản phẩm để tránh mất dữ liệu
+            console.error(`Lỗi kiểm tra sản phẩm ${item.ma_san_pham}:`, error);
+            validCart.push({
+                ...item,
+                so_luong: Math.max(1, parseInt(item.so_luong) || 1),
+                gia: Math.max(0, parseFloat(item.gia) || 0)
+            });
+        }
+    }
     
-    localStorage.setItem(cartKey, JSON.stringify(cart));
+    // Nếu có sản phẩm bị xóa, thông báo cho user
+    if (validCart.length < cart.length) {
+        const removedCount = cart.length - validCart.length;
+        showNotification(`Đã xóa ${removedCount} sản phẩm không còn tồn tại khỏi giỏ hàng`);
+    }
+    
+    localStorage.setItem(cartKey, JSON.stringify(validCart));
 }
 
 // Load cart from localStorage
@@ -501,11 +527,19 @@ function proceedToCheckout() {
     
     // Lấy các sản phẩm được chọn
     const selectedProducts = [];
+    let totalQuantity = 0;
     cart.forEach((item, index) => {
         if (selectedItems.has(index)) {
             selectedProducts.push(item);
+            totalQuantity += parseInt(item.so_luong) || 1;
         }
     });
+    
+    // Kiểm tra tổng số lượng sản phẩm - nếu >= 5 thì hiển thị cảnh báo
+    if (totalQuantity >= 5) {
+        showLargeOrderWarning(totalQuantity);
+        return;
+    }
     
     // Lưu sản phẩm được chọn để thanh toán
     const user = getCurrentUser();
@@ -514,6 +548,75 @@ function proceedToCheckout() {
     
     // Chuyển đến trang thanh toán
     window.location.href = 'checkout.html';
+}
+
+// Hiển thị cảnh báo đơn hàng số lượng lớn
+function showLargeOrderWarning(totalQuantity) {
+    // Xóa modal cũ nếu có
+    const existingModal = document.getElementById('largeOrderWarningModal');
+    if (existingModal) existingModal.remove();
+    
+    const modal = document.createElement('div');
+    modal.id = 'largeOrderWarningModal';
+    modal.className = 'fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl p-4 max-w-sm w-full shadow-2xl" onclick="event.stopPropagation()">
+            <div class="text-center">
+                <!-- Warning Icon -->
+                <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-1">📦 Đơn hàng số lượng lớn</h3>
+                <p class="text-sm text-gray-600 mb-3">
+                    Bạn đang mua <span class="font-bold text-red-600">${totalQuantity} sản phẩm</span>.
+                </p>
+                
+                <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-2 mb-3">
+                    <p class="text-xs text-gray-700">
+                        ⚠️ Đơn hàng từ <strong>5 SP</strong> trở lên, vui lòng liên hệ cửa hàng để nhận ưu đãi!
+                    </p>
+                </div>
+                
+                <!-- Hotline Info -->
+                <div class="bg-red-50 border border-red-200 rounded-lg p-2 mb-3">
+                    <p class="text-xs text-gray-600">Hotline:</p>
+                    <a href="tel:0358022466" class="text-lg font-bold text-red-600 hover:text-red-700 flex items-center justify-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        0358.022.466
+                    </a>
+                </div>
+                
+                <!-- Zalo Contact -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-3">
+                    <a href="https://zalo.me/0358022466" target="_blank" class="inline-flex items-center gap-1 text-blue-600 text-sm font-semibold hover:text-blue-700">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" class="w-4 h-4">
+                        Chat Zalo ngay
+                    </a>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-2">
+                    <button onclick="document.getElementById('largeOrderWarningModal').remove()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded-lg transition text-sm">
+                        Quay lại
+                    </button>
+                    <a href="tel:0358022466" class="flex-1 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold py-2 px-3 rounded-lg transition text-center text-sm">
+                        📞 Gọi ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Đóng modal khi click bên ngoài
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
 }
 
 // Mobile menu toggle

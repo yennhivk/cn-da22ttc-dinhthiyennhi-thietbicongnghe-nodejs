@@ -105,18 +105,48 @@ function displayProductDetail(product) {
     const stockInfo = document.getElementById('stockInfo');
     const stockBadge = document.getElementById('stockBadge');
     const addToCartBtn = document.getElementById('addToCartBtn');
+    const buyNowBtn = document.querySelector('button[onclick="buyNow()"]');
     
     if (product.so_luong > 0) {
         stockInfo.textContent = `Còn ${product.so_luong} sản phẩm`;
         stockBadge.textContent = 'Còn hàng';
         stockBadge.className = 'bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold';
         addToCartBtn.disabled = false;
+        if (buyNowBtn) buyNowBtn.disabled = false;
     } else {
         stockInfo.textContent = 'Hết hàng';
-        stockBadge.textContent = 'Hết hàng';
+        stockInfo.className = 'text-red-600 text-sm font-bold';
+        stockBadge.textContent = '🚫 Hết hàng';
         stockBadge.className = 'bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold';
+        
+        // Vô hiệu hóa nút thêm vào giỏ
         addToCartBtn.disabled = true;
-        addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
+        addToCartBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+        addToCartBtn.innerHTML = `
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+            Sản phẩm hết hàng
+        `;
+        
+        // Vô hiệu hóa nút mua ngay
+        if (buyNowBtn) {
+            buyNowBtn.disabled = true;
+            buyNowBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
+            buyNowBtn.classList.remove('bg-orange-500', 'hover:bg-orange-600');
+            buyNowBtn.innerHTML = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Tạm hết hàng
+            `;
+        }
+        
+        // Vô hiệu hóa các nút số lượng
+        const quantityInput = document.getElementById('quantity');
+        const decreaseBtn = document.querySelector('button[onclick="decreaseQuantity()"]');
+        const increaseBtn = document.querySelector('button[onclick="increaseQuantity()"]');
+        
+        if (quantityInput) quantityInput.disabled = true;
+        if (decreaseBtn) decreaseBtn.disabled = true;
+        if (increaseBtn) increaseBtn.disabled = true;
     }
     
     // Description - Chi tiết hơn
