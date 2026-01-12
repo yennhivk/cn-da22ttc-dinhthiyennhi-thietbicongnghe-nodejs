@@ -112,35 +112,47 @@
                 <section id="section-dashboard" class="content-section active">
                     <!-- Filter + Stats Row -->
                     <div class="flex gap-4 mb-4">
-                        <!-- Compact Filter Panel -->
-                        <div class="bg-white rounded-xl shadow p-3 border-l-4 border-blue-500 w-48 flex-shrink-0">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="font-bold text-gray-800 text-sm">BỘ LỌC</h3>
-                                <button onclick="resetAllFilters()" class="text-blue-500 hover:text-blue-700 text-xs">🔄 Reset</button>
+                        <!-- Advanced Date Filter Panel -->
+                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500 w-72 flex-shrink-0">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-bold text-gray-800 text-sm">📅 BỘ LỌC THỜI GIAN</h3>
+                                <button onclick="resetAllFilters()" class="text-blue-500 hover:text-blue-700 text-xs font-medium">🔄 Reset</button>
                             </div>
-                            <!-- Năm -->
-                            <p class="text-xs font-semibold text-gray-600 mb-1">NĂM</p>
-                            <div class="flex flex-wrap gap-1 mb-2">
-                                <button onclick="setYearFilter(2023)" class="year-filter-btn px-2 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-year="2023">2023</button>
-                                <button onclick="setYearFilter(2024)" class="year-filter-btn px-2 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-year="2024">2024</button>
-                                <button onclick="setYearFilter(2025)" class="year-filter-btn px-2 py-1 text-xs rounded border bg-blue-500 text-white" data-year="2025">2025</button>
+                            
+                            <!-- Quick Filter Buttons -->
+                            <p class="text-xs font-semibold text-gray-600 mb-2">LỌC NHANH</p>
+                            <div class="grid grid-cols-2 gap-1 mb-3">
+                                <button onclick="setQuickFilter('today')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="today">📆 Hôm nay</button>
+                                <button onclick="setQuickFilter('yesterday')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="yesterday">⏪ Hôm qua</button>
+                                <button onclick="setQuickFilter('7days')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="7days">📅 7 ngày qua</button>
+                                <button onclick="setQuickFilter('30days')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="30days">📅 30 ngày qua</button>
+                                <button onclick="setQuickFilter('thisMonth')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="thisMonth">📆 Tháng này</button>
+                                <button onclick="setQuickFilter('lastMonth')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="lastMonth">⏮️ Tháng trước</button>
+                                <button onclick="setQuickFilter('thisQuarter')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="thisQuarter">📊 Quý này</button>
+                                <button onclick="setQuickFilter('thisYear')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border bg-blue-500 text-white transition-colors" data-filter="thisYear">📅 Năm nay</button>
                             </div>
-                            <!-- Tháng -->
-                            <p class="text-xs font-semibold text-gray-600 mb-1">THÁNG</p>
-                            <div class="grid grid-cols-4 gap-1">
-                                <button onclick="setMonthFilter('all')" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white bg-blue-500 text-white" data-month="all">All</button>
-                                <button onclick="setMonthFilter(1)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="1">1</button>
-                                <button onclick="setMonthFilter(2)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="2">2</button>
-                                <button onclick="setMonthFilter(3)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="3">3</button>
-                                <button onclick="setMonthFilter(4)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="4">4</button>
-                                <button onclick="setMonthFilter(5)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="5">5</button>
-                                <button onclick="setMonthFilter(6)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="6">6</button>
-                                <button onclick="setMonthFilter(7)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="7">7</button>
-                                <button onclick="setMonthFilter(8)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="8">8</button>
-                                <button onclick="setMonthFilter(9)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="9">9</button>
-                                <button onclick="setMonthFilter(10)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="10">10</button>
-                                <button onclick="setMonthFilter(11)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="11">11</button>
-                                <button onclick="setMonthFilter(12)" class="month-filter-btn px-1 py-1 text-xs rounded border hover:bg-blue-500 hover:text-white" data-month="12">12</button>
+                            
+                            <!-- Date Range Inputs -->
+                            <p class="text-xs font-semibold text-gray-600 mb-2">KHOẢNG THỜI GIAN</p>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <label class="text-xs text-gray-500 w-10">Từ:</label>
+                                    <input type="date" id="filter-start-date" class="flex-1 px-2 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="onDateRangeChange()">
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <label class="text-xs text-gray-500 w-10">Đến:</label>
+                                    <input type="date" id="filter-end-date" class="flex-1 px-2 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="onDateRangeChange()">
+                                </div>
+                            </div>
+                            
+                            <!-- Apply Button -->
+                            <button onclick="applyDateFilter()" class="w-full mt-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all shadow-sm">
+                                🔍 Áp dụng bộ lọc
+                            </button>
+                            
+                            <!-- Current Filter Display -->
+                            <div id="current-filter-display" class="mt-3 p-2 bg-blue-50 rounded-lg text-xs text-gray-600 text-center">
+                                <span class="font-medium">Đang xem:</span> <span id="filter-label">Năm nay</span>
                             </div>
                         </div>
                         
@@ -1766,6 +1778,7 @@
                     avatarEl.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full" alt="Avatar" onerror="this.parentElement.innerHTML='👤'">`;
                 }
                 
+                initializeDateFilter();
                 loadDashboard();
                 loadCategoriesForFilter();
             } catch (e) {
@@ -1810,7 +1823,10 @@
             };
             document.getElementById('page-title').textContent = titles[section] || section;
 
-            if (section === 'dashboard') loadDashboard();
+            if (section === 'dashboard') {
+                initializeDateFilter();
+                loadDashboard();
+            }
             else if (section === 'products') loadProducts();
             else if (section === 'categories') loadCategories();
             else if (section === 'orders') loadOrders();
@@ -1862,51 +1878,176 @@
 
         // Dashboard
         let charts = {};
-        let currentYear = 2025; // Năm có dữ liệu
-        let currentMonth = 'all';
+        let currentStartDate = '';
+        let currentEndDate = '';
+        let currentQuickFilter = 'thisYear';
 
-        // Year filter
-        function setYearFilter(year) {
-            currentYear = year;
-            document.querySelectorAll('.year-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-            document.querySelector(`.year-filter-btn[data-year="${year}"]`).classList.add('bg-blue-500', 'text-white');
+        // Format date to YYYY-MM-DD
+        function formatDateISO(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        // Get date range for quick filters
+        function getDateRangeForFilter(filterType) {
+            const today = new Date();
+            let startDate, endDate;
+            
+            switch(filterType) {
+                case 'today':
+                    startDate = endDate = formatDateISO(today);
+                    break;
+                case 'yesterday':
+                    const yesterday = new Date(today);
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    startDate = endDate = formatDateISO(yesterday);
+                    break;
+                case '7days':
+                    const sevenDaysAgo = new Date(today);
+                    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+                    startDate = formatDateISO(sevenDaysAgo);
+                    endDate = formatDateISO(today);
+                    break;
+                case '30days':
+                    const thirtyDaysAgo = new Date(today);
+                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
+                    startDate = formatDateISO(thirtyDaysAgo);
+                    endDate = formatDateISO(today);
+                    break;
+                case 'thisMonth':
+                    startDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
+                    endDate = formatDateISO(today);
+                    break;
+                case 'lastMonth':
+                    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    const lastDayLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                    startDate = formatDateISO(lastMonth);
+                    endDate = formatDateISO(lastDayLastMonth);
+                    break;
+                case 'thisQuarter':
+                    const quarter = Math.floor(today.getMonth() / 3);
+                    const quarterStart = new Date(today.getFullYear(), quarter * 3, 1);
+                    startDate = formatDateISO(quarterStart);
+                    endDate = formatDateISO(today);
+                    break;
+                case 'thisYear':
+                    startDate = `${today.getFullYear()}-01-01`;
+                    endDate = formatDateISO(today);
+                    break;
+                case 'lastYear':
+                    const lastYear = today.getFullYear() - 1;
+                    startDate = `${lastYear}-01-01`;
+                    endDate = `${lastYear}-12-31`;
+                    break;
+                default:
+                    startDate = `${today.getFullYear()}-01-01`;
+                    endDate = formatDateISO(today);
+            }
+            return { startDate, endDate };
+        }
+
+        // Get filter label for display
+        function getFilterLabel(filterType) {
+            const labels = {
+                'today': 'Hôm nay',
+                'yesterday': 'Hôm qua',
+                '7days': '7 ngày qua',
+                '30days': '30 ngày qua',
+                'thisMonth': 'Tháng này',
+                'lastMonth': 'Tháng trước',
+                'thisQuarter': 'Quý này',
+                'thisYear': 'Năm nay',
+                'lastYear': 'Năm trước',
+                'custom': 'Tùy chỉnh'
+            };
+            return labels[filterType] || 'Tùy chỉnh';
+        }
+
+        // Set quick filter
+        function setQuickFilter(filterType) {
+            currentQuickFilter = filterType;
+            const { startDate, endDate } = getDateRangeForFilter(filterType);
+            currentStartDate = startDate;
+            currentEndDate = endDate;
+            
+            // Update date inputs
+            document.getElementById('filter-start-date').value = startDate;
+            document.getElementById('filter-end-date').value = endDate;
+            
+            // Update button styles
+            document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-500', 'text-white');
+            });
+            const activeBtn = document.querySelector(`.quick-filter-btn[data-filter="${filterType}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-blue-500', 'text-white');
+            }
+            
+            // Update filter label
+            document.getElementById('filter-label').textContent = getFilterLabel(filterType);
+            
             loadDashboard();
         }
 
-        // Month filter
-        function setMonthFilter(month) {
-            currentMonth = month;
-            document.querySelectorAll('.month-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-            document.querySelector(`.month-filter-btn[data-month="${month}"]`).classList.add('bg-blue-500', 'text-white');
+        // On date range change from inputs
+        function onDateRangeChange() {
+            // Clear quick filter selection when manually changing dates
+            document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-500', 'text-white');
+            });
+            currentQuickFilter = 'custom';
+        }
+
+        // Apply date filter from inputs
+        function applyDateFilter() {
+            const startInput = document.getElementById('filter-start-date').value;
+            const endInput = document.getElementById('filter-end-date').value;
+            
+            if (!startInput || !endInput) {
+                alert('Vui lòng chọn cả ngày bắt đầu và ngày kết thúc');
+                return;
+            }
+            
+            if (new Date(startInput) > new Date(endInput)) {
+                alert('Ngày bắt đầu không được lớn hơn ngày kết thúc');
+                return;
+            }
+            
+            currentStartDate = startInput;
+            currentEndDate = endInput;
+            currentQuickFilter = 'custom';
+            
+            // Update filter label with custom range
+            const startFormatted = new Date(startInput).toLocaleDateString('vi-VN');
+            const endFormatted = new Date(endInput).toLocaleDateString('vi-VN');
+            document.getElementById('filter-label').textContent = `${startFormatted} - ${endFormatted}`;
+            
             loadDashboard();
         }
 
         // Reset all filters
         function resetAllFilters() {
-            currentYear = new Date().getFullYear();
-            currentMonth = 'all';
-            document.querySelectorAll('.year-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-            document.querySelector(`.year-filter-btn[data-year="${currentYear}"]`)?.classList.add('bg-blue-500', 'text-white');
-            document.querySelectorAll('.month-filter-btn').forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-            document.querySelector('.month-filter-btn[data-month="all"]').classList.add('bg-blue-500', 'text-white');
-            loadDashboard();
+            setQuickFilter('thisYear');
+        }
+
+        // Initialize date filter on page load
+        function initializeDateFilter() {
+            const { startDate, endDate } = getDateRangeForFilter('thisYear');
+            currentStartDate = startDate;
+            currentEndDate = endDate;
+            document.getElementById('filter-start-date').value = startDate;
+            document.getElementById('filter-end-date').value = endDate;
+            
+            // Set max date to today
+            const today = formatDateISO(new Date());
+            document.getElementById('filter-start-date').max = today;
+            document.getElementById('filter-end-date').max = today;
         }
 
         async function loadDashboard() {
             try {
-                let startDate = '', endDate = '';
-                if (currentMonth === 'all') {
-                    startDate = `${currentYear}-01-01`;
-                    endDate = `${currentYear}-12-31`;
-                } else {
-                    const month = String(currentMonth).padStart(2, '0');
-                    startDate = `${currentYear}-${month}-01`;
-                    endDate = `${currentYear}-${month}-${new Date(currentYear, currentMonth, 0).getDate()}`;
-                }
-                
                 let queryParams = [];
-                if (startDate) queryParams.push(`startDate=${startDate}`);
-                if (endDate) queryParams.push(`endDate=${endDate}`);
+                if (currentStartDate) queryParams.push(`startDate=${currentStartDate}`);
+                if (currentEndDate) queryParams.push(`endDate=${currentEndDate}`);
                 const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
                 
                 const data = await apiCall('/admin/dashboard' + queryString);

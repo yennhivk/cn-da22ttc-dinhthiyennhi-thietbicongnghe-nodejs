@@ -164,17 +164,10 @@
                     </div>
                 </div>
 
-                <!-- Navigation Items -->
-                <a href="products.html?category=laptop" class="flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    Laptop
-                </a>
-                <a href="products.html?category=pc-gaming" class="text-base font-bold text-red-500 hover:text-blue-600 transition">PC Gaming</a>
-                <a href="products.html?category=monitor" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Màn hình</a>
-                <a href="products.html?category=cpu-vga" class="text-base font-bold text-red-500 hover:text-blue-600 transition">CPU, VGA</a>
-                <a href="products.html?category=case-power" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Case, Nguồn</a>
-                <a href="products.html?category=mouse-keyboard" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Chuột, Bàn phím</a>
-                <a href="products.html?category=headphone" class="text-base font-bold text-red-500 hover:text-blue-600 transition">Tai nghe</a>
+                <!-- Dynamic Navigation Categories -->
+                <div id="dynamic-nav-categories" class="flex items-center gap-4">
+                    <span class="text-gray-400 text-sm">Đang tải danh mục...</span>
+                </div>
             </div>
         </div>
     </div>
@@ -691,5 +684,8 @@
     <!-- Chatbot Widget -->
     <link rel="stylesheet" href="../css/chatbot.css">
     <script src="../js/chatbot.js"></script>
+    
+    <!-- Dynamic Nav Categories -->
+    <script src="../js/nav-categories.js"></script>
 </body>
 </html>

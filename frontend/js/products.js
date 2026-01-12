@@ -9,17 +9,36 @@ const CATEGORY_MAP = {
     'laptop': 'Laptop',
     'pc-gaming': 'PC Gaming',
     'monitor': 'Màn hình',
-    'cpu-vga': 'CPU',
-    'case-nguon': 'Case',
-    'chuot-ban-phim': 'Chuột',
+    'man-hinh': 'Màn hình',
+    'cpu-vga': 'CPU, VGA',
+    'case-nguon': 'Case, Nguồn',
+    'chuot-ban-phim': 'Chuột, Bàn phím',
     'tai-nghe': 'Tai nghe',
+    'op-lung': 'Ốp lưng',
     'phone': 'Điện thoại',
+    'dien-thoai': 'Điện thoại',
     'appliances': 'Điện máy',
+    'dien-may': 'Điện máy',
     'accessories': 'Phụ kiện',
+    'phu-kien': 'Phụ kiện',
     'apple': 'Apple',
     'samsung': 'Samsung',
     'xiaomi': 'Xiaomi'
 };
+
+// Get category name from slug (using static + dynamic map)
+function getCategoryName(slug) {
+    // First try static map
+    if (CATEGORY_MAP[slug]) {
+        return CATEGORY_MAP[slug];
+    }
+    // Then try dynamic map from categories.js
+    if (window.dynamicCategoryMap && window.dynamicCategoryMap[slug]) {
+        return window.dynamicCategoryMap[slug];
+    }
+    // Return original slug as fallback
+    return slug;
+}
 
 // State management
 let allProducts = [];
@@ -41,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Map category slug to actual category name
     if (category) {
-        currentCategory = CATEGORY_MAP[category] || category;
+        currentCategory = getCategoryName(category);
         // Update page title based on category
         updatePageTitle(currentCategory);
     }
@@ -751,6 +770,10 @@ function switchTab(tabName) {
         }, 10);
     } else if (tabName === 'bai-viet' && baiViet) {
         baiViet.style.display = 'block';
+        // Load bài viết từ API khi chuyển sang tab Bài viết
+        if (typeof loadArticlesFromAPI === 'function') {
+            loadArticlesFromAPI();
+        }
     }
     
     // Update tab styles

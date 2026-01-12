@@ -571,18 +571,10 @@
                     </div>
                 </div>
 
-                <!-- Other Navigation Items -->
-                <a href="products.html?category=laptop" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
-                    <span class="lightning-blink text-yellow-400">⚡</span>
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    Laptop
-                </a>
-                <a href="products.html?category=pc-gaming" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> PC Gaming</a>
-                <a href="products.html?category=monitor" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Màn hình</a>
-                <a href="products.html?category=cpu-vga" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> CPU, VGA</a>
-                <a href="products.html?category=case-power" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Case, Nguồn</a>
-                <a href="products.html?category=mouse-keyboard" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Chuột, Bàn phím</a>
-                <a href="products.html?category=headphone" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition"><span class="lightning-blink text-yellow-400">⚡</span> Tai nghe</a>
+                <!-- Dynamic Navigation Categories -->
+                <div id="dynamic-nav-categories" class="flex items-center gap-4">
+                    <span class="text-gray-400 text-sm">Đang tải danh mục...</span>
+                </div>
             </div>
         </div>
     </div>
@@ -1324,5 +1316,8 @@
     <!-- Chatbot Widget -->
     <link rel="stylesheet" href="../css/chatbot.css">
     <script src="../js/chatbot.js"></script>
+    
+    <!-- Dynamic Nav Categories -->
+    <script src="../js/nav-categories.js"></script>
 </body>
 </html>
