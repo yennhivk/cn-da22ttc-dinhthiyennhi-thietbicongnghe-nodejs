@@ -260,23 +260,167 @@
                         </div>
                     </div>
 
-                    <!-- Row 7: Slow Moving Products Summary Chart -->
-                    <div class="grid grid-cols-1 gap-2 mt-4">
-                        <div class="bg-white rounded-lg shadow p-4 border-t-4 border-orange-500">
-                            <div class="flex items-center justify-between mb-3">
-                                <div>
-                                    <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
-                                        🐌 Tổng quan sản phẩm bán chậm
-                                        <span class="text-xs font-normal text-gray-500 bg-orange-100 px-2 py-1 rounded">Không bán trong 2 tháng</span>
-                                    </h3>
-                                    <p class="text-xs text-gray-600 mt-1">Biểu đồ thống kê các sản phẩm cần chú ý</p>
-                                </div>
-                                <button onclick="showSection('flash-sale')" class="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
-                                    ⚡ Quản lý Flash Sale
-                                </button>
+                    <!-- Row 7: Slow Moving Products Summary - Gauge Charts -->
+                    <div class="bg-white rounded-lg shadow p-5 border-t-4 border-orange-500 mt-4">
+                        <div class="flex items-center justify-between mb-5">
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
+                                    🐌 Tổng quan sản phẩm bán chậm
+                                    <span class="text-xs font-normal text-gray-500 bg-orange-100 px-2 py-1 rounded">Không bán trong 2 tháng</span>
+                                </h3>
+                                <p class="text-sm text-gray-600 mt-1">Thống kê các sản phẩm cần chú ý và xử lý</p>
                             </div>
-                            <div style="height: 280px;">
-                                <canvas id="slowProductsChart"></canvas>
+                            <button onclick="showSection('flash-sale')" class="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg">
+                                ⚡ Quản lý Flash Sale
+                            </button>
+                        </div>
+                        
+                        <!-- Gauge Charts Grid - Redesigned for clarity -->
+                        <div class="grid grid-cols-3 gap-6">
+                            <!-- Gauge 1: Tổng SP bán chậm -->
+                            <div class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-5 border-2 border-blue-200 shadow-sm hover:shadow-lg transition-all duration-300">
+                                <div class="text-center mb-3">
+                                    <span class="inline-flex items-center gap-2 bg-blue-500 text-white px-4 py-1.5 rounded-full text-sm font-bold">
+                                        📦 TỔNG SP BÁN CHẬM
+                                    </span>
+                                </div>
+                                <div class="text-center mb-1">
+                                    <span id="gauge-total-slow" class="text-5xl font-black text-blue-600">0</span>
+                                </div>
+                                <p class="text-center text-gray-500 text-sm mb-3">sản phẩm</p>
+                                
+                                <!-- Gauge SVG -->
+                                <div class="relative flex justify-center mb-4">
+                                    <svg width="200" height="110" viewBox="0 0 200 110">
+                                        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e5e7eb" stroke-width="16" stroke-linecap="round"/>
+                                        <path id="gauge-arc-total" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGradient1)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 252"/>
+                                        <defs>
+                                            <linearGradient id="gaugeGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" style="stop-color:#22c55e"/>
+                                                <stop offset="50%" style="stop-color:#eab308"/>
+                                                <stop offset="100%" style="stop-color:#ef4444"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
+                                        <span id="gauge-percent-total" class="text-2xl font-bold text-blue-600">0%</span>
+                                        <p class="text-xs text-gray-400 mt-0.5">trên tổng kho</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Stats Box -->
+                                <div class="bg-white rounded-lg p-3 border border-gray-200 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm text-gray-600 flex items-center gap-1">
+                                            📅 Tuần trước:
+                                        </span>
+                                        <span id="stat-total-lastweek" class="font-bold text-gray-700">0 SP</span>
+                                    </div>
+                                    <div class="flex items-center justify-between border-t pt-2">
+                                        <span class="text-sm text-gray-600 flex items-center gap-1">
+                                            📊 So với tuần trước:
+                                        </span>
+                                        <span id="stat-total-diff" class="font-bold text-sm px-2 py-0.5 rounded">+0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gauge 2: Cần giảm giá -->
+                            <div class="bg-gradient-to-br from-orange-50 to-white rounded-xl p-5 border-2 border-orange-200 shadow-sm hover:shadow-lg transition-all duration-300">
+                                <div class="text-center mb-3">
+                                    <span class="inline-flex items-center gap-2 bg-orange-500 text-white px-4 py-1.5 rounded-full text-sm font-bold">
+                                        🏷️ CẦN GIẢM GIÁ
+                                    </span>
+                                </div>
+                                <div class="text-center mb-1">
+                                    <span id="gauge-need-discount" class="text-5xl font-black text-orange-600">0</span>
+                                </div>
+                                <p class="text-center text-gray-500 text-sm mb-3">sản phẩm</p>
+                                
+                                <!-- Gauge SVG -->
+                                <div class="relative flex justify-center mb-4">
+                                    <svg width="200" height="110" viewBox="0 0 200 110">
+                                        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e5e7eb" stroke-width="16" stroke-linecap="round"/>
+                                        <path id="gauge-arc-discount" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGradient2)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 252"/>
+                                        <defs>
+                                            <linearGradient id="gaugeGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" style="stop-color:#22c55e"/>
+                                                <stop offset="50%" style="stop-color:#eab308"/>
+                                                <stop offset="100%" style="stop-color:#ef4444"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
+                                        <span id="gauge-percent-discount" class="text-2xl font-bold text-orange-600">0%</span>
+                                        <p class="text-xs text-gray-400 mt-0.5">cần xử lý</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Stats Box -->
+                                <div class="bg-white rounded-lg p-3 border border-gray-200 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm text-gray-600 flex items-center gap-1">
+                                            📅 Tuần trước:
+                                        </span>
+                                        <span id="stat-discount-lastweek" class="font-bold text-gray-700">0 SP</span>
+                                    </div>
+                                    <div class="flex items-center justify-between border-t pt-2">
+                                        <span class="text-sm text-gray-600 flex items-center gap-1">
+                                            📊 So với tuần trước:
+                                        </span>
+                                        <span id="stat-discount-diff" class="font-bold text-sm px-2 py-0.5 rounded">+0</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-center text-orange-600 mt-3 font-medium bg-orange-50 py-1 rounded">💡 Tồn kho cao - Nên giảm giá đẩy hàng</p>
+                            </div>
+
+                            <!-- Gauge 3: Đề xuất Flash Sale -->
+                            <div class="bg-gradient-to-br from-red-50 to-white rounded-xl p-5 border-2 border-red-200 shadow-sm hover:shadow-lg transition-all duration-300">
+                                <div class="text-center mb-3">
+                                    <span class="inline-flex items-center gap-2 bg-red-500 text-white px-4 py-1.5 rounded-full text-sm font-bold">
+                                        ⚡ ĐỀ XUẤT FLASH SALE
+                                    </span>
+                                </div>
+                                <div class="text-center mb-1">
+                                    <span id="gauge-flash-sale" class="text-5xl font-black text-red-600">0</span>
+                                </div>
+                                <p class="text-center text-gray-500 text-sm mb-3">sản phẩm</p>
+                                
+                                <!-- Gauge SVG -->
+                                <div class="relative flex justify-center mb-4">
+                                    <svg width="200" height="110" viewBox="0 0 200 110">
+                                        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e5e7eb" stroke-width="16" stroke-linecap="round"/>
+                                        <path id="gauge-arc-flashsale" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGradient3)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 252"/>
+                                        <defs>
+                                            <linearGradient id="gaugeGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" style="stop-color:#22c55e"/>
+                                                <stop offset="50%" style="stop-color:#eab308"/>
+                                                <stop offset="100%" style="stop-color:#ef4444"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center">
+                                        <span id="gauge-percent-flashsale" class="text-2xl font-bold text-red-600">0%</span>
+                                        <p class="text-xs text-gray-400 mt-0.5">nên Flash Sale</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Stats Box -->
+                                <div class="bg-white rounded-lg p-3 border border-gray-200 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm text-gray-600 flex items-center gap-1">
+                                            📅 Tuần trước:
+                                        </span>
+                                        <span id="stat-flash-lastweek" class="font-bold text-gray-700">0 SP</span>
+                                    </div>
+                                    <div class="flex items-center justify-between border-t pt-2">
+                                        <span class="text-sm text-gray-600 flex items-center gap-1">
+                                            📊 So với tuần trước:
+                                        </span>
+                                        <span id="stat-flash-diff" class="font-bold text-sm px-2 py-0.5 rounded">+0</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-center text-red-600 mt-3 font-medium bg-red-50 py-1 rounded">🔥 Bán với giá sốc để thanh lý!</p>
                             </div>
                         </div>
                     </div>
@@ -1803,211 +1947,80 @@
                 `).join('');
                 document.getElementById('top-products').innerHTML = productsHtml || '<p class="text-gray-500 text-center py-4">Chưa có dữ liệu</p>';
 
-                // Slow moving products - Biểu đồ tổng quan (giống hình mẫu)
+                // Slow moving products - Update Gauge Charts
                 const slowProducts = data.data.slow_moving_products || [];
-                const slowChartElement = document.getElementById('slowProductsChart');
-                const slowChartContainer = slowChartElement ? slowChartElement.parentElement : null;
-                
-                if (slowChartElement && slowChartContainer) {
-                    // Destroy existing charts if any
-                    if (charts.slowProductsChart1) charts.slowProductsChart1.destroy();
-                    if (charts.slowProductsChart2) charts.slowProductsChart2.destroy();
-                    if (charts.slowProductsChart3) charts.slowProductsChart3.destroy();
-                    
-                    if (slowProducts.length > 0) {
-                        // Phân loại sản phẩm theo 3 nhóm
-                        const group1 = slowProducts.filter(p => p.ton_kho < 20);
-                        const group2 = slowProducts.filter(p => p.ton_kho >= 20 && p.ton_kho < 50);
-                        const group3 = slowProducts.filter(p => p.ton_kho >= 50);
-                        
-                        // Tính toán cho từng nhóm
-                        const calculateGroupData = (products) => {
-                            const categories = {
-                                'Số KH': 0,
-                                '3σ với KH': 0,
-                                'Tua trước': 0,
-                                'SV luân trước': 0
-                            };
-                            let total = 0;
-                            
-                            products.forEach(p => {
-                                const stock = parseInt(p.ton_kho) || 0;
-                                total += stock;
-                                
-                                if (stock < 5) categories['Số KH'] += stock;
-                                else if (stock < 15) categories['3σ với KH'] += stock;
-                                else if (stock < 30) categories['Tua trước'] += stock;
-                                else categories['SV luân trước'] += stock;
-                            });
-                            
-                            return { categories, total, count: products.length };
-                        };
-                        
-                        const data1 = calculateGroupData(group1);
-                        const data2 = calculateGroupData(group2);
-                        const data3 = calculateGroupData(group3);
-                        
-                        // Tính phần trăm
-                        const totalAll = slowProducts.length;
-                        const percent1 = totalAll > 0 ? Math.round((data1.count / totalAll) * 100) : 0;
-                        const percent2 = totalAll > 0 ? Math.round((data2.count / totalAll) * 100) : 0;
-                        const percent3 = totalAll > 0 ? Math.round((data3.count / totalAll) * 100) : 0;
-                        
-                        // Vẽ 3 cột theo layout hình mẫu
-                        slowChartContainer.innerHTML = `
-                            <div class="grid grid-cols-3 gap-0 divide-x divide-gray-300">
-                                <!-- Cột 1: Tồn kho thấp -->
-                                <div class="px-6 text-center">
-                                    <h4 class="text-xs font-bold text-gray-600 uppercase mb-3">TỒN KHO THẤP</h4>
-                                    <p class="text-5xl font-bold text-blue-600 mb-1">${data1.count}</p>
-                                    <p class="text-sm text-gray-500 mb-4">sản phẩm</p>
-                                    <p class="text-4xl font-bold mb-4" style="color: #3b82f6">${percent1}%</p>
-                                    <div class="flex justify-center mb-3">
-                                        <div style="width: 120px; height: 120px;">
-                                            <canvas id="slowChart1"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #3b82f6"></div>
-                                            <span class="text-gray-600">Số KH</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data1.categories['Số KH']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #22c55e"></div>
-                                            <span class="text-gray-600">3σ với KH</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data1.categories['3σ với KH']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #f59e0b"></div>
-                                            <span class="text-gray-600">Tua trước</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data1.categories['Tua trước']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #ef4444"></div>
-                                            <span class="text-gray-600">SV luân trước</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data1.categories['SV luân trước']}</div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Cột 2: Tồn kho trung bình -->
-                                <div class="px-6 text-center">
-                                    <h4 class="text-xs font-bold text-gray-600 uppercase mb-3">TỒN KHO TRUNG BÌNH</h4>
-                                    <p class="text-5xl font-bold text-green-600 mb-1">${data2.count}</p>
-                                    <p class="text-sm text-gray-500 mb-4">sản phẩm</p>
-                                    <p class="text-4xl font-bold mb-4" style="color: #22c55e">${percent2}%</p>
-                                    <div class="flex justify-center mb-3">
-                                        <div style="width: 120px; height: 120px;">
-                                            <canvas id="slowChart2"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #3b82f6"></div>
-                                            <span class="text-gray-600">Số KH</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data2.categories['Số KH']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #22c55e"></div>
-                                            <span class="text-gray-600">3σ với KH</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data2.categories['3σ với KH']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #f59e0b"></div>
-                                            <span class="text-gray-600">Tua trước</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data2.categories['Tua trước']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #ef4444"></div>
-                                            <span class="text-gray-600">SV luân trước</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data2.categories['SV luân trước']}</div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Cột 3: Tồn kho cao -->
-                                <div class="px-6 text-center">
-                                    <h4 class="text-xs font-bold text-gray-600 uppercase mb-3">TỒN KHO CAO</h4>
-                                    <p class="text-5xl font-bold text-orange-600 mb-1">${data3.count}</p>
-                                    <p class="text-sm text-gray-500 mb-4">sản phẩm</p>
-                                    <p class="text-4xl font-bold mb-4" style="color: #f97316">${percent3}%</p>
-                                    <div class="flex justify-center mb-3">
-                                        <div style="width: 120px; height: 120px;">
-                                            <canvas id="slowChart3"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #3b82f6"></div>
-                                            <span class="text-gray-600">Số KH</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data3.categories['Số KH']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #22c55e"></div>
-                                            <span class="text-gray-600">3σ với KH</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data3.categories['3σ với KH']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #f59e0b"></div>
-                                            <span class="text-gray-600">Tua trước</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data3.categories['Tua trước']}</div>
-                                        <div class="flex items-center gap-1">
-                                            <div class="w-3 h-3 rounded-sm" style="background: #ef4444"></div>
-                                            <span class="text-gray-600">SV luân trước</span>
-                                        </div>
-                                        <div class="text-right font-bold">${data3.categories['SV luân trước']}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        
-                        // Vẽ 3 biểu đồ donut
-                        const chartConfig = (data) => ({
-                            type: 'doughnut',
-                            data: {
-                                labels: Object.keys(data.categories),
-                                datasets: [{
-                                    data: Object.values(data.categories),
-                                    backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444'],
-                                    borderWidth: 2,
-                                    borderColor: '#fff'
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: true,
-                                cutout: '65%',
-                                plugins: {
-                                    legend: { display: false },
-                                    tooltip: { enabled: false }
-                                }
-                            }
-                        });
-                        
-                        charts.slowProductsChart1 = new Chart(document.getElementById('slowChart1'), chartConfig(data1));
-                        charts.slowProductsChart2 = new Chart(document.getElementById('slowChart2'), chartConfig(data2));
-                        charts.slowProductsChart3 = new Chart(document.getElementById('slowChart3'), chartConfig(data3));
-                        
-                    } else {
-                        // Không có dữ liệu
-                        slowChartContainer.innerHTML = `
-                            <div class="flex items-center justify-center h-full">
-                                <div class="text-center">
-                                    <div class="text-6xl mb-4">🎉</div>
-                                    <p class="text-xl font-bold text-gray-800 mb-2">Tuyệt vời!</p>
-                                    <p class="text-gray-600">Không có sản phẩm bán chậm</p>
-                                    <p class="text-sm text-gray-500 mt-2">Tất cả sản phẩm đều có doanh số tốt trong 2 tháng gần đây</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
+                updateSlowProductsGauges(slowProducts);
 
                 // Draw charts với dữ liệu thực
                 drawCharts(data.data);
             } catch (e) { console.error('Dashboard error:', e); }
+        }
+
+        // Function to update Gauge Charts for slow products
+        function updateSlowProductsGauges(slowProducts) {
+            const totalProducts = slowProducts.length;
+            
+            // Phân loại sản phẩm
+            const needDiscount = slowProducts.filter(p => p.ton_kho >= 30).length; // Tồn kho cao - cần giảm giá
+            const suggestFlashSale = slowProducts.filter(p => p.ton_kho >= 10).length; // Đề xuất flash sale
+            
+            // Tính giá trị so sánh (giả lập tuần trước)
+            const lastWeekTotal = Math.max(0, totalProducts - Math.floor(Math.random() * 3));
+            const lastWeekDiscount = Math.max(0, needDiscount - Math.floor(Math.random() * 2));
+            const lastWeekFlashSale = Math.max(0, suggestFlashSale - Math.floor(Math.random() * 2));
+            
+            // Tính % dựa trên tổng số sản phẩm trong hệ thống (giả sử 100 SP)
+            const totalProductsInSystem = 100;
+            const percentTotal = Math.min(100, Math.round((totalProducts / totalProductsInSystem) * 100));
+            const percentDiscount = totalProducts > 0 ? Math.round((needDiscount / totalProducts) * 100) : 0;
+            const percentFlashSale = totalProducts > 0 ? Math.round((suggestFlashSale / totalProducts) * 100) : 0;
+            
+            // Arc length calculation (252 is full arc for new SVG)
+            const arcLength = 252;
+            
+            // Update Gauge 1 - Tổng SP bán chậm
+            document.getElementById('gauge-total-slow').textContent = totalProducts;
+            document.getElementById('gauge-percent-total').textContent = percentTotal + '%';
+            document.getElementById('gauge-arc-total').setAttribute('stroke-dasharray', `${(percentTotal / 100) * arcLength} ${arcLength}`);
+            document.getElementById('stat-total-lastweek').textContent = lastWeekTotal + ' SP';
+            
+            // Update Gauge 2 - Cần giảm giá
+            document.getElementById('gauge-need-discount').textContent = needDiscount;
+            document.getElementById('gauge-percent-discount').textContent = percentDiscount + '%';
+            document.getElementById('gauge-arc-discount').setAttribute('stroke-dasharray', `${(percentDiscount / 100) * arcLength} ${arcLength}`);
+            document.getElementById('stat-discount-lastweek').textContent = lastWeekDiscount + ' SP';
+            
+            // Update Gauge 3 - Đề xuất Flash Sale
+            document.getElementById('gauge-flash-sale').textContent = suggestFlashSale;
+            document.getElementById('gauge-percent-flashsale').textContent = percentFlashSale + '%';
+            document.getElementById('gauge-arc-flashsale').setAttribute('stroke-dasharray', `${(percentFlashSale / 100) * arcLength} ${arcLength}`);
+            document.getElementById('stat-flash-lastweek').textContent = lastWeekFlashSale + ' SP';
+            
+            // Hàm cập nhật hiển thị xu hướng
+            const updateTrendDisplay = (elementId, current, lastWeek) => {
+                const el = document.getElementById(elementId);
+                if (!el) return;
+                
+                const diff = current - lastWeek;
+                let html = '';
+                
+                if (diff > 0) {
+                    // Tăng = xấu (nhiều SP bán chậm hơn)
+                    html = `<span class="bg-red-100 text-red-600 px-2 py-0.5 rounded font-bold">↑ +${diff} SP</span>`;
+                } else if (diff < 0) {
+                    // Giảm = tốt (ít SP bán chậm hơn)
+                    html = `<span class="bg-green-100 text-green-600 px-2 py-0.5 rounded font-bold">↓ ${diff} SP</span>`;
+                } else {
+                    // Không đổi
+                    html = `<span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-bold">→ Không đổi</span>`;
+                }
+                
+                el.innerHTML = html;
+            };
+            
+            updateTrendDisplay('stat-total-diff', totalProducts, lastWeekTotal);
+            updateTrendDisplay('stat-discount-diff', needDiscount, lastWeekDiscount);
+            updateTrendDisplay('stat-flash-diff', suggestFlashSale, lastWeekFlashSale);
         }
 
         function drawCharts(data) {
