@@ -48,6 +48,7 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         console.log('📅 Date filters:', { startDate, endDate });
         
         // Xây dựng điều kiện lọc theo khoảng ngày
+        // Sử dụng DATE(ngay_tao) thay vì CONVERT_TZ vì MySQL có thể không có timezone data
         let dateFilter = '';
         let dateFilterOrders = '';
         let dateFilterDH = ''; // Cho bảng don_hang với alias dh
@@ -67,20 +68,20 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         }
 
         console.log('1️⃣ Query revenue...');
-        // Tổng doanh thu (theo filter)
+        // Tổng doanh thu (theo filter) - chỉ tính đơn đang giao và hoàn thành
         const [revenue] = await db.query(`
             SELECT COALESCE(SUM(tong_tien), 0) as total_revenue 
             FROM don_hang 
-            WHERE trang_thai_don_hang = 'hoan_thanh' ${dateFilter}
+            WHERE trang_thai_don_hang IN ('hoan_thanh', 'dang_giao') ${dateFilter}
         `);
-        console.log('✅ Revenue done');
+        console.log('✅ Revenue done:', revenue[0]);
 
         console.log('2️⃣ Query orders...');
         // Tổng đơn hàng (theo filter)
         const [orders] = await db.query(`
             SELECT COUNT(*) as total_orders FROM don_hang ${dateFilterOrders}
         `);
-        console.log('✅ Orders done');
+        console.log('✅ Orders done:', orders[0]);
 
         console.log('3️⃣ Query products...');
         // Tổng sản phẩm
@@ -88,13 +89,23 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         console.log('✅ Products done');
 
         console.log('4️⃣ Query customers...');
-        // Tổng khách hàng (theo filter - khách hàng đăng ký trong khoảng thời gian)
-        let customerQuery = `SELECT COUNT(*) as total_customers FROM tai_khoan WHERE vai_tro = 'khach_hang'`;
+        // Tổng khách hàng có đơn hàng trong khoảng thời gian
+        let customerQuery = '';
         if (startDate || endDate) {
-            customerQuery = `SELECT COUNT(*) as total_customers FROM tai_khoan WHERE vai_tro = 'khach_hang' ${dateFilter}`;
+            customerQuery = `
+                SELECT COUNT(DISTINCT ma_tai_khoan) as total_customers 
+                FROM don_hang 
+                WHERE ma_tai_khoan IS NOT NULL ${dateFilter}
+            `;
+        } else {
+            customerQuery = `
+                SELECT COUNT(DISTINCT ma_tai_khoan) as total_customers 
+                FROM don_hang 
+                WHERE ma_tai_khoan IS NOT NULL
+            `;
         }
         const [customers] = await db.query(customerQuery);
-        console.log('✅ Customers done');
+        console.log('✅ Customers done:', customers[0]);
 
         console.log('5️⃣ Query ordersByStatus...');
         // Đơn hàng theo trạng thái (theo filter)
@@ -109,7 +120,8 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         console.log('6️⃣ Query recentOrders...');
         // Đơn hàng gần đây
         const [recentOrders] = await db.query(`
-            SELECT dh.*, dh.trang_thai_don_hang as trang_thai, tk.ten_dang_nhap, tk.email
+            SELECT dh.*, dh.trang_thai_don_hang as trang_thai, tk.ten_dang_nhap, tk.email,
+                   COALESCE((SELECT tt.phuong_thuc FROM thanh_toan tt WHERE tt.ma_don_hang = dh.ma_don_hang LIMIT 1), 'COD') as phuong_thuc_thanh_toan
             FROM don_hang dh
             LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
             ORDER BY dh.ngay_tao DESC
@@ -194,12 +206,12 @@ router.get('/dashboard', authenticateToken, requireAdmin, async (req, res) => {
         console.log('✅ CategoryRevenue done');
 
         console.log('1️⃣2️⃣ Query totalSold...');
-        // Tổng số lượng sản phẩm đã bán (theo filter)
+        // Tổng số lượng sản phẩm đã bán (theo filter) - chỉ tính đơn đang giao và hoàn thành
         const [totalSold] = await db.query(`
             SELECT COALESCE(SUM(ctdh.so_luong), 0) as total_sold
             FROM chi_tiet_don_hang ctdh
             JOIN don_hang dh ON ctdh.ma_don_hang = dh.ma_don_hang
-            WHERE dh.trang_thai_don_hang = 'hoan_thanh' ${dateFilterDH}
+            WHERE dh.trang_thai_don_hang IN ('hoan_thanh', 'dang_giao') ${dateFilterDH}
         `);
         console.log('✅ TotalSold done');
 
@@ -888,7 +900,8 @@ router.get('/orders', authenticateToken, requireAdmin, async (req, res) => {
         let query = `
             SELECT dh.*, dh.trang_thai_don_hang as trang_thai, dh.dia_chi_giao_hang as dia_chi_giao, 
                    tk.ten_dang_nhap, tk.email,
-                   (SELECT COUNT(*) FROM chi_tiet_don_hang WHERE ma_don_hang = dh.ma_don_hang) as so_san_pham
+                   (SELECT COUNT(*) FROM chi_tiet_don_hang WHERE ma_don_hang = dh.ma_don_hang) as so_san_pham,
+                   COALESCE((SELECT tt.phuong_thuc FROM thanh_toan tt WHERE tt.ma_don_hang = dh.ma_don_hang LIMIT 1), 'COD') as phuong_thuc_thanh_toan
             FROM don_hang dh
             LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
             WHERE 1=1
@@ -931,7 +944,8 @@ router.get('/orders/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const [orders] = await db.query(`
             SELECT dh.*, dh.trang_thai_don_hang as trang_thai, dh.dia_chi_giao_hang as dia_chi_giao,
-                   tk.ten_dang_nhap, tk.email
+                   tk.ten_dang_nhap, tk.email,
+                   COALESCE((SELECT tt.phuong_thuc FROM thanh_toan tt WHERE tt.ma_don_hang = dh.ma_don_hang LIMIT 1), 'COD') as phuong_thuc_thanh_toan
             FROM don_hang dh
             LEFT JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
             WHERE dh.ma_don_hang = ?
@@ -1381,17 +1395,37 @@ router.post('/public/apply-promo', async (req, res) => {
         // Tìm mã giảm giá trong database
         const [promos] = await db.query(`
             SELECT * FROM khuyen_mai 
-            WHERE ma_giam_gia = ? AND trang_thai = 1 AND ngay_ket_thuc >= NOW()
+            WHERE ma_giam_gia = ? AND trang_thai = 1
         `, [code.toUpperCase()]);
         
         if (promos.length === 0) {
             return res.status(404).json({ 
                 success: false, 
-                message: 'Mã giảm giá không hợp lệ hoặc đã hết hạn' 
+                message: 'Mã giảm giá không tồn tại hoặc đã bị vô hiệu hóa' 
             });
         }
         
         const promo = promos[0];
+        const now = new Date();
+        const startDate = new Date(promo.ngay_bat_dau);
+        const endDate = new Date(promo.ngay_ket_thuc);
+        
+        // Kiểm tra mã chưa tới thời gian bắt đầu
+        if (now < startDate) {
+            return res.status(400).json({ 
+                success: false, 
+                message: `Mã giảm giá này sẽ có hiệu lực từ ngày ${startDate.toLocaleDateString('vi-VN')}` 
+            });
+        }
+        
+        // Kiểm tra mã đã hết hạn
+        if (now > endDate) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Mã giảm giá đã hết hạn' 
+            });
+        }
+        
         let discountAmount = 0;
         let discountPercent = 0;
         let message = '';

@@ -423,41 +423,54 @@
                 <div class="lg:col-span-2">
                     <form id="checkoutForm" class="space-y-6">
                         <div class="bg-white rounded-xl shadow-lg p-6">
-                            <h2 class="text-2xl font-bold mb-6">Thông tin giao hàng</h2>
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-2xl font-bold">Thông tin giao hàng</h2>
+                                <a href="account.html" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    Cập nhật thông tin
+                                </a>
+                            </div>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                                <p class="text-yellow-800 text-sm flex items-center gap-2">
+                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Thông tin giao hàng được lấy từ tài khoản của bạn. Vui lòng vào <a href="account.html" class="text-blue-600 font-semibold hover:underline">Trang cá nhân</a> để cập nhật.
+                                </p>
+                            </div>
                             <div class="grid md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Họ và tên *</label>
-                                    <input type="text" id="hoTen" name="hoTen" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Nguyễn Văn A">
+                                    <input type="text" id="hoTen" name="hoTen" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" placeholder="Nguyễn Văn A" readonly>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Số điện thoại *</label>
-                                    <input type="tel" id="soDienThoai" name="soDienThoai" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="0123456789">
+                                    <input type="tel" id="soDienThoai" name="soDienThoai" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" placeholder="0123456789" readonly>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-gray-700 font-semibold mb-2">Email *</label>
-                                    <input type="email" id="email" name="email" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-gray-100" placeholder="email@example.com" readonly>
+                                    <input type="email" id="email" name="email" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" placeholder="email@example.com" readonly>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-gray-700 font-semibold mb-2">Địa chỉ *</label>
-                                    <input type="text" id="diaChi" name="diaChi" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Số nhà, tên đường">
+                                    <input type="text" id="diaChi" name="diaChi" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" placeholder="Số nhà, tên đường" readonly>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Tỉnh/Thành phố *</label>
-                                    <select id="tinhThanh" name="tinhThanh" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                                        <option value="">Chọn tỉnh/thành</option>
-                                    </select>
+                                    <input type="text" id="tinhThanhDisplay" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" readonly>
+                                    <input type="hidden" id="tinhThanh" name="tinhThanh">
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Quận/Huyện *</label>
-                                    <select id="quanHuyen" name="quanHuyen" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                                        <option value="">Chọn quận/huyện</option>
-                                    </select>
+                                    <input type="text" id="quanHuyenDisplay" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" readonly>
+                                    <input type="hidden" id="quanHuyen" name="quanHuyen">
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-semibold mb-2">Phường/Xã *</label>
-                                    <select id="phuongXa" name="phuongXa" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                                        <option value="">Chọn phường/xã</option>
-                                    </select>
+                                    <input type="text" id="phuongXaDisplay" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed" readonly>
+                                    <input type="hidden" id="phuongXa" name="phuongXa">
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-gray-700 font-semibold mb-2">Ghi chú</label>
@@ -749,98 +762,38 @@
             }
 
             if (defaultAddress) {
-                // Điền thông tin địa chỉ mặc định vào form
+                // Điền thông tin địa chỉ mặc định vào form (readonly fields)
                 if (defaultAddress.fullAddress) {
                     document.getElementById('diaChi').value = defaultAddress.fullAddress;
                 }
                 
-                // Populate và select tỉnh/thành
+                // Điền các trường hiển thị (readonly)
                 if (defaultAddress.city) {
-                    const citySelect = document.getElementById('tinhThanh');
-                    // Đợi dropdown được populate
-                    setTimeout(() => {
-                        citySelect.value = defaultAddress.city;
-                        // Trigger change để load quận/huyện
-                        citySelect.dispatchEvent(new Event('change'));
-                        
-                        // Populate và select quận/huyện
-                        if (defaultAddress.district) {
-                            setTimeout(() => {
-                                const districtSelect = document.getElementById('quanHuyen');
-                                districtSelect.value = defaultAddress.district;
-                                // Trigger change để load phường/xã
-                                districtSelect.dispatchEvent(new Event('change'));
-                                
-                                // Populate và select phường/xã
-                                if (defaultAddress.ward) {
-                                    setTimeout(() => {
-                                        document.getElementById('phuongXa').value = defaultAddress.ward;
-                                    }, 100);
-                                }
-                            }, 100);
-                        }
-                    }, 100);
+                    document.getElementById('tinhThanhDisplay').value = defaultAddress.city;
+                    document.getElementById('tinhThanh').value = defaultAddress.city;
                 }
+                
+                if (defaultAddress.district) {
+                    document.getElementById('quanHuyenDisplay').value = defaultAddress.district;
+                    document.getElementById('quanHuyen').value = defaultAddress.district;
+                }
+                
+                if (defaultAddress.ward) {
+                    document.getElementById('phuongXaDisplay').value = defaultAddress.ward;
+                    document.getElementById('phuongXa').value = defaultAddress.ward;
+                }
+            } else {
+                // Nếu không có địa chỉ mặc định, hiển thị thông báo
+                document.getElementById('tinhThanhDisplay').value = 'Chưa có thông tin';
+                document.getElementById('quanHuyenDisplay').value = 'Chưa có thông tin';
+                document.getElementById('phuongXaDisplay').value = 'Chưa có thông tin';
             }
         }
 
-        // Populate tỉnh/thành phố
+        // Không còn cần populate dropdowns vì đã chuyển sang readonly inputs
         function populateCities() {
-            const citySelect = document.getElementById('tinhThanh');
-            citySelect.innerHTML = '<option value="">Chọn tỉnh/thành</option>';
-            
-            Object.keys(vietnamAddress).forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                citySelect.appendChild(option);
-            });
+            // Không làm gì - dữ liệu được load từ trang account
         }
-
-        // Populate quận/huyện khi chọn tỉnh/thành
-        document.getElementById('tinhThanh').addEventListener('change', function() {
-            const city = this.value;
-            const districtSelect = document.getElementById('quanHuyen');
-            const wardSelect = document.getElementById('phuongXa');
-            
-            // Reset quận/huyện và phường/xã
-            districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-            wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-            wardSelect.disabled = true;
-            
-            if (city && vietnamAddress[city]) {
-                districtSelect.disabled = false;
-                Object.keys(vietnamAddress[city]).forEach(district => {
-                    const option = document.createElement('option');
-                    option.value = district;
-                    option.textContent = district;
-                    districtSelect.appendChild(option);
-                });
-            } else {
-                districtSelect.disabled = true;
-            }
-        });
-
-        // Populate phường/xã khi chọn quận/huyện
-        document.getElementById('quanHuyen').addEventListener('change', function() {
-            const city = document.getElementById('tinhThanh').value;
-            const district = this.value;
-            const wardSelect = document.getElementById('phuongXa');
-            
-            wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-            
-            if (city && district && vietnamAddress[city][district]) {
-                wardSelect.disabled = false;
-                vietnamAddress[city][district].forEach(ward => {
-                    const option = document.createElement('option');
-                    option.value = ward;
-                    option.textContent = ward;
-                    wardSelect.appendChild(option);
-                });
-            } else {
-                wardSelect.disabled = true;
-            }
-        });
 
         async function loadOrderSummary() {
             // Lấy sản phẩm được chọn từ checkout key (không phải cart key)
@@ -1100,23 +1053,26 @@
                 return;
             }
             
-            // Lấy text hiển thị từ select
-            const tinhThanh = document.getElementById('tinhThanh');
-            const quanHuyen = document.getElementById('quanHuyen');
-            const phuongXa = document.getElementById('phuongXa');
+            // Lấy text hiển thị từ input (readonly)
+            const cityText = document.getElementById('tinhThanhDisplay').value || '';
+            const districtText = document.getElementById('quanHuyenDisplay').value || '';
+            const wardText = document.getElementById('phuongXaDisplay').value || '';
             
-            const cityText = tinhThanh.options[tinhThanh.selectedIndex]?.text || '';
-            const districtText = quanHuyen.options[quanHuyen.selectedIndex]?.text || '';
-            const wardText = phuongXa.options[phuongXa.selectedIndex]?.text || '';
+            // Kiểm tra thông tin địa chỉ đã đầy đủ chưa
+            if (!cityText || cityText === 'Chưa có thông tin') {
+                alert('Vui lòng cập nhật thông tin địa chỉ trong Trang cá nhân trước khi đặt hàng.');
+                window.location.href = 'account.html';
+                return;
+            }
             
             // Lấy phương thức thanh toán
             const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || 'cod';
             
             // Tạo địa chỉ đầy đủ
             let fullAddress = `${hoTen}, ${soDienThoai}, ${diaChi}`;
-            if (wardText && wardText !== 'Chọn phường/xã') fullAddress += `, ${wardText}`;
-            if (districtText && districtText !== 'Chọn quận/huyện') fullAddress += `, ${districtText}`;
-            if (cityText && cityText !== 'Chọn tỉnh/thành') fullAddress += `, ${cityText}`;
+            if (wardText && wardText !== 'Chưa có thông tin') fullAddress += `, ${wardText}`;
+            if (districtText && districtText !== 'Chưa có thông tin') fullAddress += `, ${districtText}`;
+            if (cityText && cityText !== 'Chưa có thông tin') fullAddress += `, ${cityText}`;
             
             // Tính tổng tiền đơn hàng
             const totalAmountText = document.getElementById('total').textContent;

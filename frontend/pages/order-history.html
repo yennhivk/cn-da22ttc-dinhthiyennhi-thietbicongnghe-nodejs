@@ -334,6 +334,20 @@
             'cancelled': 'da_huy',
             'return': 'da_huy'
         };
+        
+        // Tính thông tin cọc 50% cho đơn COD
+        function getCODPaymentInfo(paymentMethod, totalAmount) {
+            if (paymentMethod === 'COD') {
+                const depositAmount = Math.round(totalAmount * 0.5);
+                const remainingAmount = totalAmount - depositAmount;
+                return {
+                    isDeposit: true,
+                    depositAmount: depositAmount,
+                    remainingAmount: remainingAmount
+                };
+            }
+            return { isDeposit: false };
+        }
 
         document.querySelectorAll('.tab-button').forEach(button => {
             button.addEventListener('click', function() {
@@ -387,7 +401,8 @@
                     allOrders = result.data.map(order => {
                         const status = statusMap[order.trang_thai] || { key: 'pending', text: 'ĐANG XỬ LÝ', color: 'text-yellow-600' };
                         const paymentMethod = order.phuong_thuc_thanh_toan || 'COD';
-                        console.log('Order payment method:', order.ma_don_hang, paymentMethod);
+                        const codInfo = getCODPaymentInfo(paymentMethod, order.tong_tien);
+                        console.log('Order payment method:', order.ma_don_hang, paymentMethod, codInfo);
                         return {
                             id: order.ma_don_hang,
                             shopName: 'Yến Nhi Tech',
@@ -397,6 +412,7 @@
                             deliverySuccess: status.success || false,
                             backendStatus: order.trang_thai,
                             paymentMethod: paymentMethod,
+                            codInfo: codInfo,
                             products: (order.items || []).map(item => {
                                 // Xử lý đường dẫn ảnh giống products.js
                                 let imageUrl = '../images/placeholder.png';
@@ -481,6 +497,7 @@
                             <span class="font-semibold">${order.shopName}</span>
                             <a href="products.html" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100 transition">Xem Shop</a>
                             <span class="text-gray-400 text-sm">Mã đơn: #${order.id}</span>
+                            ${order.codInfo && order.codInfo.isDeposit ? '<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-semibold">💰 COD - Đã cọc 50%</span>' : ''}
                         </div>
                         <div class="flex items-center gap-2">
                             ${order.deliverySuccess ? '<span class="text-green-600 text-sm flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Giao hàng thành công</span>' : ''}
@@ -516,6 +533,12 @@
                                 <div class="text-right">
                                     <span class="text-gray-600">Thành tiền:</span>
                                     <span class="text-2xl font-semibold text-orange-500 ml-2">${Number(order.total).toLocaleString('vi-VN')}đ</span>
+                                    ${order.codInfo && order.codInfo.isDeposit ? `
+                                        <div class="mt-2 p-2 bg-orange-50 rounded border border-orange-200">
+                                            <p class="text-xs text-orange-700">💰 Đã cọc: <strong>${Number(order.codInfo.depositAmount).toLocaleString('vi-VN')}đ</strong></p>
+                                            <p class="text-sm text-red-600 font-bold">📦 Còn phải trả: ${Number(order.codInfo.remainingAmount).toLocaleString('vi-VN')}đ</p>
+                                        </div>
+                                    ` : ''}
                                 </div>
                                 <div class="flex gap-2 flex-wrap">
                                     ${(order.status === 'pending' || order.status === 'shipping') && !['Momo', 'Ngan_Hang', 'momo', 'bank'].includes(order.paymentMethod) ? `
