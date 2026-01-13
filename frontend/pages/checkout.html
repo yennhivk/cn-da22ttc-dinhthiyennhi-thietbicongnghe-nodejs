@@ -862,17 +862,19 @@
                         
                         if (mainImage && mainImage.duong_dan_anh) {
                             let imagePath = mainImage.duong_dan_anh;
-                            if (!imagePath.startsWith('http')) {
-                                imagePath = imagePath.replace('images/', '');
-                                imageUrl = `${API_URL.replace('/api', '')}/images/${imagePath}`;
-                            } else {
+                            if (imagePath.startsWith('http')) {
                                 imageUrl = imagePath;
+                            } else {
+                                // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+                                const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
+                                imageUrl = `${API_URL.replace('/api', '')}${cleanPath}`;
                             }
                         }
                     } else if (item.hinh_anh) {
                         imageUrl = item.hinh_anh;
                         if (!imageUrl.startsWith('http')) {
-                            imageUrl = `${API_URL.replace('/api', '')}${imageUrl}`;
+                            const cleanPath = imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl;
+                            imageUrl = `${API_URL.replace('/api', '')}${cleanPath}`;
                         }
                     }
                     

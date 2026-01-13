@@ -1,5 +1,14 @@
 // Flash Sale - Giờ Vàng Giá Sốc
-// Hiển thị sản phẩm flash sale đang diễn ra trên trang chủ
+// Hiển thị sản phẩm flash sale đang diễn ra và sắp diễn ra trên trang chủ
+
+// Helper function to get full image URL
+function getFlashSaleImageUrl(imagePath) {
+    if (!imagePath) return 'images/placeholder.png';
+    if (imagePath.startsWith('http')) return imagePath;
+    // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+    const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
+    return `http://localhost:3300${cleanPath}`;
+}
 
 async function loadFlashSaleProducts() {
     try {
@@ -31,11 +40,15 @@ function renderFlashSaleSection(products) {
     
     const html = products.map(product => {
         const discount = product.phan_tram_giam;
+        const isUpcoming = product.trang_thai_flash === 'upcoming';
+        const startTime = new Date(product.thoi_gian_bat_dau);
         const endTime = new Date(product.thoi_gian_ket_thuc);
         const now = new Date();
-        const timeLeft = Math.floor((endTime - now) / 1000); // seconds
         
-        // Tính thời gian còn lại
+        // Tính thời gian còn lại (đến kết thúc nếu đang diễn ra, đến bắt đầu nếu sắp diễn ra)
+        const targetTime = isUpcoming ? startTime : endTime;
+        const timeLeft = Math.max(0, Math.floor((targetTime - now) / 1000)); // seconds
+        
         const hours = Math.floor(timeLeft / 3600);
         const minutes = Math.floor((timeLeft % 3600) / 60);
         const seconds = timeLeft % 60;
@@ -45,18 +58,33 @@ function renderFlashSaleSection(products) {
         const soldPercent = product.so_luong_gioi_han ? 
             Math.round((product.so_luong_da_ban / product.so_luong_gioi_han) * 100) : 0;
         
+        // Format ngày bắt đầu cho flash sale sắp diễn ra
+        const startDateStr = startTime.toLocaleDateString('vi-VN', { 
+            day: '2-digit', 
+            month: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
         return `
-            <div class="flash-sale-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all border-2 border-red-200">
+            <div class="flash-sale-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all border-2 ${isUpcoming ? 'border-blue-300' : 'border-red-200'}" data-status="${product.trang_thai_flash}" data-target-time="${targetTime.getTime()}">
                 <div class="relative">
-                    <img src="${product.anh_chinh || 'images/placeholder.png'}" 
+                    <img src="${getFlashSaleImageUrl(product.anh_chinh)}" 
                          alt="${product.ten_san_pham}" 
-                         class="w-full h-48 object-cover">
-                    <div class="absolute top-2 left-2 bg-red-600 text-white px-3 py-1 rounded-full font-bold text-lg shadow-lg">
+                         class="w-full h-48 object-cover ${isUpcoming ? 'opacity-90' : ''}"
+                         onerror="this.src='images/placeholder.png'">>
+                    <div class="absolute top-2 left-2 ${isUpcoming ? 'bg-blue-600' : 'bg-red-600'} text-white px-3 py-1 rounded-full font-bold text-lg shadow-lg">
                         -${discount}%
                     </div>
+                    ${isUpcoming ? `
+                    <div class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-bold">
+                        ⏳ SẮP DIỄN RA
+                    </div>
+                    ` : `
                     <div class="absolute top-2 right-2 bg-yellow-400 text-red-600 px-2 py-1 rounded text-xs font-bold animate-pulse">
                         🔥 HOT
                     </div>
+                    `}
                 </div>
                 <div class="p-4">
                     <h3 class="font-bold text-gray-800 mb-2 line-clamp-2 h-12" title="${product.ten_san_pham}">
@@ -64,45 +92,55 @@ function renderFlashSaleSection(products) {
                     </h3>
                     
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="text-2xl font-bold text-red-600">${formatPrice(product.gia_sale)}</span>
+                        <span class="text-2xl font-bold ${isUpcoming ? 'text-blue-600' : 'text-red-600'}">${formatPrice(product.gia_sale)}</span>
                         <span class="text-sm text-gray-500 line-through">${formatPrice(product.gia_goc)}</span>
                     </div>
                     
                     ${product.so_luong_gioi_han ? `
                     <div class="mb-3">
                         <div class="flex justify-between text-xs text-gray-600 mb-1">
-                            <span>Đã bán: ${product.so_luong_da_ban}/${product.so_luong_gioi_han}</span>
-                            <span>${soldPercent}%</span>
+                            <span>${isUpcoming ? 'Số lượng:' : 'Đã bán:'} ${isUpcoming ? product.so_luong_gioi_han : product.so_luong_da_ban + '/' + product.so_luong_gioi_han}</span>
+                            ${!isUpcoming ? `<span>${soldPercent}%</span>` : ''}
                         </div>
+                        ${!isUpcoming ? `
                         <div class="w-full bg-gray-200 rounded-full h-2">
                             <div class="bg-red-500 h-2 rounded-full transition-all" style="width: ${soldPercent}%"></div>
                         </div>
                         ${remaining > 0 ? `<p class="text-xs text-orange-600 mt-1">⚡ Chỉ còn ${remaining} sản phẩm</p>` : ''}
+                        ` : ''}
                     </div>
                     ` : ''}
                     
-                    <div class="bg-orange-50 border border-orange-200 rounded p-2 mb-3">
-                        <p class="text-xs text-gray-600 mb-1">⏰ Kết thúc sau:</p>
+                    <div class="${isUpcoming ? 'bg-blue-50 border-blue-200' : 'bg-orange-50 border-orange-200'} border rounded p-2 mb-3">
+                        <p class="text-xs text-gray-600 mb-1">${isUpcoming ? '🗓️ Bắt đầu sau:' : '⏰ Kết thúc sau:'}</p>
                         <div class="flex gap-1 text-center">
-                            <div class="flex-1 bg-red-600 text-white rounded py-1">
+                            <div class="flex-1 ${isUpcoming ? 'bg-blue-600' : 'bg-red-600'} text-white rounded py-1">
                                 <div class="text-lg font-bold countdown-hours">${hours.toString().padStart(2, '0')}</div>
                                 <div class="text-[10px]">Giờ</div>
                             </div>
-                            <div class="flex-1 bg-red-600 text-white rounded py-1">
+                            <div class="flex-1 ${isUpcoming ? 'bg-blue-600' : 'bg-red-600'} text-white rounded py-1">
                                 <div class="text-lg font-bold countdown-minutes">${minutes.toString().padStart(2, '0')}</div>
                                 <div class="text-[10px]">Phút</div>
                             </div>
-                            <div class="flex-1 bg-red-600 text-white rounded py-1">
+                            <div class="flex-1 ${isUpcoming ? 'bg-blue-600' : 'bg-red-600'} text-white rounded py-1">
                                 <div class="text-lg font-bold countdown-seconds">${seconds.toString().padStart(2, '0')}</div>
                                 <div class="text-[10px]">Giây</div>
                             </div>
                         </div>
+                        ${isUpcoming ? `<p class="text-xs text-blue-600 mt-2 text-center font-medium">📅 ${startDateStr}</p>` : ''}
                     </div>
                     
+                    ${isUpcoming ? `
+                    <button disabled
+                       class="block w-full bg-gray-300 text-gray-600 text-center py-2 rounded-lg font-bold cursor-not-allowed">
+                        SẮP MỞ BÁN
+                    </button>
+                    ` : `
                     <a href="pages/product-detail.html?id=${product.ma_san_pham}" 
                        class="block w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white text-center py-2 rounded-lg font-bold transition-all">
                         MUA NGAY
                     </a>
+                    `}
                 </div>
             </div>
         `;
@@ -116,34 +154,27 @@ function renderFlashSaleSection(products) {
 
 function startCountdowns() {
     setInterval(() => {
-        document.querySelectorAll('.flash-sale-card').forEach((card, index) => {
+        document.querySelectorAll('.flash-sale-card').forEach((card) => {
             const hoursEl = card.querySelector('.countdown-hours');
             const minutesEl = card.querySelector('.countdown-minutes');
             const secondsEl = card.querySelector('.countdown-seconds');
+            const status = card.dataset.status;
+            const targetTime = parseInt(card.dataset.targetTime);
             
-            if (!hoursEl || !minutesEl || !secondsEl) return;
+            if (!hoursEl || !minutesEl || !secondsEl || !targetTime) return;
             
-            let hours = parseInt(hoursEl.textContent);
-            let minutes = parseInt(minutesEl.textContent);
-            let seconds = parseInt(secondsEl.textContent);
+            const now = Date.now();
+            const timeLeft = Math.max(0, Math.floor((targetTime - now) / 1000));
             
-            seconds--;
-            
-            if (seconds < 0) {
-                seconds = 59;
-                minutes--;
-            }
-            
-            if (minutes < 0) {
-                minutes = 59;
-                hours--;
-            }
-            
-            if (hours < 0) {
-                // Flash sale ended, reload page
+            if (timeLeft <= 0) {
+                // Flash sale ended or started, reload page to update
                 location.reload();
                 return;
             }
+            
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
             
             hoursEl.textContent = hours.toString().padStart(2, '0');
             minutesEl.textContent = minutes.toString().padStart(2, '0');

@@ -6,15 +6,17 @@ const db = require('../config/database');
 // FLASH SALE - PUBLIC API (phải đặt trước route /:id)
 // ==========================================
 
-// Lấy danh sách sản phẩm Flash Sale đang diễn ra (không cần auth)
+// Lấy danh sách sản phẩm Flash Sale đang diễn ra và sắp diễn ra (không cần auth)
 router.get('/flash-sale', async (req, res) => {
     try {
-        const [flashSales] = await db.query(`
+        // Lấy flash sale đang diễn ra
+        const [activeFlashSales] = await db.query(`
             SELECT 
                 fs.*,
                 sp.ten_san_pham,
                 sp.mo_ta,
                 sp.thuong_hieu,
+                'active' as trang_thai_flash,
                 (SELECT duong_dan_anh FROM anh_san_pham 
                  WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
             FROM flash_sale fs
@@ -26,7 +28,29 @@ router.get('/flash-sale', async (req, res) => {
             LIMIT 20
         `);
         
-        res.json({ success: true, data: flashSales });
+        // Lấy flash sale sắp diễn ra (trong vòng 7 ngày tới)
+        const [upcomingFlashSales] = await db.query(`
+            SELECT 
+                fs.*,
+                sp.ten_san_pham,
+                sp.mo_ta,
+                sp.thuong_hieu,
+                'upcoming' as trang_thai_flash,
+                (SELECT duong_dan_anh FROM anh_san_pham 
+                 WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
+            FROM flash_sale fs
+            JOIN san_pham sp ON fs.ma_san_pham = sp.ma_san_pham
+            WHERE fs.thoi_gian_bat_dau > NOW() 
+              AND fs.thoi_gian_bat_dau <= DATE_ADD(NOW(), INTERVAL 7 DAY)
+              AND sp.trang_thai = 'hien_thi'
+            ORDER BY fs.thoi_gian_bat_dau ASC, fs.phan_tram_giam DESC
+            LIMIT 10
+        `);
+        
+        // Gộp cả 2 danh sách: đang diễn ra trước, sắp diễn ra sau
+        const allFlashSales = [...activeFlashSales, ...upcomingFlashSales];
+        
+        res.json({ success: true, data: allFlashSales });
     } catch (error) {
         console.error('Get flash sale error:', error);
         res.status(500).json({ success: false, message: 'Lỗi server' });

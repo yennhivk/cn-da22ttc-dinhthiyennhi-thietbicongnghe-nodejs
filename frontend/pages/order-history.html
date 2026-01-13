@@ -419,10 +419,10 @@
                                 if (item.anh_chinh) {
                                     if (item.anh_chinh.startsWith('http')) {
                                         imageUrl = item.anh_chinh;
-                                    } else if (item.anh_chinh.startsWith('images/')) {
-                                        imageUrl = `http://localhost:3300/${item.anh_chinh}`;
                                     } else {
-                                        imageUrl = `http://localhost:3300/${item.anh_chinh}`;
+                                        // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+                                        const cleanPath = item.anh_chinh.startsWith('/') ? item.anh_chinh : '/' + item.anh_chinh;
+                                        imageUrl = `http://localhost:3300${cleanPath}`;
                                     }
                                 }
                                 return {

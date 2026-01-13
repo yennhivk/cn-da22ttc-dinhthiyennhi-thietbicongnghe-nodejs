@@ -885,9 +885,8 @@
                                 <tr>
                                     <th class="px-4 py-3 rounded-tl-lg">Ảnh</th>
                                     <th class="px-4 py-3">Tiêu đề</th>
-                                    <th class="px-4 py-3">Danh mục</th>
+                                    <th class="px-4 py-3 text-center">Danh mục</th>
                                     <th class="px-4 py-3 text-center">Tag</th>
-                                    <th class="px-4 py-3 text-center">Lượt xem</th>
                                     <th class="px-4 py-3 text-center">Nổi bật</th>
                                     <th class="px-4 py-3 text-center">Trạng thái</th>
                                     <th class="px-4 py-3 text-center rounded-tr-lg">Thao tác</th>
@@ -3846,11 +3845,10 @@
                                 <p class="font-semibold text-gray-800 line-clamp-2">${n.tieu_de}</p>
                                 <p class="text-xs text-gray-500 mt-1">${formatDate(n.ngay_tao)}</p>
                             </td>
-                            <td class="px-4 py-3 text-gray-600">${n.danh_muc || 'Công nghệ'}</td>
+                            <td class="px-4 py-3 text-center text-gray-600">${n.danh_muc || 'Công nghệ'}</td>
                             <td class="px-4 py-3 text-center">
                                 <span class="px-2 py-1 rounded-full text-xs font-bold ${getNewsTagColor(n.mau_tag)}">${n.tag || 'Tin tức'}</span>
                             </td>
-                            <td class="px-4 py-3 text-center font-semibold text-gray-700">${n.luot_xem || 0}</td>
                             <td class="px-4 py-3 text-center">
                                 <button onclick="toggleNewsFeatured(${n.ma_tin_tuc})" class="text-2xl hover:scale-110 transition-transform" title="${n.noi_bat ? 'Bỏ nổi bật' : 'Đặt nổi bật'}">
                                     ${n.noi_bat ? '⭐' : '☆'}
@@ -4851,8 +4849,8 @@
                 return `
                 <div class="bg-white rounded-lg border-2 border-red-200 shadow-lg hover:shadow-xl transition-all overflow-hidden">
                     <div class="relative">
-                        <img src="${fs.anh_chinh || '../images/placeholder.png'}" alt="${fs.ten_san_pham}" 
-                             class="w-full h-48 object-cover">
+                        <img src="${getImageUrl(fs.anh_chinh)}" alt="${fs.ten_san_pham}" 
+                             class="w-full h-48 object-cover" onerror="this.src=PLACEHOLDER_IMG">
                         <div class="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm">
                             -${discount}%
                         </div>
@@ -4928,8 +4926,8 @@
                     <div class="flex gap-3 p-3">
                         <!-- Ảnh sản phẩm -->
                         <div class="flex-shrink-0">
-                            <img src="${p.anh_chinh || '../images/placeholder.png'}" alt="${p.ten_san_pham}" 
-                                 class="w-24 h-24 object-cover rounded-lg border-2 border-orange-300">
+                            <img src="${getImageUrl(p.anh_chinh)}" alt="${p.ten_san_pham}" 
+                                 class="w-24 h-24 object-cover rounded-lg border-2 border-orange-300" onerror="this.src=PLACEHOLDER_IMG">
                         </div>
                         
                         <!-- Thông tin sản phẩm -->

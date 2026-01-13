@@ -1414,9 +1414,13 @@
                 const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
-                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+                const hoursEl = document.getElementById('hours');
+                const minutesEl = document.getElementById('minutes');
+                const secondsEl = document.getElementById('seconds');
+                
+                if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+                if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+                if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
             }
             
             // Update button states based on golden hour
@@ -1893,7 +1897,14 @@
                     const defaultIcon = document.getElementById('defaultAvatarIcon');
                     if (user.hinh_anh && avatarImg && defaultIcon) {
                         // Nếu ảnh là URL đầy đủ (từ Google) thì dùng trực tiếp
-                        avatarImg.src = user.hinh_anh.startsWith('http') ? user.hinh_anh : 'http://localhost:3300' + user.hinh_anh;
+                        let avatarUrl;
+                        if (user.hinh_anh.startsWith('http')) {
+                            avatarUrl = user.hinh_anh;
+                        } else {
+                            const cleanPath = user.hinh_anh.startsWith('/') ? user.hinh_anh : '/' + user.hinh_anh;
+                            avatarUrl = 'http://localhost:3300' + cleanPath;
+                        }
+                        avatarImg.src = avatarUrl;
                         avatarImg.onload = function() {
                             avatarImg.classList.remove('hidden');
                             defaultIcon.classList.add('hidden');
