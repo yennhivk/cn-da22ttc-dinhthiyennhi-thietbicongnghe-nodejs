@@ -71,7 +71,19 @@
                     </div>
                     
                     <div class="space-y-3">
-                        <a href="order-history.html" class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
+                        <!-- Nút xem hóa đơn -->
+                        <button onclick="viewInvoice(${orderId})" class="block w-full border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 rounded-lg transition flex justify-center items-center gap-2 mb-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            Xem hóa đơn
+                        </button>                        <button onclick="downloadInvoice(${orderId})" class="block w-full border border-green-600 text-green-600 hover:bg-green-50 font-semibold py-3 rounded-lg transition flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Tải hóa đơn (PDF)
+                        </button>                        <a href="order-history.html" class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
                             Xem đơn hàng
                         </a>
                         <a href="products.html" class="block w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg transition">
@@ -150,6 +162,118 @@
                 }
             } catch (e) {
                 console.error('Error clearing checkout data:', e);
+            }
+        }
+
+        
+        async function viewInvoice(orderId) {
+            if (!orderId) {
+                alert('Không tìm thấy mã đơn hàng!');
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Vui lòng đăng nhập để xem hóa đơn.');
+                    return;
+                }
+                
+                const btn = event.currentTarget;
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<span class="animate-spin mr-2">🔄</span> Đang tải hóa đơn...';
+                btn.disabled = true;
+
+                const API_URL = 'http://localhost:3000/api';
+                const response = await fetch(`${API_URL}/auth/my-orders/${orderId}/invoice?action=view`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Mã lỗi: ${response.status}`);
+                }
+                
+                // Hiển thị PDF trong tab mới
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                
+                // Mở lại các nút
+                setTimeout(() => window.URL.revokeObjectURL(url), 10000);
+                
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            } catch (err) {
+                console.error('View error:', err);
+                alert('Có lỗi xảy ra khi xem hóa đơn! ' + err.message);
+                
+                const btn = event.currentTarget;
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Xem hóa đơn
+                `;
+                btn.disabled = false;
+            }
+        }
+
+        async function downloadInvoice(orderId) {
+            if (!orderId) {
+                alert('Không tìm thấy mã đơn hàng!');
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Vui lòng đăng nhập để tải hóa đơn.');
+                    return;
+                }
+                
+                const btn = event.currentTarget;
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = '<span class="animate-spin mr-2">🔄</span> Đang tạo PDF...';
+                btn.disabled = true;
+
+                // Tuỳ chỉnh cấu hình API tùy host hiện tại
+                const API_URL = 'http://localhost:3000/api';
+                const response = await fetch(`${API_URL}/auth/my-orders/${orderId}/invoice`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Backend Error Response:", errorText);
+                    throw new Error(`Mã lỗi: ${response.status} - Chi tiết: ${errorText}`);
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `Hoa_Don_${orderId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            } catch (err) {
+                console.error('Download error:', err);
+                alert('Có lỗi xảy ra khi tải hóa đơn! ' + err.message);
+                
+                const btn = event.currentTarget;
+                btn.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Tải hóa đơn (PDF)
+                `;
+                btn.disabled = false;
             }
         }
     </script>

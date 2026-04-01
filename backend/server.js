@@ -43,13 +43,21 @@ app.use(passport.session());
 
 // Static files
 app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, '../frontend/images'))); // Thêm dòng này để load ảnh frontend
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/pages', express.static(path.join(__dirname, '../frontend/pages')));
 app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
+app.use('/includes', express.static(path.join(__dirname, '../frontend/includes')));
+app.use('/videos', express.static(path.join(__dirname, '../frontend/videos')));
 
-// Test route
-app.get('/', (req, res) => {
+// Phục vụ trang chủ
+app.get(['/', '/index.html'], (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+// Test route API
+app.get('/api/status', (req, res) => {
     res.json({
         message: 'Backend API đang chạy!',
         status: 'success',

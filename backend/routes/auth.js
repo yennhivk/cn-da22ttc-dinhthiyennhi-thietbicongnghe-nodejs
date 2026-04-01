@@ -1467,6 +1467,91 @@ router.put('/my-orders/:id/cancel', authenticateToken, async (req, res) => {
     }
 });
 
+// Route in/xuất HTML sang PDF cho hóa đơn
+const ejs = require('ejs');
+const invoicePath = require('path');
+const htmlPdf = require('html-pdf-node');
+
+router.get('/my-orders/:id/invoice', authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.ma_tai_khoan;
+        const orderId = req.params.id;
+
+        // 1. Lấy thông tin đơn hàng
+        const [orders] = await db.query(`
+            SELECT dh.*, tk.ten_dang_nhap as ho_ten, tk.email, 
+                   COALESCE(dh.so_dien_thoai, tk.so_dien_thoai) as so_dien_thoai,
+                   COALESCE((SELECT tt.phuong_thuc FROM thanh_toan tt WHERE tt.ma_don_hang = dh.ma_don_hang LIMIT 1), 'COD') as phuong_thuc_thanh_toan
+            FROM don_hang dh
+            JOIN tai_khoan tk ON dh.ma_tai_khoan = tk.ma_tai_khoan
+            WHERE dh.ma_don_hang = ? AND dh.ma_tai_khoan = ?
+        `, [orderId, userId]);
+
+        if (orders.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy đơn hàng' });
+        }
+
+        const order = orders[0];
+
+        // 2. Lấy chi tiết đơn hàng
+        const [items] = await db.query(`
+            SELECT c.*, s.ten_san_pham
+            FROM chi_tiet_don_hang c
+            JOIN san_pham s ON c.ma_san_pham = s.ma_san_pham
+            WHERE c.ma_don_hang = ?
+        `, [orderId]);
+
+        // Hàm format tiền tệ
+        const formatMoney = (amount) => {
+            return new Intl.NumberFormat('vi-VN').format(amount || 0);
+        };
+
+        // 3. Render HTML từ EJS template
+        const data = {
+            order: {
+                ...order,
+                ngay_tao: new Date(order.ngay_tao).toLocaleString('vi-VN'),
+                tong_tien_formatted: formatMoney(order.tong_tien),
+                giam_gia_formatted: formatMoney(order.giam_gia || 0),
+                tong_thanh_toan_formatted: formatMoney(order.tong_tien - (order.giam_gia || 0) + 30000)
+            },
+            items: items.map(item => ({
+                ...item,
+                don_gia_formatted: formatMoney(item.don_gia),
+                thanh_tien_formatted: formatMoney(item.so_luong * item.don_gia)
+            }))
+        };
+
+        const templatePath = invoicePath.join(__dirname, '../views/invoice.ejs');
+        
+        ejs.renderFile(templatePath, data, (err, html) => {
+            if (err) {
+                console.error("Lỗi biên dịch EJS:", err);
+                return res.status(500).json({ success: false, message: 'Lỗi tạo mẫu hóa đơn' });
+            }
+
+            // 4. Tạo PDF từ mảng HTML
+            let options = { format: 'A4' };
+            let file = { content: html };
+
+            htmlPdf.generatePdf(file, options).then(pdfBuffer => {
+                // Set Header trả về file dạng PDF
+                res.setHeader('Content-Type', 'application/pdf');
+                const contentDisposition = req.query.action === 'view' ? 'inline' : 'attachment';
+                res.setHeader('Content-Disposition', `${contentDisposition}; filename="Hoa_Don_${orderId}.pdf"`);
+                res.send(pdfBuffer);
+            }).catch(pdfErr => {
+                console.error("Lỗi tạo PDF:", pdfErr);
+                res.status(500).json({ success: false, message: 'Lỗi xuất file PDF' });
+            });
+        });
+
+    } catch (error) {
+        console.error('Lỗi khi xuất hóa đơn:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
 module.exports = router;
 module.exports.authenticateToken = authenticateToken;
 module.exports.requireAdmin = requireAdmin;

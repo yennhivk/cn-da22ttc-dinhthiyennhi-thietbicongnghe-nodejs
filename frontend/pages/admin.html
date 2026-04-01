@@ -111,108 +111,118 @@
             <div class="p-4 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
                 <!-- Dashboard Section -->
                 <section id="section-dashboard" class="content-section active">
-                    <!-- Filter + Stats Row -->
-                    <div class="flex gap-4 mb-4">
-                        <!-- Advanced Date Filter Panel -->
-                        <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500 w-72 flex-shrink-0">
-                            <div class="flex items-center justify-between mb-3">
-                                <h3 class="font-bold text-gray-800 text-sm">📅 BỘ LỌC THỜI GIAN</h3>
-                                <button onclick="resetAllFilters()" class="text-blue-500 hover:text-blue-700 text-xs font-medium">🔄 Reset</button>
-                            </div>
-                            
-                            <!-- Quick Filter Buttons -->
-                            <p class="text-xs font-semibold text-gray-600 mb-2">LỌC NHANH</p>
-                            <div class="grid grid-cols-2 gap-1 mb-3">
-                                <button onclick="setQuickFilter('today')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="today">📆 Hôm nay</button>
-                                <button onclick="setQuickFilter('yesterday')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="yesterday">⏪ Hôm qua</button>
-                                <button onclick="setQuickFilter('7days')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="7days">📅 7 ngày qua</button>
-                                <button onclick="setQuickFilter('30days')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="30days">📅 30 ngày qua</button>
-                                <button onclick="setQuickFilter('thisMonth')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="thisMonth">📆 Tháng này</button>
-                                <button onclick="setQuickFilter('lastMonth')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="lastMonth">⏮️ Tháng trước</button>
-                                <button onclick="setQuickFilter('thisQuarter')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="thisQuarter">📊 Quý này</button>
-                                <button onclick="setQuickFilter('thisYear')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border bg-blue-500 text-white transition-colors" data-filter="thisYear">📅 Năm nay</button>
-                            </div>
-                            
-                            <!-- Date Range Inputs -->
-                            <p class="text-xs font-semibold text-gray-600 mb-2">KHOẢNG THỜI GIAN</p>
-                            <div class="space-y-2">
-                                <div class="flex items-center gap-2">
-                                    <label class="text-xs text-gray-500 w-10">Từ:</label>
-                                    <input type="date" id="filter-start-date" class="flex-1 px-2 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="onDateRangeChange()">
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <label class="text-xs text-gray-500 w-10">Đến:</label>
-                                    <input type="date" id="filter-end-date" class="flex-1 px-2 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="onDateRangeChange()">
-                                </div>
-                            </div>
-                            
-                            <!-- Apply Button -->
-                            <button onclick="applyDateFilter()" class="w-full mt-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all shadow-sm">
-                                🔍 Áp dụng bộ lọc
-                            </button>
-                            
-                            <!-- Current Filter Display -->
-                            <div id="current-filter-display" class="mt-3 p-2 bg-blue-50 rounded-lg text-xs text-gray-600 text-center">
-                                <span class="font-medium">Đang xem:</span> <span id="filter-label">Năm nay</span>
-                            </div>
-                        </div>
+                    <!-- Dashboard Layout: 2 Columns -->
+                    <div class="flex flex-col lg:flex-row gap-4 mb-4">
                         
-                        <!-- Stats Cards -->
-                        <div class="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-3">
-                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-blue-500 h-28">
-                                <div class="flex flex-col items-center justify-center text-center h-full">
-                                    <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                                        <span class="text-lg">💰</span>
+                        <!-- LEFT COLUMN: Filter & KPI -->
+                        <div class="w-full lg:w-72 flex-shrink-0 flex flex-col gap-4">
+                            <!-- Advanced Date Filter Panel -->
+                            <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="font-bold text-gray-800 text-sm">📅 BỘ LỌC THỜI GIAN</h3>
+                                    <button onclick="resetAllFilters()" class="text-blue-500 hover:text-blue-700 text-xs font-medium">🔄 Reset</button>
+                                </div>
+                                
+                                <!-- Quick Filter Buttons -->
+                                <p class="text-xs font-semibold text-gray-600 mb-2">LỌC NHANH</p>
+                                <div class="grid grid-cols-2 gap-1 mb-3">
+                                    <button onclick="setQuickFilter('today')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="today">📆 Hôm nay</button>
+                                    <button onclick="setQuickFilter('yesterday')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="yesterday">⏪ Hôm qua</button>
+                                    <button onclick="setQuickFilter('7days')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="7days">📅 7 ngày qua</button>
+                                    <button onclick="setQuickFilter('30days')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="30days">📅 30 ngày qua</button>
+                                    <button onclick="setQuickFilter('thisMonth')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="thisMonth">📆 Tháng này</button>
+                                    <button onclick="setQuickFilter('lastMonth')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="lastMonth">⏮️ Tháng trước</button>
+                                    <button onclick="setQuickFilter('thisQuarter')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border hover:bg-blue-500 hover:text-white transition-colors" data-filter="thisQuarter">📊 Quý này</button>
+                                    <button onclick="setQuickFilter('thisYear')" class="quick-filter-btn px-2 py-1.5 text-xs rounded border bg-blue-500 text-white transition-colors" data-filter="thisYear">📅 Năm nay</button>
+                                </div>
+                                
+                                <!-- Date Range Inputs -->
+                                <p class="text-xs font-semibold text-gray-600 mb-2">KHOẢNG THỜI GIAN</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-xs text-gray-500 w-10">Từ:</label>
+                                        <input type="date" id="filter-start-date" class="flex-1 px-2 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="onDateRangeChange()">
                                     </div>
-                                    <p class="text-gray-600 text-sm font-semibold">Tổng doanh thu</p>
-                                    <p id="stat-revenue" class="text-xl font-bold text-gray-800">0đ</p>
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-xs text-gray-500 w-10">Đến:</label>
+                                        <input type="date" id="filter-end-date" class="flex-1 px-2 py-1.5 text-xs border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="onDateRangeChange()">
+                                    </div>
+                                </div>
+                                
+                                <!-- Apply Button -->
+                                <button onclick="applyDateFilter()" class="w-full mt-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-all shadow-sm">
+                                    🔍 Áp dụng bộ lọc
+                                </button>
+                                
+                                <!-- Current Filter Display -->
+                                <div id="current-filter-display" class="mt-3 p-2 bg-blue-50 rounded-lg text-xs text-gray-600 text-center">
+                                    <span class="font-medium">Đang xem:</span> <span id="filter-label">Năm nay</span>
                                 </div>
                             </div>
-                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-cyan-500 h-28">
-                                <div class="flex flex-col items-center justify-center text-center h-full">
-                                    <div class="w-8 h-8 bg-cyan-100 rounded flex items-center justify-center">
-                                        <span class="text-lg">🛒</span>
-                                    </div>
-                                    <p class="text-gray-600 text-sm font-semibold">Số đơn đặt hàng</p>
-                                    <p id="stat-orders" class="text-xl font-bold text-gray-800">0</p>
+                            
+                            <!-- KPI Gauge Chart -->
+                            <div class="bg-white rounded-lg shadow p-3 border-t-3 border-orange-400">
+                                <h3 class="font-bold text-gray-700 mb-1 text-xs text-center">🎯 KPI doanh thu</h3>
+                                <div class="flex justify-center">
+                                    <canvas id="gaugeChart" width="120" height="70"></canvas>
                                 </div>
-                            </div>
-                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-amber-500 h-28">
-                                <div class="flex flex-col items-center justify-center text-center h-full">
-                                    <div class="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
-                                        <span class="text-lg">👥</span>
-                                    </div>
-                                    <p class="text-gray-600 text-sm font-semibold">Số khách hàng</p>
-                                    <p id="stat-customers" class="text-xl font-bold text-gray-800">0</p>
-                                </div>
-                            </div>
-                            <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-purple-500 h-28">
-                                <div class="flex flex-col items-center justify-center text-center h-full">
-                                    <div class="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
-                                        <span class="text-lg">📦</span>
-                                    </div>
-                                    <p class="text-gray-600 text-sm font-semibold">Số lượng bán</p>
-                                    <p id="stat-products-sold" class="text-xl font-bold text-gray-800">0</p>
-                                </div>
+                                <p id="kpi-percent" class="text-center text-xl font-bold text-orange-500">0%</p>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Row 2: KPI Gauge + Revenue Chart -->
-                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-2 mb-4">
-                        <div class="bg-white rounded-lg shadow p-3 border-t-3 border-orange-400">
-                            <h3 class="font-bold text-gray-700 mb-1 text-xs text-center">🎯 KPI doanh thu</h3>
-                            <div class="flex justify-center">
-                                <canvas id="gaugeChart" width="120" height="70"></canvas>
+                        <!-- RIGHT COLUMN: Stats & Primary Charts -->
+                        <div class="flex-1 flex flex-col gap-4">
+                            
+                            <!-- Stats Cards -->
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                                <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-blue-500 h-28">
+                                    <div class="flex flex-col items-center justify-center text-center h-full">
+                                        <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
+                                            <span class="text-lg">💰</span>
+                                        </div>
+                                        <p class="text-gray-600 text-sm font-semibold">Tổng doanh thu</p>
+                                        <p id="stat-revenue" class="text-xl font-bold text-gray-800">0đ</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-cyan-500 h-28">
+                                    <div class="flex flex-col items-center justify-center text-center h-full">
+                                        <div class="w-8 h-8 bg-cyan-100 rounded flex items-center justify-center">
+                                            <span class="text-lg">🛒</span>
+                                        </div>
+                                        <p class="text-gray-600 text-sm font-semibold">Số đơn đặt hàng</p>
+                                        <p id="stat-orders" class="text-xl font-bold text-gray-800">0</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-amber-500 h-28">
+                                    <div class="flex flex-col items-center justify-center text-center h-full">
+                                        <div class="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
+                                            <span class="text-lg">👥</span>
+                                        </div>
+                                        <p class="text-gray-600 text-sm font-semibold">Số khách hàng</p>
+                                        <p id="stat-customers" class="text-xl font-bold text-gray-800">0</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card bg-white rounded-lg p-4 shadow border-l-4 border-purple-500 h-28">
+                                    <div class="flex flex-col items-center justify-center text-center h-full">
+                                        <div class="w-8 h-8 bg-purple-100 rounded flex items-center justify-center">
+                                            <span class="text-lg">📦</span>
+                                        </div>
+                                        <p class="text-gray-600 text-sm font-semibold">Số lượng bán</p>
+                                        <p id="stat-products-sold" class="text-xl font-bold text-gray-800">0</p>
+                                    </div>
+                                </div>
                             </div>
-                            <p id="kpi-percent" class="text-center text-xl font-bold text-orange-500">0%</p>
-                        </div>
-                        <div class="bg-white rounded-lg shadow p-3 lg:col-span-3 border-t-3 border-blue-400">
-                            <h3 class="font-bold text-gray-700 mb-1 text-xs">📊 Doanh thu 12 tháng gần nhất</h3>
-                            <div id="revenueChartContainer">
-                                <canvas id="revenueChart" height="80"></canvas>
-                                <p id="revenueChartPlaceholder" class="text-gray-400 text-center text-sm py-4 hidden">Chưa có dữ liệu doanh thu</p>
+
+                            <!-- Revenue Chart -->
+                            <div class="bg-white rounded-lg shadow p-3 border-t-3 border-blue-400 h-full flex flex-col">
+                                <h3 class="font-bold text-gray-700 mb-1 text-xs">📊 Doanh thu 12 tháng gần nhất</h3>
+                                <div id="revenueChartContainer" class="flex-1 flex items-center justify-center min-h-[220px]">
+                                    <canvas id="revenueChart" style="width: 100%; height: 100%;"></canvas>
+                                    <p id="revenueChartPlaceholder" class="text-gray-400 text-center text-sm py-4 w-full hidden">Chưa có dữ liệu doanh thu</p>
+                                </div>
                             </div>
+                            
+                            <!-- Break out of right column? No, let's keep the rest below the 2 columns. -->
                         </div>
                     </div>
 
@@ -1793,7 +1803,7 @@
                 const avatarEl = document.getElementById('admin-avatar');
                 if (adminUser.hinh_anh) {
                     const avatarUrl = adminUser.hinh_anh.startsWith('http') ? adminUser.hinh_anh : 'http://localhost:3000' + adminUser.hinh_anh;
-                    avatarEl.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full" alt="Avatar" onerror="this.parentElement.innerHTML='👤'">`;
+                    avatarEl.innerHTML = `<img src="${avatarUrl}" referrerpolicy="no-referrer" class="w-full h-full object-cover rounded-full" alt="Avatar" onerror="this.parentElement.innerHTML='👤'">`;
                 }
                 
                 initializeDateFilter();
