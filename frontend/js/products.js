@@ -831,7 +831,12 @@ function toggleFilter(filterId) {
 // Initialize cart badge on page load
 updateCartBadge();
 
-// Show "KhÃ¡m phÃ¡" tab by default
+function shouldOpenProductTabFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return Boolean(params.get('category') || params.get('brand') || params.get('search'));
+}
+
+// Show default tab based on URL filters
 document.addEventListener('DOMContentLoaded', function() {
-    switchTab('kham-pha');
+    switchTab(shouldOpenProductTabFromUrl() ? 'san-pham' : 'kham-pha');
 });

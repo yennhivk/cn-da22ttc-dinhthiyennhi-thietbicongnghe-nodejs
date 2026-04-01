@@ -165,33 +165,6 @@
             }
         }
 
-        /* Tuyết rơi cho không khí Tết */
-        .tuyet-roi {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.7;
-            animation: fall-tuyet linear infinite;
-            z-index: 1;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-
-        @keyframes fall-tuyet {
-            0% {
-                top: -10%;
-                transform: translateX(0) rotate(0deg) scale(1);
-            }
-            50% {
-                transform: translateX(50px) rotate(180deg) scale(1.2);
-            }
-            100% {
-                top: 110%;
-                transform: translateX(-30px) rotate(360deg) scale(0.8);
-            }
-        }
-
         /* Promotion Card Style */
         .promo-card {
             position: relative;
@@ -632,9 +605,6 @@
         <!-- Hoa mai rơi -->
         <div id="hoaMaiContainer"></div>
         
-        <!-- Tuyết rơi -->
-        <div id="tuyetRoiContainer"></div>
-
         <!-- Header with HOT badge -->
         <section class="relative py-6 border-b-2 border-orange-300" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);">
             <!-- Nhánh mai bên trái -->
@@ -888,31 +858,12 @@
             }, 10000);
         }
 
-        // Tạo hiệu ứng tuyết rơi
-        function createTuyetRoi() {
-            const container = document.getElementById('tuyetRoiContainer');
-            const tuyet = document.createElement('div');
-            tuyet.className = 'tuyet-roi';
-            tuyet.style.left = Math.random() * 100 + '%';
-            tuyet.style.width = (Math.random() * 5 + 5) + 'px';
-            tuyet.style.height = tuyet.style.width;
-            tuyet.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            tuyet.style.animationDelay = Math.random() * 2 + 's';
-            container.appendChild(tuyet);
-
-            setTimeout(() => {
-                tuyet.remove();
-            }, 7000);
-        }
-
         // Khởi tạo hiệu ứng
         setInterval(createHoaMai, 800);
-        setInterval(createTuyetRoi, 600);
 
         // Tạo hoa mai ban đầu
         for (let i = 0; i < 15; i++) {
             setTimeout(createHoaMai, i * 200);
-            setTimeout(createTuyetRoi, i * 150);
         }
     </script>
 

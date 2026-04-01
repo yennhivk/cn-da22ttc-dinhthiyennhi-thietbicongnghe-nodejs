@@ -725,6 +725,16 @@ router.get('/google', (req, res, next) => {
     if (redirect) {
         req.session.oauth_redirect = redirect;
     }
+    
+    // Lưu origin URL để xử lý redirect chính xác
+    if (req.headers.referer) {
+        try {
+            const url = new URL(req.headers.referer);
+            const basePath = url.origin + url.pathname.substring(0, url.pathname.lastIndexOf('/'));
+            req.session.frontend_base = basePath;
+        } catch (e) { console.error('URL parse error:', e); }
+    }
+
     passport.authenticate('google', {
         scope: ['profile', 'email']
     })(req, res, next);
@@ -814,8 +824,15 @@ router.get('/google/callback',
             
             // Redirect đến callback tương ứng
             const callbackPage = isAdminLogin ? 'admin-callback.html' : 'auth-callback.html';
-            const redirectUrl = `${frontendUrl}/pages/${callbackPage}?token=${token}&user=${userData}`;
             
+            let redirectUrl;
+            if (req.session.frontend_base) {
+                redirectUrl = `${req.session.frontend_base}/${callbackPage}?token=${token}&user=${userData}`;
+                delete req.session.frontend_base;
+            } else {
+                redirectUrl = `${frontendUrl}/pages/${callbackPage}?token=${token}&user=${userData}`;
+            }
+
             console.log('🔄 [CALLBACK] Redirect to:', callbackPage);
             console.log('🔄 [CALLBACK] Full URL:', redirectUrl.substring(0, 100) + '...');
             
@@ -1095,6 +1112,15 @@ router.get('/google-admin', (req, res, next) => {
     console.log('🔐 [ADMIN LOGIN] Request URL:', req.originalUrl);
     console.log('🔐 [ADMIN LOGIN] Session ID:', req.sessionID);
     
+    // LÆ°u origin URL Ä‘á»ƒ xá»­ lÃ½ redirect chÃ­nh xÃ¡c
+    if (req.headers.referer) {
+        try {
+            const url = new URL(req.headers.referer);
+            const basePath = url.origin + url.pathname.substring(0, url.pathname.lastIndexOf('/'));
+            req.session.frontend_base = basePath;
+        } catch (e) { console.error('URL parse error:', e); }
+    }
+
     // Lưu state vào session trước khi redirect
     req.session.oauth_state = 'admin_login';
     req.session.save((err) => {

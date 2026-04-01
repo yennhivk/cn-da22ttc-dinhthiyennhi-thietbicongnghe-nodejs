@@ -1,4 +1,4 @@
-// Seasonal Effects - Hoa Mai & Tuyết Rơi
+// Seasonal Effects - Hoa Mai
 (function() {
     'use strict';
 
@@ -6,13 +6,11 @@
     const CONFIG = {
         hoaMaiCount: 10,      // Số lượng hoa mai emoji
         hoaMaiImageCount: 8,  // Số lượng hoa mai hình ảnh
-        snowflakeCount: 15,   // Số lượng tuyết
-        enabled: true         // Bật/tắt hiệu ứng
+        enabled: false         // Bật/tắt hiệu ứng
     };
 
-    // Emoji hoa mai và tuyết
+    // Emoji hoa mai
     const HOA_MAI_EMOJIS = ['🌸', '🏵️', '💮', '🌺'];
-    const SNOWFLAKE_EMOJIS = ['❄️', '❅', '❆', '✻', '✼'];
     
     // Hình ảnh hoa mai
     const HOA_MAI_IMAGE = 'images/Tổng-hợp-những-hình-ảnh-hoa-mai-vàng-đẹp-nhất-13-removebg-preview.png';
@@ -80,28 +78,6 @@
         return hoaMai;
     }
 
-    // Tạo một bông tuyết
-    function createSnowflake() {
-        const snowflake = document.createElement('div');
-        snowflake.className = 'snowflake';
-        snowflake.innerHTML = SNOWFLAKE_EMOJIS[Math.floor(Math.random() * SNOWFLAKE_EMOJIS.length)];
-        
-        // Random vị trí và kích thước
-        const size = Math.random() * 15 + 10; // 10-25px
-        const left = Math.random() * 100;
-        const duration = Math.random() * 6 + 10; // 10-16s
-        const delay = Math.random() * 12;
-        
-        snowflake.style.cssText = `
-            left: ${left}%;
-            font-size: ${size}px;
-            animation-duration: ${duration}s;
-            animation-delay: ${delay}s;
-        `;
-        
-        return snowflake;
-    }
-
     // Tạo nút toggle
     function createToggleButton() {
         const btn = document.createElement('button');
@@ -136,6 +112,8 @@
 
     // Khởi tạo hiệu ứng
     function init() {
+        if (!CONFIG.enabled) return;
+
         // Kiểm tra trạng thái đã lưu
         const savedState = localStorage.getItem('seasonalEffectsPaused');
         if (savedState === 'true') {
@@ -153,11 +131,6 @@
         // Tạo hoa mai hình ảnh
         for (let i = 0; i < CONFIG.hoaMaiImageCount; i++) {
             container.appendChild(createHoaMaiImage());
-        }
-
-        // Tạo tuyết
-        for (let i = 0; i < CONFIG.snowflakeCount; i++) {
-            container.appendChild(createSnowflake());
         }
 
         // Không tạo nút toggle - hiệu ứng luôn bật
