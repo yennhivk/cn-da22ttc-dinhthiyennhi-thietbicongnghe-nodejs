@@ -11,10 +11,12 @@ npm install
 ### Bước 2: Kiểm tra file .env
 Đảm bảo file `.env` có đầy đủ thông tin:
 ```
+PORT=3000
+NODE_ENV=development
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=Choncon1310@
+DB_PASSWORD=your_mysql_password
 DB_NAME=CSDL_DoAnCN
 DB_CHARSET=utf8mb4
 ```
@@ -34,14 +36,14 @@ node scripts/hash-passwords.js
 npm start
 ```
 
-Server sẽ chạy tại: http://localhost:3300
+Server sẽ chạy tại: http://localhost:3000
 
 ---
 
 ## 2. TEST API BẰNG POSTMAN/THUNDER CLIENT
 
 ### Test 1: Đăng ký tài khoản mới
-**POST** `http://localhost:3300/api/auth/register`
+**POST** `http://localhost:3000/api/auth/register`
 
 **Body (JSON):**
 ```json
@@ -68,12 +70,12 @@ Server sẽ chạy tại: http://localhost:3300
 ```
 
 ### Test 2: Đăng nhập
-**POST** `http://localhost:3300/api/auth/login`
+**POST** `http://localhost:3000/api/auth/login`
 
 **Body (JSON):**
 ```json
 {
-  "ten_dang_nhap": "testuser",
+  "email": "testuser@gmail.com",
   "mat_khau": "123456"
 }
 ```
@@ -96,11 +98,24 @@ Server sẽ chạy tại: http://localhost:3300
 ```
 
 ### Test 3: Kiểm tra thông tin user
-**GET** `http://localhost:3300/api/auth/me`
+**GET** `http://localhost:3000/api/auth/me`
 
 **Headers:**
 ```
 Authorization: Bearer <token_từ_bước_đăng_nhập>
+```
+
+**Kết quả mong đợi:**
+```json
+{
+  "success": true,
+  "user": {
+    "ma_tai_khoan": 4,
+    "ten_dang_nhap": "testuser",
+    "email": "testuser@gmail.com",
+    "vai_tro": "khach_hang"
+  }
+}
 ```
 
 ---
@@ -143,7 +158,7 @@ SELECT * FROM tai_khoan WHERE ten_dang_nhap = 'testuser';
 **Giải pháp:**
 - Kiểm tra MySQL đã chạy chưa
 - Kiểm tra thông tin trong file `.env`
-- Test kết nối: `http://localhost:3300/api/test-db`
+- Test kết nối: `http://localhost:3000/api/test-db`
 
 ### Lỗi 2: CORS Error
 **Nguyên nhân:** Frontend và Backend khác domain

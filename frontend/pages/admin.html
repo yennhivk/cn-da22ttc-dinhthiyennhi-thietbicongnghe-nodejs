@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../images/Screenshot 2025-11-10 154306.png">
     <title>Quản Trị - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1710,7 +1711,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3300/api';
+        const API_URL = 'http://localhost:3000/api';
         let adminToken = '';
         let adminUser = null;
 
@@ -1791,7 +1792,7 @@
                 // Hiển thị avatar
                 const avatarEl = document.getElementById('admin-avatar');
                 if (adminUser.hinh_anh) {
-                    const avatarUrl = adminUser.hinh_anh.startsWith('http') ? adminUser.hinh_anh : 'http://localhost:3300' + adminUser.hinh_anh;
+                    const avatarUrl = adminUser.hinh_anh.startsWith('http') ? adminUser.hinh_anh : 'http://localhost:3000' + adminUser.hinh_anh;
                     avatarEl.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover rounded-full" alt="Avatar" onerror="this.parentElement.innerHTML='👤'">`;
                 }
                 
@@ -1862,7 +1863,7 @@
         function getImageUrl(path) {
             if (!path) return PLACEHOLDER_IMG;
             if (path.startsWith('http')) return path;
-            return 'http://localhost:3300/' + (path.startsWith('/') ? path.slice(1) : path);
+            return 'http://localhost:3000/' + (path.startsWith('/') ? path.slice(1) : path);
         }
         function formatDate(date) { return new Date(date).toLocaleDateString('vi-VN'); }
         function getStatusBadge(status) {
@@ -3581,7 +3582,7 @@
                     }
                     
                     const html = data.data.map(u => {
-                        const avatarUrl = u.hinh_anh ? (u.hinh_anh.startsWith('http') ? u.hinh_anh : `http://localhost:3300${u.hinh_anh}`) : '';
+                        const avatarUrl = u.hinh_anh ? (u.hinh_anh.startsWith('http') ? u.hinh_anh : `http://localhost:3000${u.hinh_anh}`) : '';
                         return `
                         <tr class="border-b hover:bg-gray-50 transition">
                             <td class="px-4 py-3 text-center">
@@ -3651,7 +3652,7 @@
                 
                 if (d.success) {
                     const u = d.data;
-                    const avatarUrl = u.hinh_anh ? (u.hinh_anh.startsWith('http') ? u.hinh_anh : `http://localhost:3300${u.hinh_anh}`) : '';
+                    const avatarUrl = u.hinh_anh ? (u.hinh_anh.startsWith('http') ? u.hinh_anh : `http://localhost:3000${u.hinh_anh}`) : '';
                     
                     // Tạo HTML cho lịch sử đơn hàng
                     let ordersHTML = '<p class="text-gray-500 text-center py-4">Chưa có đơn hàng</p>';
@@ -4751,7 +4752,7 @@
         // Load Flash Sale data
         async function loadFlashSales() {
             try {
-                const response = await fetch('http://localhost:3300/api/admin/flash-sale', {
+                const response = await fetch('http://localhost:3000/api/admin/flash-sale', {
                     headers: { 'Authorization': `Bearer ${adminToken}` }
                 });
                 
@@ -4891,7 +4892,7 @@
 
         async function loadSlowProductsForFlashSale() {
             try {
-                const response = await fetch('http://localhost:3300/api/admin/dashboard', {
+                const response = await fetch('http://localhost:3000/api/admin/dashboard', {
                     headers: { 'Authorization': `Bearer ${adminToken}` }
                 });
                 const data = await response.json();
@@ -4999,7 +5000,7 @@
             if (!confirm('Bạn có chắc muốn xóa sản phẩm này khỏi Flash Sale?')) return;
             
             try {
-                const response = await fetch(`http://localhost:3300/api/admin/flash-sale/${id}`, {
+                const response = await fetch(`http://localhost:3000/api/admin/flash-sale/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${adminToken}` }
                 });
@@ -5102,7 +5103,7 @@
             const discount = Math.round(((originalPrice - salePrice) / originalPrice) * 100);
             
             try {
-                const response = await fetch('http://localhost:3300/api/admin/flash-sale', {
+                const response = await fetch('http://localhost:3000/api/admin/flash-sale', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

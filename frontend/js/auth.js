@@ -1,26 +1,26 @@
-// ==========================================
-// QUẢN LÝ XÁC THỰC NGƯỜI DÙNG
+﻿// ==========================================
+// QUAN LY XAC THUC NGUOI DUNG
 // ==========================================
 
-const API_URL = 'http://localhost:3300/api';
+const API_URL = 'http://localhost:3000/api';
 
-// Lấy thông tin user từ localStorage
+// Lay thong tin user tu localStorage
 function getCurrentUser() {
     const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
 }
 
-// Lấy token
+// Lay token
 function getToken() {
     return localStorage.getItem('token');
 }
 
-// Kiểm tra đã đăng nhập chưa
+// Kiem tra da dang nhap chua
 function isLoggedIn() {
     return !!getToken();
 }
 
-// Đăng xuất
+// Dang xuat
 async function logout() {
     try {
         const token = getToken();
@@ -35,17 +35,17 @@ async function logout() {
             });
         }
         
-        // Xóa thông tin local
+        // Xoa thong tin local
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         
-        // Chuyển về trang chủ
+        // Chuyen ve trang chu
         const path = window.location.pathname;
         window.location.href = path.includes('/pages/') ? '../index.html' : 'index.html';
         
     } catch (error) {
         console.error('Lỗi đăng xuất:', error);
-        // Vẫn xóa thông tin local dù có lỗi
+        // Van xoa thong tin local du co loi
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         const path = window.location.pathname;
@@ -53,7 +53,7 @@ async function logout() {
     }
 }
 
-// Cập nhật UI dựa trên trạng thái đăng nhập
+// Cap nhat UI dua tren trang thai dang nhap
 function updateAuthUI() {
     const user = getCurrentUser();
     const authButtons = document.getElementById('authButtons');
@@ -101,13 +101,13 @@ function updateAuthUI() {
     }
 }
 
-// Kiểm tra quyền admin
+// Kiem tra quyen admin
 function isAdmin() {
     const user = getCurrentUser();
     return user && user.vai_tro === 'admin';
 }
 
-// Yêu cầu đăng nhập (redirect nếu chưa đăng nhập)
+// Yeu cau dang nhap (redirect neu chua dang nhap)
 function requireLogin() {
     if (!isLoggedIn()) {
         alert('Vui lòng đăng nhập để tiếp tục');
@@ -117,7 +117,7 @@ function requireLogin() {
     return true;
 }
 
-// Yêu cầu quyền admin
+// Yeu cau quyen admin
 function requireAdmin() {
     if (!isAdmin()) {
         alert('Bạn không có quyền truy cập trang này');
@@ -127,7 +127,7 @@ function requireAdmin() {
     return true;
 }
 
-// Gọi API với token
+// Goi API voi token
 async function fetchWithAuth(url, options = {}) {
     const token = getToken();
     
@@ -146,7 +146,7 @@ async function fetchWithAuth(url, options = {}) {
         headers
     });
     
-    // Nếu token hết hạn, đăng xuất
+    // Neu token het han, dang xuat
     if (response.status === 401 || response.status === 403) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -157,7 +157,7 @@ async function fetchWithAuth(url, options = {}) {
     return response;
 }
 
-// Khởi tạo khi trang load
+// Khoi tao khi trang load
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
 });

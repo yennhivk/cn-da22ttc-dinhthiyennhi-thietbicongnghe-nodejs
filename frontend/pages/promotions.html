@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../images/Screenshot 2025-11-10 154306.png">
     <title>Khuyến Mãi - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
@@ -774,7 +775,7 @@
         async function loadPromotions() {
             const container = document.getElementById('promotions-container');
             try {
-                const response = await fetch('http://localhost:3300/api/products/promotions/upcoming');
+                const response = await fetch('http://localhost:3000/api/products/promotions/upcoming');
                 const data = await response.json();
                 
                 if (data.success && data.data.length > 0) {
@@ -1179,7 +1180,7 @@
         });
 
         // Load khuyến mãi từ database
-        const API_BASE = 'http://localhost:3300/api';
+        const API_BASE = 'http://localhost:3000/api';
         
         async function loadPromotions() {
             try {

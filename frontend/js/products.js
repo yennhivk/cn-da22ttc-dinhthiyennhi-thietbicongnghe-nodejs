@@ -1,8 +1,8 @@
-// API Configuration
-const API_URL = 'http://localhost:3300/api';
+﻿// API Configuration
+const API_URL = 'http://localhost:3000/api';
 
 // Default placeholder image
-const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKhông có ảnh%3C/text%3E%3C/svg%3E';
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKh%C3%B4ng%20c%C3%B3%20%E1%BA%A3nh%3C/text%3E%3C/svg%3E';
 
 // Category mapping - map URL slug to database category name
 const CATEGORY_MAP = {
@@ -45,8 +45,8 @@ let allProducts = [];
 let filteredProducts = [];
 let currentCategory = null;
 let currentBrand = null;
-let currentPriceRange = 'all'; // Thêm biến lưu trữ bộ lọc giá hiện tại
-let itemsToShow = 6; // Số lượng sản phẩm hiển thị ban đầu
+let currentPriceRange = 'all'; // ThÃªm biáº¿n lÆ°u trá»¯ bá»™ lá»c giÃ¡ hiá»‡n táº¡i
+let itemsToShow = 6; // So luong san pham hien thi ban dau
 
 // Load products when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -81,16 +81,16 @@ function updatePageTitle(categoryName) {
     document.title = `${categoryName} - Yến Nhi Tech`;
 }
 
-// Cập nhật số lượng sản phẩm theo danh mục
+// Cáº­p nháº­t sá»‘ lÆ°á»£ng sáº£n pháº©m theo danh má»¥c
 function updateCategoryCounts() {
-    // Đếm số sản phẩm theo từng danh mục
+    // Äáº¿m sá»‘ sáº£n pháº©m theo tá»«ng danh má»¥c
     const categoryCounts = {};
     allProducts.forEach(product => {
-        const category = product.ten_danh_muc || 'Khác';
+        const category = product.ten_danh_muc || 'KhÃ¡c';
         categoryCounts[category] = (categoryCounts[category] || 0) + 1;
     });
     
-    // Cập nhật số liệu trên giao diện
+    // Cáº­p nháº­t sá»‘ liá»‡u trÃªn giao diá»‡n
     const categoryCountElements = document.querySelectorAll('.category-count');
     categoryCountElements.forEach(el => {
         const categoryName = el.getAttribute('data-category');
@@ -103,7 +103,7 @@ function updateCategoryCounts() {
         }
     });
     
-    // Debug: console.log('📊 Category counts:', categoryCounts);
+    // Debug: console.log('ðŸ“Š Category counts:', categoryCounts);
 }
 
 // Setup event listeners
@@ -141,7 +141,7 @@ function setupEventListeners() {
                 // Filter products
                 filterByPrice(this.value);
             } else {
-                // If unchecked, show all (or check "Tất cả")
+                // If unchecked, show all (or check "Táº¥t cáº£")
                 const allCheckbox = document.querySelector('.price-filter-checkbox[value="all"]');
                 if (allCheckbox) {
                     allCheckbox.checked = true;
@@ -154,28 +154,28 @@ function setupEventListeners() {
 
 // Filter products by price range
 function filterByPrice(range) {
-    itemsToShow = 6; // Reset số lượng hiển thị khi lọc
-    currentPriceRange = range; // Lưu trạng thái bộ lọc giá
+    itemsToShow = 6; // Reset sá»‘ lÆ°á»£ng hiá»ƒn thá»‹ khi lá»c
+    currentPriceRange = range; // LÆ°u tráº¡ng thÃ¡i bá»™ lá»c giÃ¡
     
-    // Áp dụng cả bộ lọc danh mục và giá
+    // Ãp dá»¥ng cáº£ bá»™ lá»c danh má»¥c vÃ  giÃ¡
     applyAllFilters();
 }
 
-// Áp dụng tất cả bộ lọc (danh mục + giá)
+// Ãp dá»¥ng táº¥t cáº£ bá»™ lá»c (danh má»¥c + giÃ¡)
 function applyAllFilters() {
-    // Bắt đầu từ tất cả sản phẩm
+    // Báº¯t Ä‘áº§u tá»« táº¥t cáº£ sáº£n pháº©m
     let result = [...allProducts];
     
-    // Lọc theo danh mục nếu có
+    // Lá»c theo danh má»¥c náº¿u cÃ³
     const activeCategory = document.querySelector('.category-btn.active span:not(.text-2xl):not(.category-count)');
-    if (activeCategory && activeCategory.textContent !== 'Tất cả') {
+    if (activeCategory && activeCategory.textContent !== 'Táº¥t cáº£') {
         const categoryName = activeCategory.textContent;
         result = result.filter(product => 
             product.ten_danh_muc && product.ten_danh_muc.toLowerCase().includes(categoryName.toLowerCase())
         );
     }
     
-    // Lọc theo giá nếu có
+    // Lá»c theo giÃ¡ náº¿u cÃ³
     if (currentPriceRange && currentPriceRange !== 'all') {
         const [min, max] = currentPriceRange.split('-').map(Number);
         result = result.filter(product => {
@@ -186,7 +186,7 @@ function applyAllFilters() {
     
     filteredProducts = result;
     
-    // Áp dụng sắp xếp hiện tại nếu có
+    // Ãp dá»¥ng sáº¯p xáº¿p hiá»‡n táº¡i náº¿u cÃ³
     const sortSelect = document.getElementById('sortSelect');
     if (sortSelect && sortSelect.value !== 'default') {
         handleSort(sortSelect.value);
@@ -198,7 +198,7 @@ function applyAllFilters() {
 
 // Handle sorting
 function handleSort(sortType) {
-    // Đồng bộ giá trị giữa 2 select
+    // Äá»“ng bá»™ giÃ¡ trá»‹ giá»¯a 2 select
     const s1 = document.getElementById('sortSelect');
     const s2 = document.getElementById('sortSelect2');
     if (s1) s1.value = sortType;
@@ -212,28 +212,28 @@ function handleSort(sortType) {
             filteredProducts.sort((a, b) => b.gia - a.gia);
             break;
         case 'newest':
-            // Giả sử ma_san_pham càng lớn là càng mới
+            // Giáº£ sá»­ ma_san_pham cÃ ng lá»›n lÃ  cÃ ng má»›i
             filteredProducts.sort((a, b) => b.ma_san_pham - a.ma_san_pham);
             break;
         default:
-            // Mặc định theo ID
+            // Máº·c Ä‘á»‹nh theo ID
             filteredProducts.sort((a, b) => b.ma_san_pham - a.ma_san_pham);
             break;
     }
     
-    itemsToShow = 6; // Reset số lượng hiển thị khi sắp xếp
+    itemsToShow = 6; // Reset sá»‘ lÆ°á»£ng hiá»ƒn thá»‹ khi sáº¯p xáº¿p
     displayProducts(filteredProducts);
     updateResultCount(filteredProducts.length);
 }
 
 // Filter products by category
 function filterByCategory(categoryName) {
-    // Cập nhật trạng thái active cho các nút
+    // Cáº­p nháº­t tráº¡ng thÃ¡i active cho cÃ¡c nÃºt
     const categoryBtns = document.querySelectorAll('.category-btn');
     categoryBtns.forEach(btn => {
         const span = btn.querySelector('span:not(.text-2xl):not(.category-count)');
         if (!span) return;
-        const isMatch = (categoryName === 'all' && span.textContent === 'Tất cả') || 
+        const isMatch = (categoryName === 'all' && span.textContent === 'Táº¥t cáº£') || 
                         (span.textContent === categoryName);
         
         if (isMatch) {
@@ -245,7 +245,7 @@ function filterByCategory(categoryName) {
         }
     });
 
-    // Áp dụng tất cả bộ lọc (kết hợp danh mục + giá)
+    // Ãp dá»¥ng táº¥t cáº£ bá»™ lá»c (káº¿t há»£p danh má»¥c + giÃ¡)
     itemsToShow = 6;
     applyAllFilters();
 }
@@ -281,9 +281,9 @@ async function loadProducts(searchTerm = null) {
         if (result.success) {
             allProducts = result.data;
             filteredProducts = result.data;
-            itemsToShow = 6; // Reset số lượng hiển thị khi tải mới
+            itemsToShow = 6; // Reset sá»‘ lÆ°á»£ng hiá»ƒn thá»‹ khi táº£i má»›i
             
-            // Cập nhật UI cho category nếu có
+            // Cáº­p nháº­t UI cho category náº¿u cÃ³
             if (currentCategory) {
                 const categoryBtns = document.querySelectorAll('.category-btn');
                 categoryBtns.forEach(btn => {
@@ -298,7 +298,7 @@ async function loadProducts(searchTerm = null) {
                 });
             }
 
-            // Áp dụng sắp xếp hiện tại nếu có
+            // Ãp dá»¥ng sáº¯p xáº¿p hiá»‡n táº¡i náº¿u cÃ³
             const sortSelect = document.getElementById('sortSelect');
             if (sortSelect && sortSelect.value !== 'default') {
                 handleSort(sortSelect.value);
@@ -307,7 +307,7 @@ async function loadProducts(searchTerm = null) {
                 updateResultCount(filteredProducts.length);
             }
             
-            // Cập nhật số lượng sản phẩm theo danh mục
+            // Cáº­p nháº­t sá»‘ lÆ°á»£ng sáº£n pháº©m theo danh má»¥c
             updateCategoryCounts();
         } else {
             showError('Không thể tải sản phẩm');
@@ -330,7 +330,7 @@ function displayProducts(products) {
         return;
     }
     
-    // Chỉ lấy số lượng sản phẩm cần hiển thị
+    // Chá»‰ láº¥y sá»‘ lÆ°á»£ng sáº£n pháº©m cáº§n hiá»ƒn thá»‹
     const productsToShow = products.slice(0, itemsToShow);
     
     const html = products.length === 0 ? `
@@ -343,15 +343,15 @@ function displayProducts(products) {
         </div>
     ` : productsToShow.map(product => createProductCard(product)).join('');
 
-    // Cập nhật cả 2 container
+    // Cáº­p nháº­t cáº£ 2 container
     if (container) container.innerHTML = html;
     if (container2) container2.innerHTML = html;
 
-    // Cập nhật trạng thái nút "Xem thêm"
+    // Cáº­p nháº­t tráº¡ng thÃ¡i nÃºt "Xem thÃªm"
     updateLoadMoreButtons(products.length);
 }
 
-// Cập nhật nút Xem thêm
+// Cáº­p nháº­t nÃºt Xem thÃªm
 function updateLoadMoreButtons(totalItems) {
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     const loadMoreBtn2 = document.getElementById('loadMoreBtn2');
@@ -370,22 +370,22 @@ function updateLoadMoreButtons(totalItems) {
     });
 }
 
-// Hàm xử lý khi nhấn Xem thêm
+// HÃ m xá»­ lÃ½ khi nháº¥n Xem thÃªm
 function loadMore() {
-    itemsToShow += 6; // Tăng thêm 6 sản phẩm mỗi lần nhấn
+    itemsToShow += 6; // TÄƒng thÃªm 6 sáº£n pháº©m má»—i láº§n nháº¥n
     displayProducts(filteredProducts);
 }
 
 // Create product card HTML
 function createProductCard(product) {
-    // Xử lý đường dẫn ảnh - thêm URL backend nếu ảnh từ database
+    // Xá»­ lÃ½ Ä‘Æ°á»ng dáº«n áº£nh - thÃªm URL backend náº¿u áº£nh tá»« database
     let imageUrl = PLACEHOLDER_IMAGE;
     if (product.anh_chinh) {
-        // Nếu đường dẫn bắt đầu bằng http thì dùng trực tiếp
+        // Náº¿u Ä‘Æ°á»ng dáº«n báº¯t Ä‘áº§u báº±ng http thÃ¬ dÃ¹ng trá»±c tiáº¿p
         if (product.anh_chinh.startsWith('http')) {
             imageUrl = product.anh_chinh;
         } else {
-            // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+            // Xá»­ lÃ½ Ä‘Æ°á»ng dáº«n tá»« database (cÃ³ thá»ƒ báº¯t Ä‘áº§u báº±ng / hoáº·c khÃ´ng)
             const cleanPath = product.anh_chinh.startsWith('/') ? product.anh_chinh : '/' + product.anh_chinh;
             imageUrl = `${API_URL.replace('/api', '')}${cleanPath}`;
         }
@@ -397,10 +397,10 @@ function createProductCard(product) {
     const discount = 15;
     const discountAmount = formatPrice(oldPriceValue - product.gia);
     
-    // Kiểm tra sản phẩm hết hàng
+    // Kiá»ƒm tra sáº£n pháº©m háº¿t hÃ ng
     const isOutOfStock = product.so_luong === 0;
     const outOfStockClass = isOutOfStock ? 'out-of-stock' : '';
-    const outOfStockOverlay = isOutOfStock ? '<div class="out-of-stock-overlay">🚫 Hết hàng</div>' : '';
+    const outOfStockOverlay = isOutOfStock ? '<div class="out-of-stock-overlay">ðŸš« Háº¿t hÃ ng</div>' : '';
     
     return `
         <div class="bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 relative group product-card ${outOfStockClass}">
@@ -454,7 +454,7 @@ function createProductCard(product) {
                     ` : ''}
                 </div>
                 
-                <!-- Tình trạng tồn kho -->
+                <!-- TÃ¬nh tráº¡ng tá»“n kho -->
                 ${isOutOfStock ? `
                 <div class="mb-2">
                     <span class="inline-block bg-red-100 text-red-700 text-sm px-3 py-1 rounded-full font-semibold">
@@ -487,7 +487,7 @@ function createProductCard(product) {
     `;
 }
 
-// Hiển thị thông báo sản phẩm hết hàng
+// Hiá»ƒn thá»‹ thÃ´ng bÃ¡o sáº£n pháº©m háº¿t hÃ ng
 function showOutOfStockAlert() {
     alert('🚫 Sản phẩm này hiện đã hết hàng. Vui lòng quay lại sau!');
 }
@@ -509,23 +509,23 @@ function viewProduct(productId) {
 function getProductImageUrl(imagePath) {
     if (!imagePath) return PLACEHOLDER_IMAGE;
     if (imagePath.startsWith('http')) return imagePath;
-    // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+    // Xá»­ lÃ½ Ä‘Æ°á»ng dáº«n tá»« database (cÃ³ thá»ƒ báº¯t Ä‘áº§u báº±ng / hoáº·c khÃ´ng)
     const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
     return `${API_URL.replace('/api', '')}${cleanPath}`;
 }
 
-// Kiểm tra đăng nhập
+// Kiem tra dang nhap
 function isLoggedIn() {
     return !!localStorage.getItem('token');
 }
 
-// Lấy user hiện tại
+// Lay user hien tai
 function getCurrentUser() {
     const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
 }
 
-// Lấy cart key theo user
+// Lay cart key theo user
 function getCartKey() {
     const user = getCurrentUser();
     return user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
@@ -533,7 +533,7 @@ function getCartKey() {
 
 // Add to cart
 function addToCart(productOrId) {
-    // Kiểm tra đăng nhập
+    // Kiem tra dang nhap
     if (!isLoggedIn()) {
         showLoginRequired();
         return;
@@ -541,7 +541,7 @@ function addToCart(productOrId) {
     
     let product;
     
-    // Kiểm tra xem tham số là object product hay productId
+    // Kiem tra xem tham so la object product hay productId
     if (typeof productOrId === 'object' && productOrId !== null) {
         product = productOrId;
     } else {
@@ -584,9 +584,9 @@ function addToCart(productOrId) {
     showNotification('Đã thêm sản phẩm vào giỏ hàng!');
 }
 
-// Hiển thị yêu cầu đăng nhập
+// Hien thi yeu cau dang nhap
 function showLoginRequired() {
-    // Xóa modal cũ nếu có
+    // Xoa modal cu neu co
     const existingModal = document.getElementById('loginRequiredModal');
     if (existingModal) existingModal.remove();
     
@@ -614,12 +614,12 @@ function showLoginRequired() {
     `;
     document.body.appendChild(modal);
     
-    // Thêm event listener cho nút đóng
+    // Them event listener cho nut dong
     document.getElementById('closeLoginModalBtn').addEventListener('click', function() {
         modal.remove();
     });
     
-    // Đóng modal khi click bên ngoài
+    // Dong modal khi click ben ngoai
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             modal.remove();
@@ -627,13 +627,13 @@ function showLoginRequired() {
     });
 }
 
-// Đóng modal đăng nhập (giữ lại để tương thích)
+// Dong modal dang nhap (giu lai de tuong thich)
 function closeLoginModal() {
     const modal = document.getElementById('loginRequiredModal');
     if (modal) modal.remove();
 }
 
-// Chuyển đến trang đăng nhập (giữ lại để tương thích)
+// Chuyen den trang dang nhap (giu lai de tuong thich)
 function goToLoginPage() {
     window.location.href = 'login.html';
 }
@@ -716,10 +716,10 @@ function showError(message) {
                 <svg class="w-24 h-24 mx-auto text-red-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">Có lỗi xảy ra</h3>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">CÃ³ lá»—i xáº£y ra</h3>
                 <p class="text-gray-500 mb-4">${message}</p>
                 <button onclick="loadProducts()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition">
-                    Thử lại
+                    Thá»­ láº¡i
                 </button>
             </div>
         `;
@@ -758,7 +758,7 @@ function switchTab(tabName) {
     const sanPham = document.getElementById('content-san-pham');
     const baiViet = document.getElementById('content-bai-viet');
     
-    // Ẩn tất cả bằng style.display
+    // áº¨n táº¥t cáº£ báº±ng style.display
     if (khamPha) khamPha.style.display = 'none';
     if (sanPham) sanPham.style.display = 'none';
     if (baiViet) baiViet.style.display = 'none';
@@ -768,7 +768,7 @@ function switchTab(tabName) {
         khamPha.style.display = 'block';
     } else if (tabName === 'san-pham' && sanPham) {
         sanPham.style.display = 'block';
-        // Cập nhật productGrid2 với dữ liệu hiện tại khi chuyển tab
+        // Cáº­p nháº­t productGrid2 vá»›i dá»¯ liá»‡u hiá»‡n táº¡i khi chuyá»ƒn tab
         setTimeout(() => {
             const container2 = document.getElementById('productGrid2');
             if (container2 && filteredProducts) {
@@ -779,20 +779,20 @@ function switchTab(tabName) {
                             <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                             </svg>
-                            <h3 class="text-xl font-semibold text-gray-600 mb-2">Không tìm thấy sản phẩm</h3>
-                            <p class="text-gray-500">Vui lòng thử lại với bộ lọc khác</p>
+                            <h3 class="text-xl font-semibold text-gray-600 mb-2">KhÃ´ng tÃ¬m tháº¥y sáº£n pháº©m</h3>
+                            <p class="text-gray-500">Vui lÃ²ng thá»­ láº¡i vá»›i bá»™ lá»c khÃ¡c</p>
                         </div>
                     `;
                 } else {
                     const html = productsToShow.map(product => createProductCard(product)).join('');
                     container2.innerHTML = html;
                 }
-                console.log('✅ Đã đổ', productsToShow.length, 'sản phẩm vào productGrid2');
+                console.log('âœ… ÄÃ£ Ä‘á»•', productsToShow.length, 'sáº£n pháº©m vÃ o productGrid2');
             }
         }, 10);
     } else if (tabName === 'bai-viet' && baiViet) {
         baiViet.style.display = 'block';
-        // Load bài viết từ API khi chuyển sang tab Bài viết
+        // Load bÃ i viáº¿t tá»« API khi chuyá»ƒn sang tab BÃ i viáº¿t
         if (typeof loadArticlesFromAPI === 'function') {
             loadArticlesFromAPI();
         }
@@ -831,7 +831,7 @@ function toggleFilter(filterId) {
 // Initialize cart badge on page load
 updateCartBadge();
 
-// Show "Khám phá" tab by default
+// Show "KhÃ¡m phÃ¡" tab by default
 document.addEventListener('DOMContentLoaded', function() {
     switchTab('kham-pha');
 });

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../images/Screenshot 2025-11-10 154306.png">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: data: blob: ws:; connect-src 'self' http://localhost:* http://127.0.0.1:* https://cdn.tailwindcss.com ws://localhost:* ws://127.0.0.1:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;">
     <title>Đơn Hàng Của Tôi - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -149,7 +150,7 @@
                 <!-- Deal 3 -->
                 <a href="../pages/promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
                     <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">🎫</span>
+                        <span class="text-2xl">🎁</span>
                     </div>
                     <span class="font-bold text-sm md:text-base">Voucher tặng bạn mới</span>
                 </a>
@@ -167,7 +168,7 @@
                     <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse">
                         <span class="font-black text-red-600 text-sm">11.11</span>
                     </div>
-                    <span class="font-bold text-sm md:text-base">Trợ giá cực đã - Sale 50%</span>
+                    <span class="font-bold text-sm md:text-base">Trợ giá cực sốc - Sale 50%</span>
                 </a>
             </div>
         </div>
@@ -314,7 +315,7 @@
         });
     </script>
     <script>
-        const ORDER_API_URL = 'http://localhost:3300/api';
+        const ORDER_API_URL = 'http://localhost:3000/api';
         let currentTab = 'all';
         let allOrders = [];
         // Map trạng thái từ backend sang frontend
@@ -422,7 +423,7 @@
                                     } else {
                                         // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
                                         const cleanPath = item.anh_chinh.startsWith('/') ? item.anh_chinh : '/' + item.anh_chinh;
-                                        imageUrl = `http://localhost:3300${cleanPath}`;
+                                        imageUrl = `http://localhost:3000${cleanPath}`;
                                     }
                                 }
                                 return {
@@ -493,11 +494,11 @@
                 <div class="bg-white rounded-lg shadow overflow-hidden">
                     <div class="flex items-center justify-between px-6 py-3 border-b bg-gray-50">
                         <div class="flex items-center gap-4">
-                            <span class="text-orange-500">❤️</span>
+                            <span class="text-orange-500">🏪</span>
                             <span class="font-semibold">${order.shopName}</span>
                             <a href="products.html" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-100 transition">Xem Shop</a>
                             <span class="text-gray-400 text-sm">Mã đơn: #${order.id}</span>
-                            ${order.codInfo && order.codInfo.isDeposit ? '<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-semibold">💰 COD - Đã cọc 50%</span>' : ''}
+                            ${order.codInfo && order.codInfo.isDeposit ? '<span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-semibold">Đặt COD - Đã cọc 50%</span>' : ''}
                         </div>
                         <div class="flex items-center gap-2">
                             ${order.deliverySuccess ? '<span class="text-green-600 text-sm flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Giao hàng thành công</span>' : ''}
@@ -536,7 +537,7 @@
                                     ${order.codInfo && order.codInfo.isDeposit ? `
                                         <div class="mt-2 p-2 bg-orange-50 rounded border border-orange-200">
                                             <p class="text-xs text-orange-700">💰 Đã cọc: <strong>${Number(order.codInfo.depositAmount).toLocaleString('vi-VN')}đ</strong></p>
-                                            <p class="text-sm text-red-600 font-bold">📦 Còn phải trả: ${Number(order.codInfo.remainingAmount).toLocaleString('vi-VN')}đ</p>
+                                            <p class="text-sm text-red-600 font-bold">🔥 Cần phải trả: ${Number(order.codInfo.remainingAmount).toLocaleString('vi-VN')}đ</p>
                                         </div>
                                     ` : ''}
                                 </div>
@@ -695,10 +696,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
                 <!-- About Column -->
                 <div class="lg:col-span-1">
-                    <h3 class="text-lg font-bold mb-4 text-red-600">VỀ YẾN NHI TECH</h3>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">V? YN NHI TECH</h3>
                     <ul class="space-y-2 text-sm text-gray-700">
-                        <li><a href="about.html" class="hover:text-gray-900 hover:font-semibold transition">Giới thiệu công ty</a></li>
-                        <li><a href="contact.html#map-section" class="hover:text-gray-900 hover:font-semibold transition">Hệ thống cửa hàng</a></li>
+                        <li><a href="about.html" class="hover:text-gray-900 hover:font-semibold transition">Gi>i thi?u cng ty</a></li>
+                        <li><a href="contact.html#map-section" class="hover:text-gray-900 hover:font-semibold transition">H? th'ng ca hàng</a></li>
                     </ul>
                 </div>
 
@@ -707,23 +708,23 @@
                     <h3 class="text-lg font-bold mb-4 text-red-600">CHÍNH SÁCH</h3>
                     <ul class="space-y-2 text-sm text-gray-700">
                         <li><a href="policy-warranty.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo hành</a></li>
-                        <li><a href="policy-return.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách đổi trả</a></li>
+                        <li><a href="policy-return.html" class="hover:text-gray-900 hover:font-semibold transition">Chnh sch '.i tr</a></li>
                         <li><a href="policy-privacy.html" class="hover:text-gray-900 hover:font-semibold transition">Chính sách bảo mật</a></li>
                     </ul>
                 </div>
 
                 <!-- Info Column -->
                 <div class="lg:col-span-1">
-                    <h3 class="text-lg font-bold mb-4 text-red-600">THÔNG TIN</h3>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">TH"NG TIN</h3>
                     <ul class="space-y-2 text-sm text-gray-700">
-                        <li><a href="payment-guide.html" class="hover:text-gray-900 hover:font-semibold transition">Hướng dẫn thanh toán</a></li>
-                        <li><a href="order-history.html" class="hover:text-gray-900 hover:font-semibold transition">Tra cứu đơn hàng</a></li>
+                        <li><a href="payment-guide.html" class="hover:text-gray-900 hover:font-semibold transition">H>ng dn thanh toán</a></li>
+                        <li><a href="order-history.html" class="hover:text-gray-900 hover:font-semibold transition">Tra cu 'n hàng</a></li>
                     </ul>
                 </div>
 
                 <!-- Contact Column -->
                 <div class="lg:col-span-2">
-                    <h3 class="text-lg font-bold mb-4 text-red-600">TỔNG ĐÀI HỖ TRỢ</h3>
+                    <h3 class="text-lg font-bold mb-4 text-red-600">T"NG Đ?I H- TR</h3>
                     <div class="space-y-3 text-sm">
                         <div class="flex items-start gap-2">
                             <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
@@ -731,7 +732,7 @@
                             </svg>
                             <div>
                                 <p class="text-gray-900 font-semibold">Mua hàng: 1900.5301</p>
-                                <p class="text-gray-700">Gọi miễn phí từ 8:00 - 21:30</p>
+                                <p class="text-gray-700">Gi mi.n ph t 8:00 - 21:30</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-2">
@@ -740,7 +741,7 @@
                             </svg>
                             <div>
                                 <p class="text-gray-900 font-semibold">Bảo hành: 1900.5325</p>
-                                <p class="text-gray-700">8:00 - 21:00 (cả CN và Lễ)</p>
+                                <p class="text-gray-700">8:00 - 21:00 (c CN v L.)</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-2">
@@ -751,7 +752,7 @@
                                 <circle cx="16" cy="10" r="1.5"/>
                             </svg>
                             <div>
-                                <p class="text-gray-900 font-semibold">Khiếu nại: 1900.5310</p>
+                                <p class="text-gray-900 font-semibold">Khiu ni: 1900.5310</p>
                                 <p class="text-gray-700">8:00 - 21:30</p>
                             </div>
                         </div>
@@ -774,10 +775,10 @@
                     <div>
                         <h4 class="text-sm font-bold mb-4 text-gray-900">ĐƠN VỊ VẬN CHUYỂN</h4>
                         <div class="flex flex-wrap gap-4">
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 GHTK</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 Viettel Post</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 J&T Express</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 VNPost</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ GHTK</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ Viettel Post</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ J&T Express</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ VNPost</div>
                         </div>
                     </div>
 
@@ -785,11 +786,11 @@
                     <div>
                         <h4 class="text-sm font-bold mb-4 text-gray-900">PHƯƠNG THỨC THANH TOÁN</h4>
                         <div class="flex flex-wrap gap-4">
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💳 Visa/Master</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏧 ATM</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📱 Momo</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📱 ZaloPay</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💵 COD</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ Visa/Master</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ ATM</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ MoMo</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ ZaloPay</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">✓ COD</div>
                         </div>
                     </div>
                 </div>
@@ -800,7 +801,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="text-sm text-gray-900">
                         <p>&copy; 2024 Yến Nhi Tech. All rights reserved.</p>
-                        <p class="mt-1">📍 Địa chỉ: 74-76 Lê Lợi, khóm 3, Trà Vinh</p>
+                        <p class="mt-1">Y" Đ<a ch?: 74-76 L Li, khm 3, Tr Vinh</p>
                     </div>
                     <div class="flex gap-4">
                         <a href="#" class="bg-blue-600 hover:bg-blue-700 p-2 rounded-full transition">

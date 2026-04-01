@@ -407,24 +407,56 @@ router.post('/logout', (req, res) => {
 // ==========================================
 router.get('/me', async (req, res) => {
     try {
-        // Kiểm tra session
-        if (!req.session.user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Chưa đăng nhập'
-            });
+        // Hỗ trợ cả session và JWT token
+        let userId = req.session?.user?.ma_tai_khoan;
+
+        if (!userId) {
+            const authHeader = req.headers['authorization'];
+            const token = authHeader && authHeader.split(' ')[1];
+
+            if (!token) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Chưa đăng nhập'
+                });
+            }
+
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+                userId = decoded.ma_tai_khoan;
+            } catch (verifyError) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Token không hợp lệ hoặc đã hết hạn'
+                });
+            }
         }
 
-        // Lấy thông tin user từ database (bao gồm cả thông tin cá nhân)
-        const [users] = await db.query(
-            `SELECT tk.ma_tai_khoan, tk.ten_dang_nhap, tk.email, tk.vai_tro, tk.trang_thai, tk.hinh_anh,
-                    kh.ho_ten, kh.so_dien_thoai, kh.dia_chi, kh.tinh_thanh, kh.quan_huyen
-             FROM tai_khoan tk
-             LEFT JOIN khach_hang kh ON tk.ma_tai_khoan = kh.ma_tai_khoan
-             WHERE tk.ma_tai_khoan = ?`,
-            [req.session.user.ma_tai_khoan]
-        );
+        // Lấy thông tin user từ database (bao gồm thông tin cá nhân nếu có bảng khach_hang)
+        let users;
+        try {
+            [users] = await db.query(
+                `SELECT tk.ma_tai_khoan, tk.ten_dang_nhap, tk.email, tk.vai_tro, tk.trang_thai, tk.hinh_anh,
+                        kh.ho_ten, kh.so_dien_thoai, kh.dia_chi, kh.tinh_thanh, kh.quan_huyen
+                 FROM tai_khoan tk
+                 LEFT JOIN khach_hang kh ON tk.ma_tai_khoan = kh.ma_tai_khoan
+                 WHERE tk.ma_tai_khoan = ?`,
+                [userId]
+            );
+        } catch (dbError) {
+            if (dbError.code !== 'ER_NO_SUCH_TABLE') {
+                throw dbError;
+            }
 
+            // Fallback cho trường hợp schema chưa có bảng khach_hang
+            [users] = await db.query(
+                `SELECT ma_tai_khoan, ten_dang_nhap, email, vai_tro, trang_thai, hinh_anh,
+                        NULL AS ho_ten, NULL AS so_dien_thoai, NULL AS dia_chi, NULL AS tinh_thanh, NULL AS quan_huyen
+                 FROM tai_khoan
+                 WHERE ma_tai_khoan = ?`,
+                [userId]
+            );
+        }
         if (users.length === 0) {
             req.session.destroy();
             return res.status(404).json({
@@ -675,8 +707,19 @@ router.put('/change-password', authenticateToken, async (req, res) => {
 // ==========================================
 const passport = require('passport');
 
+function isGoogleStrategyReady() {
+    return !!passport._strategy('google');
+}
+
 // Bắt đầu đăng nhập Google
 router.get('/google', (req, res, next) => {
+    if (!isGoogleStrategyReady()) {
+        return res.status(503).json({
+            success: false,
+            message: 'Google OAuth chưa được cấu hình trên server'
+        });
+    }
+
     // Lưu redirect parameter vào session
     const redirect = req.query.redirect;
     if (redirect) {
@@ -689,6 +732,12 @@ router.get('/google', (req, res, next) => {
 
 // Callback từ Google
 router.get('/google/callback', 
+    (req, res, next) => {
+        if (!isGoogleStrategyReady()) {
+            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5500'}/pages/login.html?error=google_not_configured`);
+        }
+        next();
+    },
     passport.authenticate('google', { failureRedirect: '/login?error=google_failed' }),
     (req, res) => {
         try {

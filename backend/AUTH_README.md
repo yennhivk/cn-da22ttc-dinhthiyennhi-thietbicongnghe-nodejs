@@ -17,12 +17,14 @@ npm install
 ```
 
 ### 2. Cấu hình file .env
-File `.env` đã được cấu hình sẵn với thông tin:
+Tạo file `.env` từ `.env.example` rồi điền thông tin thực tế:
 ```
+PORT=3000
+NODE_ENV=development
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=Choncon1310@
+DB_PASSWORD=your_mysql_password
 DB_NAME=CSDL_DoAnCN
 JWT_SECRET=your_jwt_secret_key_here_change_in_production
 ```
@@ -36,7 +38,7 @@ mysql -u root -p < CSDL_DoAnCN.sql
 ```bash
 npm start
 ```
-Server sẽ chạy tại: `http://localhost:3300`
+Server sẽ chạy tại: `http://localhost:3000`
 
 ---
 
@@ -85,7 +87,7 @@ Server sẽ chạy tại: `http://localhost:3300`
 **Request Body:**
 ```json
 {
-  "ten_dang_nhap": "testuser",
+  "email": "testuser@gmail.com",
   "mat_khau": "123456"
 }
 ```
@@ -120,11 +122,16 @@ Server sẽ chạy tại: `http://localhost:3300`
 ### 3. Kiểm tra trạng thái đăng nhập
 **GET** `/api/auth/me`
 
+**Headers (khuyến nghị):**
+```
+Authorization: Bearer <token_từ_đăng_nhập>
+```
+
 **Response Success (200):**
 ```json
 {
   "success": true,
-  "data": {
+  "user": {
     "ma_tai_khoan": 4,
     "ten_dang_nhap": "testuser",
     "email": "testuser@gmail.com",
@@ -157,7 +164,7 @@ Server sẽ chạy tại: `http://localhost:3300`
 
 ### Frontend - Đăng nhập
 1. Mở file: `frontend/pages/login.html`
-2. Nhập tên đăng nhập và mật khẩu
+2. Nhập email và mật khẩu
 3. Nhấn "Đăng nhập"
 4. Token sẽ được lưu vào localStorage
 
@@ -176,7 +183,7 @@ const user = getCurrentUser();
 console.log(user.ten_dang_nhap);
 
 // Gọi API với token
-const response = await fetchWithAuth('http://localhost:3300/api/cart', {
+const response = await fetchWithAuth('http://localhost:3000/api/cart', {
     method: 'GET'
 });
 
@@ -200,14 +207,14 @@ logout();
 ### Test bằng curl
 ```bash
 # Đăng ký
-curl -X POST http://localhost:3300/api/auth/register \
+curl -X POST http://localhost:3000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"ten_dang_nhap":"testuser","mat_khau":"123456","email":"test@gmail.com"}'
 
 # Đăng nhập
-curl -X POST http://localhost:3300/api/auth/login \
+curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"ten_dang_nhap":"testuser","mat_khau":"123456"}'
+  -d '{"email":"test@gmail.com","mat_khau":"123456"}'
 ```
 
 ---

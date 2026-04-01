@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -69,6 +69,291 @@
             line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        /* Explore tab redesign */
+        .explore-showcase {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        }
+        .explore-collage {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .explore-collage img {
+            width: 100%;
+            height: 9rem;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            transition: transform 0.35s ease;
+        }
+        .explore-collage img:hover {
+            transform: scale(1.04);
+        }
+        .explore-asus-panel {
+            border-radius: 1rem;
+            padding: 1.25rem;
+            background: linear-gradient(145deg, #eff6ff 0%, #e0ecff 55%, #dbeafe 100%);
+            box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.16);
+        }
+        .explore-asus-image {
+            width: 100%;
+            height: 100%;
+            min-height: 280px;
+            object-fit: contain;
+            filter: drop-shadow(0 14px 22px rgba(30, 64, 175, 0.24));
+            transform: translateY(4px);
+        }
+        .explore-hero-image {
+            width: 100%;
+            height: 100%;
+            min-height: 280px;
+            object-fit: cover;
+        }
+        .explore-iphone-wrap {
+            background: radial-gradient(circle at 30% 30%, rgba(251, 191, 36, 0.18), transparent 55%), #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .explore-iphone-wrap::before {
+            content: '';
+            position: absolute;
+            width: 520px;
+            height: 520px;
+            border-radius: 9999px;
+            border: 1px dashed rgba(251, 191, 36, 0.35);
+            transform: rotate(10deg);
+            opacity: 0.75;
+            animation: orbitSpin 18s linear infinite;
+        }
+        .explore-luxury-scene {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            transform-style: preserve-3d;
+            transition: transform 220ms ease;
+            z-index: 2;
+        }
+        .explore-luxury-scene.is-interactive {
+            transform: perspective(950px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translate3d(var(--move-x, 0px), var(--move-y, 0px), 0);
+        }
+        .explore-iphone-orb {
+            width: min(86vw, 470px);
+            aspect-ratio: 1 / 1;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 28% 24%, #fcd34d 0%, #f59e0b 36%, #c2410c 100%);
+            box-shadow: 0 22px 40px rgba(0, 0, 0, 0.45), inset 0 0 0 8px rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: iphoneOrbSpin 14s linear infinite;
+            overflow: hidden;
+            isolation: isolate;
+            position: relative;
+            z-index: 3;
+        }
+        .explore-iphone-orb::before {
+            content: '';
+            position: absolute;
+            inset: 14px;
+            border-radius: 9999px;
+            border: 2px solid rgba(255, 255, 255, 0.24);
+            pointer-events: none;
+        }
+        .explore-iphone-orb::after {
+            content: '';
+            position: absolute;
+            inset: -18px;
+            border-radius: 9999px;
+            background: conic-gradient(from 120deg, rgba(251, 191, 36, 0.18), rgba(251, 191, 36, 0), rgba(251, 191, 36, 0.25));
+            filter: blur(12px);
+            z-index: -1;
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+        .explore-iphone-image {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+            object-fit: contain;
+            mix-blend-mode: normal;
+            filter: saturate(1.12) contrast(1.06) drop-shadow(0 12px 20px rgba(55, 24, 8, 0.35));
+            position: relative;
+            z-index: 2;
+        }
+        .explore-iphone-device {
+            width: 66%;
+            max-height: 78%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .explore-iphone-glass {
+            position: absolute;
+            left: 50%;
+            bottom: 8%;
+            width: 92%;
+            height: 16%;
+            border-radius: 9999px;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.06) 55%, rgba(255, 255, 255, 0) 100%);
+            box-shadow: 0 16px 20px rgba(120, 53, 15, 0.24);
+            backdrop-filter: blur(2px);
+            z-index: 1;
+        }
+        .explore-iphone-reflection {
+            position: absolute;
+            left: 50%;
+            top: 72%;
+            width: 95%;
+            transform: translateX(-50%) scaleY(-1);
+            transform-origin: top center;
+            opacity: 0.26;
+            mix-blend-mode: soft-light;
+            filter: blur(1.6px) saturate(0.92);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 82%);
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 82%);
+            z-index: 0;
+        }
+        .explore-iphone-rings {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .explore-iphone-rings span {
+            position: absolute;
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: 9999px;
+        }
+        .explore-iphone-rings span:nth-child(1) {
+            width: 240px;
+            height: 240px;
+            top: 10%;
+            right: 14%;
+            animation: orbitSpin 12s linear infinite;
+        }
+        .explore-iphone-rings span:nth-child(2) {
+            width: 180px;
+            height: 180px;
+            bottom: 16%;
+            left: 15%;
+            animation: orbitSpin 9s linear infinite reverse;
+        }
+        .explore-iphone-rings span:nth-child(3) {
+            width: 110px;
+            height: 110px;
+            top: 50%;
+            left: 8%;
+            animation: pulseGlow 3.2s ease-in-out infinite;
+        }
+        .explore-spec-badges {
+            margin-top: 1.1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+        .explore-spec-badge {
+            padding: 0.4rem 0.7rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            background: rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(6px);
+            color: #fde68a;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            animation: floatUpDown 4.5s ease-in-out infinite;
+        }
+        .explore-spec-badge:nth-child(2) {
+            animation-delay: 0.9s;
+        }
+        .explore-spec-badge:nth-child(3) {
+            animation-delay: 1.4s;
+        }
+        .explore-heading-gradient {
+            background: linear-gradient(135deg, #fde68a 0%, #fbbf24 45%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        @keyframes iphoneOrbSpin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes orbitSpin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes pulseGlow {
+            0%, 100% {
+                opacity: 0.45;
+                transform: scale(0.98);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.03);
+            }
+        }
+        @keyframes floatUpDown {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        .explore-stat {
+            border-left: 3px solid #f59e0b;
+            padding-left: 0.85rem;
+        }
+        .explore-stat .number {
+            color: #f59e0b;
+            font-size: 2rem;
+            line-height: 1;
+            font-weight: 800;
+        }
+        .explore-cta {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .explore-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 18px rgba(217, 119, 6, 0.35);
+        }
+        @media (min-width: 1024px) {
+            .explore-collage img {
+                height: 11rem;
+            }
+        }
+        @media (max-width: 1023px) {
+            .explore-luxury-scene {
+                transform: none !important;
+            }
         }
         
         /* Sản phẩm hết hàng - Làm mờ và không cho click */
@@ -370,126 +655,72 @@
     <!-- Main Content -->
     <section class="py-6 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4">
-            <!-- Khám phá Tab - With Sidebar -->
-            <div id="content-kham-pha">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                
-                <!-- Sidebar Filters -->
-                <aside class="lg:col-span-3">
-                    <div class="bg-white rounded-lg shadow-sm p-5 sticky top-28">
-                        <!-- Filter Header -->
-                        <div class="flex items-center gap-2 mb-5 pb-4 border-b">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
-                            </svg>
-                            <h2 class="text-lg font-bold text-gray-800">Bộ lọc tìm kiếm</h2>
-                        </div>
-                        
-                        <!-- Price Filter -->
-                        <div class="mb-6">
-                            <button class="flex items-center justify-between w-full text-left mb-3" onclick="toggleFilter('priceFilter')">
-                                <h3 class="font-semibold text-gray-800">Mức giá</h3>
-                                <svg class="w-4 h-4 transform transition-transform" id="priceFilterIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div id="priceFilter" class="space-y-3">
-                                <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="radio" name="price-range" value="all" class="price-filter-checkbox w-4 h-4 accent-red-600" checked>
-                                    <span class="text-sm text-gray-700">Tất cả</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="radio" name="price-range" value="0-2000000" class="price-filter-checkbox w-4 h-4 accent-red-600">
-                                    <span class="text-sm text-gray-700">Dưới 2 triệu</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="radio" name="price-range" value="2000000-4000000" class="price-filter-checkbox w-4 h-4 accent-red-600">
-                                    <span class="text-sm text-gray-700">Từ 2 - 4 triệu</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="radio" name="price-range" value="4000000-7000000" class="price-filter-checkbox w-4 h-4 accent-red-600">
-                                    <span class="text-sm text-gray-700">Từ 4 - 7 triệu</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="radio" name="price-range" value="7000000-13000000" class="price-filter-checkbox w-4 h-4 accent-red-600">
-                                    <span class="text-sm text-gray-700">Từ 7 - 13 triệu</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="radio" name="price-range" value="13000000-20000000" class="price-filter-checkbox w-4 h-4 accent-red-600">
-                                    <span class="text-sm text-gray-700">Từ 13 - 20 triệu</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer hover:text-red-600 transition">
-                                    <input type="radio" name="price-range" value="20000000-999999999" class="price-filter-checkbox w-4 h-4 accent-red-600">
-                                    <span class="text-sm text-gray-700">Trên 20 triệu</span>
-                                </label>
+            <!-- Khám phá Tab - Redesigned Layout -->
+            <div id="content-kham-pha" class="space-y-8">
+                <article class="explore-showcase bg-slate-900 text-white">
+                    <div class="grid lg:grid-cols-12">
+                        <div class="lg:col-span-5 p-6 md:p-10 flex flex-col justify-center">
+                            <p class="text-amber-400 tracking-[0.26em] text-sm uppercase font-semibold">Launch Collection</p>
+                            <h3 class="text-4xl md:text-5xl font-black mt-3 leading-tight">iPhone 17 Pro Max
+                                <span class="explore-heading-gradient">Titanium Edition</span>
+                            </h3>
+                            <p class="text-slate-200 mt-4 leading-relaxed">Thiết kế titan sang trọng, chip A-series thế hệ mới, camera zoom quang học vượt trội và thời lượng pin bền bỉ cả ngày. Đây là flagship dành cho người cần hiệu năng mạnh, quay chụp chuyên nghiệp và trải nghiệm cao cấp.</p>
+                            <div class="explore-spec-badges">
+                                <span class="explore-spec-badge">A19 Pro Bionic</span>
+                                <span class="explore-spec-badge">48MP Pro Camera</span>
+                                <span class="explore-spec-badge">120Hz Super Retina</span>
                             </div>
-                        </div>
-
-                    </div>
-                </aside>
-
-                <!-- Products Area -->
-                <main class="lg:col-span-9">
-                    <!-- Category Tabs -->
-                    <div class="bg-white rounded-lg shadow-sm mb-5 p-4">
-                        <div class="flex flex-wrap gap-3">
-                            <button onclick="filterByCategory('all')" class="category-btn active flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border-2 border-red-600 rounded-lg font-semibold text-sm hover:bg-red-600 hover:text-white transition">
+                            <a href="promotions.html" class="explore-cta mt-7 w-fit">
+                                <span>Xem ưu đãi iPhone 17 Pro Max</span>
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
-                                <span>Tất cả</span>
-                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="all">(0)</span>
-                            </button>
-                            <button onclick="filterByCategory('Phụ kiện')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
-                                <span class="text-2xl">🎧</span>
-                                <span>Phụ kiện</span>
-                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Phụ kiện">(0)</span>
-                            </button>
-                            <button onclick="filterByCategory('Điện thoại')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
-                                <span class="text-2xl">📱</span>
-                                <span>Điện thoại</span>
-                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Điện thoại">(0)</span>
-                            </button>
-                            <button onclick="filterByCategory('Laptop')" class="category-btn flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg font-medium text-sm hover:border-red-600 hover:text-red-600 transition">
-                                <span class="text-2xl">💻</span>
-                                <span>Laptop</span>
-                                <span class="category-count bg-gray-200 px-2 py-0.5 rounded-full text-xs" data-category="Laptop">(0)</span>
-                            </button>
+                            </a>
                         </div>
-                    </div>
-
-                    <!-- Sort & Results Info -->
-                    <div class="bg-white rounded-lg shadow-sm p-4 mb-5">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm text-gray-600">Lọc nhanh:</span>
-                                <select id="sortSelect" onchange="handleSort(this.value)" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-400 bg-white">
-                                    <option value="default">Hàng sản xuất</option>
-                                    <option value="price_asc">Giá thấp đến cao</option>
-                                    <option value="price_desc">Giá cao đến thấp</option>
-                                    <option value="newest">Mới nhất</option>
-                                </select>
+                        <div class="lg:col-span-7 explore-iphone-wrap">
+                            <div class="explore-luxury-scene" id="exploreLuxuryScene">
+                                <div class="explore-iphone-rings" aria-hidden="true">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <div class="explore-iphone-orb">
+                                    <div class="explore-iphone-device">
+                                        <img class="explore-iphone-image" src="../images/tải_xuống-removebg-preview.png" alt="iPhone 17 Pro Max màu cam">
+                                        <div class="explore-iphone-glass" aria-hidden="true"></div>
+                                        <img class="explore-iphone-reflection" src="../images/tải_xuống-removebg-preview.png" alt="" aria-hidden="true">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </article>
 
-                    <!-- Products Grid -->
-                    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Dữ liệu sẽ được đổ vào đây từ products.js -->
+                <article class="explore-showcase bg-white p-5 md:p-8">
+                    <div class="grid lg:grid-cols-12 gap-6 items-center">
+                        <div class="lg:col-span-5">
+                            <div class="explore-asus-panel">
+                                <img src="../images/asus-vivobook.png" alt="Laptop ASUS Vivobook" class="explore-asus-image">
+                            </div>
+                        </div>
+                        <div class="lg:col-span-7">
+                            <p class="text-sm tracking-[0.24em] uppercase text-blue-600 font-semibold">ASUS Spotlight</p>
+                            <h2 class="text-3xl md:text-4xl font-black text-gray-900 mt-2 mb-4">Laptop ASUS Vivobook mỏng nhẹ, mạnh mẽ cho học tập và làm việc</h2>
+                            <p class="text-gray-600 text-base leading-relaxed">ASUS Vivobook sở hữu thiết kế gọn nhẹ, màn hình sắc nét và hiệu năng ổn định cho đa tác vụ hằng ngày. Máy phù hợp cho sinh viên, nhân viên văn phòng và người dùng cần một chiếc laptop linh hoạt, pin bền và vận hành mượt trong nhiều tình huống.</p>
+                            <div class="mt-6 flex flex-wrap gap-6">
+                                <div class="explore-stat">
+                                    <div class="number">16GB</div>
+                                    <div class="text-sm font-semibold text-gray-700">RAM xử lý đa nhiệm</div>
+                                </div>
+                                <div class="explore-stat">
+                                    <div class="number">512GB</div>
+                                    <div class="text-sm font-semibold text-gray-700">SSD tốc độ cao</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </article>
 
-                    <!-- Load More Button -->
-                    <div class="mt-8 flex justify-center">
-                        <button id="loadMoreBtn" onclick="loadMore()" class="px-8 py-3 border-2 border-gray-300 rounded-lg text-gray-700 font-semibold hover:border-red-500 hover:text-red-600 transition flex items-center gap-2">
-                            <span>Xem thêm 78 kết quả</span>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                </main>
-                </div>
             </div>
 
             <!-- Sản phẩm Tab - With Sidebar -->
@@ -699,6 +930,51 @@
                 if (icon) icon.style.transform = 'rotate(-90deg)';
             }
         }
+
+        function initExploreLuxuryParallax() {
+            const wrap = document.querySelector('.explore-iphone-wrap');
+            const scene = document.getElementById('exploreLuxuryScene');
+            if (!wrap || !scene) return;
+
+            const maxTilt = 5;
+            const maxMove = 10;
+            let rafId = null;
+
+            const reset = () => {
+                scene.style.setProperty('--tilt-x', '0deg');
+                scene.style.setProperty('--tilt-y', '0deg');
+                scene.style.setProperty('--move-x', '0px');
+                scene.style.setProperty('--move-y', '0px');
+                scene.classList.remove('is-interactive');
+            };
+
+            wrap.addEventListener('mousemove', (event) => {
+                if (window.innerWidth < 1024) return;
+                const rect = wrap.getBoundingClientRect();
+                const relX = (event.clientX - rect.left) / rect.width;
+                const relY = (event.clientY - rect.top) / rect.height;
+
+                if (rafId) cancelAnimationFrame(rafId);
+                rafId = requestAnimationFrame(() => {
+                    const tiltY = (relX - 0.5) * maxTilt * 2;
+                    const tiltX = (0.5 - relY) * maxTilt * 2;
+                    const moveX = (relX - 0.5) * maxMove * 2;
+                    const moveY = (relY - 0.5) * maxMove * 2;
+
+                    scene.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
+                    scene.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+                    scene.style.setProperty('--move-x', `${moveX.toFixed(2)}px`);
+                    scene.style.setProperty('--move-y', `${moveY.toFixed(2)}px`);
+                    scene.classList.add('is-interactive');
+                });
+            });
+
+            wrap.addEventListener('mouseleave', reset);
+            window.addEventListener('blur', reset);
+            reset();
+        }
+
+        document.addEventListener('DOMContentLoaded', initExploreLuxuryParallax);
     </script>
 
     <!-- Footer -->
@@ -998,7 +1274,7 @@
         }
 
         // Articles API Configuration
-        const API_BASE = 'http://localhost:3300/api';
+        const API_BASE = 'http://localhost:3000/api';
         let articlesData = [];
         let currentArticlesPage = 1;
         const articlesPerPage = 6;

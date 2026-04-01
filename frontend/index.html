@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/Screenshot 2025-11-10 154306.png">
     <!-- CSP disabled for development - re-enable for production -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://accounts.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http://localhost:3300; frame-src 'self' https://accounts.google.com;"> -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://accounts.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http://localhost:3000; frame-src 'self' https://accounts.google.com;"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/seasonal-effects.css">
@@ -158,7 +159,7 @@
                         <!-- Hiển thị khi đã đăng nhập -->
                         <div id="userDropdown" class="hidden relative group">
                             <button class="flex items-center gap-2 text-black hover:text-red-600 transition cursor-pointer">
-                                <!-- Avatar - hiển thị ảnh nếu có, không thì hiện icon -->
+                                <!-- Avatar - hiển thị ảnh nếu có, không thì hiển thị icon -->
                                 <div id="userAvatarContainer" class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center border-2 border-orange-300 overflow-hidden">
                                     <svg id="defaultAvatarIcon" class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -312,7 +313,7 @@
                             <!-- Right Content - Gợi ý -->
                             <div class="col-span-9 p-6 flex flex-col h-[500px]">
                                 <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2 flex-shrink-0">
-                                    <span class="text-xl">🔥</span>
+                                    <span class="text-xl">💡</span>
                                     <span id="categoryTitle">Gợi ý cho bạn</span>
                                 </h3>
 
@@ -364,7 +365,7 @@
                                     <a href="#" class="group text-center">
                                         <div class="bg-gray-50 rounded-lg p-3 mb-2 group-hover:bg-red-50 transition">
                                             <div class="w-14 h-14 mx-auto flex items-center justify-center">
-                                                <span class="text-4xl">📲</span>
+                                                <span class="text-4xl">📞</span>
                                             </div>
                                         </div>
                                         <p class="text-sm font-semibold text-gray-700 group-hover:text-red-600">Phổ thông 4G</p>
@@ -429,12 +430,12 @@
             </div>
             <div class="flex flex-col space-y-1">
                 <a href="index.html" class="block py-3 px-4 text-base font-semibold text-yellow-500 hover:bg-yellow-50 rounded-lg transition">🏠 Trang chủ</a>
-                <a href="pages/products.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📱 Sản phẩm</a>
+                <a href="pages/products.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📦 Sản phẩm</a>
                 <a href="pages/news.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📰 Tin tức</a>
-                <a href="pages/promotions.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">🎉 Khuyến mãi</a>
+                <a href="pages/promotions.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">🎁 Khuyến mãi</a>
                 <a href="pages/about.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">ℹ️ Giới thiệu</a>
                 <a href="pages/contact.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">📞 Liên hệ</a>
-                <a href="pages/admin.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">👤 Quản trị</a>
+                <a href="pages/admin.html" class="block py-3 px-4 text-base font-semibold text-gray-800 hover:bg-yellow-50 hover:text-yellow-500 rounded-lg transition">🛠️ Quản trị</a>
                 <div class="pt-3 pb-2">
                     <a href="pages/cart.html" class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-200 shadow-md">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -462,7 +463,7 @@
                 <!-- Deal 2 -->
                 <a href="pages/products.html?brand=samsung" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
                     <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">📱</span>
+                        <span class="text-2xl">🎁</span>
                     </div>
                     <span class="font-bold text-sm md:text-base">Samsung mua 1 tặng 1</span>
                 </a>
@@ -478,7 +479,7 @@
                 <!-- Deal 4 -->
                 <a href="pages/products.html?category=appliances" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
                     <div class="bg-white rounded-full p-2">
-                        <span class="text-2xl">❄️</span>
+                        <span class="text-2xl">🚿</span>
                     </div>
                     <span class="font-bold text-sm md:text-base">Máy nước nóng từ 2.29 triệu</span>
                 </a>
@@ -488,7 +489,7 @@
                     <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse">
                         <span class="font-black text-red-600 text-sm">11.11</span>
                     </div>
-                    <span class="font-bold text-sm md:text-base">Trở giá cực đã - Sale 50%</span>
+                    <span class="font-bold text-sm md:text-base">Trợ giá cực đã - Sale 50%</span>
                 </a>
             </div>
         </div>
@@ -553,12 +554,12 @@
                         <div class="flex-1 text-right">
                             <div class="inline-block">
                                 <div class="flex items-center gap-2 mb-4">
-                                    <span class="text-6xl">🏁</span>
+                                    <span class="text-6xl">⚡</span>
                                     <div class="text-red-600">
                                         <h1 class="text-7xl font-black leading-none drop-shadow-lg" style="text-shadow: 3px 3px 0px rgba(220, 38, 38, 0.2), -1px -1px 0px rgba(0,0,0,0.05);">11.11</h1>
                                     </div>
                                 </div>
-                                <h2 class="text-5xl font-black text-gray-900 mb-2 drop-shadow-md">TRỞ GIÁ</h2>
+                                <h2 class="text-5xl font-black text-gray-900 mb-2 drop-shadow-md">TRỢ GIÁ</h2>
                                 <h2 class="text-5xl font-black text-red-600 mb-4 drop-shadow-md">CỰC ĐÃ</h2>
                                 <p class="text-3xl font-black text-gray-800 mb-2">CHẠY KPI BỨT PHÁ</p>
                                 <div class="bg-red-600 rounded-lg px-6 py-3 inline-block shadow-xl">
@@ -570,7 +571,7 @@
                     </div>
                 </div>
 
-                <!-- Slide 2 - Galaxy A56 "Awesome Ngay 9đ" -->
+                <!-- Slide 2 - Galaxy A56 "Awesome Ngay 9₫" -->
                 <div class="min-w-full h-full relative overflow-hidden" style="background: linear-gradient(rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.2)), url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1920&h=600&fit=crop') center/cover;">
                     <div class="absolute inset-0 flex items-center justify-between px-8">
                         <!-- Left Side - Text Content -->
@@ -578,7 +579,7 @@
                             <div class="text-blue-600 mb-2">
                                 <p class="text-lg font-semibold">Galaxy A56 | A36 5G</p>
                             </div>
-                            <h1 class="text-6xl font-black text-blue-700 mb-4" style="font-family: 'Arial Black', sans-serif;">Awesome<br/>Ngay 9đ</h1>
+                            <h1 class="text-6xl font-black text-blue-700 mb-4" style="font-family: 'Arial Black', sans-serif;">Awesome<br/>Ngày 9</h1>
                             <p class="text-2xl font-bold text-blue-600 mb-6">- Nhận đổi bảo hành -</p>
                             
                             <!-- 3 Features in Blue Boxes -->
@@ -666,8 +667,8 @@
                                         <p class="text-2xl font-black text-yellow-300">đến 5 TRIỆU</p>
                                     </div>
                                     <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg px-4 py-2 shadow-xl border-2 border-blue-700">
-                                        <p class="text-lg font-bold">Tặng gói Bảo Hành</p>
-                                        <p class="text-xl font-black text-yellow-300">PMH 300K mua Bảo hành 1 ĐỔI 1</p>
+                                        <p class="text-lg font-bold">Tặng gói bảo hành</p>
+                                        <p class="text-xl font-black text-yellow-300">PMH 300K mua bảo hành 1 ĐỔI 1</p>
                                     </div>
                                 </div>
                                 
@@ -693,7 +694,7 @@
                             <p class="text-4xl font-black text-orange-600 mb-6">ĐẾN 30%</p>
                             <div class="bg-red-600 rounded-xl p-6 inline-block shadow-2xl">
                                 <p class="text-xl font-bold mb-2 text-white">Chỉ từ</p>
-                                <p class="text-5xl font-black text-yellow-300">18.990.000đ</p>
+                                <p class="text-5xl font-black text-yellow-300">18.990.000₫</p>
                                 <p class="text-sm mt-2 text-white">Trả góp 0% - Đổi cũ lên đời</p>
                             </div>
                         </div>
@@ -727,14 +728,14 @@
                             <h2 class="text-5xl font-black text-cyan-600 mb-6">ĐỈNH CAO</h2>
                             <div class="bg-blue-600 rounded-xl p-6 mb-4 shadow-2xl">
                                 <p class="text-xl font-bold mb-2 text-white">Giá từ</p>
-                                <p class="text-5xl font-black text-yellow-300">42.990.000đ</p>
+                                <p class="text-5xl font-black text-yellow-300">42.990.000₫</p>
                             </div>
                             <div class="flex gap-2">
                                 <div class="bg-gray-800 text-white rounded-lg px-4 py-2 shadow-lg">
-                                    <p class="text-sm font-semibold">✓ Trả góp 0%</p>
+                                    <p class="text-sm font-semibold">✅ Trả góp 0%</p>
                                 </div>
                                 <div class="bg-gray-800 text-white rounded-lg px-4 py-2 shadow-lg">
-                                    <p class="text-sm font-semibold">✓ Thu cũ đổi mới</p>
+                                    <p class="text-sm font-semibold">✅ Thu cũ đổi mới</p>
                                 </div>
                             </div>
                         </div>
@@ -779,7 +780,7 @@
                     </div>
                 </div>
                 <a href="pages/products.html" class="text-red-600 hover:text-red-700 font-semibold flex items-center gap-1">
-                    Xem tất cả →
+                    Xem tất cả
                 </a>
             </div>
             
@@ -844,10 +845,10 @@
                         <div class="absolute inset-0 bg-black/30"></div>
                         <div class="relative z-10">
                             <div class="inline-block bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full mb-2 animate-pulse">
-                                🏁 SIÊU SALE
+                                🎉 SIÊU SALE
                             </div>
                             <h3 class="text-4xl font-black mb-1 drop-shadow-lg">11.11</h3>
-                            <p class="text-xl font-black mb-1 drop-shadow-lg">TRỞ GIÁ CỰC ĐÃ</p>
+                            <p class="text-xl font-black mb-1 drop-shadow-lg">TRỢ GIÁ CỰC ĐÃ</p>
                             <p class="text-lg font-bold drop-shadow-lg">CHẠY KPI BỨT PHÁ</p>
                         </div>
                         <div class="relative z-10 flex items-center justify-between">
@@ -886,8 +887,8 @@
                         <div class="flex items-start gap-3 mb-3">
                             <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
                             <div class="flex-1">
-                                <p class="text-sm text-gray-500 line-through mb-1">44.990.000đ</p>
-                                <p class="text-xl md:text-2xl font-black text-gray-800">42.990.000đ</p>
+                                <p class="text-sm text-gray-500 line-through mb-1">44.990.000₫</p>
+                                <p class="text-xl md:text-2xl font-black text-gray-800">42.990.000₫</p>
                             </div>
                         </div>
                         <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">Honor Magic V5 5G 16GB 512GB</h3>
@@ -907,7 +908,7 @@
                         <div class="flex items-start gap-3 mb-3">
                             <img src="https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
                             <div class="flex-1">
-                                <p class="text-xl md:text-2xl font-black text-gray-800">37.990.000đ</p>
+                                <p class="text-xl md:text-2xl font-black text-gray-800">37.990.000₫</p>
                             </div>
                         </div>
                         <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">iPhone 17 Pro Max 256GB</h3>
@@ -923,7 +924,7 @@
                         </video>
                         <!-- Badge - 3 MÀU SẮC -->
                         <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
-                            ⚡ 3 MÀU SẮC
+                            🎨 3 MÀU SẮC
                         </div>
                     </div>
                     <!-- Product Info -->
@@ -931,8 +932,8 @@
                         <div class="flex items-start gap-3 mb-3">
                             <img src="https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
                             <div class="flex-1">
-                                <p class="text-sm text-gray-500 line-through mb-1">5.490.000đ <span class="text-red-600 font-bold">-9%</span></p>
-                                <p class="text-xl md:text-2xl font-black text-gray-800">4.990.000đ</p>
+                                <p class="text-sm text-gray-500 line-through mb-1">5.490.000₫ <span class="text-red-600 font-bold">-9%</span></p>
+                                <p class="text-xl md:text-2xl font-black text-gray-800">4.990.000₫</p>
                             </div>
                         </div>
                         <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">Huawei Watch GT 6 46mm Silicone</h3>
@@ -956,8 +957,8 @@
                         <div class="flex items-start gap-3 mb-3">
                             <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=100&h=100&fit=crop" alt="Product" class="w-16 h-16 rounded-lg object-cover border-2 border-gray-200">
                             <div class="flex-1">
-                                <p class="text-sm text-gray-500 line-through mb-1">11.290.000đ <span class="text-red-600 font-bold">-29%</span></p>
-                                <p class="text-xl md:text-2xl font-black text-gray-800">7.990.000đ</p>
+                                <p class="text-sm text-gray-500 line-through mb-1">11.290.000₫ <span class="text-red-600 font-bold">-29%</span></p>
+                                <p class="text-xl md:text-2xl font-black text-gray-800">7.990.000₫</p>
                             </div>
                         </div>
                         <h3 class="text-sm font-semibold text-gray-800 line-clamp-2">Laptop Colorful Rimbook L1 i3-...</h3>
@@ -971,8 +972,8 @@
     <section class="py-12 px-4 bg-gray-50">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-3xl font-black text-gray-800">💻 PC GAMING BÁN CHẠY</h2>
-                <a href="pages/products.html?category=pc" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả →</a>
+                <h2 class="text-3xl font-black text-gray-800">🖥️ PC GAMING BÁN CHẠY</h2>
+                <a href="pages/products.html?category=pc" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả</a>
             </div>
             
             <!-- Brand Filter -->
@@ -992,8 +993,8 @@
     <section class="py-12 px-4 bg-white">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-3xl font-black text-gray-800">🎮 LAPTOP GAMING BÁN CHẠY</h2>
-                <a href="pages/products.html?category=laptop" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả →</a>
+                <h2 class="text-3xl font-black text-gray-800">💻 LAPTOP GAMING BÁN CHẠY</h2>
+                <a href="pages/products.html?category=laptop" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả</a>
             </div>
             
             <!-- Brand Filter -->
@@ -1014,7 +1015,7 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-3xl font-black text-gray-800">🖱️ CHUỘT GAMING BÁN CHẠY</h2>
-                <a href="pages/products.html?category=mouse" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả →</a>
+                <a href="pages/products.html?category=mouse" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả</a>
             </div>
             
             <!-- Brand Filter -->
@@ -1035,7 +1036,7 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-3xl font-black text-gray-800">⌨️ BÀN PHÍM GAMING BÁN CHẠY</h2>
-                <a href="pages/products.html?category=keyboard" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả →</a>
+                <a href="pages/products.html?category=keyboard" class="text-red-600 hover:text-red-700 font-semibold">Xem tất cả</a>
             </div>
             
             <!-- Brand Filter -->
@@ -1158,9 +1159,9 @@
                         <h4 class="text-sm font-bold mb-4 text-gray-900">ĐƠN VỊ VẬN CHUYỂN</h4>
                         <div class="flex flex-wrap gap-4">
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 GHTK</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📦 Viettel Post</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚛 J&T Express</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📮 VNPost</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 Viettel Post</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 J&T Express</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🚚 VNPost</div>
                         </div>
                     </div>
 
@@ -1169,9 +1170,9 @@
                         <h4 class="text-sm font-bold mb-4 text-gray-900">PHƯƠNG THỨC THANH TOÁN</h4>
                         <div class="flex flex-wrap gap-4">
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💳 Visa/Master</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏦 ATM</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💰 Momo</div>
-                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏧 ZaloPay</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">🏧 ATM</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📱 Momo</div>
+                            <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">📱 ZaloPay</div>
                             <div class="bg-white rounded px-3 py-2 text-xs font-semibold text-gray-700 shadow-md">💵 COD</div>
                         </div>
                     </div>
@@ -1216,78 +1217,78 @@
             phone: {
                 title: 'Điện thoại - Gợi ý cho bạn',
                 products: [
-                    { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=200&h=200&fit=crop', tag: 'HOT' },
-                    { name: 'Samsung S24 Ultra', price: '25.990.000đ', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'NEW' },
-                    { name: 'Xiaomi 14 Pro', price: '19.990.000đ', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=200&h=200&fit=crop', tag: '-15%' },
-                    { name: 'OPPO Find X7', price: '22.990.000đ', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', tag: 'NEW' },
-                    { name: 'iPhone 14 Pro', price: '27.990.000đ', image: 'https://images.unsplash.com/photo-1678911820864-e2c567c655d7?w=200&h=200&fit=crop', tag: '-10%' },
-                    { name: 'Samsung S23 FE', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=200&h=200&fit=crop', tag: 'SALE' }
+                    { name: 'iPhone 15 Pro Max', price: '34.990.000₫', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Samsung S24 Ultra', price: '₫', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Xiaomi 14 Pro', price: '₫', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=200&h=200&fit=crop', tag: '-15%' },
+                    { name: 'OPPO Find X7', price: '₫', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'iPhone 14 Pro', price: '₫', image: 'https://images.unsplash.com/photo-1678911820864-e2c567c655d7?w=200&h=200&fit=crop', tag: '-10%' },
+                    { name: 'Samsung S23 FE', price: '12.990.000₫', image: 'https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=200&h=200&fit=crop', tag: 'SALE' }
                 ]
             },
             laptop: {
                 title: 'Laptop - Gợi ý cho bạn',
                 products: [
-                    { name: 'MacBook Pro M3', price: '54.990.000đ', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop', tag: 'HOT' },
-                    { name: 'Dell XPS 15', price: '42.990.000đ', image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200&h=200&fit=crop', tag: '-10%' },
-                    { name: 'Asus ROG Zephyrus', price: '52.990.000đ', image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=200&h=200&fit=crop', tag: 'GAMING' },
-                    { name: 'HP Spectre x360', price: '38.990.000đ', image: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=200&h=200&fit=crop', tag: '-12%' },
-                    { name: 'Lenovo ThinkPad X1', price: '45.990.000đ', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=200&h=200&fit=crop', tag: 'NEW' },
-                    { name: 'MSI Creator Z16', price: '49.990.000đ', image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=200&fit=crop', tag: 'HOT' }
+                    { name: 'MacBook Pro M3', price: '₫', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Dell XPS 15', price: '₫', image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200&h=200&fit=crop', tag: '-10%' },
+                    { name: 'Asus ROG Zephyrus', price: '₫', image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=200&h=200&fit=crop', tag: 'GAMING' },
+                    { name: 'HP Spectre x360', price: '₫', image: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=200&h=200&fit=crop', tag: '-12%' },
+                    { name: 'Lenovo ThinkPad X1', price: '₫', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'MSI Creator Z16', price: '₫', image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=200&fit=crop', tag: 'HOT' }
                 ]
             },
             appliances: {
                 title: 'Điện máy - Gợi ý cho bạn',
                 products: [
-                    { name: 'Tủ lạnh Samsung Inverter', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400&h=400&fit=crop', tag: '-20%' },
-                    { name: 'Máy giặt LG AI', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?w=400&h=400&fit=crop', tag: 'HOT' },
-                    { name: 'Tivi Sony 4K 55"', price: '18.990.000đ', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'NEW' },
-                    { name: 'Điều hòa Daikin Inverter', price: '9.990.000đ', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: '-15%' },
-                    { name: 'Máy lọc không khí Sharp', price: '5.990.000đ', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: 'SALE' },
-                    { name: 'Nồi cơm điện Toshiba', price: '2.490.000đ', image: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=400&fit=crop', tag: '-10%' }
+                    { name: 'Tủ lạnh Samsung Inverter', price: '8.990.000₫', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400&h=400&fit=crop', tag: '-20%' },
+                    { name: 'Máy giặt LG AI', price: '12.990.000₫', image: 'https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Tivi Sony 4K 55"', price: '18.990.000₫', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Điều hòa Daikin Inverter', price: '9.990.000₫', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: '-15%' },
+                    { name: 'Máy lọc không khí Sharp', price: '5.990.000₫', image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&h=400&fit=crop', tag: 'SALE' },
+                    { name: 'Nồi cơm điện Toshiba', price: '2.490.000₫', image: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&h=400&fit=crop', tag: '-10%' }
                 ]
             },
             accessories: {
                 title: 'Phụ kiện - Gợi ý cho bạn',
                 products: [
-                    { name: 'AirPods Pro 2', price: '6.990.000đ', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
-                    { name: 'Apple Watch Series 9', price: '10.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
-                    { name: 'Bàn phím Logitech MX Keys', price: '2.990.000đ', image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&h=400&fit=crop', tag: '-10%' },
-                    { name: 'Chuột Logitech MX Master 3', price: '2.490.000đ', image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=400&fit=crop', tag: 'HOT' },
-                    { name: 'Tai nghe Sony WH-1000XM5', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1545127398-14699f92334b?w=400&h=400&fit=crop', tag: 'NEW' },
-                    { name: 'Webcam Logitech C920', price: '1.990.000đ', image: 'https://m.media-amazon.com/images/I/71iNwni9TsL._AC_SL1500_.jpg', tag: 'SALE' }
+                    { name: 'AirPods Pro 2', price: '₫', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Apple Watch Series 9', price: '₫', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Bàn phím Logitech MX Keys', price: '₫', image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&h=400&fit=crop', tag: '-10%' },
+                    { name: 'Chuột Logitech MX Master 3', price: '₫', image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Tai nghe Sony WH-1000XM5', price: '₫', image: 'https://images.unsplash.com/photo-1545127398-14699f92334b?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Webcam Logitech C920', price: '1.990.000₫', image: 'https://m.media-amazon.com/images/I/71iNwni9TsL._AC_SL1500_.jpg', tag: 'SALE' }
                 ]
             },
             apple: {
                 title: 'Apple - Sản phẩm nổi bật',
                 products: [
-                    { name: 'iPhone 15 Pro Max', price: '34.990.000đ', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=400&h=400&fit=crop', tag: 'HOT' },
-                    { name: 'MacBook Pro M3', price: '54.990.000đ', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop', tag: 'NEW' },
-                    { name: 'iPad Pro 2024', price: '28.990.000đ', image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop', tag: '-17%' },
-                    { name: 'AirPods Pro 2', price: '6.990.000đ', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
-                    { name: 'Apple Watch Series 9', price: '10.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
-                    { name: 'iMac 24" M3', price: '38.990.000đ', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=400&fit=crop', tag: '-10%' }
+                    { name: 'iPhone 15 Pro Max', price: '₫', image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'MacBook Pro M3', price: '₫', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'iPad Pro 2024', price: '₫', image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop', tag: '-17%' },
+                    { name: 'AirPods Pro 2', price: '₫', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Apple Watch Series 9', price: '₫', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'iMac 24" M3', price: '₫', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=400&fit=crop', tag: '-10%' }
                 ]
             },
             samsung: {
                 title: 'Samsung - Sản phẩm nổi bật',
                 products: [
-                    { name: 'Samsung S24 Ultra', price: '25.990.000đ', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'HOT' },
-                    { name: 'Galaxy Z Fold 5', price: '42.990.000đ', image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=200&h=200&fit=crop', tag: 'NEW' },
-                    { name: 'Galaxy Tab S9', price: '18.990.000đ', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=200&h=200&fit=crop', tag: '-15%' },
-                    { name: 'Galaxy Buds Pro', price: '4.990.000đ', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=200&h=200&fit=crop', tag: 'HOT' },
-                    { name: 'Galaxy Watch 6', price: '7.990.000đ', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=200&h=200&fit=crop', tag: 'NEW' },
-                    { name: 'Tủ lạnh Samsung Inverter', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=200&h=200&fit=crop', tag: '-20%' }
+                    { name: 'Samsung S24 Ultra', price: '₫', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Galaxy Z Fold 5', price: '₫', image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Galaxy Tab S9', price: '₫', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=200&h=200&fit=crop', tag: '-15%' },
+                    { name: 'Galaxy Buds Pro', price: '₫', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=200&h=200&fit=crop', tag: 'HOT' },
+                    { name: 'Galaxy Watch 6', price: '₫', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=200&h=200&fit=crop', tag: 'NEW' },
+                    { name: 'Tủ lạnh Samsung Inverter', price: '₫', image: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=200&h=200&fit=crop', tag: '-20%' }
                 ]
             },
             xiaomi: {
                 title: 'Xiaomi - Sản phẩm nổi bật',
                 products: [
-                    { name: 'Xiaomi 14 Pro', price: '19.990.000đ', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=400&fit=crop', tag: 'HOT' },
-                    { name: 'Redmi Note 13 Pro', price: '8.990.000đ', image: 'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=400&h=400&fit=crop', tag: '-10%' },
-                    { name: 'Xiaomi Pad 6', price: '12.990.000đ', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop', tag: 'NEW' },
-                    { name: 'Mi Band 8', price: '990.000đ', image: 'https://images.unsplash.com/photo-1557438159-51eec7a6c9e8?w=400&h=400&fit=crop', tag: 'SALE' },
-                    { name: 'Redmi Buds 4 Pro', price: '1.990.000đ', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop', tag: '-15%' },
-                    { name: 'Xiaomi Smart TV 55"', price: '9.990.000đ', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'HOT' }
+                    { name: 'Xiaomi 14 Pro', price: '₫', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=400&fit=crop', tag: 'HOT' },
+                    { name: 'Redmi Note 13 Pro', price: '₫', image: 'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=400&h=400&fit=crop', tag: '-10%' },
+                    { name: 'Xiaomi Pad 6', price: '₫', image: 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop', tag: 'NEW' },
+                    { name: 'Mi Band 8', price: '₫', image: 'https://images.unsplash.com/photo-1557438159-51eec7a6c9e8?w=400&h=400&fit=crop', tag: 'SALE' },
+                    { name: 'Redmi Buds 4 Pro', price: '₫', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop', tag: '-15%' },
+                    { name: 'Xiaomi Smart TV 55"', price: '₫', image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=400&fit=crop', tag: 'HOT' }
                 ]
             }
         };
@@ -1462,7 +1463,7 @@
                 stock: 10,
                 totalStock: 10,
                 soldCount: 2, // Ít lượt bán
-                features: ['⚡ Công nghệ MagSafe', '🛡️ Da cao cấp', '⭐ Gọn nhẹ và tiện lợi']
+                features: ['🔋 Công nghệ MagSafe', '✅ Da cao cấp', '⭐ Gọn nhẹ và tiện lợi']
             },
             { 
                 id: 2, 
@@ -1474,7 +1475,7 @@
                 stock: 5,
                 totalStock: 5,
                 soldCount: 3, // Ít lượt bán
-                features: ['⚡ Lực hút 10000 Pa', '🔋 Thời gian hoạt động 320\'', '💧 Giặt khăn bằng nước nóng 60°C']
+                features: ['🔋 Lực hút 10000 Pa', '⏱️ Thời gian hoạt động 320 phút', '💧 Giặt khăn bằng nước nóng 60°C']
             },
             { 
                 id: 3, 
@@ -1486,7 +1487,7 @@
                 stock: 5,
                 totalStock: 5,
                 soldCount: 3, // Ít lượt bán
-                features: ['🔋 21 ngày', '📍 Định vị GPS', '💧 Kháng nước 10 ATM']
+                features: ['⏱️ Pin 21 ngày', '📍 Định vị GPS', '💧 Kháng nước 10 ATM']
             },
             { 
                 id: 4, 
@@ -1498,7 +1499,7 @@
                 stock: 10,
                 totalStock: 10,
                 soldCount: 0, // Chưa bán được
-                features: ['💻 Vỏ nhôm cao cấp', '🎵 Âm thanh B&O Play', '📺 Viền mỏng hiệu mỏng']
+                features: ['💼 Vỏ nhôm cao cấp', '🎧 Âm thanh B&O Play', '🔥 Viền mỏng hiện đại']
             },
             { 
                 id: 5, 
@@ -1510,13 +1511,13 @@
                 stock: 10,
                 totalStock: 10,
                 soldCount: 0, // Chưa bán được
-                features: ['📷 Nút gạt tắt camera', '🔇 Lọc tạp âm AI', '📱 Viền màn hình siêu mỏng']
+                features: ['🔒 Nút gạt tắt camera', '🤖 Lọc tạp âm AI', '🔥 Viền màn hình siêu mỏng']
             }
         ];
 
         // Format price to Vietnamese currency
         function formatPriceVN(price) {
-            return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+            return new Intl.NumberFormat('vi-VN').format(price) + '₫';
         }
 
         function loadFlashSaleProducts() {
@@ -1539,7 +1540,7 @@
                         <!-- Stock Badge -->
                         <div class="absolute top-2 left-2">
                             <div class="bg-gradient-to-r from-red-600 to-red-500 text-white px-2 py-1 rounded-md text-xs md:text-sm font-bold shadow-lg flex items-center gap-1">
-                                <span>🔥</span>
+                                <span>🎯</span>
                                 <span>Còn ${product.stock}/${product.totalStock} suất</span>
                             </div>
                         </div>
@@ -1767,7 +1768,7 @@
             if (!container) return;
             
             try {
-                const response = await fetch('http://localhost:3300/api/news?limit=6');
+                const response = await fetch('http://localhost:3000/api/news?limit=6');
                 const result = await response.json();
                 
                 if (result.success && result.data.length > 0) {
@@ -1783,7 +1784,7 @@
                 console.error('Error loading news:', error);
                 container.innerHTML = `
                     <div class="col-span-full text-center py-8 text-gray-500">
-                        <p>Không thể tải tin tức</p>
+                            <p>Không thể tải tin tức</p>
                     </div>
                 `;
             }
@@ -1821,14 +1822,14 @@
         // Load Hot Deals
         const hotDeals = [
             { id: 1, title: 'Flash Sale iPhone 14 Pro - Giảm 50%', product: 'iPhone 14 Pro 128GB', oldPrice: 24990000, newPrice: 12495000, image: 'https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=600&h=400&fit=crop', discount: '50%', endDate: '2025-01-31' },
-            { id: 2, title: 'Mua Galaxy S24 Tặng Galaxy Buds 2 Pro', product: 'Samsung Galaxy S24 Ultra', price: 25990000, gift: 'Galaxy Buds 2 Pro (5tr)', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=600&h=400&fit=crop', discount: 'Tặng quà 5tr', endDate: '2025-02-15' },
+            { id: 2, title: 'Mua Galaxy S24 tặng Galaxy Buds 2 Pro', product: 'Samsung Galaxy S24 Ultra', price: 25990000, gift: 'Galaxy Buds 2 Pro (5tr)', image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=600&h=400&fit=crop', discount: 'Tặng quà 5tr', endDate: '2025-02-15' },
             { id: 3, title: 'Trả góp 0% MacBook - 12 tháng', product: 'MacBook Pro M3 14"', price: 54990000, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop', discount: '0% lãi suất', endDate: '2025-01-28' },
             { id: 4, title: 'Flash Sale iPad Pro - Giảm 40%', product: 'iPad Pro 11" M2', oldPrice: 28990000, newPrice: 17394000, image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&h=400&fit=crop', discount: '40%', endDate: '2025-01-25' },
-            { id: 5, title: 'Mua 1 Tặng 1 - Phụ Kiện Apple', product: 'AirPods, Case, Sạc...', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=600&h=400&fit=crop', discount: 'Mua 1 tặng 1', endDate: '2025-02-10' },
-            { id: 6, title: 'Gaming Laptop - Giảm 3 Triệu', product: 'Asus ROG Strix G16', oldPrice: 42990000, newPrice: 39990000, image: 'https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?w=600&h=400&fit=crop', discount: '-3.000.000đ', endDate: '2025-02-05' },
-            { id: 7, title: 'Đồng Hồ Thông Minh - Giảm Sốc', product: 'Apple Watch Ultra 2', oldPrice: 21990000, newPrice: 18990000, image: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=600&h=400&fit=crop', discount: '15%', endDate: '2025-01-30' },
-            { id: 8, title: 'Tai Nghe Cao Cấp - Ưu Đãi Hot', product: 'Sony WH-1000XM5', oldPrice: 8990000, newPrice: 6990000, image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&h=400&fit=crop', discount: '22%', endDate: '2025-02-08' },
-            { id: 9, title: 'Combo Văn Phòng - Tiết Kiệm 5tr', product: 'Laptop + Chuột + Bàn phím', oldPrice: 35990000, newPrice: 30990000, image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop', discount: '-5tr', endDate: '2025-02-12' }
+            { id: 5, title: 'Mua 1 tặng 1 - Phụ kiện Apple', product: 'AirPods, Case, sạc...', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=600&h=400&fit=crop', discount: 'Mua 1 tặng 1', endDate: '2025-02-10' },
+            { id: 6, title: 'Gaming Laptop - Giảm 3 triệu', product: 'Asus ROG Strix G16', oldPrice: 42990000, newPrice: 39990000, image: 'https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?w=600&h=400&fit=crop', discount: '-3.000.000₫', endDate: '2025-02-05' },
+            { id: 7, title: 'Đồng hồ thông minh - Giá sốc', product: 'Apple Watch Ultra 2', oldPrice: 21990000, newPrice: 18990000, image: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=600&h=400&fit=crop', discount: '15%', endDate: '2025-01-30' },
+            { id: 8, title: 'Tai nghe cao cấp - Ưu đãi hot', product: 'Sony WH-1000XM5', oldPrice: 8990000, newPrice: 6990000, image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&h=400&fit=crop', discount: '22%', endDate: '2025-02-08' },
+            { id: 9, title: 'Combo văn phòng - Tiết kiệm 5tr', product: 'Laptop + Chuột + Bàn phím', oldPrice: 35990000, newPrice: 30990000, image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&h=400&fit=crop', discount: '-5tr', endDate: '2025-02-12' }
         ];
 
         function loadHotDeals() {
@@ -1842,7 +1843,7 @@
                             ${deal.discount}
                         </div>
                         <div class="absolute top-4 left-4 bg-yellow-400 text-gray-900 px-3 py-1 rounded-full font-bold text-xs">
-                            ⚡ HOT
+                            DEAL HOT
                         </div>
                     </div>
                     <div class="p-6">
@@ -1902,7 +1903,7 @@
                             avatarUrl = user.hinh_anh;
                         } else {
                             const cleanPath = user.hinh_anh.startsWith('/') ? user.hinh_anh : '/' + user.hinh_anh;
-                            avatarUrl = 'http://localhost:3300' + cleanPath;
+                            avatarUrl = 'http://localhost:3000' + cleanPath;
                         }
                         avatarImg.src = avatarUrl;
                         avatarImg.onload = function() {
@@ -1928,7 +1929,7 @@
             if (!user || !token) return;
             
             try {
-                const response = await fetch('http://localhost:3300/api/notifications/unread-count', {
+                const response = await fetch('http://localhost:3000/api/notifications/unread-count', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
@@ -2067,7 +2068,7 @@
     <link rel="stylesheet" href="css/chatbot.css">
     <script src="js/chatbot.js"></script>
     
-    <!-- Seasonal Effects - Hoa Mai & Tuyết Rơi -->
+    <!-- Seasonal Effects - Hoa Mai & Tuyáº¿t RÆ¡i -->
     <script src="js/seasonal-effects.js"></script>
     
     <!-- Flash Sale -->
@@ -2077,6 +2078,9 @@
     <script src="js/nav-categories.js"></script>
 </body>
 </html>
+
+
+
 
 
 

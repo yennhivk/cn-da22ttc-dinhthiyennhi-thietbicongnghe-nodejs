@@ -3,7 +3,106 @@
     bottom: 20px;
     right: 20px;
     z-index: 9999;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: inherit;
+}
+
+.social-floating-buttons {
+    position: absolute;
+    right: 0;
+    bottom: 76px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.social-float-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-decoration: none;
+    position: relative;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: visible;
+    isolation: isolate;
+}
+
+.social-float-btn:hover {
+    transform: translateY(-2px) scale(1.08);
+}
+
+.social-float-facebook {
+    background: transparent;
+    box-shadow: 0 8px 20px rgba(24, 119, 242, 0.3);
+    padding: 0;
+}
+
+.social-float-zalo {
+    background: transparent;
+    border: none;
+    box-shadow: 0 8px 20px rgba(10, 103, 209, 0.25);
+    padding: 0;
+}
+
+.facebook-icon-img {
+    width: 46px;
+    height: 46px;
+    display: block;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(1.08) saturate(1.08);
+}
+
+.social-wave {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    animation: socialWave 2.1s infinite ease-out;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.social-float-facebook .social-wave {
+    border-color: rgba(24, 119, 242, 0.45);
+}
+
+.social-float-zalo .social-wave {
+    border-color: rgba(2, 132, 199, 0.45);
+    animation-delay: 0.3s;
+}
+
+.zalo-icon-img {
+    width: 44px;
+    height: 44px;
+    display: block;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(1.08) saturate(1.08);
+}
+
+@keyframes socialWave {
+    0% {
+        transform: scale(0.85);
+        opacity: 0.8;
+    }
+    70% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: scale(1.35);
+        opacity: 0;
+    }
 }
 
 .chatbot-toggle {
@@ -469,6 +568,14 @@
 
 @media (max-width: 480px) {
     #chatbot-container { bottom: 10px; right: 10px; }
+    .social-floating-buttons {
+        bottom: 70px;
+        gap: 10px;
+    }
+    .social-float-btn {
+        width: 48px;
+        height: 48px;
+    }
     .chatbot-window {
         width: calc(100vw - 20px);
         height: calc(100vh - 100px);

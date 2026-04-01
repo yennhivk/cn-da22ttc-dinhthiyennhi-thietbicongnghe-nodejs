@@ -1,5 +1,5 @@
-// News API Configuration
-const NEWS_API_URL = 'http://localhost:3300/api/news';
+﻿// News API Configuration
+const NEWS_API_URL = 'http://localhost:3000/api/news';
 
 // Biến lưu tất cả tin tức để đếm theo danh mục
 let allNewsData = [];
@@ -139,7 +139,7 @@ async function loadFeaturedNews() {
     }
 }
 
-// Load tin mới nhất hôm nay
+    // Load tin mới nhất hôm nay
 async function loadTodayNews() {
     try {
         const response = await fetch(`${NEWS_API_URL}/today`);
@@ -169,7 +169,7 @@ async function loadTodayNews() {
     }
 }
 
-// Load tất cả tin tức (grid)
+    // Load tất cả tin tức (grid)
 async function loadAllNews(page = 1, categories = [], search = '', time = 'all') {
     try {
         let url = `${NEWS_API_URL}?page=${page}&limit=6`;
@@ -204,7 +204,7 @@ async function loadAllNews(page = 1, categories = [], search = '', time = 'all')
         if (result.data.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-12">
-                    <div class="text-6xl mb-4">📭</div>
+                    <div class="text-6xl mb-4">📰</div>
                     <p class="text-gray-500 text-lg font-semibold">Không tìm thấy tin tức nào</p>
                     <p class="text-gray-400 text-sm mt-2">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
                 </div>
@@ -216,7 +216,7 @@ async function loadAllNews(page = 1, categories = [], search = '', time = 'all')
         container.innerHTML = result.data.map(news => `
             <article class="news-card bg-white rounded-xl shadow-md overflow-hidden group cursor-pointer" onclick="window.location.href='news-detail.html?id=${news.ma_tin_tuc}'">
                 <div class="relative h-48 overflow-hidden">
-                    <img src="${news.hinh_anh}" alt="${news.tieu_de}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/400x200?text=Tin+tức'">
+                    <img src="${news.hinh_anh}" alt="${news.tieu_de}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/400x200?text=Tin+tuc'">
                     <span class="absolute top-3 left-3 ${getTagColor(news.mau_tag)} px-3 py-1 rounded-full text-xs font-bold">${news.tag}</span>
                 </div>
                 <div class="p-4">

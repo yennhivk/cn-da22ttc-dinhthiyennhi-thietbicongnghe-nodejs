@@ -1,44 +1,44 @@
-/**
- * Search Suggestions - Tìm kiếm gợi ý giống YouTube
- * Hiển thị dropdown gợi ý sản phẩm khi người dùng gõ vào thanh tìm kiếm
+﻿/**
+ * Search Suggestions - TÃ¬m kiáº¿m gá»£i Ã½ giá»‘ng YouTube
+ * Hiá»ƒn thá»‹ dropdown gá»£i Ã½ sáº£n pháº©m khi ngÆ°á»i dÃ¹ng gÃµ vÃ o thanh tÃ¬m kiáº¿m
  */
 
 (function() {
     'use strict';
     
-    const API_URL = 'http://localhost:3300/api';
+    const API_URL = 'http://localhost:3000/api';
     let debounceTimer = null;
     let currentFocus = -1;
     
-    // Khởi tạo khi DOM ready
+    // Khá»Ÿi táº¡o khi DOM ready
     document.addEventListener('DOMContentLoaded', initSearchSuggestions);
     
     function initSearchSuggestions() {
-        // Tìm tất cả các input tìm kiếm
+        // TÃ¬m táº¥t cáº£ cÃ¡c input tÃ¬m kiáº¿m
         const searchInputs = document.querySelectorAll('#searchInput, #headerSearch, #mobileSearchInput');
         
         searchInputs.forEach(input => {
             if (!input) return;
             
-            // Tạo container cho dropdown
+            // Táº¡o container cho dropdown
             createSuggestionsDropdown(input);
             
-            // Lắng nghe sự kiện input
+            // Láº¯ng nghe sá»± kiá»‡n input
             input.addEventListener('input', handleInput);
             input.addEventListener('keydown', handleKeydown);
             input.addEventListener('focus', handleFocus);
         });
         
-        // Đóng dropdown khi click ra ngoài
+        // ÄÃ³ng dropdown khi click ra ngoÃ i
         document.addEventListener('click', handleClickOutside);
     }
     
     function createSuggestionsDropdown(input) {
-        // Tìm parent container của input
+        // TÃ¬m parent container cá»§a input
         const parent = input.parentElement;
         parent.style.position = 'relative';
         
-        // Tạo dropdown container
+        // Táº¡o dropdown container
         const dropdown = document.createElement('div');
         dropdown.className = 'search-suggestions-dropdown';
         dropdown.id = `suggestions-${input.id}`;
@@ -65,7 +65,7 @@
         const input = e.target;
         const query = input.value.trim();
         
-        // Clear timer cũ
+        // Clear timer cÅ©
         if (debounceTimer) clearTimeout(debounceTimer);
         
         if (query.length < 1) {
@@ -144,7 +144,7 @@
                 hideDropdown(input);
             }
         } catch (error) {
-            console.error('Lỗi tìm kiếm gợi ý:', error);
+            console.error('Lá»—i tÃ¬m kiáº¿m gá»£i Ã½:', error);
             hideDropdown(input);
         }
     }
@@ -155,7 +155,7 @@
         
         currentFocus = -1;
         
-        // Xác định đường dẫn base dựa trên vị trí trang hiện tại
+        // XÃ¡c Ä‘á»‹nh Ä‘Æ°á»ng dáº«n base dá»±a trÃªn vá»‹ trÃ­ trang hiá»‡n táº¡i
         const isInPages = window.location.pathname.includes('/pages/');
         const basePath = isInPages ? '' : 'pages/';
         const apiBasePath = API_URL.replace('/api', '');
@@ -166,7 +166,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <span>Kết quả cho "<strong class="text-gray-700">${escapeHtml(query)}</strong>"</span>
+                    <span>Káº¿t quáº£ cho "<strong class="text-gray-700">${escapeHtml(query)}</strong>"</span>
                 </div>
             </div>
         `;
@@ -190,7 +190,7 @@
                         <div class="font-medium text-gray-800 text-sm line-clamp-2">${highlightedName}</div>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-red-600 font-bold text-sm">${price}</span>
-                            ${product.ten_danh_muc ? `<span class="text-xs text-gray-400">• ${escapeHtml(product.ten_danh_muc)}</span>` : ''}
+                            ${product.ten_danh_muc ? `<span class="text-xs text-gray-400">â€¢ ${escapeHtml(product.ten_danh_muc)}</span>` : ''}
                         </div>
                     </div>
                     <svg class="w-5 h-5 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,7 +200,7 @@
             `;
         });
         
-        // Nút xem tất cả kết quả
+        // NÃºt xem táº¥t cáº£ káº¿t quáº£
         html += `
             <div class="p-3 bg-gray-50 rounded-b-xl">
                 <button onclick="searchAll('${escapeHtml(query)}')" 
@@ -208,7 +208,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    Xem tất cả kết quả cho "${escapeHtml(query)}"
+                    Xem táº¥t cáº£ káº¿t quáº£ cho "${escapeHtml(query)}"
                 </button>
             </div>
         `;

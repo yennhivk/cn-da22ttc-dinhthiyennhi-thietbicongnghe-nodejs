@@ -1,24 +1,24 @@
-// Flash Sale - Giờ Vàng Giá Sốc
-// Hiển thị sản phẩm flash sale đang diễn ra và sắp diễn ra trên trang chủ
+﻿// Flash Sale - Gio Vang Gia Soc
+// Hien thi san pham flash sale dang dien ra va sap dien ra tren trang chu
 
 // Helper function to get full image URL
 function getFlashSaleImageUrl(imagePath) {
     if (!imagePath) return 'images/placeholder.png';
     if (imagePath.startsWith('http')) return imagePath;
-    // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+    // Xá»­ lÃ½ Ä‘Æ°á»ng dáº«n tá»« database (cÃ³ thá»ƒ báº¯t Ä‘áº§u báº±ng / hoáº·c khÃ´ng)
     const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
-    return `http://localhost:3300${cleanPath}`;
+    return `http://localhost:3000${cleanPath}`;
 }
 
 async function loadFlashSaleProducts() {
     try {
-        const response = await fetch('http://localhost:3300/api/products/flash-sale');
+        const response = await fetch('http://localhost:3000/api/products/flash-sale');
         const data = await response.json();
         
         if (data.success && data.data.length > 0) {
             renderFlashSaleSection(data.data);
         } else {
-            // Không có flash sale, ẩn section
+            // Khong co flash sale, an section
             const section = document.getElementById('flash-sale-section');
             if (section) section.style.display = 'none';
         }
@@ -45,7 +45,7 @@ function renderFlashSaleSection(products) {
         const endTime = new Date(product.thoi_gian_ket_thuc);
         const now = new Date();
         
-        // Tính thời gian còn lại (đến kết thúc nếu đang diễn ra, đến bắt đầu nếu sắp diễn ra)
+        // TÃ­nh thá»i gian cÃ²n láº¡i (Ä‘áº¿n káº¿t thÃºc náº¿u Ä‘ang diá»…n ra, Ä‘áº¿n báº¯t Ä‘áº§u náº¿u sáº¯p diá»…n ra)
         const targetTime = isUpcoming ? startTime : endTime;
         const timeLeft = Math.max(0, Math.floor((targetTime - now) / 1000)); // seconds
         
@@ -58,7 +58,7 @@ function renderFlashSaleSection(products) {
         const soldPercent = product.so_luong_gioi_han ? 
             Math.round((product.so_luong_da_ban / product.so_luong_gioi_han) * 100) : 0;
         
-        // Format ngày bắt đầu cho flash sale sắp diễn ra
+        // Format ngÃ y báº¯t Ä‘áº§u cho flash sale sáº¯p diá»…n ra
         const startDateStr = startTime.toLocaleDateString('vi-VN', { 
             day: '2-digit', 
             month: '2-digit',
@@ -72,7 +72,7 @@ function renderFlashSaleSection(products) {
                     <img src="${getFlashSaleImageUrl(product.anh_chinh)}" 
                          alt="${product.ten_san_pham}" 
                          class="w-full h-48 object-cover ${isUpcoming ? 'opacity-90' : ''}"
-                         onerror="this.src='images/placeholder.png'">>
+                        onerror="this.src='images/placeholder.png'">
                     <div class="absolute top-2 left-2 ${isUpcoming ? 'bg-blue-600' : 'bg-red-600'} text-white px-3 py-1 rounded-full font-bold text-lg shadow-lg">
                         -${discount}%
                     </div>

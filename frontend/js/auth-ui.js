@@ -1,13 +1,13 @@
-// ==========================================
-// AUTH UI - Quản lý hiển thị đăng nhập/đăng xuất
+﻿// ==========================================
+// AUTH UI - Quan ly hien thi dang nhap/dang xuat
 // ==========================================
 
-// Chỉ khai báo nếu chưa tồn tại
+// Chi khai bao neu chua ton tai
 if (typeof AUTH_API_URL === 'undefined') {
-    var AUTH_API_URL = 'http://localhost:3300/api';
+    var AUTH_API_URL = 'http://localhost:3000/api';
 }
 
-// Khởi tạo Auth UI khi trang load
+// Khoi tao Auth UI khi trang load
 document.addEventListener('DOMContentLoaded', function() {
     initAuthUI();
 });
@@ -16,12 +16,12 @@ function initAuthUI() {
     const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
     
-    // Tìm container user account trong navbar
+    // Tim container user account trong navbar
     const userAccountContainer = document.querySelector('.user-account-container');
     if (!userAccountContainer) return;
     
     if (user && token) {
-        // Đã đăng nhập - hiển thị dropdown user
+        // Da dang nhap - hien thi dropdown user
         const avatarSrc = user.hinh_anh ? 
             (user.hinh_anh.startsWith('http') ? user.hinh_anh : AUTH_API_URL.replace('/api', '') + user.hinh_anh) 
             : '';
@@ -83,10 +83,10 @@ function initAuthUI() {
             </div>
         `;
         
-        // Cập nhật badge thông báo
+        // Cap nhat badge thong bao
         updateNotificationBadge();
     } else {
-        // Chưa đăng nhập - hiển thị nút đăng nhập
+        // Chua dang nhap - hien thi nut dang nhap
         userAccountContainer.innerHTML = `
             <a href="${getBasePath()}login.html" class="flex items-center gap-2 text-black hover:text-red-600 transition">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,18 +98,18 @@ function initAuthUI() {
     }
 }
 
-// Xác định base path dựa trên vị trí file hiện tại
+// Xac dinh base path dua tren vi tri file hien tai
 function getBasePath() {
     const path = window.location.pathname;
-    // Nếu đang ở trong thư mục /pages/, không cần thêm gì (cùng cấp)
-    // Nếu ở ngoài (index.html), cần thêm pages/
+    // Neu dang o trong thu muc /pages/, khong can them gi (cung cap)
+    // Neu o ngoai (index.html), can them pages/
     if (path.includes('/pages/')) {
         return '';
     }
     return 'pages/';
 }
 
-// Hàm đăng xuất global
+// Ham dang xuat global
 function handleLogoutGlobal() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -118,28 +118,28 @@ function handleLogoutGlobal() {
     window.location.href = path.includes('/pages/') ? '../index.html' : 'index.html';
 }
 
-// Hàm cập nhật badge số thông báo chưa đọc
+// Ham cap nhat badge so thong bao chua doc
 async function updateNotificationBadge() {
     const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
     
-    // Lấy số từ localStorage trước (đã được cập nhật bởi trang notifications)
+    // Lay so tu localStorage truoc (da duoc cap nhat boi trang notifications)
     const cachedCount = parseInt(localStorage.getItem('notification_unread_count') || '0');
     updateAllNotificationBadges(cachedCount);
     
     if (!user || !token) return;
     
     try {
-        // Gọi API lấy tổng số thông báo
+        // Goi API lay tong so thong bao
         const response = await fetch(`${AUTH_API_URL}/notifications`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         
-        // Xử lý lỗi 401/403 - token hết hạn hoặc không hợp lệ
+        // Xu ly loi 401/403 - token het han hoac khong hop le
         if (response.status === 401 || response.status === 403) {
             console.log('Token expired or invalid, clearing auth data');
-            // Không xóa auth data ở đây để tránh logout tự động
-            // Chỉ reset badge về 0
+            // Khong xoa auth data o day de tranh logout tu dong
+            // Chi reset badge ve 0
             updateAllNotificationBadges(0);
             return;
         }
@@ -147,24 +147,24 @@ async function updateNotificationBadge() {
         if (response.ok) {
             const result = await response.json();
             if (result.success && result.data) {
-                // Lấy danh sách ID đã đọc từ localStorage
+                // Lay danh sach ID da doc tu localStorage
                 const readKey = `read_notifications_${user.ma_tai_khoan}`;
                 let readIds = [];
                 try {
                     readIds = JSON.parse(localStorage.getItem(readKey)) || [];
                 } catch { readIds = []; }
                 
-                // Đếm số thông báo chưa đọc
+                // Dem so thong bao chua doc
                 const unreadCount = result.data.filter(n => {
                     const id = n.id || n.ma_thong_bao;
                     const isRead = n.read === true || n.read === 1 || readIds.includes(id);
                     return !isRead;
                 }).length;
                 
-                // Lưu vào localStorage
+                // Luu vao localStorage
                 localStorage.setItem('notification_unread_count', unreadCount);
                 
-                // Cập nhật tất cả badge trên trang
+                // Cap nhat tat ca badge tren trang
                 updateAllNotificationBadges(unreadCount);
             }
         }
@@ -173,9 +173,9 @@ async function updateNotificationBadge() {
     }
 }
 
-// Cập nhật tất cả badge thông báo trên trang
+// Cap nhat tat ca badge thong bao tren trang
 function updateAllNotificationBadges(unreadCount) {
-    // Cập nhật badge trong dropdown user
+    // Cap nhat badge trong dropdown user
     const badge = document.getElementById('notificationBadge');
     if (badge) {
         if (unreadCount > 0) {
@@ -186,7 +186,7 @@ function updateAllNotificationBadges(unreadCount) {
         }
     }
     
-    // Cập nhật badge ở index.html nếu có
+    // Cap nhat badge o index.html neu co
     const badgeIndex = document.getElementById('notificationBadgeIndex');
     if (badgeIndex) {
         if (unreadCount > 0) {
@@ -198,7 +198,7 @@ function updateAllNotificationBadges(unreadCount) {
     }
 }
 
-// Hàm để các trang khác gọi khi cần refresh badge
+// Ham de cac trang khac goi khi can refresh badge
 function refreshNotificationBadge() {
     updateNotificationBadge();
 }

@@ -1,13 +1,27 @@
-// Dynamic Navigation Categories Loader
-const NAV_API_BASE = 'http://localhost:3300/api';
+﻿// Dynamic Navigation Categories Loader
+const NAV_API_BASE = 'http://localhost:3000/api';
+
+function normalizeCategoryName(name) {
+    const map = {
+        'MÃ n hÃ¬nh': 'Màn hình',
+        'Case Nguá»“n': 'Case, Nguồn',
+        'Phá»¥ kiá»‡n': 'Phụ kiện',
+        'Äiá»‡n thoáº¡i': 'Điện thoại',
+        'Äiá»‡n mÃ¡y': 'Điện máy',
+        'á»p lÆ°ng': 'Ốp lưng',
+        'Chuá»™t, BÃ n phÃ­m': 'Chuột, Bàn phím'
+    };
+    return map[name] || name;
+}
 
 function getCategorySlugFromName(name) {
+    const normalizedName = normalizeCategoryName(name);
     const slugMap = {
         'Laptop': 'laptop',
         'PC Gaming': 'pc-gaming',
         'Màn hình': 'man-hinh',
         'CPU VGA': 'cpu-vga',
-        'Case Nguồn': 'case-nguon',
+        'Case, Nguồn': 'case-nguon',
         'Phụ kiện': 'phu-kien',
         'Tai nghe': 'tai-nghe',
         'Điện thoại': 'dien-thoai',
@@ -15,7 +29,7 @@ function getCategorySlugFromName(name) {
         'Ốp lưng': 'op-lung',
         'Chuột, Bàn phím': 'chuot-ban-phim'
     };
-    return slugMap[name] || name.toLowerCase()
+    return slugMap[normalizedName] || normalizedName.toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         .replace(/đ/g, 'd').replace(/Đ/g, 'D')
         .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -38,16 +52,17 @@ async function loadNavCategories() {
             let html = '';
             
             categories.forEach((cat, index) => {
-                const slug = getCategorySlugFromName(cat.ten_danh_muc);
+                const displayName = normalizeCategoryName(cat.ten_danh_muc);
+                const slug = getCategorySlugFromName(displayName);
                 if (index === 0) {
                     html += `<a href="${productsPath}?category=${slug}" class="nav-menu-blink flex items-center gap-1 text-base font-bold text-red-500 hover:text-blue-600 transition">
                         <span class="lightning-blink text-yellow-400">⚡</span>
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        ${cat.ten_danh_muc}
+                        ${displayName}
                     </a>`;
                 } else {
                     html += `<a href="${productsPath}?category=${slug}" class="nav-menu-blink text-base font-bold text-red-500 hover:text-blue-600 transition">
-                        <span class="lightning-blink text-yellow-400">⚡</span> ${cat.ten_danh_muc}
+                        <span class="lightning-blink text-yellow-400">⚡</span> ${displayName}
                     </a>`;
                 }
             });

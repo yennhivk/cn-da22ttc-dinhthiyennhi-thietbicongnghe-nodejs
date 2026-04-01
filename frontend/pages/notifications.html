@@ -2,8 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông báo - Yến Nhi Tech</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <link rel="icon" type="image/png" href="../images/Screenshot 2025-11-10 154306.png">    <title>Thông báo - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -185,7 +184,7 @@
                     <span class="font-bold text-sm md:text-base">Samsung mua 1 tặng 1</span>
                 </a>
                 <a href="promotions.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
-                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🎫</span></div>
+                    <div class="bg-white rounded-full p-2"><span class="text-2xl">🎁</span></div>
                     <span class="font-bold text-sm md:text-base">Voucher tặng bạn mới</span>
                 </a>
                 <a href="products.html" class="flex items-center gap-2 whitespace-nowrap hover:scale-105 transition flex-shrink-0">
@@ -196,7 +195,7 @@
                     <div class="bg-yellow-400 rounded-full px-3 py-1 animate-pulse">
                         <span class="font-black text-red-600 text-sm">11.11</span>
                     </div>
-                    <span class="font-bold text-sm md:text-base">Trợ giá cực đã - Sale 50%</span>
+                    <span class="font-bold text-sm md:text-base">Trợ giá cực sốc - Sale 50%</span>
                 </a>
             </div>
         </div>
@@ -378,18 +377,18 @@
     </script>
 
     <script>
-        const API_URL = 'http://localhost:3300/api';
+        const API_URL = 'http://localhost:3000/api';
         let currentTab = 'all';
         let allNotifications = [];
         let isLoggedIn = false;
         
-        // Key để lưu trạng thái đã đọc vào localStorage
+        // Key đ lu trng thi đ đc vo localStorage
         function getReadNotificationsKey() {
             const user = JSON.parse(localStorage.getItem('user'));
             return user ? `read_notifications_${user.ma_tai_khoan}` : 'read_notifications_guest';
         }
         
-        // Lấy danh sách ID thông báo đã đọc từ localStorage
+        // Ly danh sch ID thàng bo đ đc t localStorage
         function getReadNotificationIds() {
             try {
                 return JSON.parse(localStorage.getItem(getReadNotificationsKey())) || [];
@@ -398,7 +397,7 @@
             }
         }
         
-        // Lưu ID thông báo đã đọc vào localStorage
+        // Lu ID thàng bo đ đc vo localStorage
         function saveReadNotificationId(id) {
             const readIds = getReadNotificationIds();
             if (!readIds.includes(id)) {
@@ -428,9 +427,9 @@
 
         function getIconForType(type, title) {
             if (type === 'order') {
-                if (title.includes('đang được giao') || title.includes('🚚')) return { icon: 'fa-truck', color: 'text-green-500' };
-                if (title.includes('hoàn thành') || title.includes('✅')) return { icon: 'fa-check-circle', color: 'text-green-600' };
-                if (title.includes('hủy') || title.includes('❌')) return { icon: 'fa-times-circle', color: 'text-red-500' };
+                if (title.includes('đang được giao')) return { icon: 'fa-truck', color: 'text-green-500' };
+                if (title.includes('hoàn thành') || title.includes('đã giao')) return { icon: 'fa-check-circle', color: 'text-green-600' };
+                if (title.includes('hủy') || title.includes('thất bại')) return { icon: 'fa-times-circle', color: 'text-red-500' };
                 return { icon: 'fa-box', color: 'text-blue-500' };
             }
             if (type === 'promotion') return { icon: 'fa-tag', color: 'text-red-500' };
@@ -611,7 +610,7 @@
                 // Nếu không có thông báo nào, thêm thông báo mặc định
                 if (allNotifications.length === 0) {
                     allNotifications = [
-                        { id: 'system_welcome', type: 'system', title: '🔔 Chào mừng bạn đến với Yến Nhi Tech!', message: 'Khám phá ngay các sản phẩm công nghệ hàng đầu.', time: new Date(), read: readIds.includes('system_welcome') }
+                        { id: 'system_welcome', type: 'system', title: 'Chào mừng bạn đến với Yến Nhi Tech!', message: 'Khám phá ngay các sản phẩm công nghệ hàng đầu.', time: new Date(), read: readIds.includes('system_welcome') }
                     ];
                 }
 
@@ -623,7 +622,7 @@
                 // Fallback: hiển thị thông báo mặc định
                 const readIds = getReadNotificationIds();
                 allNotifications = [
-                    { id: 'system_welcome', type: 'system', title: '🔔 Chào mừng bạn đến với Yến Nhi Tech!', message: 'Khám phá ngay các sản phẩm công nghệ hàng đầu.', time: new Date(), read: readIds.includes('system_welcome') }
+                    { id: 'system_welcome', type: 'system', title: 'Chào mừng bạn đến với Yến Nhi Tech!', message: 'Khám phá ngay các sản phẩm công nghệ hàng đầu.', time: new Date(), read: readIds.includes('system_welcome') }
                 ];
                 updateLocalBadge();
                 filterNotifications();

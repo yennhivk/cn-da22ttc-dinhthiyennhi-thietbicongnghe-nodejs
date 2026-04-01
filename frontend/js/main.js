@@ -1,6 +1,6 @@
-/**
- * Global Functions - Yến Nhi Mobile
- * Các hàm JavaScript dùng chung cho toàn bộ website
+﻿/**
+ * Global Functions - Yáº¿n Nhi Mobile
+ * CÃ¡c hÃ m JavaScript dÃ¹ng chung cho toÃ n bá»™ website
  */
 
 // Toggle Mobile Menu
@@ -34,6 +34,155 @@ function handleMobileSearch() {
     }
 }
 
+function navigateToSearchResults(query) {
+    const keyword = (query || '').trim();
+    if (!keyword) return;
+
+    if (typeof window.searchAll === 'function') {
+        window.searchAll(keyword);
+        return;
+    }
+
+    const isInPages = window.location.pathname.includes('/pages/');
+    const target = isInPages ? 'products.html' : 'pages/products.html';
+    window.location.href = `${target}?search=${encodeURIComponent(keyword)}`;
+}
+
+function normalizeImageFileName(fileName) {
+    return (fileName || '')
+        .replace(/\.[^/.]+$/, '')
+        .replace(/[\-_]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/(screenshot|image|img|photo|scan|camera|upload)/gi, '')
+        .trim();
+}
+
+function initAdvancedSearchFeatures() {
+    const searchInputs = document.querySelectorAll('#headerSearch, #searchInput');
+    if (!searchInputs.length) return;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    searchInputs.forEach(input => {
+        if (!input || input.dataset.advancedSearchInit === '1') return;
+        input.dataset.advancedSearchInit = '1';
+
+        const wrapper = input.parentElement;
+        if (!wrapper) return;
+
+        input.style.paddingRight = '90px';
+
+        const actions = document.createElement('div');
+        actions.className = 'search-action-buttons';
+        actions.style.cssText = [
+            'position:absolute',
+            'right:8px',
+            'top:50%',
+            'transform:translateY(-50%)',
+            'display:flex',
+            'align-items:center',
+            'gap:6px',
+            'z-index:4'
+        ].join(';');
+
+        const voiceBtn = document.createElement('button');
+        voiceBtn.type = 'button';
+        voiceBtn.title = 'Tim kiem bang giong noi';
+        voiceBtn.setAttribute('aria-label', 'Tim kiem bang giong noi');
+        voiceBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"></path><path d="M19 10v2a7 7 0 01-14 0v-2"></path><path d="M12 19v4"></path><path d="M8 23h8"></path></svg>';
+        voiceBtn.style.cssText = [
+            'width:32px',
+            'height:32px',
+            'border:none',
+            'border-radius:999px',
+            'background:#eff6ff',
+            'color:#2563eb',
+            'display:flex',
+            'align-items:center',
+            'justify-content:center',
+            'cursor:pointer',
+            'transition:all .2s ease'
+        ].join(';');
+
+        const imageBtn = document.createElement('button');
+        imageBtn.type = 'button';
+        imageBtn.title = 'Tim kiem bang hinh anh';
+        imageBtn.setAttribute('aria-label', 'Tim kiem bang hinh anh');
+        imageBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8a2 2 0 012-2h2.2l1.4-2h6.8l1.4 2H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>';
+        imageBtn.style.cssText = voiceBtn.style.cssText;
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+
+        actions.appendChild(voiceBtn);
+        actions.appendChild(imageBtn);
+        wrapper.appendChild(actions);
+        wrapper.appendChild(fileInput);
+
+        let recognition = null;
+        let listening = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'vi-VN';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = function(event) {
+                const transcript = event.results?.[0]?.[0]?.transcript?.trim() || '';
+                if (transcript) {
+                    input.value = transcript;
+                    navigateToSearchResults(transcript);
+                }
+            };
+
+            recognition.onend = function() {
+                listening = false;
+                voiceBtn.style.background = '#eff6ff';
+                voiceBtn.style.color = '#2563eb';
+            };
+        } else {
+            voiceBtn.disabled = true;
+            voiceBtn.style.opacity = '0.45';
+            voiceBtn.style.cursor = 'not-allowed';
+            voiceBtn.title = 'Trinh duyet khong ho tro tim kiem giong noi';
+        }
+
+        voiceBtn.addEventListener('click', function() {
+            if (!recognition) return;
+            if (!listening) {
+                listening = true;
+                voiceBtn.style.background = '#fee2e2';
+                voiceBtn.style.color = '#dc2626';
+                recognition.start();
+            } else {
+                recognition.stop();
+            }
+        });
+
+        imageBtn.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            const inferredQuery = normalizeImageFileName(file.name);
+            if (!inferredQuery) {
+                alert('Khong doc duoc tu khoa tu ten file anh. Ban co the doi ten file theo ten san pham de tim nhanh hon.');
+                return;
+            }
+
+            input.value = inferredQuery;
+            navigateToSearchResults(inferredQuery);
+            fileInput.value = '';
+        });
+    });
+}
+
 // Navigate to Home
 function navigateToHome() {
     const currentPath = window.location.pathname;
@@ -64,53 +213,57 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    initAdvancedSearchFeatures();
 });
 
-// Shopping Cart Functions (dùng cho index.html - trang chủ)
-// Lưu ý: Trang products.html và product-detail.html có hàm addToCart riêng trong products.js/product-detail.js
-// Hàm này chỉ được gọi khi các file JS khác không định nghĩa addToCart
+document.addEventListener('headerLoaded', initAdvancedSearchFeatures);
 
-// Kiểm tra xem đang ở trang nào để quyết định có định nghĩa addToCart hay không
+// Shopping Cart Functions (dÃ¹ng cho index.html - trang chá»§)
+// LÆ°u Ã½: Trang products.html vÃ  product-detail.html cÃ³ hÃ m addToCart riÃªng trong products.js/product-detail.js
+// HÃ m nÃ y chá»‰ Ä‘Æ°á»£c gá»i khi cÃ¡c file JS khÃ¡c khÃ´ng Ä‘á»‹nh nghÄ©a addToCart
+
+// Kiem tra xem dang o trang nao de quyet dinh co dinh nghia addToCart hay khong
 (function() {
-    // Nếu đang ở trang products hoặc product-detail, không định nghĩa addToCart
-    // vì các trang đó đã có hàm riêng trong products.js hoặc product-detail.js
+    // Neu dang o trang products hoac product-detail, khong dinh nghia addToCart
+    // vi cac trang do da co ham rieng trong products.js hoac product-detail.js
     const isProductPage = window.location.pathname.includes('products.html') || 
                           window.location.pathname.includes('product-detail.html');
     
     if (isProductPage) {
-        console.log('main.js: Đang ở trang sản phẩm, bỏ qua định nghĩa addToCart');
+        console.log('main.js: Dang o trang san pham, bo qua dinh nghia addToCart');
         return;
     }
     
-    // Định nghĩa addToCart cho trang chủ và các trang khác
+    // Dinh nghia addToCart cho trang chu va cac trang khac
     window.addToCart = function(product) {
-        // Kiểm tra đăng nhập
+        // Kiem tra dang nhap
         if (!localStorage.getItem('token')) {
             showLoginRequiredModal();
             return;
         }
         
-        // Lấy cart key theo user
+        // Lay cart key theo user
         const user = JSON.parse(localStorage.getItem('user'));
         const cartKey = user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
         let cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
         
-        // Xử lý nhiều kiểu tham số
+        // Xá»­ lÃ½ nhiá»u kiá»ƒu tham sá»‘
         let productData;
         if (typeof product === 'object' && product !== null) {
             productData = product;
         } else if (typeof product === 'number') {
-            // Nếu là ID, tạo object cơ bản
-            productData = { id: product, name: 'Sản phẩm #' + product, price: 0 };
+            // Náº¿u lÃ  ID, táº¡o object cÆ¡ báº£n
+            productData = { id: product, name: 'Sáº£n pháº©m #' + product, price: 0 };
         } else if (typeof product === 'string') {
-            // Nếu là tên sản phẩm
+            // Náº¿u lÃ  tÃªn sáº£n pháº©m
             productData = { id: Date.now(), name: product, price: 0 };
         } else {
-            console.error('addToCart: Tham số không hợp lệ', product);
+            console.error('addToCart: Tham sá»‘ khÃ´ng há»£p lá»‡', product);
             return;
         }
         
-        // Ràng buộc giá không âm
+        // RÃ ng buá»™c giÃ¡ khÃ´ng Ã¢m
         const productPrice = Math.max(0, productData.price || 0);
         
         const existingItem = cart.find(item => item.id === productData.id || item.ma_san_pham === productData.id);
@@ -118,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (existingItem) {
             const newQuantity = (existingItem.quantity || existingItem.so_luong || 0) + 1;
             
-            // Kiểm tra số lượng > 5 thì yêu cầu liên hệ hotline
+            // Kiá»ƒm tra sá»‘ lÆ°á»£ng > 5 thÃ¬ yÃªu cáº§u liÃªn há»‡ hotline
             if (newQuantity > 5) {
                 showQuantityLimitModalMain();
                 return;
@@ -192,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 })();
 
-// Cập nhật cart badge (global)
+// Cáº­p nháº­t cart badge (global)
 function updateCartBadgeGlobal() {
     const user = JSON.parse(localStorage.getItem('user'));
     const cartKey = user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
@@ -205,9 +358,9 @@ function updateCartBadgeGlobal() {
     });
 }
 
-// Hiển thị modal yêu cầu đăng nhập (dùng cho index.html)
+// Hien thi modal yeu cau dang nhap (dung cho index.html)
 function showLoginRequiredModal() {
-    // Xóa modal cũ nếu có
+    // Xoa modal cu neu co
     const existingModal = document.getElementById('loginRequiredModalMain');
     if (existingModal) existingModal.remove();
     
@@ -235,12 +388,12 @@ function showLoginRequiredModal() {
     `;
     document.body.appendChild(modal);
     
-    // Thêm event listener cho nút đóng
+    // Them event listener cho nut dong
     document.getElementById('closeLoginModalMainBtn').addEventListener('click', function() {
         modal.remove();
     });
     
-    // Đóng modal khi click bên ngoài
+    // Dong modal khi click ben ngoai
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             modal.remove();
@@ -248,13 +401,13 @@ function showLoginRequiredModal() {
     });
 }
 
-// Đóng modal đăng nhập (main.js) - giữ lại để tương thích
+// Dong modal dang nhap (main.js) - giu lai de tuong thich
 function closeLoginModalMain() {
     const modal = document.getElementById('loginRequiredModalMain');
     if (modal) modal.remove();
 }
 
-// Chuyển đến trang đăng nhập (main.js - từ index.html) - giữ lại để tương thích
+// Chuyen den trang dang nhap (main.js - tu index.html) - giu lai de tuong thich
 function goToLoginPageMain() {
     window.location.href = 'pages/login.html';
 }
@@ -364,7 +517,7 @@ function validatePhone(phone) {
     return re.test(phone);
 }
 
-// User Authentication - Sử dụng token và user từ localStorage
+// User Authentication - Su dung token va user tu localStorage
 function isLoggedIn() {
     return !!localStorage.getItem('token');
 }
@@ -379,7 +532,7 @@ function logout() {
     localStorage.removeItem('user');
     showToast('Đã đăng xuất!', 'info');
     
-    // Xác định đường dẫn đúng dựa trên vị trí hiện tại
+    // Xac dinh duong dan dung dua tren vi tri hien tai
     const currentPath = window.location.pathname;
     if (currentPath.includes('/pages/')) {
         window.location.href = '../index.html';
@@ -390,14 +543,14 @@ function logout() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Cập nhật cart badge cho tất cả các trang
+    // Cap nhat cart badge cho tat ca cac trang
     updateCartBadgeGlobal();
     
     // Check if user is logged in and update UI
     if (isLoggedIn()) {
         const user = getCurrentUser();
         
-        // Cập nhật phần user account area (cho các trang có cấu trúc mới)
+        // Cap nhat phan user account area (cho cac trang co cau truc moi)
         const userAccountArea = document.getElementById('userAccountArea');
         const loginBtn = document.getElementById('loginBtn');
         const userDropdown = document.getElementById('userDropdown');
@@ -408,30 +561,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const dropdownUserEmail = document.getElementById('dropdownUserEmail');
         
         if (userAccountArea && loginBtn && userDropdown) {
-            // Ẩn nút đăng nhập, hiện dropdown user
+            // An nut dang nhap, hien dropdown user
             loginBtn.classList.add('hidden');
             userDropdown.classList.remove('hidden');
             
-            // Hiển thị tên user
+            // Hien thi ten user
             const displayName = user.ho_ten || user.ten_dang_nhap || 'User';
             if (userDisplayName) {
                 userDisplayName.textContent = displayName;
             }
             
-            // Hiển thị chữ cái đầu trong avatar
+            // Hien thi chu cai dau trong avatar
             if (userAvatarLetter) {
                 userAvatarLetter.textContent = displayName.charAt(0).toLowerCase();
             }
             
-            // Hiển thị avatar nếu có
+            // Hien thi avatar neu co
             if (userAvatarImg && user.hinh_anh) {
-                const avatarSrc = user.hinh_anh.startsWith('http') ? user.hinh_anh : 'http://localhost:3300' + user.hinh_anh;
+                const avatarSrc = user.hinh_anh.startsWith('http') ? user.hinh_anh : 'http://localhost:3000' + user.hinh_anh;
                 userAvatarImg.src = avatarSrc;
                 userAvatarImg.classList.remove('hidden');
                 if (userAvatarLetter) userAvatarLetter.classList.add('hidden');
             }
             
-            // Cập nhật dropdown info
+            // Cap nhat dropdown info
             if (dropdownUserName) {
                 dropdownUserName.textContent = displayName;
             }
@@ -440,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Fallback cho các trang cũ
+        // Fallback cho cac trang cu
         const loginButtons = document.querySelectorAll('[href*="login.html"]');
         loginButtons.forEach(btn => {
             if (btn.textContent.includes('Đăng nhập')) {

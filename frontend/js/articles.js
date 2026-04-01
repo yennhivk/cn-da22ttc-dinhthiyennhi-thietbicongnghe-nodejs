@@ -1,13 +1,13 @@
-// Articles API Configuration
-const ARTICLES_API_URL = 'http://localhost:3300/api/articles';
+﻿// Articles API Configuration
+const ARTICLES_API_URL = 'http://localhost:3000/api/articles';
 
-// Biến lưu tất cả bài viết để đếm theo danh mục
+// Biáº¿n lÆ°u táº¥t cáº£ bÃ i viáº¿t Ä‘á»ƒ Ä‘áº¿m theo danh má»¥c
 let allArticlesData = [];
 let currentPage = 1;
 let currentCategory = '';
 let currentSearch = '';
 
-// Format thời gian
+// Format thá»i gian
 function formatTimeAgo(dateString) {
     const date = new Date(dateString);
     const now = new Date();
@@ -24,7 +24,7 @@ function formatTimeAgo(dateString) {
     return date.toLocaleDateString('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
-// Lấy tên danh mục
+// Láº¥y tÃªn danh má»¥c
 function getCategoryName(category) {
     const names = {
         'huong_dan': '📚 Hướng dẫn',
@@ -35,7 +35,7 @@ function getCategoryName(category) {
     return names[category] || category;
 }
 
-// Lấy màu badge danh mục
+// Láº¥y mÃ u badge danh má»¥c
 function getCategoryBadgeColor(category) {
     const colors = {
         'huong_dan': 'bg-blue-100 text-blue-700',
@@ -46,7 +46,7 @@ function getCategoryBadgeColor(category) {
     return colors[category] || 'bg-gray-100 text-gray-700';
 }
 
-// Load số lượng bài viết theo danh mục
+// Load sá»‘ lÆ°á»£ng bÃ i viáº¿t theo danh má»¥c
 async function loadArticleCategoryCounts() {
     try {
         const response = await fetch(`${ARTICLES_API_URL}?limit=1000`);
@@ -61,7 +61,7 @@ async function loadArticleCategoryCounts() {
     }
 }
 
-// Cập nhật số lượng bài viết theo danh mục
+// Cáº­p nháº­t sá»‘ lÆ°á»£ng bÃ i viáº¿t theo danh má»¥c
 function updateArticleCategoryCounts() {
     const categoryCounts = {};
     let totalCount = allArticlesData.length;
@@ -71,7 +71,7 @@ function updateArticleCategoryCounts() {
         categoryCounts[category] = (categoryCounts[category] || 0) + 1;
     });
     
-    // Cập nhật số liệu trên giao diện
+    // Cáº­p nháº­t sá»‘ liá»‡u trÃªn giao diá»‡n
     const categoryCountElements = document.querySelectorAll('.article-category-count');
     categoryCountElements.forEach(el => {
         const categoryName = el.getAttribute('data-category');
@@ -87,7 +87,7 @@ function updateArticleCategoryCounts() {
     console.log('📊 Article category counts:', categoryCounts);
 }
 
-// Load tất cả bài viết
+// Load táº¥t cáº£ bÃ i viáº¿t
 async function loadArticles(page = 1, category = '', search = '') {
     try {
         let url = `${ARTICLES_API_URL}?page=${page}&limit=9`;
@@ -113,7 +113,7 @@ async function loadArticles(page = 1, category = '', search = '') {
         if (!result.success || result.data.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-12">
-                    <div class="text-6xl mb-4">📭</div>
+                    <div class="text-6xl mb-4">📰</div>
                     <p class="text-gray-500 text-lg font-semibold">Không tìm thấy bài viết nào</p>
                     <p class="text-gray-400 text-sm mt-2">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
                 </div>
@@ -125,7 +125,7 @@ async function loadArticles(page = 1, category = '', search = '') {
         container.innerHTML = result.data.map(article => `
             <article class="article-card bg-white rounded-xl shadow-md overflow-hidden group cursor-pointer" onclick="window.location.href='article-detail.html?id=${article.ma_bai_viet}'">
                 <div class="relative h-48 overflow-hidden">
-                    <img src="${article.hinh_anh || 'https://via.placeholder.com/400x200?text=Bài+viết'}" alt="${article.tieu_de}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/400x200?text=Bài+viết'">
+                    <img src="${article.hinh_anh || 'https://via.placeholder.com/400x200?text=Bai+viet'}" alt="${article.tieu_de}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/400x200?text=Bai+viet'">
                     <span class="absolute top-3 left-3 ${getCategoryBadgeColor(article.danh_muc)} px-3 py-1 rounded-full text-xs font-bold">${getCategoryName(article.danh_muc)}</span>
                 </div>
                 <div class="p-4">

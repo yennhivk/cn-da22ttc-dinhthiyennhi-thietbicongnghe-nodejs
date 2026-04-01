@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../images/Screenshot 2025-11-10 154306.png">
     <title>Thanh Toán - Yến Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/vietnam-address.js"></script>
@@ -681,7 +682,7 @@
 
     <script src="../js/main.js"></script>
     <script>
-        const API_URL = 'http://localhost:3300/api';
+        const API_URL = 'http://localhost:3000/api';
 
         // Lấy thông tin promo từ localStorage
         function getPromoData() {
@@ -891,7 +892,7 @@
                     return `
                         <div class="flex gap-3 border-b pb-3">
                             <img src="${imageUrl || '../images/Screenshot 2025-11-10 154306.png'}" alt="${productName}" 
-                                 class="w-16 h-16 object-cover rounded border" 
+                                 class="w-12 h-12 object-cover rounded border" 
                                  onerror="this.src='../images/Screenshot 2025-11-10 154306.png'">
                             <div class="flex-1">
                                 <p class="font-semibold text-sm">${productName}</p>
@@ -953,7 +954,7 @@
                     return `
                         <div class="flex gap-3 border-b pb-3">
                             <img src="${item.hinh_anh}" alt="${item.ten_san_pham}" 
-                                 class="w-16 h-16 object-cover rounded border" 
+                                 class="w-12 h-12 object-cover rounded border" 
                                  onerror="this.src='../images/Screenshot 2025-11-10 154306.png'">
                             <div class="flex-1">
                                 <p class="font-semibold text-sm">${item.ten_san_pham}</p>

@@ -1,22 +1,22 @@
-// API Configuration
-const API_URL = 'http://localhost:3300/api';
+﻿// API Configuration
+const API_URL = 'http://localhost:3000/api';
 
 // State
 let currentProduct = null;
 let currentQuantity = 1;
 
-// Kiểm tra đăng nhập
+// Kiem tra dang nhap
 function isLoggedIn() {
     return !!localStorage.getItem('token');
 }
 
-// Lấy user hiện tại
+// Lay user hien tai
 function getCurrentUser() {
     const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
 }
 
-// Lấy cart key theo user
+// Lay cart key theo user
 function getCartKey() {
     const user = getCurrentUser();
     return user ? `cart_${user.ma_tai_khoan}` : 'cart_guest';
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (productId) {
         loadProductDetail(productId);
     } else {
-        showError('Không tìm thấy sản phẩm');
+        showError('KhÃ´ng tÃ¬m tháº¥y sáº£n pháº©m');
     }
     
     updateCartBadge();
@@ -47,21 +47,21 @@ async function loadProductDetail(productId) {
             displayProductDetail(currentProduct);
             loadRelatedProducts(currentProduct.ma_danh_muc);
         } else {
-            showError('Không tìm thấy sản phẩm');
+            showError('KhÃ´ng tÃ¬m tháº¥y sáº£n pháº©m');
         }
     } catch (error) {
-        console.error('Lỗi khi tải sản phẩm:', error);
-        showError('Lỗi kết nối đến server');
+        console.error('Lá»—i khi táº£i sáº£n pháº©m:', error);
+        showError('Lá»—i káº¿t ná»‘i Ä‘áº¿n server');
     }
 }
 
 // Display product detail
 function displayProductDetail(product) {
     // Update page title
-    document.title = `${product.ten_san_pham} - Yến Nhi Tech`;
+    document.title = `${product.ten_san_pham} - Yáº¿n Nhi Tech`;
     
     // Breadcrumb
-    document.getElementById('breadcrumbCategory').textContent = product.ten_danh_muc || 'Sản phẩm';
+    document.getElementById('breadcrumbCategory').textContent = product.ten_danh_muc || 'Sáº£n pháº©m';
     document.getElementById('breadcrumbProduct').textContent = product.ten_san_pham;
     
     // Main image
@@ -89,7 +89,7 @@ function displayProductDetail(product) {
     }
     
     // Product info
-    document.getElementById('productBrand').textContent = product.thuong_hieu || 'Không rõ';
+    document.getElementById('productBrand').textContent = product.thuong_hieu || 'KhÃ´ng rÃµ';
     document.getElementById('productName').textContent = product.ten_san_pham;
     
     // Price
@@ -108,38 +108,38 @@ function displayProductDetail(product) {
     const buyNowBtn = document.querySelector('button[onclick="buyNow()"]');
     
     if (product.so_luong > 0) {
-        stockInfo.textContent = `Còn ${product.so_luong} sản phẩm`;
-        stockBadge.textContent = 'Còn hàng';
+        stockInfo.textContent = `CÃ²n ${product.so_luong} sáº£n pháº©m`;
+        stockBadge.textContent = 'CÃ²n hÃ ng';
         stockBadge.className = 'bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold';
         addToCartBtn.disabled = false;
         if (buyNowBtn) buyNowBtn.disabled = false;
     } else {
-        stockInfo.textContent = 'Hết hàng';
+        stockInfo.textContent = 'Háº¿t hÃ ng';
         stockInfo.className = 'text-red-600 text-sm font-bold';
-        stockBadge.textContent = '🚫 Hết hàng';
+        stockBadge.textContent = 'ðŸš« Háº¿t hÃ ng';
         stockBadge.className = 'bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold';
         
-        // Vô hiệu hóa nút thêm vào giỏ
+        // VÃ´ hiá»‡u hÃ³a nÃºt thÃªm vÃ o giá»
         addToCartBtn.disabled = true;
         addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
         addToCartBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
         addToCartBtn.innerHTML = `
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-            Sản phẩm hết hàng
+            Sáº£n pháº©m háº¿t hÃ ng
         `;
         
-        // Vô hiệu hóa nút mua ngay
+        // VÃ´ hiá»‡u hÃ³a nÃºt mua ngay
         if (buyNowBtn) {
             buyNowBtn.disabled = true;
             buyNowBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
             buyNowBtn.classList.remove('bg-orange-500', 'hover:bg-orange-600');
             buyNowBtn.innerHTML = `
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Tạm hết hàng
+                Táº¡m háº¿t hÃ ng
             `;
         }
         
-        // Vô hiệu hóa các nút số lượng
+        // VÃ´ hiá»‡u hÃ³a cÃ¡c nÃºt sá»‘ lÆ°á»£ng
         const quantityInput = document.getElementById('quantity');
         const decreaseBtn = document.querySelector('button[onclick="decreaseQuantity()"]');
         const increaseBtn = document.querySelector('button[onclick="increaseQuantity()"]');
@@ -149,21 +149,21 @@ function displayProductDetail(product) {
         if (increaseBtn) increaseBtn.disabled = true;
     }
     
-    // Description - Chi tiết hơn
+    // Description - Chi tiáº¿t hÆ¡n
     displayProductDescription(product);
     
-    // Specs - Chi tiết hơn
+    // Specs - Chi tiáº¿t hÆ¡n
     displayProductSpecs(product);
     
     // Reviews
     displayReviews(product.reviews || []);
 }
 
-// Hiển thị mô tả sản phẩm chi tiết
+// Hiá»ƒn thá»‹ mÃ´ táº£ sáº£n pháº©m chi tiáº¿t
 function displayProductDescription(product) {
     const descContainer = document.getElementById('productDescription');
     
-    // Tạo mô tả chi tiết dựa trên thông tin sản phẩm
+    // Táº¡o mÃ´ táº£ chi tiáº¿t dá»±a trÃªn thÃ´ng tin sáº£n pháº©m
     let descriptionHTML = '';
     
     if (product.mo_ta) {
@@ -173,14 +173,14 @@ function displayProductDescription(product) {
                     <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    Giới thiệu sản phẩm
+                    Giá»›i thiá»‡u sáº£n pháº©m
                 </h3>
                 <p class="text-gray-700 leading-relaxed">${product.mo_ta}</p>
             </div>
         `;
     }
     
-    // Thêm điểm nổi bật
+    // ThÃªm Ä‘iá»ƒm ná»•i báº­t
     descriptionHTML += `
         <div class="mb-6">
             <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
@@ -218,19 +218,19 @@ function displayProductDescription(product) {
         </div>
     `;
     
-    // Thêm cam kết
+    // ThÃªm cam káº¿t
     descriptionHTML += `
         <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
             <h3 class="text-lg font-bold text-blue-800 mb-3 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                 </svg>
-                Cam kết từ Yến Nhi Tech
+                Cam káº¿t tá»« Yáº¿n Nhi Tech
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div class="flex items-center gap-2 text-sm text-blue-700">
-                    <span class="text-lg">✅</span>
-                    <span>100% sản phẩm chính hãng</span>
+                    <span class="text-lg">âœ…</span>
+                    <span>100% sáº£n pháº©m chÃ­nh hÃ£ng</span>
                 </div>
                 <div class="flex items-center gap-2 text-sm text-blue-700">
                     <span class="text-lg">🚚</span>
@@ -242,7 +242,7 @@ function displayProductDescription(product) {
                 </div>
                 <div class="flex items-center gap-2 text-sm text-blue-700">
                     <span class="text-lg">🛡️</span>
-                    <span>Bảo hành tận nơi</span>
+                    <span>Báº£o hÃ nh táº­n nÆ¡i</span>
                 </div>
             </div>
         </div>
@@ -251,65 +251,65 @@ function displayProductDescription(product) {
     descContainer.innerHTML = descriptionHTML;
 }
 
-// Hiển thị thông số kỹ thuật chi tiết
+// Hiá»ƒn thá»‹ thÃ´ng sá»‘ ká»¹ thuáº­t chi tiáº¿t
 function displayProductSpecs(product) {
     const specsContainer = document.getElementById('productSpecs');
     
-    // Tạo thông số kỹ thuật dựa trên danh mục sản phẩm
+    // Táº¡o thÃ´ng sá»‘ ká»¹ thuáº­t dá»±a trÃªn danh má»¥c sáº£n pháº©m
     let specsHTML = `
         <div class="overflow-hidden rounded-xl border border-gray-200">
             <table class="w-full">
                 <tbody>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700 w-1/3">Thương hiệu</td>
-                        <td class="px-4 py-3 text-gray-900">${product.thuong_hieu || 'Đang cập nhật'}</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700 w-1/3">ThÆ°Æ¡ng hiá»‡u</td>
+                        <td class="px-4 py-3 text-gray-900">${product.thuong_hieu || 'Äang cáº­p nháº­t'}</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Danh mục</td>
-                        <td class="px-4 py-3 text-gray-900">${product.ten_danh_muc || 'Đang cập nhật'}</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Danh má»¥c</td>
+                        <td class="px-4 py-3 text-gray-900">${product.ten_danh_muc || 'Äang cáº­p nháº­t'}</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Mã sản phẩm</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">MÃ£ sáº£n pháº©m</td>
                         <td class="px-4 py-3 text-gray-900">SP${String(product.ma_san_pham).padStart(6, '0')}</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Tình trạng</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">TÃ¬nh tráº¡ng</td>
                         <td class="px-4 py-3">
                             <span class="${product.so_luong > 0 ? 'text-green-600' : 'text-red-600'} font-medium">
-                                ${product.so_luong > 0 ? 'Còn hàng (' + product.so_luong + ' sản phẩm)' : 'Hết hàng'}
+                                ${product.so_luong > 0 ? 'CÃ²n hÃ ng (' + product.so_luong + ' sáº£n pháº©m)' : 'Háº¿t hÃ ng'}
                             </span>
                         </td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Bảo hành</td>
-                        <td class="px-4 py-3 text-gray-900">12 tháng chính hãng tại trung tâm bảo hành</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Báº£o hÃ nh</td>
+                        <td class="px-4 py-3 text-gray-900">12 thÃ¡ng chÃ­nh hÃ£ng táº¡i trung tÃ¢m báº£o hÃ nh</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Xuất xứ</td>
-                        <td class="px-4 py-3 text-gray-900">Chính hãng - Nhập khẩu</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Xuáº¥t xá»©</td>
+                        <td class="px-4 py-3 text-gray-900">ChÃ­nh hÃ£ng - Nháº­p kháº©u</td>
                     </tr>
     `;
     
-    // Thêm thông số theo danh mục
+    // ThÃªm thÃ´ng sá»‘ theo danh má»¥c
     if (product.ten_danh_muc) {
         const category = product.ten_danh_muc.toLowerCase();
         
-        if (category.includes('điện thoại') || category.includes('phone')) {
+        if (category.includes('Ä‘iá»‡n thoáº¡i') || category.includes('phone')) {
             specsHTML += `
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Màn hình</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">MÃ n hÃ¬nh</td>
                         <td class="px-4 py-3 text-gray-900">AMOLED, 6.7 inch, 120Hz</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Chip xử lý</td>
-                        <td class="px-4 py-3 text-gray-900">Chip cao cấp thế hệ mới</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Chip xá»­ lÃ½</td>
+                        <td class="px-4 py-3 text-gray-900">Chip cao cáº¥p tháº¿ há»‡ má»›i</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
                         <td class="px-4 py-3 font-semibold text-gray-700">RAM</td>
                         <td class="px-4 py-3 text-gray-900">8GB / 12GB</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Bộ nhớ trong</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Bá»™ nhá»› trong</td>
                         <td class="px-4 py-3 text-gray-900">128GB / 256GB / 512GB</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
@@ -317,70 +317,70 @@ function displayProductSpecs(product) {
                         <td class="px-4 py-3 text-gray-900">48MP + 12MP + 12MP</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Camera trước</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Camera trÆ°á»›c</td>
                         <td class="px-4 py-3 text-gray-900">12MP</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
                         <td class="px-4 py-3 font-semibold text-gray-700">Pin</td>
-                        <td class="px-4 py-3 text-gray-900">4500mAh, sạc nhanh 65W</td>
+                        <td class="px-4 py-3 text-gray-900">4500mAh, sáº¡c nhanh 65W</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Hệ điều hành</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Há»‡ Ä‘iá»u hÃ nh</td>
                         <td class="px-4 py-3 text-gray-900">${product.thuong_hieu === 'Apple' ? 'iOS' : 'Android'}</td>
                     </tr>
             `;
         } else if (category.includes('laptop')) {
             specsHTML += `
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Màn hình</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">MÃ n hÃ¬nh</td>
                         <td class="px-4 py-3 text-gray-900">14 inch / 15.6 inch, Full HD / 2K</td>
                     </tr>
                     <tr class="border-b border-gray-200">
                         <td class="px-4 py-3 font-semibold text-gray-700">CPU</td>
-                        <td class="px-4 py-3 text-gray-900">Intel Core i5/i7 hoặc AMD Ryzen 5/7</td>
+                        <td class="px-4 py-3 text-gray-900">Intel Core i5/i7 hoáº·c AMD Ryzen 5/7</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
                         <td class="px-4 py-3 font-semibold text-gray-700">RAM</td>
                         <td class="px-4 py-3 text-gray-900">8GB / 16GB / 32GB DDR5</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Ổ cứng</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">á»” cá»©ng</td>
                         <td class="px-4 py-3 text-gray-900">SSD 256GB / 512GB / 1TB NVMe</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Card đồ họa</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Card Ä‘á»“ há»a</td>
                         <td class="px-4 py-3 text-gray-900">Intel Iris Xe / NVIDIA RTX</td>
                     </tr>
                     <tr class="border-b border-gray-200">
                         <td class="px-4 py-3 font-semibold text-gray-700">Pin</td>
-                        <td class="px-4 py-3 text-gray-900">Lên đến 10 giờ sử dụng</td>
+                        <td class="px-4 py-3 text-gray-900">LÃªn Ä‘áº¿n 10 giá» sá»­ dá»¥ng</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Hệ điều hành</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Há»‡ Ä‘iá»u hÃ nh</td>
                         <td class="px-4 py-3 text-gray-900">${product.thuong_hieu === 'Apple' ? 'macOS' : 'Windows 11'}</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Trọng lượng</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Trá»ng lÆ°á»£ng</td>
                         <td class="px-4 py-3 text-gray-900">1.4kg - 1.8kg</td>
                     </tr>
             `;
-        } else if (category.includes('phụ kiện') || category.includes('tai nghe')) {
+        } else if (category.includes('phá»¥ kiá»‡n') || category.includes('tai nghe')) {
             specsHTML += `
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Loại kết nối</td>
-                        <td class="px-4 py-3 text-gray-900">Bluetooth 5.3 / Có dây</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Loáº¡i káº¿t ná»‘i</td>
+                        <td class="px-4 py-3 text-gray-900">Bluetooth 5.3 / CÃ³ dÃ¢y</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Thời lượng pin</td>
-                        <td class="px-4 py-3 text-gray-900">Lên đến 30 giờ (với hộp sạc)</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Thá»i lÆ°á»£ng pin</td>
+                        <td class="px-4 py-3 text-gray-900">LÃªn Ä‘áº¿n 30 giá» (vá»›i há»™p sáº¡c)</td>
                     </tr>
                     <tr class="border-b border-gray-200 bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Chống nước</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Chá»‘ng nÆ°á»›c</td>
                         <td class="px-4 py-3 text-gray-900">IPX4 / IPX5</td>
                     </tr>
                     <tr class="border-b border-gray-200">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Tính năng</td>
-                        <td class="px-4 py-3 text-gray-900">Chống ồn chủ động (ANC), Xuyên âm</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">TÃ­nh nÄƒng</td>
+                        <td class="px-4 py-3 text-gray-900">Chá»‘ng á»“n chá»§ Ä‘á»™ng (ANC), XuyÃªn Ã¢m</td>
                     </tr>
             `;
         }
@@ -388,8 +388,8 @@ function displayProductSpecs(product) {
     
     specsHTML += `
                     <tr class="bg-gray-50">
-                        <td class="px-4 py-3 font-semibold text-gray-700">Phụ kiện đi kèm</td>
-                        <td class="px-4 py-3 text-gray-900">Hộp, sách hướng dẫn, cáp sạc, phụ kiện theo máy</td>
+                        <td class="px-4 py-3 font-semibold text-gray-700">Phá»¥ kiá»‡n Ä‘i kÃ¨m</td>
+                        <td class="px-4 py-3 text-gray-900">Há»™p, sÃ¡ch hÆ°á»›ng dáº«n, cÃ¡p sáº¡c, phá»¥ kiá»‡n theo mÃ¡y</td>
                     </tr>
                 </tbody>
             </table>
@@ -397,8 +397,8 @@ function displayProductSpecs(product) {
         
         <div class="mt-4 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
             <p class="text-sm text-yellow-800">
-                <strong>Lưu ý:</strong> Thông số kỹ thuật có thể thay đổi theo từng phiên bản sản phẩm. 
-                Vui lòng liên hệ hotline <strong class="text-red-600">1900.5301</strong> để được tư vấn chi tiết.
+                <strong>LÆ°u Ã½:</strong> ThÃ´ng sá»‘ ká»¹ thuáº­t cÃ³ thá»ƒ thay Ä‘á»•i theo tá»«ng phiÃªn báº£n sáº£n pháº©m. 
+                Vui lÃ²ng liÃªn há»‡ hotline <strong class="text-red-600">1900.5301</strong> Ä‘á»ƒ Ä‘Æ°á»£c tÆ° váº¥n chi tiáº¿t.
             </p>
         </div>
     `;
@@ -412,45 +412,45 @@ function displayReviews(reviews) {
     const container = document.getElementById('reviewsContainer');
     const reviewCount = reviews.length;
     
-    document.getElementById('reviewCount').textContent = `${reviewCount} đánh giá`;
+    document.getElementById('reviewCount').textContent = `${reviewCount} Ä‘Ã¡nh giÃ¡`;
     document.getElementById('tabReviewCount').textContent = reviewCount;
     document.getElementById('totalReviewsDisplay').textContent = reviewCount;
     
-    // Kiểm tra token còn hợp lệ không
+    // Kiá»ƒm tra token cÃ²n há»£p lá»‡ khÃ´ng
     const token = localStorage.getItem('token');
     let isValidLogin = false;
     
     if (token) {
         try {
-            // Decode JWT để kiểm tra expiry
+            // Decode JWT Ä‘á»ƒ kiá»ƒm tra expiry
             const payload = JSON.parse(atob(token.split('.')[1]));
             const expiry = payload.exp * 1000; // Convert to milliseconds
             isValidLogin = Date.now() < expiry;
             
             if (!isValidLogin) {
-                // Token hết hạn, xóa đi
+                // Token háº¿t háº¡n, xÃ³a Ä‘i
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
             }
         } catch (e) {
-            // Token không hợp lệ
+            // Token khÃ´ng há»£p lá»‡
             localStorage.removeItem('token');
             localStorage.removeItem('user');
         }
     }
     
-    // Hiển thị form đánh giá hoặc nút đăng nhập
+    // Hien thi form danh gia hoac nut dang nhap
     if (isValidLogin) {
         document.getElementById('reviewFormContainer').classList.remove('hidden');
         document.getElementById('loginToReview').classList.add('hidden');
-        // Mặc định chọn 5 sao
+        // Máº·c Ä‘á»‹nh chá»n 5 sao
         selectStar(5);
     } else {
         document.getElementById('reviewFormContainer').classList.add('hidden');
         document.getElementById('loginToReview').classList.remove('hidden');
     }
     
-    // Tính điểm trung bình và phân bố sao
+    // TÃ­nh Ä‘iá»ƒm trung bÃ¬nh vÃ  phÃ¢n bá»‘ sao
     let avgRating = 0;
     const ratingCounts = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
     
@@ -462,14 +462,14 @@ function displayReviews(reviews) {
         avgRating = avgRating / reviewCount;
     }
     
-    // Hiển thị điểm trung bình
+    // Hiá»ƒn thá»‹ Ä‘iá»ƒm trung bÃ¬nh
     document.getElementById('avgRatingDisplay').textContent = avgRating.toFixed(1);
     document.getElementById('ratingText').textContent = avgRating.toFixed(1);
     
-    // Hiển thị sao trung bình
+    // Hiá»ƒn thá»‹ sao trung bÃ¬nh
     document.getElementById('avgStarsDisplay').innerHTML = generateStars(Math.round(avgRating));
     
-    // Hiển thị phân bố sao
+    // Hiá»ƒn thá»‹ phÃ¢n bá»‘ sao
     const distributionHTML = [5, 4, 3, 2, 1].map(star => {
         const count = ratingCounts[star] || 0;
         const percent = reviewCount > 0 ? (count / reviewCount * 100) : 0;
@@ -485,7 +485,7 @@ function displayReviews(reviews) {
     }).join('');
     document.getElementById('ratingDistribution').innerHTML = distributionHTML;
     
-    // Hiển thị danh sách đánh giá
+    // Hiá»ƒn thá»‹ danh sÃ¡ch Ä‘Ã¡nh giÃ¡
     if (reviewCount === 0) {
         container.innerHTML = `
             <div class="text-center py-8 text-gray-500">
@@ -528,7 +528,7 @@ function displayReviews(reviews) {
     `;
 }
 
-// Chọn số sao khi viết đánh giá
+// Chá»n sá»‘ sao khi viáº¿t Ä‘Ã¡nh giÃ¡
 let selectedStarRating = 5;
 function selectStar(rating) {
     selectedStarRating = rating;
@@ -545,7 +545,7 @@ function selectStar(rating) {
     });
 }
 
-// Gửi đánh giá
+// Gá»­i Ä‘Ã¡nh giÃ¡
 async function submitReview(event) {
     event.preventDefault();
     
@@ -585,7 +585,7 @@ async function submitReview(event) {
         const result = await response.json();
         
         if (response.status === 401) {
-            // Token hết hạn hoặc không hợp lệ
+            // Token het han hoac khong hop le
             alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
             localStorage.removeItem('token');
             localStorage.removeItem('user');
@@ -597,7 +597,7 @@ async function submitReview(event) {
             alert('Đánh giá của bạn đã được gửi thành công!');
             document.getElementById('reviewContent').value = '';
             selectStar(5);
-            // Reload product để cập nhật đánh giá
+            // Reload product de cap nhat danh gia
             loadProductDetail(currentProduct.ma_san_pham);
         } else {
             alert(result.message || 'Có lỗi xảy ra khi gửi đánh giá!');
@@ -621,22 +621,22 @@ function generateStars(rating) {
     return stars;
 }
 
-// Load related products - Lấy tất cả sản phẩm khác
+// Load related products - Láº¥y táº¥t cáº£ sáº£n pháº©m khÃ¡c
 async function loadRelatedProducts(categoryId) {
     try {
-        // Lấy tất cả sản phẩm
+        // Láº¥y táº¥t cáº£ sáº£n pháº©m
         const response = await fetch(`${API_URL}/products`);
         const result = await response.json();
         
         if (result.success) {
-            // Lọc bỏ sản phẩm hiện tại và sắp xếp: ưu tiên cùng danh mục trước
+            // Lá»c bá» sáº£n pháº©m hiá»‡n táº¡i vÃ  sáº¯p xáº¿p: Æ°u tiÃªn cÃ¹ng danh má»¥c trÆ°á»›c
             let relatedProducts = result.data
                 .filter(p => p.ma_san_pham !== currentProduct.ma_san_pham)
                 .sort((a, b) => {
-                    // Ưu tiên sản phẩm cùng danh mục
+                    // Æ¯u tiÃªn sáº£n pháº©m cÃ¹ng danh má»¥c
                     if (a.ma_danh_muc === categoryId && b.ma_danh_muc !== categoryId) return -1;
                     if (a.ma_danh_muc !== categoryId && b.ma_danh_muc === categoryId) return 1;
-                    // Sau đó ưu tiên cùng thương hiệu
+                    // Sau Ä‘Ã³ Æ°u tiÃªn cÃ¹ng thÆ°Æ¡ng hiá»‡u
                     if (a.thuong_hieu === currentProduct.thuong_hieu && b.thuong_hieu !== currentProduct.thuong_hieu) return -1;
                     if (a.thuong_hieu !== currentProduct.thuong_hieu && b.thuong_hieu === currentProduct.thuong_hieu) return 1;
                     return 0;
@@ -645,13 +645,13 @@ async function loadRelatedProducts(categoryId) {
             displayRelatedProducts(relatedProducts, categoryId);
         }
     } catch (error) {
-        console.error('Lỗi khi tải sản phẩm liên quan:', error);
-        // Hiển thị sản phẩm mẫu nếu không kết nối được API
+        console.error('Lá»—i khi táº£i sáº£n pháº©m liÃªn quan:', error);
+        // Hiá»ƒn thá»‹ sáº£n pháº©m máº«u náº¿u khÃ´ng káº¿t ná»‘i Ä‘Æ°á»£c API
         displaySampleRelatedProducts();
     }
 }
 
-// Hiển thị sản phẩm mẫu khi không có dữ liệu từ API
+// Hiá»ƒn thá»‹ sáº£n pháº©m máº«u khi khÃ´ng cÃ³ dá»¯ liá»‡u tá»« API
 function displaySampleRelatedProducts() {
     const container = document.getElementById('relatedProducts');
     const sampleProducts = [
@@ -670,7 +670,7 @@ function displaySampleRelatedProducts() {
     container.innerHTML = html;
 }
 
-// Display related products với nút xem thêm
+// Display related products vá»›i nÃºt xem thÃªm
 function displayRelatedProducts(products, categoryId) {
     const container = document.getElementById('relatedProducts');
     
@@ -679,14 +679,14 @@ function displayRelatedProducts(products, categoryId) {
         return;
     }
     
-    // Hiển thị tối đa 5 sản phẩm đầu tiên
+    // Hiá»ƒn thá»‹ tá»‘i Ä‘a 5 sáº£n pháº©m Ä‘áº§u tiÃªn
     const displayProducts = products.slice(0, 5);
     const hasMore = products.length > 5;
     
     let html = '<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">';
     html += displayProducts.map(product => `
         <a href="product-detail.html?id=${product.ma_san_pham}" class="bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 group">
-            <!-- Badge giảm giá -->
+            <!-- Badge giáº£m giÃ¡ -->
             <div class="relative">
                 <div class="absolute top-2 left-2 z-10">
                     <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">-15%</span>
@@ -699,16 +699,16 @@ function displayRelatedProducts(products, categoryId) {
                 </div>
             </div>
             <div class="p-3">
-                <!-- Thương hiệu -->
-                <span class="text-xs text-blue-600 font-medium">${product.thuong_hieu || 'Chính hãng'}</span>
-                <!-- Tên sản phẩm -->
+                <!-- ThÆ°Æ¡ng hiá»‡u -->
+                <span class="text-xs text-blue-600 font-medium">${product.thuong_hieu || 'ChÃ­nh hÃ£ng'}</span>
+                <!-- TÃªn sáº£n pháº©m -->
                 <h3 class="font-semibold text-gray-900 text-sm mt-1 line-clamp-2 group-hover:text-red-600 transition min-h-[40px]">${product.ten_san_pham}</h3>
-                <!-- Giá -->
+                <!-- GiÃ¡ -->
                 <div class="mt-2">
                     <p class="text-red-600 font-bold text-base">${formatPrice(product.gia)}</p>
                     <p class="text-gray-400 text-xs line-through">${formatPrice(product.gia * 1.15)}</p>
                 </div>
-                <!-- Rating giả -->
+                <!-- Rating giáº£ -->
                 <div class="flex items-center gap-1 mt-2">
                     <div class="flex text-yellow-400">
                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -724,13 +724,13 @@ function displayRelatedProducts(products, categoryId) {
     `).join('');
     html += '</div>';
     
-    // Thêm nút xem thêm
+    // ThÃªm nÃºt xem thÃªm
     html += createViewMoreButton(categoryId);
     
     container.innerHTML = html;
 }
 
-// Tạo card sản phẩm liên quan
+// Táº¡o card sáº£n pháº©m liÃªn quan
 function createRelatedProductCard(id, name, price, brand, image) {
     return `
         <a href="product-detail.html?id=${id}" class="bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 group">
@@ -766,13 +766,13 @@ function createRelatedProductCard(id, name, price, brand, image) {
     `;
 }
 
-// Tạo nút xem thêm
+// Táº¡o nÃºt xem thÃªm
 function createViewMoreButton(categoryId) {
     return `
         <div class="flex justify-center mt-8">
             <a href="products.html${categoryId ? '?category=' + categoryId : ''}" 
                class="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                <span>Xem thêm sản phẩm</span>
+                <span>Xem thÃªm sáº£n pháº©m</span>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                 </svg>
@@ -782,14 +782,14 @@ function createViewMoreButton(categoryId) {
 }
 
 // Default placeholder image
-const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKhông có ảnh%3C/text%3E%3C/svg%3E';
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%23f3f4f6" width="300" height="300"/%3E%3Ctext fill="%239ca3af" font-family="Arial" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EKhÃ´ng cÃ³ áº£nh%3C/text%3E%3C/svg%3E';
 
 // Helper function to get full image URL
 function getProductImageUrl(imagePath) {
     if (!imagePath) return PLACEHOLDER_IMAGE;
     if (imagePath.startsWith('http')) return imagePath;
     if (imagePath.startsWith('data:')) return imagePath;
-    // Xử lý đường dẫn từ database (có thể bắt đầu bằng / hoặc không)
+    // Xá»­ lÃ½ Ä‘Æ°á»ng dáº«n tá»« database (cÃ³ thá»ƒ báº¯t Ä‘áº§u báº±ng / hoáº·c khÃ´ng)
     const cleanPath = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
     return `${API_URL.replace('/api', '')}${cleanPath}`;
 }
@@ -831,7 +831,7 @@ function increaseQuantity() {
     const max = currentProduct?.so_luong || 99;
     const newValue = parseInt(input.value) + 1;
     
-    // Kiểm tra số lượng > 5 thì yêu cầu liên hệ hotline
+    // Kiá»ƒm tra sá»‘ lÆ°á»£ng > 5 thÃ¬ yÃªu cáº§u liÃªn há»‡ hotline
     if (newValue > 5) {
         showQuantityLimitModal();
         return;
@@ -843,7 +843,7 @@ function increaseQuantity() {
     }
 }
 
-// Modal hiển thị khi số lượng > 5
+// Modal hiá»ƒn thá»‹ khi sá»‘ lÆ°á»£ng > 5
 function showQuantityLimitModal() {
     const existingModal = document.getElementById('quantityLimitModal');
     if (existingModal) existingModal.remove();
@@ -919,9 +919,9 @@ function switchTab(tabName) {
 }
 
 
-// Hiển thị yêu cầu đăng nhập
+// Hien thi yeu cau dang nhap
 function showLoginRequired() {
-    // Xóa modal cũ nếu có
+    // Xoa modal cu neu co
     const existingModal = document.getElementById('loginRequiredModal');
     if (existingModal) existingModal.remove();
     
@@ -949,12 +949,12 @@ function showLoginRequired() {
     `;
     document.body.appendChild(modal);
     
-    // Thêm event listener cho nút đóng
+    // Them event listener cho nut dong
     document.getElementById('closeLoginModalBtn').addEventListener('click', function() {
         modal.remove();
     });
     
-    // Đóng modal khi click bên ngoài
+    // Dong modal khi click ben ngoai
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             modal.remove();
@@ -962,20 +962,20 @@ function showLoginRequired() {
     });
 }
 
-// Đóng modal đăng nhập (giữ lại để tương thích)
+// Dong modal dang nhap (giu lai de tuong thich)
 function closeLoginModal() {
     const modal = document.getElementById('loginRequiredModal');
     if (modal) modal.remove();
 }
 
-// Chuyển đến trang đăng nhập (giữ lại để tương thích)
+// Chuyen den trang dang nhap (giu lai de tuong thich)
 function goToLoginPage() {
     window.location.href = 'login.html';
 }
 
 // Add to cart from detail page
 function addToCartFromDetail() {
-    // Kiểm tra đăng nhập
+    // Kiem tra dang nhap
     if (!isLoggedIn()) {
         showLoginRequired();
         return;
@@ -985,15 +985,15 @@ function addToCartFromDetail() {
     
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
     
-    // Kiểm tra số lượng > 5 thì yêu cầu liên hệ hotline
+    // Kiá»ƒm tra sá»‘ lÆ°á»£ng > 5 thÃ¬ yÃªu cáº§u liÃªn há»‡ hotline
     if (quantity > 5) {
         showQuantityLimitModal();
         return;
     }
     
-    // Kiểm tra giá không âm
+    // Kiá»ƒm tra giÃ¡ khÃ´ng Ã¢m
     if (currentProduct.gia < 0) {
-        showNotification('Lỗi: Giá sản phẩm không hợp lệ!');
+        showNotification('Lá»—i: GiÃ¡ sáº£n pháº©m khÃ´ng há»£p lá»‡!');
         return;
     }
     
@@ -1008,7 +1008,7 @@ function addToCartFromDetail() {
     if (existingItem) {
         const newQuantity = (parseInt(existingItem.so_luong) || 0) + quantity;
         
-        // Kiểm tra tổng số lượng > 5
+        // Kiá»ƒm tra tá»•ng sá»‘ lÆ°á»£ng > 5
         if (newQuantity > 5) {
             showQuantityLimitModal();
             return;
@@ -1019,7 +1019,7 @@ function addToCartFromDetail() {
         cart.push({
             ma_san_pham: currentProduct.ma_san_pham,
             ten_san_pham: currentProduct.ten_san_pham,
-            gia: Math.max(0, currentProduct.gia), // Đảm bảo giá không âm
+            gia: Math.max(0, currentProduct.gia), // Äáº£m báº£o giÃ¡ khÃ´ng Ã¢m
             anh_chinh: getProductImageUrl(currentProduct.images?.[0]?.duong_dan_anh),
             so_luong: parseInt(quantity) || 1
         });
@@ -1037,7 +1037,7 @@ function addToCartFromDetail() {
 
 // Buy now
 function buyNow() {
-    // Kiểm tra đăng nhập trước
+    // Kiem tra dang nhap truoc
     if (!isLoggedIn()) {
         showLoginRequired();
         return;
@@ -1125,9 +1125,9 @@ function showError(message) {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             <h2 class="text-2xl font-bold text-gray-700 mb-2">${message}</h2>
-            <p class="text-gray-500 mb-6">Vui lòng thử lại hoặc quay về trang sản phẩm</p>
+            <p class="text-gray-500 mb-6">Vui lÃ²ng thá»­ láº¡i hoáº·c quay vá» trang sáº£n pháº©m</p>
             <a href="products.html" class="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition">
-                Xem tất cả sản phẩm
+                Xem táº¥t cáº£ sáº£n pháº©m
             </a>
         </div>
     `;

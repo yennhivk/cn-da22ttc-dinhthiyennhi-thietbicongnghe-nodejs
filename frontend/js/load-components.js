@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.text())
             .then(data => {
                 headerPlaceholder.innerHTML = data;
+                document.dispatchEvent(new Event('headerLoaded'));
                 // Initialize auth UI after header is loaded
                 if (typeof initAuthUI === 'function') {
                     initAuthUI();

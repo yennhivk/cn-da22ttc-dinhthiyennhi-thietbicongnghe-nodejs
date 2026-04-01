@@ -1,6 +1,6 @@
 // Chatbot Widget with Groq AI + Chat History (User-based)
 (function() {
-    const CHATBOT_API_URL = 'http://localhost:3300/api/chatbot/chat';
+    const CHATBOT_API_URL = 'http://localhost:3000/api/chatbot/chat';
     const STORAGE_PREFIX = 'yennhi_chat_';
     
     const isInPages = window.location.pathname.includes('/pages/');
@@ -75,6 +75,17 @@ Hãy trả lời ngắn gọn (tối đa 3-4 câu), thân thiện và sử dụn
     // Create chatbot HTML
     const chatbotHTML = `
     <div id="chatbot-container">
+        <div class="social-floating-buttons">
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="social-float-btn social-float-facebook" title="Facebook Yến Nhi Tech" aria-label="Facebook Yến Nhi Tech">
+                <span class="social-wave"></span>
+                <img src="${basePath}images/Facebook-2020-200.png" alt="Facebook" class="facebook-icon-img">
+            </a>
+            <a href="https://zalo.me/" target="_blank" rel="noopener noreferrer" class="social-float-btn social-float-zalo" title="Zalo Yến Nhi Tech" aria-label="Zalo Yến Nhi Tech">
+                <span class="social-wave"></span>
+                <img src="${basePath}images/Icon_of_Zalo.svg.webp" alt="Zalo" class="zalo-icon-img">
+            </a>
+        </div>
+
         <button id="chatbot-toggle" class="chatbot-toggle" title="Chat với chúng tôi">
             <svg id="chat-icon" width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
