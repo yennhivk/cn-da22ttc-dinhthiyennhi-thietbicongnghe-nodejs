@@ -1517,8 +1517,8 @@ router.get('/my-orders/:id/invoice', authenticateToken, async (req, res) => {
             },
             items: items.map(item => ({
                 ...item,
-                don_gia_formatted: formatMoney(item.don_gia),
-                thanh_tien_formatted: formatMoney(item.so_luong * item.don_gia)
+                don_gia_formatted: formatMoney(item.gia_ban),
+                thanh_tien_formatted: formatMoney(item.so_luong * item.gia_ban)
             }))
         };
 
