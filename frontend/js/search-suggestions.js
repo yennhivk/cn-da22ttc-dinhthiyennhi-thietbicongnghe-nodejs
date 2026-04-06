@@ -10,26 +10,33 @@
     let debounceTimer = null;
     let currentFocus = -1;
     
-    // Khá»Ÿi táº¡o khi DOM ready
-    document.addEventListener('DOMContentLoaded', initSearchSuggestions);
-    
+    // Kh?i t?o khi DOM ready vï¿½ khi header du?c load xong d? b?t input linh d?ng
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSearchSuggestions);
+    } else {
+        initSearchSuggestions();
+    }
+    document.addEventListener('headerLoaded', initSearchSuggestions);
+
     function initSearchSuggestions() {
-        // TÃ¬m táº¥t cáº£ cÃ¡c input tÃ¬m kiáº¿m
         const searchInputs = document.querySelectorAll('#searchInput, #headerSearch, #mobileSearchInput');
-        
+
         searchInputs.forEach(input => {
-            if (!input) return;
+            if (!input || input.dataset.suggestionsInit) return;
+            input.dataset.suggestionsInit = 'true';
             
-            // Táº¡o container cho dropdown
+            // Táº¯t gá»£i Ã½ máº·c Ä‘á»‹nh cá»§a trÃ¬nh duyá»‡t
+            input.setAttribute('autocomplete', 'off');
+            
+            console.log('Init search suggestions for:', input.id);
+
             createSuggestionsDropdown(input);
-            
-            // Láº¯ng nghe sá»± kiá»‡n input
             input.addEventListener('input', handleInput);
             input.addEventListener('keydown', handleKeydown);
             input.addEventListener('focus', handleFocus);
         });
-        
-        // ÄÃ³ng dropdown khi click ra ngoÃ i
+
+        document.removeEventListener('click', handleClickOutside);
         document.addEventListener('click', handleClickOutside);
     }
     
@@ -61,17 +68,21 @@
         parent.appendChild(dropdown);
     }
     
-    function handleInput(e) {
+        function handleInput(e) {
         const input = e.target;
         const query = input.value.trim();
-        
-        // Clear timer cÅ©
+
         if (debounceTimer) clearTimeout(debounceTimer);
-        
+
         if (query.length < 1) {
-            hideDropdown(input);
+            showSearchHistory(input);
             return;
         }
+
+        debounceTimer = setTimeout(() => {
+            fetchSuggestions(input, query);
+        }, 300);
+    }
         
         // Debounce 300ms
         debounceTimer = setTimeout(() => {
@@ -106,11 +117,15 @@
         }
     }
     
-    function handleFocus(e) {
+        function handleFocus(e) {
         const input = e.target;
-        if (input.value.trim().length >= 1) {
-            fetchSuggestions(input, input.value.trim());
+        const query = input.value.trim();
+        if (query.length >= 1) {
+            fetchSuggestions(input, query);
+        } else {
+            showSearchHistory(input);
         }
+    }
     }
     
     function handleClickOutside(e) {
@@ -133,9 +148,9 @@
         });
     }
 
-    async function fetchSuggestions(input, query) {
+    async function fetchSuggestions(input, query) { console.log("Fetching for:", query);
         try {
-            const response = await fetch(`${API_URL}/search/suggestions?q=${encodeURIComponent(query)}&limit=8`);
+            const response = await fetch(`${API_URL}/products/search/suggestions?q=${encodeURIComponent(query)}&limit=8`);
             const result = await response.json();
             
             if (result.success && result.data.length > 0) {
@@ -250,16 +265,105 @@
         return escapeHtml(text).replace(regex, '<mark class="bg-yellow-200 px-0.5 rounded">$1</mark>');
     }
     
-    // Global functions
-    window.goToProduct = function(productId) {
+        // Load tiá»n sá»­ tÃ¬m kiáº¿m tá»« Local storage
+    function getSearchHistory() {
+        try {
+             return JSON.parse(localStorage.getItem('searchHistory')) || [];
+        } catch {
+             return [];
+        }
+    }
+    
+    function saveSearchHistory(query) {
+        if (!query || query.trim() === '') return;
+        let history = getSearchHistory();
+        // XÃ³a náº¿u Ä‘Ã£ cÃ³ Ä‘á»ƒ move lÃªn trá»±c
+        history = history.filter(item => item !== query);
+        history.unshift(query);
+        // giá»¯ tÃ´i Ä‘a 5
+        if (history.length > 5) history.pop();
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+    }
+    
+    function removeSearchHistory(query, e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        let history = getSearchHistory();
+        history = history.filter(item => item !== query);
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+        // tÃ¬m input gáº¯n vá»›i Ä‘ang má»Ÿ Ä‘á»ƒ cáº­p nháº­t
+        const inputs = document.querySelectorAll('#searchInput, #headerSearch, #mobileSearchInput');
+        inputs.forEach(input => {
+            const dropdown = document.getElementById('suggestions-' + input.id);
+            if (dropdown && dropdown.style.display === 'block') {
+               showSearchHistory(input);
+            }
+        });
+    }
+
+    window.removeSearchHistory = removeSearchHistory;
+
+    function showSearchHistory(input) {
+        const history = getSearchHistory();
+        const dropdown = document.getElementById('suggestions-' + input.id);
+        if (!dropdown) return;
+
+        if (history.length === 0) {
+            hideDropdown(input);
+            return;
+        }
+
+        currentFocus = -1;
+
+        let html = '<div class="p-3 border-b border-gray-100 text-sm font-semibold text-gray-500">Lá»‹ch sá»­ tÃ¬m kiáº¿m</div>';
+        
+                history.forEach((item, index) => {
+            html += `
+                <div class="suggestion-item flex items-center justify-between p-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50"
+                     onclick="searchAllHistory('${escapeHtml(item)}')" data-index="${index}">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-gray-700 text-sm">${escapeHtml(item)}</span>
+                    </div>
+                    <button onclick="removeSearchHistory('${escapeHtml(item)}', event)" class="p-1 hover:bg-gray-200 rounded-full text-gray-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            `;
+        });
+        
+        dropdown.innerHTML = html;
+        dropdown.style.display = 'block';
+    }
+    
+    function goToProduct(productId) {
         const isInPages = window.location.pathname.includes('/pages/');
-        const basePath = isInPages ? '' : 'pages/';
-        window.location.href = `${basePath}product-detail.html?id=${productId}`;
+        const target = isInPages ? 'product-detail.html' : 'pages/product-detail.html';
+        window.location.href = target + '?id=' + productId;
+    }
+    window.goToProduct = goToProduct;
+
+    function doSearch(query) {
+        saveSearchHistory(query);
+        const isInPages = window.location.pathname.includes('/pages/');
+        const target = isInPages ? 'products.html' : 'pages/products.html';
+        window.location.href = target + '?search=' + encodeURIComponent(query);
+    }
+    
+    window.searchAll = doSearch;
+    window.searchAllHistory = doSearch;
+    
+    window.handleSearch = function() {
+        const input = document.getElementById('searchInput');
+        if (input && input.value.trim()) doSearch(input.value.trim());
     };
     
-    window.searchAll = function(query) {
-        const isInPages = window.location.pathname.includes('/pages/');
-        const basePath = isInPages ? '' : 'pages/';
-        window.location.href = `${basePath}products.html?search=${encodeURIComponent(query)}`;
+    window.handleMobileSearch = function() {
+        const input = document.getElementById('mobileSearchInput');
+        if (input && input.value.trim()) doSearch(input.value.trim());
     };
 })();

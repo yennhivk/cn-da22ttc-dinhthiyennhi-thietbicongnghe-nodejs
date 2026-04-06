@@ -3,6 +3,41 @@ const router = express.Router();
 const db = require('../config/database');
 
 // ==========================================
+// SEARCH SUGGESTIONS API
+// ==========================================
+router.get('/search/suggestions', async (req, res) => {
+    try {
+        const { q, limit = 8 } = req.query;
+        
+        if (!q) {
+            return res.json({ success: true, data: [] });
+        }
+
+        const queryStr = `%${q}%`;
+        const limitNum = parseInt(limit) || 8;
+
+        const [products] = await db.query(`
+            SELECT 
+                sp.ma_san_pham,
+                sp.ten_san_pham,
+                sp.thuong_hieu,
+                sp.gia,
+                (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
+            FROM san_pham sp
+            WHERE sp.trang_thai = 'hien_thi' 
+              AND (sp.ten_san_pham LIKE ? OR sp.thuong_hieu LIKE ?)
+            ORDER BY sp.ten_san_pham LIKE ? DESC, sp.ten_san_pham ASC
+            LIMIT ?
+        `, [queryStr, queryStr, `${q}%`, limitNum]);
+
+        res.json({ success: true, data: products });
+    } catch (error) {
+        console.error('Search suggestions error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// ==========================================
 // FLASH SALE - PUBLIC API (phải đặt trước route /:id)
 // ==========================================
 

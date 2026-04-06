@@ -20,8 +20,7 @@ function toggleMobileMenu() {
 function handleSearch() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput && searchInput.value.trim()) {
-        const searchQuery = encodeURIComponent(searchInput.value.trim());
-        window.location.href = `pages/products.html?search=${searchQuery}`;
+        navigateToSearchResults(searchInput.value);
     }
 }
 
@@ -29,8 +28,7 @@ function handleSearch() {
 function handleMobileSearch() {
     const searchInput = document.getElementById('mobileSearchInput');
     if (searchInput && searchInput.value.trim()) {
-        const searchQuery = encodeURIComponent(searchInput.value.trim());
-        window.location.href = `pages/products.html?search=${searchQuery}`;
+        navigateToSearchResults(searchInput.value);
     }
 }
 

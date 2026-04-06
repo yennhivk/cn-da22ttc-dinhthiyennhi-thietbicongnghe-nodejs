@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../images/Screenshot 2025-11-10 154306.png">
-    <title>Xác nhận Email - Yến Nhi Tech</title>
+    <title>X�c nh?n Email - Y?n Nhi Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -41,14 +41,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
             </div>
-            <h1 class="text-xl font-bold text-gray-800 mb-1">Xác nhận Email</h1>
-            <p class="text-gray-600 text-sm">Mã xác nhận đã gửi đến</p>
+            <h1 class="text-xl font-bold text-gray-800 mb-1">X�c nh?n Email</h1>
+            <p class="text-gray-600 text-sm">M� x�c nh?n d� g?i d?n</p>
             <p id="emailDisplay" class="text-yellow-600 font-semibold text-sm"></p>
         </div>
 
         <!-- Countdown Timer -->
         <div class="text-center mb-4">
-            <p class="text-gray-500 text-sm mb-1">Mã hết hạn sau</p>
+            <p class="text-gray-500 text-sm mb-1">M� h?t h?n sau</p>
             <div class="countdown" id="countdown">5:00</div>
         </div>
 
@@ -67,14 +67,14 @@
 
         <!-- Verify Button -->
         <button id="verifyBtn" onclick="verifyOTP()" class="w-full bg-yellow-500 text-white font-bold py-2.5 rounded-lg hover:bg-yellow-600 transition mb-3 text-sm">
-            Xác nhận
+            X�c nh?n
         </button>
 
         <!-- Resend -->
         <div class="text-center">
-            <p class="text-gray-500 text-xs mb-1">Không nhận được mã?</p>
+            <p class="text-gray-500 text-xs mb-1">Kh�ng nh?n du?c m�?</p>
             <button id="resendBtn" onclick="resendOTP()" class="text-yellow-600 font-semibold text-sm hover:underline disabled:text-gray-400 disabled:cursor-not-allowed" disabled>
-                Gửi lại mã
+                G?i l?i m�
             </button>
         </div>
     </div>
@@ -82,16 +82,16 @@
     <script>
         const API_URL = 'http://localhost:3000/api';
         let email = '';
-        let countdown = 300; // 5 phút
+        let countdown = 300; // 5 ph�t
         let timer = null;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Lấy email từ URL
+            // L?y email t? URL
             const urlParams = new URLSearchParams(window.location.search);
             email = urlParams.get('email');
             
             if (!email) {
-                alert('Không tìm thấy thông tin email');
+                alert('Kh�ng t�m th?y th�ng tin email');
                 window.location.href = 'login.html';
                 return;
             }
@@ -107,12 +107,12 @@
             inputs.forEach((input, index) => {
                 input.addEventListener('input', (e) => {
                     const value = e.target.value;
-                    // Chỉ cho phép nhập số
+                    // Ch? cho ph�p nh?p s?
                     e.target.value = value.replace(/[^0-9]/g, '');
                     if (e.target.value && index < inputs.length - 1) {
                         inputs[index + 1].focus();
                     }
-                    // Ẩn lỗi khi người dùng đang nhập
+                    // ?n l?i khi ngu?i d�ng dang nh?p
                     hideError();
                 });
                 
@@ -120,20 +120,20 @@
                     if (e.key === 'Backspace' && !e.target.value && index > 0) {
                         inputs[index - 1].focus();
                     }
-                    // Cho phép nhấn Enter để xác thực
+                    // Cho ph�p nh?n Enter d? x�c th?c
                     if (e.key === 'Enter' && getOTP().length === 6) {
                         verifyOTP();
                     }
                 });
                 
-                // Cho phép paste
+                // Cho ph�p paste
                 input.addEventListener('paste', (e) => {
                     e.preventDefault();
                     const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
                     pastedData.split('').forEach((char, i) => {
                         if (inputs[i]) inputs[i].value = char;
                     });
-                    // Không tự động verify khi paste, để người dùng kiểm tra lại
+                    // Kh�ng t? d?ng verify khi paste, d? ngu?i d�ng ki?m tra l?i
                 });
             });
             
@@ -152,7 +152,7 @@
         }
 
         function startCountdown() {
-            countdown = 300; // 5 phút
+            countdown = 300; // 5 ph�t
             document.getElementById('resendBtn').disabled = true;
             document.getElementById('countdown').textContent = formatTime(countdown);
             
@@ -164,7 +164,7 @@
                     clearInterval(timer);
                     document.getElementById('countdown').textContent = '0:00';
                     document.getElementById('resendBtn').disabled = false;
-                    showError('Mã OTP đã hết hạn. Vui lòng gửi lại mã mới.');
+                    showError('M� OTP d� h?t h?n. Vui l�ng g?i l?i m� m?i.');
                 }
             }, 1000);
         }
@@ -183,13 +183,13 @@
             const otp = getOTP();
             
             if (otp.length !== 6) {
-                showError('Vui lòng nhập đủ 6 số');
+                showError('Vui l�ng nh?p d? 6 s?');
                 return;
             }
             
             hideError();
             document.getElementById('verifyBtn').disabled = true;
-            document.getElementById('verifyBtn').textContent = 'Đang xác nhận...';
+            document.getElementById('verifyBtn').textContent = '�ang x�c nh?n...';
             
             try {
                 const response = await fetch(`${API_URL}/auth/verify-otp`, {
@@ -204,7 +204,7 @@
                     clearInterval(timer);
                     localStorage.setItem('token', data.data.token);
                     localStorage.setItem('user', JSON.stringify(data.data.user));
-                    alert('🎉 ' + data.message);
+                    alert('?? ' + data.message);
                     window.location.href = '../index.html';
                 } else {
                     showError(data.message);
@@ -213,11 +213,11 @@
                     document.querySelector('.otp-input').focus();
                 }
             } catch (error) {
-                showError('Không thể kết nối đến server');
+                showError('Kh�ng th? k?t n?i d?n server');
             }
             
             document.getElementById('verifyBtn').disabled = false;
-            document.getElementById('verifyBtn').textContent = 'Xác nhận';
+            document.getElementById('verifyBtn').textContent = 'X�c nh?n';
         }
 
         async function resendOTP() {
@@ -233,19 +233,22 @@
                 if (data.success) {
                     hideError();
                     startCountdown();
-                    alert('Đã gửi lại mã OTP!');
+                    alert('�� g?i l?i m� OTP!');
                     document.querySelectorAll('.otp-input').forEach(i => i.value = '');
                     document.querySelector('.otp-input').focus();
                 } else {
                     showError(data.message);
                 }
             } catch (error) {
-                showError('Không thể kết nối đến server');
+                showError('Kh�ng th? k?t n?i d?n server');
             }
         }
     </script>
     <!-- Chatbot Widget -->
     <link rel="stylesheet" href="../css/chatbot.css">
     <script src="../js/chatbot.js"></script>
+
+    <!-- Search Suggestions -->
+    <script src="../js/search-suggestions.js?v=1"></script>
 </body>
 </html>

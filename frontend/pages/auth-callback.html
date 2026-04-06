@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="../images/Screenshot 2025-11-10 154306.png">
-    <title>Đang xử lý đăng nhập...</title>
+    <title>�ang x? l� dang nh?p...</title>
     <style>
         body {
             display: flex;
@@ -36,25 +36,25 @@
 <body>
     <div class="loader-container">
         <div class="spinner"></div>
-        <h2>Đang xử lý đăng nhập...</h2>
-        <p>Vui lòng đợi trong giây lát</p>
+        <h2>�ang x? l� dang nh?p...</h2>
+        <p>Vui l�ng d?i trong gi�y l�t</p>
     </div>
 
     <script>
         (function() {
-            // Lấy token và user từ URL
+            // L?y token v� user t? URL
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
             const userStr = urlParams.get('user');
             const error = urlParams.get('error');
             const redirect = urlParams.get('redirect');
 
-            console.log('Token:', token ? 'Có' : 'Không');
+            console.log('Token:', token ? 'C�' : 'Kh�ng');
             console.log('User string:', userStr);
             console.log('Redirect:', redirect);
 
             if (error) {
-                alert('Đăng nhập Google thất bại: ' + error);
+                alert('�ang nh?p Google th?t b?i: ' + error);
                 window.location.replace('login.html');
                 return;
             }
@@ -67,40 +67,40 @@
                     const user = JSON.parse(decodedUserStr);
                     console.log('Parsed user:', user);
                     
-                    // Lưu vào localStorage
+                    // Luu v�o localStorage
                     localStorage.setItem('token', token);
                     localStorage.setItem('user', JSON.stringify(user));
                     
-                    console.log('Đã lưu localStorage, đang chuyển trang...');
+                    console.log('�� luu localStorage, dang chuy?n trang...');
                     
-                    // Kiểm tra redirect về admin
+                    // Ki?m tra redirect v? admin
                     if (redirect === 'admin') {
-                        // Kiểm tra quyền admin
+                        // Ki?m tra quy?n admin
                         if (user.vai_tro === 'admin') {
                             setTimeout(function() {
                                 window.location.href = 'admin.html';
                             }, 500);
                         } else {
-                            alert('Bạn không có quyền truy cập trang quản trị!');
+                            alert('B?n kh�ng c� quy?n truy c?p trang qu?n tr?!');
                             localStorage.removeItem('token');
                             localStorage.removeItem('user');
                             setTimeout(function() {
-                                window.location.href = 'login.html?message=' + encodeURIComponent('Bạn không có quyền truy cập trang quản trị');
+                                window.location.href = 'login.html?message=' + encodeURIComponent('B?n kh�ng c� quy?n truy c?p trang qu?n tr?');
                             }, 500);
                         }
                     } else {
-                        // Chuyển về trang chủ
+                        // Chuy?n v? trang ch?
                         setTimeout(function() {
                             window.location.href = '../index.html';
                         }, 500);
                     }
                 } catch (e) {
-                    console.error('Lỗi xử lý dữ liệu:', e);
-                    alert('Có lỗi xảy ra khi xử lý đăng nhập: ' + e.message);
+                    console.error('L?i x? l� d? li?u:', e);
+                    alert('C� l?i x?y ra khi x? l� dang nh?p: ' + e.message);
                     window.location.replace('login.html');
                 }
             } else {
-                alert('Không tìm thấy thông tin đăng nhập');
+                alert('Kh�ng t�m th?y th�ng tin dang nh?p');
                 window.location.replace('login.html');
             }
         })();
@@ -108,5 +108,8 @@
     <!-- Chatbot Widget -->
     <link rel="stylesheet" href="../css/chatbot.css">
     <script src="../js/chatbot.js"></script>
+
+    <!-- Search Suggestions -->
+    <script src="../js/search-suggestions.js?v=1"></script>
 </body>
 </html>
