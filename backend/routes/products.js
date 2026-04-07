@@ -24,11 +24,12 @@ router.get('/search/suggestions', async (req, res) => {
                 sp.gia,
                 (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
             FROM san_pham sp
+            LEFT JOIN danh_muc_san_pham dm ON sp.ma_danh_muc = dm.ma_danh_muc
             WHERE sp.trang_thai = 'hien_thi' 
-              AND (sp.ten_san_pham LIKE ? OR sp.thuong_hieu LIKE ?)
+              AND (sp.ten_san_pham LIKE ? OR dm.ten_danh_muc LIKE ? OR sp.thuong_hieu LIKE ? OR EXISTS (SELECT 1 FROM anh_san_pham a WHERE a.ma_san_pham = sp.ma_san_pham AND a.duong_dan_anh LIKE ?))
             ORDER BY sp.ten_san_pham LIKE ? DESC, sp.ten_san_pham ASC
             LIMIT ?
-        `, [queryStr, queryStr, `${q}%`, limitNum]);
+        `, [queryStr, queryStr, queryStr, '%' + q.replace(/\s+/g, '%') + '%', `${q}%`, limitNum]);
 
         res.json({ success: true, data: products });
     } catch (error) {
@@ -36,6 +37,44 @@ router.get('/search/suggestions', async (req, res) => {
         res.status(500).json({ success: false, message: 'Lỗi server' });
     }
 });
+
+
+// ==========================================
+// SEARCH SUGGESTIONS API
+// ==========================================
+router.get('/search/suggestions', async (req, res) => {
+    try {
+        const { q, limit = 8 } = req.query;
+        
+        if (!q) {
+            return res.json({ success: true, data: [] });
+        }
+
+        const queryStr = `%${q}%`;
+        const limitNum = parseInt(limit) || 8;
+
+        const [products] = await db.query(`
+            SELECT 
+                sp.ma_san_pham,
+                sp.ten_san_pham,
+                sp.thuong_hieu,
+                sp.gia,
+                (SELECT duong_dan_anh FROM anh_san_pham WHERE ma_san_pham = sp.ma_san_pham AND la_anh_chinh = 1 LIMIT 1) as anh_chinh
+            FROM san_pham sp
+            LEFT JOIN danh_muc_san_pham dm ON sp.ma_danh_muc = dm.ma_danh_muc
+            WHERE sp.trang_thai = 'hien_thi' 
+              AND (sp.ten_san_pham LIKE ? OR dm.ten_danh_muc LIKE ? OR sp.thuong_hieu LIKE ? OR EXISTS (SELECT 1 FROM anh_san_pham a WHERE a.ma_san_pham = sp.ma_san_pham AND a.duong_dan_anh LIKE ?))
+            ORDER BY sp.ten_san_pham LIKE ? DESC, sp.ten_san_pham ASC
+            LIMIT ?
+        `, [queryStr, queryStr, queryStr, '%' + q.replace(/\s+/g, '%') + '%', `${q}%`, limitNum]);
+
+        res.json({ success: true, data: products });
+    } catch (error) {
+        console.error('Search suggestions error:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
 
 // ==========================================
 // FLASH SALE - PUBLIC API (phải đặt trước route /:id)
@@ -138,10 +177,37 @@ router.get('/', async (req, res) => {
             params.push(parseFloat(maxPrice));
         }
         
-        // Tìm kiếm
+                // Tìm kiếm
         if (search) {
-            query += ` AND (sp.ten_san_pham LIKE ? OR sp.mo_ta LIKE ? OR sp.thuong_hieu LIKE ?)`;
-            params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+            const searchStr = search.trim();
+            const words = searchStr.split(' ').filter(w => w.trim().length > 0);
+            
+            const searchPattern = `%${searchStr.replace(/\s+/g, '%')}%`;
+            const exactPattern = `%${searchStr}%`;
+            
+            let searchCondition = `(sp.ten_san_pham LIKE ? OR dm.ten_danh_muc LIKE ? OR sp.thuong_hieu LIKE ? OR EXISTS (
+                SELECT 1 FROM anh_san_pham a 
+                WHERE a.ma_san_pham = sp.ma_san_pham 
+                AND a.duong_dan_anh LIKE ?
+            ))`;
+            params.push(exactPattern, exactPattern, exactPattern, searchPattern);
+            
+            if (words.length > 1) {
+                let wordConditions = [];
+                for (const word of words) {
+                    if (word.length >= 2) {
+                        wordConditions.push(`(sp.ten_san_pham LIKE ? OR dm.ten_danh_muc LIKE ? OR sp.thuong_hieu LIKE ? OR EXISTS(SELECT 1 FROM anh_san_pham a2 WHERE a2.ma_san_pham = sp.ma_san_pham AND a2.duong_dan_anh LIKE ?))`);
+                        const wordPattern = `%${word}%`;
+                        params.push(wordPattern, wordPattern, wordPattern, wordPattern);
+                    }
+                }
+                if (wordConditions.length > 0) {
+                    // Y�u c?u t�m M?T TRONG NH?NG t? d� cung du?c ph�p hi?n ra (OR)
+                    searchCondition = `(${searchCondition} OR (${wordConditions.join(' AND ')}))`;
+                }
+            }
+            
+            query += ` AND (${searchCondition})`;
         }
         
         // Sắp xếp

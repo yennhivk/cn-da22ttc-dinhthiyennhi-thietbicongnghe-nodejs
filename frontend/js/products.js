@@ -50,10 +50,7 @@ let itemsToShow = 6; // So luong san pham hien thi ban dau
 
 // Load products when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();
-    setupEventListeners();
-    
-    // Check URL parameters
+
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
     const brand = urlParams.get('brand');
@@ -268,7 +265,7 @@ async function loadProducts(searchTerm = null) {
             params.append('search', searchTerm);
             // Update search input value
             const searchInput = document.getElementById('searchInput');
-            if (searchInput) searchInput.value = searchTerm;
+            if (searchInput && !sessionStorage.getItem('uploadedImage')) searchInput.value = searchTerm;
         }
         
         if (params.toString()) {

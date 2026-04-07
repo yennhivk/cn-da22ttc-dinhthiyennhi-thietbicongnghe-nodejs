@@ -83,13 +83,7 @@
             fetchSuggestions(input, query);
         }, 300);
     }
-        
-        // Debounce 300ms
-        debounceTimer = setTimeout(() => {
-            fetchSuggestions(input, query);
-        }, 300);
-    }
-    
+
     function handleKeydown(e) {
         const input = e.target;
         const dropdown = document.getElementById(`suggestions-${input.id}`);
@@ -126,8 +120,7 @@
             showSearchHistory(input);
         }
     }
-    }
-    
+
     function handleClickOutside(e) {
         const dropdowns = document.querySelectorAll('.search-suggestions-dropdown');
         dropdowns.forEach(dropdown => {
@@ -153,7 +146,7 @@
             const response = await fetch(`${API_URL}/products/search/suggestions?q=${encodeURIComponent(query)}&limit=8`);
             const result = await response.json();
             
-            if (result.success && result.data.length > 0) {
+            if (result.success) {
                 showSuggestions(input, result.data, query);
             } else {
                 hideDropdown(input);
@@ -186,7 +179,14 @@
             </div>
         `;
         
-        products.forEach((product, index) => {
+        if (products.length === 0) {
+            html += `
+                <div class="p-4 text-center text-gray-500 text-sm">
+                    Không tìm thấy sản phẩm
+                </div>
+            `;
+        } else {
+            products.forEach((product, index) => {
             const imageUrl = getImageUrl(product.anh_chinh, apiBasePath);
             const price = formatPrice(product.gia);
             const highlightedName = highlightMatch(product.ten_san_pham, query);
@@ -214,7 +214,8 @@
                 </div>
             `;
         });
-        
+        }
+
         // NÃºt xem táº¥t cáº£ káº¿t quáº£
         html += `
             <div class="p-3 bg-gray-50 rounded-b-xl">

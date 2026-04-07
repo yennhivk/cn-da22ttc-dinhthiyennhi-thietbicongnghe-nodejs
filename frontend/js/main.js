@@ -1,6 +1,33 @@
-﻿/**
- * Global Functions - Yáº¿n Nhi Mobile
- * CÃ¡c hÃ m JavaScript dÃ¹ng chung cho toÃ n bá»™ website
+
+
+
+﻿// Tải sẵn model AI nhận diện ảnh cho mượt
+window.addEventListener('load', async () => {
+    if (!window.location.pathname.includes('index.html') && window.location.pathname !== '/') return;
+    try {
+        if (!window.tf) {
+            const s1 = document.createElement('script');
+            s1.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0';
+            document.head.appendChild(s1);
+            await new Promise(r => s1.onload = r);
+        }
+        if (!window.mobilenet) {
+            const s2 = document.createElement('script');
+            s2.src = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0';
+            document.head.appendChild(s2);
+            await new Promise(r => s2.onload = r);
+        }
+        if (!window.__aiModel) {
+            try { await window.tf.setBackend('webgl'); } catch(e){}
+            window.__aiModel = await window.mobilenet.load({version: 2, alpha: 0.5});
+            console.log('AI Model Preloaded V2!');
+        }
+    } catch(e) {}
+});
+
+/**
+ * Global Functions - Yến Nhi Mobile
+ * Các hàm JavaScript dùng chung cho toàn bộ website
  */
 
 // Toggle Mobile Menu
@@ -56,7 +83,7 @@ function normalizeImageFileName(fileName) {
 }
 
 function initAdvancedSearchFeatures() {
-    const searchInputs = document.querySelectorAll('#headerSearch, #searchInput');
+    const searchInputs = document.querySelectorAll('#headerSearch, #searchInput, #mobileSearchInput');
     if (!searchInputs.length) return;
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -128,18 +155,43 @@ function initAdvancedSearchFeatures() {
             recognition.interimResults = false;
             recognition.maxAlternatives = 1;
 
+            recognition.onstart = function() {
+                input.dataset.originalPlaceholder = input.placeholder;
+                input.placeholder = 'Đang nghe... Vui lòng nói';
+            };
+
             recognition.onresult = function(event) {
-                const transcript = event.results?.[0]?.[0]?.transcript?.trim() || '';
+                let transcript = event.results?.[0]?.[0]?.transcript?.trim() || '';
                 if (transcript) {
+                    // Chuẩn hóa giọng nói: bỏ dấu câu, chữ viết hoa và các từ thừa (filler words) hay dùng khi nói
+                    transcript = transcript.toLowerCase()
+                        .replace(/[.,!?]/g, '') // Bỏ dấu chấm phẩy nếu có
+                        .replace(/^(tìm|tìm kiếm|tìm cho tôi|mua|mua giúp tôi|tôi muốn mua|tôi muốn tìm|cho xem)\s+/i, '')
+                        .replace(/i phôn|ai phôn/i, 'iphone') // Sửa lỗi người Việt hay đọc sai tiếng anh
+                        .replace(/láp tốp|lắp ráp/i, 'laptop')
+                        .replace(/mắc búc/i, 'macbook')
+                        .trim();
+                    
                     input.value = transcript;
                     navigateToSearchResults(transcript);
                 }
+            };
+            
+            recognition.onerror = function(event) {
+                console.error("Lỗi nhận diện giọng nói:", event.error);
+                input.placeholder = 'Không nghe rõ, vui lòng thử lại...';
+                setTimeout(() => {
+                    input.placeholder = input.dataset.originalPlaceholder || 'Tìm kiếm...';
+                }, 3000);
             };
 
             recognition.onend = function() {
                 listening = false;
                 voiceBtn.style.background = '#eff6ff';
                 voiceBtn.style.color = '#2563eb';
+                if (input.placeholder === 'Đang nghe... Vui lòng nói') {
+                    input.placeholder = input.dataset.originalPlaceholder || 'Tìm kiếm...';
+                }
             };
         } else {
             voiceBtn.disabled = true;
@@ -168,16 +220,179 @@ function initAdvancedSearchFeatures() {
             const file = e.target.files && e.target.files[0];
             if (!file) return;
 
-            const inferredQuery = normalizeImageFileName(file.name);
-            if (!inferredQuery) {
-                alert('Khong doc duoc tu khoa tu ten file anh. Ban co the doi ten file theo ten san pham de tim nhanh hon.');
-                return;
-            }
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                const base64Str = event.target.result;
+                sessionStorage.setItem('uploadedImage', base64Str);
+                
+                input.value = '';
+                input.placeholder = 'Đang dùng AI quét ảnh...';
+                
+                try {
+                    // 1. Tải thư viện AI (nếu chưa tải) tuần tự để tránh lỗi thiếu TensorFlow
+                    if (!window.tf) {
+                        await new Promise(r => {
+                            const s = document.createElement('script');
+                            s.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0';
+                            s.onload = r;
+                            document.head.appendChild(s);
+                        });
+                    }
+                    if (!window.mobilenet) {
+                        await new Promise(r => {
+                            const s = document.createElement('script');
+                            s.src = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0';
+                            s.onload = r;
+                            document.head.appendChild(s);
+                        });
+                    }
+                    
+                    // 2. Tái sử dụng model đã tải để phản hồi ngay lập tức
+                    if (!window.__aiModel) {
+                        try { await window.tf.setBackend('webgl'); } catch(e){} // Bật tăng tốc phần cứng
+                        window.__aiModel = await window.mobilenet.load({version: 2, alpha: 0.5}); // Bản nhẹ nhất
+                    }
+                    
+                    // 3. Đưa ảnh vào phân tích
+                    const imgForAI = new Image();
+                    imgForAI.src = base64Str;
+                    await new Promise(resolve => { imgForAI.onload = resolve; });
+                    
+                    // Lấy ra top 7 kết quả giống nhất
+                    const predictions = await window.__aiModel.classify(imgForAI, 7);
+                    console.log("AI trả về danh sách đầy đủ:", predictions);
+                    
+                    let inferredQuery = '';
+                    
+                    // Sắp xếp thứ tự ưu tiên nhận diện: Những từ khóa dễ trùng lặp phải xếp hợp lý.
+                    // Vd: "computer mouse" phải lọt vào 'chuột' trước khi bị nhận nhầm thành 'máy tính' (pc)
+                    // "headphone" phải lọt vào 'tai nghe' trước khi bị nhận nhầm thành 'phone' (điện thoại)
+                    const mappings = [
+                        { regex: /laptop|notebook|macbook/i, kw: 'laptop' },
+                        { regex: /headset|headphone|earphone|earpiece|loudspeaker|speaker|stethoscope|hearing aid|dental floss|projector/i, kw: 'tai nghe' },
+                        { regex: /cellular|smartphone|telephone|phone|handset|mobile|ipod|modem|remote control|wallet|pay-phone/i, kw: 'điện thoại' },
+                        { regex: /keyboard|keypad|typewriter/i, kw: 'bàn phím' },
+                        { regex: /mouse|joystick/i, kw: 'chuột' },
+                        { regex: /monitor|screen|display|television|tv/i, kw: 'màn hình' },
+                        { regex: /desktop|computer|system board|case/i, kw: 'pc' },
+                        { regex: /watch|clock/i, kw: 'đồng hồ' },
+                        { regex: /refrigerator|icebox/i, kw: 'tủ lạnh' },
+                        { regex: /washer|washing machine|dryer/i, kw: 'máy giặt' },
+                        { regex: /camera|webcam|polaroid/i, kw: 'webcam' },
+                        { regex: /tablet|ipad|pad/i, kw: 'ipad' },
+                        { regex: /router|switch|usb/i, kw: 'phụ kiện' }
+                    ];
 
-            input.value = inferredQuery;
-            navigateToSearchResults(inferredQuery);
+                    // Chấm điểm xác suất AI từ cao đến thấp, dò qua từng món cụ thể
+                    // Điều này giúp ảnh Tai nghe (xác suất tai nghe cao nhất) không bị đè bởi chữ Mouse (xác suất thấp)
+                    for (const p of predictions) {
+                        const classStr = p.className.toLowerCase();
+                        for (const m of mappings) {
+                            if (m.regex.test(classStr)) {
+                                inferredQuery = m.kw;
+                                break;
+                            }
+                        }
+                        if (inferredQuery) break; // Nếu đã tìm thấy kết quả ở dự đoán cao nhất thì kết thúc
+                    }
+                    
+                    if (inferredQuery) {
+                        sessionStorage.setItem('imageSearchQuery', inferredQuery);
+                        navigateToSearchResults(inferredQuery);
+                    } else {
+                        alert('Hệ thống AI quét ra vật thể: [' + predictions[0].className + '] nhưng chưa khớp với sản phẩm công nghệ nào. Bạn vui lòng chụp gần sản phẩm hơn!');
+                        input.placeholder = 'Tìm kiếm...';
+                    }
+                    
+                } catch (err) {
+                    console.error('Lỗi khi AI quét ảnh:', err);
+                    alert('Quá trình quét và phân tích đang bị gián đoạn, vui lòng kiểm tra kết nối mạng và thử lại!');
+                    input.placeholder = 'Tìm kiếm...';
+                }
+            };
+            reader.readAsDataURL(file);
             fileInput.value = '';
         });
+
+        // Hien thi thumbnail neu co trong sessionStorage va trung khop voi query
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentQuery = urlParams.get('search');
+        const savedImage = sessionStorage.getItem('uploadedImage');
+        const savedQuery = sessionStorage.getItem('imageSearchQuery');
+
+        if (savedImage && (currentQuery === savedQuery || (!currentQuery && savedQuery))) {
+            const thumbWrapper = document.createElement('div');
+            thumbWrapper.style.cssText = [
+                'position:absolute',
+                'left:8px',
+                'top:50%',
+                'transform:translateY(-50%)',
+                'height:32px',
+                'width:32px',
+                'border-radius:4px',
+                'overflow:hidden',
+                'z-index:5',
+                'border:1px solid #ddd',
+                'background:#fff',
+                'display:flex',
+                'align-items:center',
+                'justify-content:center'
+            ].join(';');
+
+            const img = document.createElement('img');
+            img.src = savedImage;
+            img.style.cssText = 'max-width:100%;max-height:100%;object-fit:cover;';
+
+            // Nut xoa thumbnail
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.innerHTML = '×';
+            closeBtn.style.cssText = [
+                'position:absolute',
+                'top:-5px',
+                'right:-5px',
+                'width:16px',
+                'height:16px',
+                'border-radius:50%',
+                'background:red',
+                'color:white',
+                'border:none',
+                'font-size:12px',
+                'line-height:1',
+                'cursor:pointer',
+                'display:none'
+            ].join(';');
+
+            thumbWrapper.appendChild(img);
+            thumbWrapper.appendChild(closeBtn);
+            wrapper.appendChild(thumbWrapper);
+            
+            // Them padding left cho input de chua thumbnail
+            input.style.paddingLeft = '45px';
+            input.value = savedQuery || ''; // xoa text hoac ghi de text (ẩn text? user muon xoa text "không xuất hiện tên hình")
+            // De an ten hinh: ta lam text color mau trang hoac rong
+            input.value = '';
+            input.placeholder = 'Đang tìm bằng hình ảnh...';
+
+            thumbWrapper.addEventListener('mouseenter', () => closeBtn.style.display = 'block');
+            thumbWrapper.addEventListener('mouseleave', () => closeBtn.style.display = 'none');
+
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                sessionStorage.removeItem('uploadedImage');
+                sessionStorage.removeItem('imageSearchQuery');
+                thumbWrapper.remove();
+                input.style.paddingLeft = ''; // reset padding left
+                input.value = '';
+                input.placeholder = 'Tìm kiếm...';
+                
+                // neu dang o trang ket qua tim kiem, tro ve trang tat ca san pham
+                if (window.location.pathname.includes('products.html')) {
+                    window.location.href = window.location.pathname;
+                }
+            });
+        }
+
     });
 }
 
