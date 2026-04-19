@@ -1,0 +1,1 @@
+fetch(http://localhost:3000/api/chatbot/chat, { method: POST, headers: {Content-Type: pplication/json}, body: JSON.stringify({messages: [{role: user, content: hi}, {role: ssistant, content: <div onclick=\\()\\></div>}, {role:user, content: hi}]})}).then(r=>r.text()).then(t=>console.log(t));

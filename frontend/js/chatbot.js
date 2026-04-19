@@ -530,10 +530,12 @@ Hãy trả lời ngắn gọn (tối đa 3-4 câu), thân thiện và sử dụn
             saveSessions();
         }
 
+        const token = localStorage.getItem('token');
         const response = await fetch(CHATBOT_API_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 messages: [
@@ -550,7 +552,9 @@ Hãy trả lời ngắn gọn (tối đa 3-4 câu), thân thiện và sử dụn
         const data = await response.json();
         const aiMessage = data.choices[0].message.content;
 
-        conversationHistory.push({ role: 'assistant', content: aiMessage });
+                // Lọc bỏ HTML trước khi ghép vào lịch sử (giúp backend ko bị lỗi 400 từ đợt hỏi sau)
+        const cleanMessageForHistory = aiMessage.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+        conversationHistory.push({ role: 'assistant', content: cleanMessageForHistory });
 
         if (session) {
             session.messages = conversationHistory;
